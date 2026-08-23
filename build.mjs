@@ -1,8 +1,14 @@
 /* Gera as versões autocontidas (dist/) das páginas do guia: um arquivo só,
    sem nenhuma referência local, pronto para mandar por e-mail ou publicar. */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { buildTokens } from './tokens/build-tokens.mjs';
 
 const read = (p) => readFileSync(p, 'utf8');
+
+/* Primeiro os tokens: o JSON é derivado do CSS e a checagem de fechamento
+   derruba o build se algum token referenciado não existir. */
+const tk = buildTokens();
+console.log(`tokens/tokens.json · ${tk.token} tokens + ${tk.inverso} de inversão`);
 
 /* Tabela única do projeto. `out` é ENDEREÇO, `src` e conteúdo são ASSUNTO:
    o nome do arquivo em dist/ é o caminho de publicação a que o artifact está

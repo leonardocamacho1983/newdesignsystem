@@ -10,6 +10,7 @@
 
 export const BRAND = {
   name: 'Cadrian',
+  version: '1.0.0',
   domain: 'cadrian.ai',
   person: 'Dan Preiss',
   role: 'CEO',

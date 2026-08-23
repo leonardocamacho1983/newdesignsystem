@@ -1,2 +1,4 @@
 node_modules/
+package-lock.json
 _shot.mjs
+_diffpx.mjs

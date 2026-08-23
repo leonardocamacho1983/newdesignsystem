@@ -1,5 +1,11 @@
 {
-  "devDependencies": {
-    "playwright": "^1.62.1"
+  "name": "camacho-design-system",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sistema de identidade visual: tokens, motor gráfico de dithering e componentes.",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "python3 -m http.server 8899"
   }
 }
