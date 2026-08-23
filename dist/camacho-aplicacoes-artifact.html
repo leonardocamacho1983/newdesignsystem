@@ -738,10 +738,31 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
   container-type: inline-size;
   display: grid; grid-template-rows: auto auto 1fr auto; gap: 4cqi;
   padding: 6cqi; aspect-ratio: var(--ar, 3/4);
+  /* A proporção fixa impõe a altura: se o conteúdo interno for medido em rem,
+     em coluna estreita ele excede essa altura e as linhas se sobrepõem. A
+     peça inteira escala com a própria largura — inclusive as listas. */
+  min-height: fit-content;
 }
+.laudo .specs { font-size: 3.2cqi; }
+.laudo .specs > li { padding-block: 1.4cqi; gap: 3cqi; }
+.laudo .cmc-micro { font-size: 2.6cqi; }
 .laudo__hed { font-size: 9cqi; line-height: 1; letter-spacing: -0.03em;
               font-weight: var(--cmc-w-light); margin: 0; }
 .laudo__art { position: relative; min-height: 0; color: var(--cmc-black); }
+/* Área de arte que contém TEXTO não pode encolher: min-height 0 existe para o
+   canvas, que é absoluto e não tem altura própria. Aplicado ao texto, ele
+   deixa o conteúdo vazar por baixo do que vem depois. */
+.laudo__art--texto { min-height: auto; }
+/* Peça densa de texto não cabe numa proporção de impressão fixa sem cortar
+   conteúdo — e cortar conteúdo para manter a moldura é a troca errada num
+   guia. Estas crescem com o texto, e a legenda não promete proporção. */
+.laudo--fluida { aspect-ratio: auto; }
+/* Em coluna estreita a proporção fixa da peça deixa de caber: solta a
+   proporção e deixa a peça crescer, em vez de sobrepor linhas. */
+@media (max-width: 46rem) {
+  .laudo { aspect-ratio: auto; }
+  .laudo__art { min-height: auto; }
+}
 .laudo__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .laudo__meta { font-family: var(--cmc-font-mono); font-size: 2.6cqi;
                display: flex; justify-content: space-between; gap: 3cqi; }
@@ -834,10 +855,10 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
       </figure>
 
       <figure class="format">
-        <article class="laudo" style="--ar:4/3">
+        <article class="laudo laudo--fluida">
           <span class="cmc-micro">Achado 04 · dados e processos</span>
           <h3 class="laudo__hed" style="font-size:6cqi">Três fontes<br>para o mesmo número</h3>
-          <div class="laudo__art" style="display:flex;align-items:center">
+          <div class="laudo__art laudo__art--texto" style="display:flex;align-items:center">
             <p class="cmc-editorial" style="font-size:3.4cqi;line-height:1.55">
               Receita é apurada em três lugares e fechada por conciliação manual.
               O custo não é a planilha: é a reunião semanal que discute qual
@@ -846,7 +867,7 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
           </div>
           <p class="laudo__meta"><span>IMPACTO: ALTO</span><span>ESFORÇO: BAIXO</span></p>
         </article>
-        <figcaption class="cmc-micro">Página de achado · 4:3</figcaption>
+        <figcaption class="cmc-micro">Página de achado</figcaption>
       </figure>
     </div>
   </div>
@@ -930,10 +951,10 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
 
     <div class="formats formats--pair">
       <figure class="format">
-        <article class="laudo" style="--ar:4/3">
+        <article class="laudo laudo--fluida">
           <span class="cmc-micro">Proposta · escopo</span>
           <h3 class="laudo__hed" style="font-size:6cqi">Da avaliação<br>à capacidade instalada</h3>
-          <div class="laudo__art" style="display:flex;align-items:center">
+          <div class="laudo__art laudo__art--texto" style="display:flex;align-items:center">
             <ul class="specs cmc-small" style="width:100%">
               <li><span class="specs__key">Diagnosticar · 3 semanas</span><span class="specs__val">assessment e achados</span></li>
               <li><span class="specs__key">Priorizar · 1 semana</span><span class="specs__val">roadmap e critério</span></li>
@@ -945,7 +966,7 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
           </div>
           <p class="laudo__meta"><span>PROPOSTA</span><span data-brand="domain">camacho.ai</span></p>
         </article>
-        <figcaption class="cmc-micro">Proposta comercial · 4:3</figcaption>
+        <figcaption class="cmc-micro">Proposta comercial · página</figcaption>
       </figure>
 
       <div class="showcase__col">
@@ -985,7 +1006,7 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
               </p>
             </div>
             <div class="format__art">
-              <canvas data-cmc-dither="weave" data-ramp="0.06,0.8" data-cell="3"
+              <canvas data-cmc-dither="weave" data-ramp="0.14,1" data-cell="3"
                       aria-hidden="true"></canvas>
             </div>
           </article>

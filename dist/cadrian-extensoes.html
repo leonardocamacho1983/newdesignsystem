@@ -741,10 +741,31 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
   container-type: inline-size;
   display: grid; grid-template-rows: auto auto 1fr auto; gap: 4cqi;
   padding: 6cqi; aspect-ratio: var(--ar, 3/4);
+  /* A proporção fixa impõe a altura: se o conteúdo interno for medido em rem,
+     em coluna estreita ele excede essa altura e as linhas se sobrepõem. A
+     peça inteira escala com a própria largura — inclusive as listas. */
+  min-height: fit-content;
 }
+.laudo .specs { font-size: 3.2cqi; }
+.laudo .specs > li { padding-block: 1.4cqi; gap: 3cqi; }
+.laudo .cmc-micro { font-size: 2.6cqi; }
 .laudo__hed { font-size: 9cqi; line-height: 1; letter-spacing: -0.03em;
               font-weight: var(--cmc-w-light); margin: 0; }
 .laudo__art { position: relative; min-height: 0; color: var(--cmc-black); }
+/* Área de arte que contém TEXTO não pode encolher: min-height 0 existe para o
+   canvas, que é absoluto e não tem altura própria. Aplicado ao texto, ele
+   deixa o conteúdo vazar por baixo do que vem depois. */
+.laudo__art--texto { min-height: auto; }
+/* Peça densa de texto não cabe numa proporção de impressão fixa sem cortar
+   conteúdo — e cortar conteúdo para manter a moldura é a troca errada num
+   guia. Estas crescem com o texto, e a legenda não promete proporção. */
+.laudo--fluida { aspect-ratio: auto; }
+/* Em coluna estreita a proporção fixa da peça deixa de caber: solta a
+   proporção e deixa a peça crescer, em vez de sobrepor linhas. */
+@media (max-width: 46rem) {
+  .laudo { aspect-ratio: auto; }
+  .laudo__art { min-height: auto; }
+}
 .laudo__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .laudo__meta { font-family: var(--cmc-font-mono); font-size: 2.6cqi;
                display: flex; justify-content: space-between; gap: 3cqi; }
