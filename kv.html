@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Key Visuals Camacho</title>
+<meta name="description" content="Quatro key visuals da marca Camacho, adaptados a cinco formatos e animados pelo próprio motor gráfico.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/guide.css">
+</head>
+<body>
+
+<header class="hero cmc-inverse">
+  <div class="cmc-shell">
+    <a class="cmc-lockup cmc-lockup--sm" href="index.html">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </a>
+
+    <div class="stack">
+      <h1 class="cmc-display">Key<br>visuals</h1>
+      <p class="cmc-lead cmc-muted">
+        Quatro imagens, uma ideia cada, adaptadas a cinco formatos e animadas
+        pelo próprio motor. Nenhuma imagem externa — o que a marca mostra é o
+        material que ela mesma gera.
+      </p>
+    </div>
+
+    <nav class="hero__nav">
+      <a class="cmc-tag" href="#kvs"><span>01 Os quatro KVs</span></a>
+      <a class="cmc-tag" href="#formatos"><span>02 Formatos</span></a>
+      <a class="cmc-tag" href="#movimento"><span>03 Movimento</span></a>
+      <a class="cmc-tag" href="#regras"><span>04 Regras</span></a>
+      <a class="cmc-tag" href="index.html"><span>Sistema →</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section id="kvs" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Os quatro KVs</h2><span class="cmc-slide__num">01</span>
+    </div>
+    <p class="block__intro">
+      Um key visual que diz duas coisas não diz nenhuma. Cada um carrega uma
+      única ideia da marca, e juntos cobrem a tese, a cadeia, a oferta de
+      entrada e o que fica no fim.
+    </p>
+    <div class="stack-7" id="galeria"></div>
+  </div>
+</section>
+
+<hr class="cmc-rule">
+
+<section id="formatos" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Formatos</h2><span class="cmc-slide__num">02</span>
+    </div>
+    <p class="block__intro">
+      A composição é sempre a mesma — assinatura, grafismo, manchete — e vale de
+      21:9 a 9:16 sem layout alternativo, porque todo campo do motor é ciente de
+      proporção. Nos verticais a rampa vira 90°, para correr no eixo longo da
+      peça: adensar de baixo para cima diz o mesmo que da esquerda para a direita.
+    </p>
+    <div class="formats formats--social" id="grade-formatos"></div>
+  </div>
+</section>
+
+<hr class="cmc-rule">
+
+<section id="movimento" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Movimento</h2><span class="cmc-slide__num">03</span>
+    </div>
+    <p class="block__intro">
+      A micro-animação da marca não é um efeito aplicado por cima: é o parâmetro
+      <code>progress</code> do próprio motor, uma frente de onda que resolve
+      primeiro a ponta do sinal e depois a do ruído. Passe o mouse — ou toque —
+      para rodar de novo.
+    </p>
+    <div class="grid grid--2" id="animacoes"></div>
+    <div class="spec spec--outline">
+      <ul class="specs cmc-small">
+        <li><span class="specs__key">Duração</span><span class="specs__val">1600 ms padrão · 2200 ms em peça grande</span></li>
+        <li><span class="specs__key">Curva</span><span class="specs__val">saída cúbica — resolve rápido e assenta</span></li>
+        <li><span class="specs__key">Direção</span><span class="specs__val">acompanha a rampa: o sinal aparece antes do ruído</span></li>
+        <li><span class="specs__key">Acessibilidade</span><span class="specs__val">com <code>prefers-reduced-motion</code>, desenha resolvido e não anima</span></li>
+        <li><span class="specs__key">Uso</span><span class="specs__val">uma vez, na entrada. Nunca em laço permanente.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="cmc-rule">
+
+<section id="regras" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Regras</h2><span class="cmc-slide__num">04</span>
+    </div>
+    <div class="grid grid--2">
+      <div class="spec rules rules--do">
+        <span class="rules__flag">Faça</span>
+        <ul class="specs cmc-small">
+          <li><span class="specs__key">Uma ideia por KV — se precisar de duas, são dois KVs</span></li>
+          <li><span class="specs__key">Gere no formato final; nunca escale um KV pronto</span></li>
+          <li><span class="specs__key">Guarde a semente: é ela que reproduz o grão idêntico</span></li>
+          <li><span class="specs__key">Deixe o grafismo respirar — ele é o argumento, não o fundo</span></li>
+        </ul>
+      </div>
+      <div class="spec rules rules--dont">
+        <span class="rules__flag">Não faça</span>
+        <ul class="specs cmc-small">
+          <li><span class="specs__key">Fotografia de banco por cima ou por baixo do grafismo</span></li>
+          <li><span class="specs__key">Manchete sobre a região densa das partículas</span></li>
+          <li><span class="specs__key">Animação em laço, ou grafismo em movimento contínuo</span></li>
+          <li><span class="specs__key">Recortar um KV de um formato para outro</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="spec spec--outline">
+      <p class="cmc-micro">Por que não entra fotografia</p>
+      <p class="cmc-editorial">
+        Todo o sistema é gerado a partir de código: um KV se reproduz exatamente
+        com a forma, a rampa e a semente, em qualquer resolução, por qualquer
+        pessoa da equipe, sem arquivo de origem. Uma foto de banco seria a única
+        peça da marca que ninguém consegue refazer — e a única que outra empresa
+        pode estar usando na mesma semana. A recusa não é purismo: é a razão de o
+        sistema custar quase nada para operar.
+      </p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="guide-foot cmc-inverse">
+  <div class="cmc-shell">
+    <a class="cmc-lockup cmc-lockup--sm" href="index.html">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </a>
+    <span class="cmc-small">Key visuals · <a href="index.html" style="color:inherit">sistema</a></span>
+  </div>
+</footer>
+
+<script type="module">
+import { init, render, resolve } from './src/dither.js';
+import { applyBrand, brandFromUrl, BRAND } from './src/brand.js';
+import { KVS, FORMATOS, CAMPOS, ajustar, configDoKV } from './src/kv.js';
+
+const marca = applyBrand(document, brandFromUrl());
+
+/* Modo solo: ?solo=<kv>&fmt=<formato>&cell=<px> desenha uma peça só, ocupando
+   a janela inteira. É o alvo do exportador — assim a peça publicada e a peça
+   exportada saem da MESMA composição, e não de dois códigos que divergem. */
+const q = new URLSearchParams(location.search);
+const solo = q.get('solo');
+
+const MARCA_SVG = `
+  <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+    <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+  </svg>`;
+
+/** Monta um KV num formato. `id` permite ao exportador achar a peça. */
+function pecaKV(kv, formato, id) {
+  const campo = CAMPOS[kv.campo];
+  const a = ajustar(kv, formato);
+  return `
+  <div class="cmc-kv" id="${id}" data-kv="${kv.id}" data-formato="${formato.id}"
+       style="--kv-ar:${formato.ar};--kv-bg:${campo.bg};--kv-ink:${campo.ink};--kv-base:${formato.base}cqi">
+    <div class="cmc-kv__inner">
+      <span class="cmc-lockup cmc-kv__lockup">${MARCA_SVG}<span class="cmc-lockup__word">${marca.name}</span></span>
+      <div class="cmc-kv__art">
+        <canvas data-cmc-dither="${a.shape}" data-ramp="${a.ramp.join(',')}"
+                data-angle="${a.angle}" data-cell="${a.cell}" data-seed="${a.seed}"
+                ${a.opts ? `data-opts='${JSON.stringify(a.opts)}'` : ''}
+                aria-label="${kv.ideia}"></canvas>
+      </div>
+      <div class="cmc-kv__copy">
+        ${kv.manchete ? `<h3 class="cmc-kv__hed">${kv.manchete.replace(/\n/g, '<br>')}</h3>` : ''}
+        <div class="cmc-kv__pe">
+          <p class="cmc-kv__apoio">${kv.apoio}</p>
+          <span class="cmc-kv__url">${marca.domain}</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+if (solo) {
+  const kv = KVS.find((k) => k.id === solo) || KVS[0];
+  const formato = FORMATOS.find((f) => f.id === q.get('fmt')) || FORMATOS[0];
+  const cellForcada = Number(q.get('cell')) || null;
+  document.body.innerHTML = pecaKV(
+    cellForcada ? { ...kv, cell: cellForcada } : kv, formato, 'solo');
+  document.body.style.cssText = 'margin:0;overflow:hidden';
+  const peca = document.getElementById('solo');
+  peca.style.width = '100vw';
+  peca.style.aspectRatio = formato.ar;
+  init();
+  /* O exportador espera este sinal antes de capturar. */
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.documentElement.dataset.kvPronto = '1';
+  }));
+} else {
+
+/* --- 01 Os quatro KVs, no formato mestre --- */
+const mestre = FORMATOS[0];
+document.getElementById('galeria').innerHTML = KVS.map((kv) => `
+  <figure class="stack">
+    <div class="cmc-section-head" style="margin:0;border:0;padding:0">
+      <p class="cmc-h2">${kv.rotulo}</p>
+      <span class="cmc-micro">${kv.shape} · semente ${kv.seed}</span>
+    </div>
+    <p class="block__intro">${kv.ideia}</p>
+    ${pecaKV(kv, mestre, `kv-${kv.id}-${mestre.id}`)}
+  </figure>`).join('');
+
+/* --- 02 O KV mestre em todos os formatos --- */
+const paraFormatos = KVS[0];
+document.getElementById('grade-formatos').innerHTML = FORMATOS.map((f) => `
+  <figure class="format">
+    ${pecaKV(paraFormatos, f, `fmt-${paraFormatos.id}-${f.id}`)}
+    <figcaption class="cmc-micro">${f.nome} · ${f.ar.replace('/', ':')} · ${f.w}×${f.h}</figcaption>
+  </figure>`).join('');
+
+/* --- 03 Movimento: o mesmo motor, rodando --- */
+document.getElementById('animacoes').innerHTML = KVS.slice(0, 2).map((kv) => `
+  <figure class="stack">
+    <div class="cmc-stage" style="--stage-ar:16/9">
+      <canvas id="anim-${kv.id}" aria-label="Animação: ${kv.ideia}"></canvas>
+    </div>
+    <figcaption class="cmc-small">${kv.rotulo} · <code>progress</code> de 0 a 1</figcaption>
+  </figure>`).join('');
+
+init();   /* ativa os canvas estáticos dos KVs */
+
+/* As duas prévias de movimento rodam de novo a cada interação. */
+for (const kv of KVS.slice(0, 2)) {
+  const el = document.getElementById(`anim-${kv.id}`);
+  const cfg = { ...configDoKV(kv), color: CAMPOS[kv.campo].ink };
+  const rodar = () => resolve(el, cfg, 1800);
+  rodar();
+  el.parentElement.addEventListener('pointerenter', rodar);
+  addEventListener('resize', () => render(el, cfg));
+}
+
+}   /* fim do modo galeria */
+
+/* Exposto para o exportador de vídeo desenhar quadro a quadro. */
+window.__kv = { render, KVS, FORMATOS, CAMPOS, ajustar, configDoKV };
+</script>
+</body>
+</html>

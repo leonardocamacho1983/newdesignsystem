@@ -18,6 +18,7 @@ const PAGES = [
   { src: 'studio.html',     out: 'cadrian-studio',    url: 'https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5' },
   /* Página nova: escolhe o nome que quiser; a url entra depois da primeira
      publicação. Até lá o aviso em stderr lembra que falta. */
+  { src: 'kv.html',         out: 'camacho-kv',         url: '' },
   { src: 'aplicacoes.html', out: 'camacho-aplicacoes', url: 'https://claude.ai/code/artifact/40b9d44b-fb1e-4c86-b6ba-bde9c92e27a0' },
 ];
 
@@ -40,6 +41,7 @@ const engine = read('src/dither.js')
   .replace(/\n?if \(typeof document[\s\S]*$/, '\n');
 
 const brand = read('src/brand.js').replace(/^export /gm, '');
+const kv = read('src/kv.js').replace(/^export /gm, '');
 
 const favicon = Buffer.from(read('assets/favicon.svg')).toString('base64');
 
@@ -57,6 +59,7 @@ for (const page of PAGES) {
   html = html
     .replace(/import \{[^}]+\} from '\.\/src\/dither\.js';\n?/, engine)
     .replace(/import \{[^}]+\} from '\.\/src\/brand\.js';\n?/, brand)
+    .replace(/import \{[^}]+\} from '\.\/src\/kv\.js';\n?/, kv)
     .replace('<link rel="icon" href="assets/favicon.svg">',
       `<link rel="icon" href="data:image/svg+xml;base64,${favicon}">`);
 

@@ -252,3 +252,67 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }
+
+/* --- Key visual ----------------------------------------------------------
+   Uma composição em três faixas — assinatura, grafismo, manchete — que vale
+   para qualquer proporção. O grafismo ocupa a faixa do meio e cresce com o
+   que sobra, e como todo campo do motor é ciente de proporção, a mesma peça
+   se recompõe de 21:9 a 9:16 sem layout alternativo.
+
+   Tudo escala a partir de UMA medida por formato (--kv-base), em cqi.
+
+   Duas armadilhas de unidade, ambas encontradas na renderização:
+   1. cqmin não serve — com container-type inline-size o eixo de bloco não é
+      consultável e a unidade degenera.
+   2. Um elemento NÃO pode usar as próprias unidades de container: em cqi
+      declarado e usado no mesmo .cmc-kv, a medida resolve contra um ancestral
+      (ou o viewport) e o padding estoura, esmagando a coluna. Por isso a
+      grade mora num filho: lá dentro, cqi resolve contra o KV. */
+.cmc-kv {
+  --kv-base: 8cqi;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--kv-ar, 16 / 9);
+  background: var(--kv-bg, var(--cmc-black));
+  color: var(--kv-ink, var(--cmc-white));
+  container-type: inline-size;
+}
+.cmc-kv__inner {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: calc(var(--kv-base) * 0.42);
+  padding: calc(var(--kv-base) * 0.62);
+}
+.cmc-kv__art { position: relative; min-height: 0; min-width: 0; }
+.cmc-kv__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.cmc-kv__hed {
+  margin: 0;
+  font-size: var(--kv-base);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  font-weight: var(--cmc-w-light);
+  text-wrap: balance;
+}
+/* O bloco de texto precisa de gap proporcional como o resto da peça: um
+   `gap` em rem é absoluto e desaparece numa peça de 2560 px, ao mesmo tempo
+   que domina uma miniatura. */
+.cmc-kv__copy {
+  display: flex; flex-direction: column;
+  gap: calc(var(--kv-base) * 0.34);
+}
+.cmc-kv__pe {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: calc(var(--kv-base) * 0.5);
+}
+.cmc-kv__apoio {
+  margin: 0; max-width: 42ch;
+  font-size: calc(var(--kv-base) * 0.30); line-height: 1.35;
+  color: color-mix(in srgb, currentColor 62%, transparent);
+}
+.cmc-kv__url {
+  font-family: var(--cmc-font-mono);
+  font-size: calc(var(--kv-base) * 0.25); flex: none;
+}
+.cmc-kv__lockup { --lockup-size: calc(var(--kv-base) * 0.58); }

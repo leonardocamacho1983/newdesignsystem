@@ -312,17 +312,24 @@ export const fields = {
      = capacidade instalada. */
   gauge: ({ n = 5, w = 0.34, de = 0.62, ate = 0.06, inset = 0.05, soft = 0.014 } = {}) =>
     (u, v, ar) => {
-      const util = 1 - inset * 2, passo = util / n;
-      if (u < inset || u > 1 - inset) return 0;
-      const i = Math.min(n - 1, Math.floor((u - inset) / passo));
-      const cx = inset + (i + 0.5) * passo, cy = ar / 2;
-      const R = Math.min(passo * 0.38, ar * 0.36);
+      /* A escala corre no eixo LONGO do quadro. Numa peça alta, uma fileira
+         horizontal ocuparia uma faixa fina e ficaria boiando — a forma saber a
+         proporção em que está é o mesmo princípio de todo o motor. */
+      const empilha = ar > 1.15;
+      const [eixo, cruz, extEixo, extCruz] = empilha ? [v, u, ar, 1] : [u, v, 1, ar];
+      const util = extEixo - inset * 2 * extEixo, passo = util / n;
+      const ini = inset * extEixo;
+      if (eixo < ini || eixo > extEixo - ini) return 0;
+      const i = Math.min(n - 1, Math.floor((eixo - ini) / passo));
+      const cEixo = ini + (i + 0.5) * passo, cCruz = extCruz / 2;
+      const R = Math.min(passo * 0.38, extCruz * 0.36);
       const W = R * w * 2;
       const t = n === 1 ? 0 : i / (n - 1);
-      const abertura = de + (ate - de) * t;      /* fecha da esquerda p/ direita */
-      const dx = u - cx, dy = v - cy;
-      if (dx > 0 && Math.abs(dy) < R * abertura) return 0;   /* o vão do C */
-      return edge(Math.abs(Math.hypot(dx, dy) - R) - W / 2, soft);
+      const abertura = de + (ate - de) * t;      /* fecha ao longo da escala */
+      const dEixo = eixo - cEixo, dCruz = cruz - cCruz;
+      /* o vão do C aponta para o fim da escala */
+      if (dEixo > 0 && Math.abs(dCruz) < R * abertura) return 0;
+      return edge(Math.abs(Math.hypot(dEixo, dCruz) - R) - W / 2, soft);
     },
 
   /* TRANSFERIR — a capacidade mudando de mãos. Um recipiente que esvazia à
@@ -330,18 +337,23 @@ export const fields = {
      declarado: o objetivo não é criar dependência permanente. */
   handoff: ({ r = 0.6, w = 0.22, canal = 0.05, vao = 0.58, soft = 0.014 } = {}) =>
     (u, v, ar) => {
-      const cy = ar / 2, xEsq = (1 - vao) / 2, xDir = 1 - xEsq;
-      /* o raio precisa caber na vertical E na folga entre os dois centros,
+      /* A transferência também corre no eixo longo: em peça alta, de cima
+         para baixo. */
+      const empilha = ar > 1.15;
+      const [eixo, cruz, extEixo, extCruz] = empilha ? [v, u, ar, 1] : [u, v, 1, ar];
+      const cy = extCruz / 2;
+      const xEsq = extEixo * (1 - vao) / 2, xDir = extEixo - xEsq;
+      /* o raio precisa caber no eixo curto E na folga entre os dois centros,
          senão em 1:1 os recipientes se atravessam */
-      const R = Math.min(ar * 0.42, (vao / 2) * r);
-      const dEsq = Math.hypot(u - xEsq, v - cy);
-      const dDir = Math.hypot(u - xDir, v - cy);
+      const R = Math.min(extCruz * 0.42, ((xDir - xEsq) / 2) * r);
+      const dEsq = Math.hypot(eixo - xEsq, cruz - cy);
+      const dDir = Math.hypot(eixo - xDir, cruz - cy);
       /* esquerda: só o contorno (esvaziou) · direita: massa cheia (recebeu) */
       const esq = edge(Math.abs(dEsq - R) - (R * w) / 2, soft);
       const dir = edge(dDir - R, soft);
       /* o canal só existe entre os dois */
-      const canalCov = u > xEsq && u < xDir
-        ? edge(Math.abs(v - cy) - ar * canal, soft) : 0;
+      const canalCov = eixo > xEsq && eixo < xDir
+        ? edge(Math.abs(cruz - cy) - extCruz * canal, soft) : 0;
       return Math.max(esq, Math.max(dir, canalCov));
     },
 

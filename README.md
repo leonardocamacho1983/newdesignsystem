@@ -51,6 +51,9 @@ src/dither.js            Motor gráfico: 20 campos de forma, rampa, texturas, re
 src/camacho.css          Componentes do sistema
 src/guide.css            Estilos só da documentação — fora do sistema, de propósito
 src/brand.js             O nome da marca, num lugar só
+src/kv.js                Os key visuals como dado: formatos, campos e calibração
+tools/export-kv.mjs      Exporta os KVs em PNG e as animações em GIF/WebP
+tools/anim-frames.py     Monta as animações a partir dos quadros
 assets/                  Símbolo em SVG (positivo, negativo, glifo, favicon)
 build.mjs                Tabela única de páginas; gera dist/ autocontido
 ```
@@ -97,6 +100,30 @@ o alpha como cobertura — qualquer manchete vira grafismo da marca.
 | `texture` | `grain` · `screen` · `halftone`. |
 | `seed` | Hash determinístico por célula — o mesmo grafismo sempre. |
 | `width`/`height` | Renderiza no tamanho pedido, ignorando o layout: é o caminho de exportação em alta resolução. |
+
+## Key visuals
+
+Quatro KVs — a costura, complexidade vira clareza, a lacuna que se mede e o que
+fica — cada um com uma ideia só, em cinco formatos de 21:9 a 9:16. Vivem em
+`kv.html`, definidos como dado em `src/kv.js`.
+
+```bash
+node tools/export-kv.mjs            # 20 PNGs + 2 animações em dist/kv/
+node tools/export-kv.mjs caminho    # ou em outro destino
+```
+
+O alvo de renderização é a própria `kv.html` em modo solo (`?solo=&fmt=`), e
+não uma segunda composição escrita no exportador: dois códigos para a mesma
+peça divergiriam no primeiro ajuste. A célula escala com a largura de saída,
+para o grão manter o mesmo peso visual em qualquer resolução.
+
+**Sem fotografia, e não por purismo.** Um KV se reproduz exatamente com forma,
+rampa e semente, em qualquer resolução, sem arquivo de origem. Uma foto de banco
+seria a única peça da marca que ninguém consegue refazer — e a única que outra
+empresa pode estar usando na mesma semana.
+
+As animações saem em GIF e WebP, ambos sem perda: a marca é feita de partícula
+de borda dura, e codec com perda borra exatamente o grão que a identifica.
 
 ## Trocar o nome da marca
 
