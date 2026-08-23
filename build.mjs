@@ -5,11 +5,6 @@ import { buildTokens } from './tokens/build-tokens.mjs';
 
 const read = (p) => readFileSync(p, 'utf8');
 
-/* Primeiro os tokens: o JSON é derivado do CSS e a checagem de fechamento
-   derruba o build se algum token referenciado não existir. */
-const tk = buildTokens();
-console.log(`tokens/tokens.json · ${tk.token} tokens + ${tk.inverso} de inversão`);
-
 /* Tabela única do projeto. `out` é ENDEREÇO, `src` e conteúdo são ASSUNTO:
    o nome do arquivo em dist/ é o caminho de publicação a que o artifact está
    ligado, então ele nunca muda — publicar um caminho novo criaria um artifact
@@ -19,11 +14,16 @@ console.log(`tokens/tokens.json · ${tk.token} tokens + ${tk.inverso} de invers�
 const PAGES = [
   { src: 'index.html',      out: 'cadrian-brand',     url: 'https://claude.ai/code/artifact/dbceae6a-0ea9-4fcf-9845-bdc238b4baa4' },
   { src: 'extensoes.html',  out: 'cadrian-extensoes', url: 'https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2' },
-  { src: 'nome.html',       out: 'cadrian-nome',      url: 'https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60' },
+  { src: 'posicionamento.html', out: 'cadrian-nome',  url: 'https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60' },
   { src: 'studio.html',     out: 'cadrian-studio',    url: 'https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5' },
 ];
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/* Primeiro os tokens: o JSON é derivado do CSS, e a checagem de fechamento
+   derruba o build se algum token referenciado não existir. */
+const tk = buildTokens({ paginas: PAGES.map((p) => p.src) });
+console.log(`tokens/tokens.json · ${tk.token} tokens + ${tk.inverso} de inversão`);
 
 /* Uma página recém-criada ainda não tem UUID. Avisar em vez de falhar: o
    esquecimento silencioso era o modo de falha — gerava artifact com link

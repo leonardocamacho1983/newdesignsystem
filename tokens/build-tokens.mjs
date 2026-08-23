@@ -24,8 +24,12 @@ function declaracoes(css) {
 export function buildTokens({
   cssPath = 'tokens/tokens.css',
   jsonPath = 'tokens/tokens.json',
-  consumidores = ['src/camacho.css', 'src/guide.css', 'index.html', 'extensoes.html', 'nome.html', 'studio.html'],
+  /* Quem consome tokens: as camadas de CSS mais todas as páginas. A lista de
+     páginas vem de quem chama — repeti-la aqui era mais um lugar para esquecer
+     de atualizar, que é justamente o acoplamento que a tabela do build tirou. */
+  paginas = [],
 } = {}) {
+  const consumidores = ['src/camacho.css', 'src/guide.css', ...paginas];
   const css = read(cssPath);
 
   /* O bloco :root traz os tokens do tema claro; o bloco de inversão só
