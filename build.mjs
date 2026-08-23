@@ -4,12 +4,27 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 
 const read = (p) => readFileSync(p, 'utf8');
 
+/* Tabela única do projeto. `out` é ENDEREÇO, `src` e conteúdo são ASSUNTO:
+   o nome do arquivo em dist/ é o caminho de publicação a que o artifact está
+   ligado, então ele nunca muda — publicar um caminho novo criaria um artifact
+   novo e deixaria a URL já compartilhada servindo conteúdo velho. Os nomes
+   `cadrian-*` são legado congelado de propósito; a URL pública não os contém.
+   Tudo o que depende de nome de arquivo é derivado daqui. */
 const PAGES = [
-  { src: 'index.html', out: 'cadrian-brand' },
-  { src: 'extensoes.html', out: 'cadrian-extensoes' },
-  { src: 'nome.html', out: 'cadrian-nome' },
-  { src: 'studio.html', out: 'cadrian-studio' },
+  { src: 'index.html',      out: 'cadrian-brand',     url: 'https://claude.ai/code/artifact/dbceae6a-0ea9-4fcf-9845-bdc238b4baa4' },
+  { src: 'extensoes.html',  out: 'cadrian-extensoes', url: 'https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2' },
+  { src: 'nome.html',       out: 'cadrian-nome',      url: 'https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60' },
+  { src: 'studio.html',     out: 'cadrian-studio',    url: 'https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5' },
 ];
+
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/* Uma página recém-criada ainda não tem UUID. Avisar em vez de falhar: o
+   esquecimento silencioso era o modo de falha — gerava artifact com link
+   quebrado sem nada reclamar. */
+for (const p of PAGES) {
+  if (!p.url) console.warn(`aviso: ${p.out} ainda não tem url publicada — links para ela ficarão locais no -artifact.html`);
+}
 
 const engine = read('src/dither.js')
   .replace(/^export /gm, '')
@@ -18,15 +33,6 @@ const engine = read('src/dither.js')
 const brand = read('src/brand.js').replace(/^export /gm, '');
 
 const favicon = Buffer.from(read('assets/favicon.svg')).toString('base64');
-
-/* Nas variantes publicadas como artifact não existe sistema de arquivos: os
-   links entre as páginas precisam apontar para as URLs publicadas. */
-const ARTIFACT_URLS = {
-  'cadrian-brand.html': 'https://claude.ai/code/artifact/dbceae6a-0ea9-4fcf-9845-bdc238b4baa4',
-  'cadrian-extensoes.html': 'https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2',
-  'cadrian-nome.html': 'https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60',
-  'cadrian-studio.html': 'https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5',
-};
 
 mkdirSync('dist', { recursive: true });
 
@@ -43,20 +49,24 @@ for (const page of PAGES) {
     .replace(/import \{[^}]+\} from '\.\/src\/dither\.js';\n?/, engine)
     .replace(/import \{[^}]+\} from '\.\/src\/brand\.js';\n?/, brand)
     .replace('<link rel="icon" href="assets/favicon.svg">',
-      `<link rel="icon" href="data:image/svg+xml;base64,${favicon}">`)
-    /* entre as páginas do dist os links apontam para os arquivos gerados */
-    /* Links entre as páginas passam a apontar para os arquivos gerados,
-       preservando qualquer query string (ex.: ?brand=Camacho). */
-    .replace(/href="index\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-brand.html${q || ''}"`)
-    .replace(/href="extensoes\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-extensoes.html${q || ''}"`)
-    .replace(/href="nome\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-nome.html${q || ''}"`)
-    .replace(/href="studio\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-studio.html${q || ''}"`);
+      `<link rel="icon" href="data:image/svg+xml;base64,${favicon}">`);
+
+  /* Links entre as páginas apontam para os arquivos gerados, preservando
+     qualquer query string (ex.: ?brand=Camacho). */
+  for (const other of PAGES) {
+    html = html.replace(
+      new RegExp(`href="${escapeRe(other.src)}(\\?[^"]*)?"`, 'g'),
+      (_, q) => `href="${other.out}.html${q || ''}"`,
+    );
+  }
 
   /* Trava: qualquer referência local sobrevivente quebraria a página
      autocontida (e um artifact publicado, onde o host bloqueia origens
      externas). Links entre as próprias páginas do dist são esperados. */
-  const dangling = [...html.matchAll(/(?:href|src)="((?!https?:|data:|#|cadrian-)[^"]+)"/g)]
-    .map((m) => m[1]);
+  const allowed = new Set(PAGES.map((p) => `${p.out}.html`));
+  const dangling = [...html.matchAll(/(?:href|src)="((?!https?:|data:|#)[^"]+)"/g)]
+    .map((m) => m[1])
+    .filter((ref) => !allowed.has(ref.split('?')[0]));
   if (dangling.length) {
     console.error(`${page.src}: referências locais não embutidas:\n  ${dangling.join('\n  ')}`);
     process.exit(1);
@@ -65,13 +75,14 @@ for (const page of PAGES) {
   writeFileSync(`dist/${page.out}.html`, html);
 
   /* Variante fragmento: sem <!doctype>/<html>/<head>/<body>, para hosts que
-     fornecem o próprio esqueleto de página (ex.: publicação como artifact). */
+     fornecem o próprio esqueleto de página (ex.: publicação como artifact).
+     Lá não existe sistema de arquivos: os links viram as URLs publicadas. */
   let fragment = html;
-  for (const [file, url] of Object.entries(ARTIFACT_URLS)) {
-    if (!url) continue;
+  for (const other of PAGES) {
+    if (!other.url) continue;
     fragment = fragment.replace(
-      new RegExp(`href="${file.replace('.', '\\.')}(\\?[^"]*)?"`, 'g'),
-      (_, q) => `href="${url}${q || ''}"`,
+      new RegExp(`href="${escapeRe(`${other.out}.html`)}(\\?[^"]*)?"`, 'g'),
+      (_, q) => `href="${other.url}${q || ''}"`,
     );
   }
   const head = fragment.slice(fragment.indexOf('<head>') + 6, fragment.indexOf('</head>'));
