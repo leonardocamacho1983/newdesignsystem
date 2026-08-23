@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cadrian — Sistema Visual</title>
+<meta name="description" content="Sistema de identidade visual da Cadrian: tokens, motor de dithering e componentes.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/cadrian.css">
+<style>
+  /* Estilos só do guia — não fazem parte do sistema. */
+  .guide-hero { background: var(--cdr-black); color: var(--cdr-white); }
+  .guide-hero .cdr-shell { padding-block: clamp(3rem, 8vw, 7rem); }
+  .guide-nav { display: flex; flex-wrap: wrap; gap: var(--cdr-sp-2); }
+  .guide-toc a { color: inherit; }
+  .spec-list { display: grid; gap: var(--cdr-sp-2); margin: 0; padding: 0; list-style: none; }
+  .spec-list li { display: flex; justify-content: space-between; gap: var(--cdr-sp-4);
+                  border-bottom: var(--cdr-border); padding-block: var(--cdr-sp-2); }
+  code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
+  .clearspace { align-self: flex-start; padding: 1rem; outline: 1px dashed var(--cdr-grey-35); }
+</style>
+</head>
+<body>
+
+<!-- ====================== HERO ====================== -->
+<header class="guide-hero cdr-inverse">
+  <div class="cdr-shell">
+    <a class="cdr-lockup cdr-lockup--sm" href="#" style="color:var(--cdr-white)">
+      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cdr-lockup__word">Cadrian</span>
+    </a>
+
+    <h1 class="cdr-display" style="margin-top:var(--cdr-sp-6)">Prioritize.<br>Automate.<br>Deliver.</h1>
+    <p class="cdr-lead cdr-muted" style="margin-top:var(--cdr-sp-4);max-width:34ch">
+      AI systems built right in your stack. Sistema visual — versão 1.0.
+    </p>
+
+    <div class="cdr-stage cdr-stage--flat" style="--stage-ar:16/5;margin-top:var(--cdr-sp-7)">
+      <canvas data-cdr-dither="noiseToSignal" data-ramp="0.02,1" data-angle="0"
+              data-cell="4" data-duration="2200" aria-label="Grafismo: de ruído a sinal"></canvas>
+    </div>
+
+    <nav class="guide-nav guide-toc" style="margin-top:var(--cdr-sp-6)">
+      <a class="cdr-tag" href="#fundacao"><span>01 Fundação</span></a>
+      <a class="cdr-tag" href="#dither"><span>02 Motor gráfico</span></a>
+      <a class="cdr-tag" href="#processo"><span>03 Processo</span></a>
+      <a class="cdr-tag" href="#componentes"><span>04 Componentes</span></a>
+      <a class="cdr-tag" href="#aplicacoes"><span>05 Aplicações</span></a>
+      <a class="cdr-tag" href="#voz"><span>06 Voz &amp; regras</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ====================== 01 FUNDAÇÃO ====================== -->
+<section id="fundacao" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Fundação</h2><span class="cdr-slide__num">01</span>
+    </div>
+
+    <!-- Marca -->
+    <h3 class="cdr-h2">Marca</h3>
+    <p class="cdr-body cdr-muted" style="margin-block:var(--cdr-sp-3) var(--cdr-sp-5)">
+      Um “C” geométrico com contraforma circular perfeita, alojado num squircle.
+      O símbolo funciona sozinho a partir de 16&nbsp;px. O lockup horizontal é o
+      uso padrão; a área de proteção equivale a metade da altura do símbolo.
+    </p>
+
+    <div class="cdr-grid cdr-grid--3">
+      <div class="cdr-card">
+        <div class="clearspace">
+          <img src="assets/mark.svg" alt="Símbolo Cadrian" width="88" height="88" style="display:block">
+        </div>
+        <p class="cdr-micro">Símbolo · positivo · área de proteção</p>
+      </div>
+      <div class="cdr-card" style="background:var(--cdr-black)">
+        <span class="cdr-lockup" style="color:#fff">
+          <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <rect width="64" height="64" rx="14" fill="#fff"/>
+            <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+          </svg>
+          <span class="cdr-lockup__word">Cadrian</span>
+        </span>
+        <p class="cdr-micro">Lockup · negativo</p>
+      </div>
+      <div class="cdr-card cdr-card--outline">
+        <span class="cdr-lockup" style="color:var(--cdr-black)">
+          <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+          </svg>
+          <span class="cdr-lockup__word">Cadrian</span>
+        </span>
+        <p class="cdr-micro">Glifo em uma cor · currentColor</p>
+      </div>
+    </div>
+
+    <!-- Cor -->
+    <h3 class="cdr-h2" style="margin-top:var(--cdr-sp-8)">Cor</h3>
+    <p class="cdr-body cdr-muted" style="margin-block:var(--cdr-sp-3) var(--cdr-sp-5)">
+      Monocromática por convicção. Não existe cor de destaque — o destaque é o
+      contraste e a densidade das partículas. Preto e branco são puros; os cinzas
+      são neutros e servem a texto secundário, réguas e numerais.
+    </p>
+    <div class="cdr-grid cdr-grid--3" id="swatches"></div>
+
+    <!-- Tipografia -->
+    <h3 class="cdr-h2" style="margin-top:var(--cdr-sp-8)">Tipografia</h3>
+    <div class="cdr-grid cdr-grid--2" style="margin-top:var(--cdr-sp-5)">
+      <div class="cdr-card" style="background:var(--cdr-steel);color:var(--cdr-white)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem">
+          <span class="cdr-h1">Inter Tight</span>
+          <span class="cdr-tag">Google Fonts</span>
+        </div>
+        <p class="cdr-h2" style="font-weight:var(--cdr-w-book)">
+          Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn<br>
+          Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz<br>0 1 2 3 4 5 6 7 8 9
+        </p>
+      </div>
+      <div class="cdr-card">
+        <ul class="spec-list cdr-small">
+          <li><span>Display · Light 300</span><code>-0.035em / 0.94</code></li>
+          <li><span>Título · Light 300</span><code>-0.035em / 0.94</code></li>
+          <li><span>H1–H2 · Light 300</span><code>-0.025em / 1.08</code></li>
+          <li><span>Lead · Regular 400</span><code>-0.01em / 1.3</code></li>
+          <li><span>Corpo · Regular 400</span><code>-0.01em / 1.45</code></li>
+          <li><span>Micro · Medium 500</span><code>+0.02em / caixa alta</code></li>
+        </ul>
+        <p class="cdr-small">
+          Regra: títulos sempre em <strong>Light</strong> com tracking negativo.
+          Peso Medium só em rótulos micro, botões e no wordmark.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 02 DITHER ====================== -->
+<section id="dither" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Motor gráfico</h2><span class="cdr-slide__num">02</span>
+    </div>
+    <p class="cdr-body" style="margin-bottom:var(--cdr-sp-6)">
+      Todo grafismo da marca é a mesma operação: uma <strong>forma</strong> amostrada por
+      uma <strong>grade de partículas quadradas</strong>, cuja probabilidade de existir varia
+      ao longo de uma <strong>rampa de densidade</strong>. Ruído de um lado, sinal do outro.
+      Nada é ilustrado à mão — tudo é gerado, então escala de um favicon a um outdoor
+      sem perder o grão.
+    </p>
+
+    <div class="cdr-grid cdr-grid--2" id="specimens"></div>
+
+    <div class="cdr-card cdr-card--outline" style="margin-top:var(--cdr-sp-6)">
+      <h3 class="cdr-h2">Parâmetros</h3>
+      <ul class="spec-list cdr-small">
+        <li><code>shape</code><span>disc · ring · chevrons · bars · loop · layers · mark · noiseToSignal</span></li>
+        <li><code>cell</code><span>aresta da célula em px (4 padrão; 6–8 em peças grandes)</span></li>
+        <li><code>ramp</code><span>[densidade mínima, máxima] — o eixo ruído→sinal</span></li>
+        <li><code>angle</code><span>0° ruído à esquerda · 180° à direita · 90° embaixo</span></li>
+        <li><code>curve</code><span>&gt;1 prolonga a dispersão antes de resolver</span></li>
+        <li><code>seed</code><span>hash determinístico: o mesmo grafismo sempre</span></li>
+      </ul>
+      <p class="cdr-small">
+        <code>&lt;canvas data-cdr-dither="chevrons" data-ramp="0.05,1" data-angle="180"&gt;&lt;/canvas&gt;</code>
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 03 PROCESSO ====================== -->
+<section id="processo" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Processo</h2><span class="cdr-slide__num">03</span>
+    </div>
+    <p class="cdr-body cdr-muted" style="margin-bottom:var(--cdr-sp-6)">
+      Seis etapas, seis grafismos. Cada slide segue a mesma gramática:
+      título + numeral, painel preto, linha de chamada com kicker à direita, corpo em cinza.
+    </p>
+    <div class="cdr-grid cdr-grid--2" id="processo-grid"></div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 04 COMPONENTES ====================== -->
+<section id="componentes" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Componentes</h2><span class="cdr-slide__num">04</span>
+    </div>
+    <div class="cdr-grid cdr-grid--3">
+      <div class="cdr-card">
+        <p class="cdr-micro">Botões</p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--cdr-sp-2)">
+          <button class="cdr-btn">Falar com a Cadrian</button>
+          <button class="cdr-btn cdr-btn--ghost">Ver casos</button>
+        </div>
+      </div>
+      <div class="cdr-card" style="background:var(--cdr-black);color:var(--cdr-white)">
+        <p class="cdr-micro">Em campo escuro</p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--cdr-sp-2)">
+          <button class="cdr-btn cdr-btn--inverse">Começar</button>
+          <span class="cdr-tag">Signal</span>
+        </div>
+      </div>
+      <div class="cdr-card">
+        <p class="cdr-micro">Card</p>
+        <p class="cdr-lead">Turn insight into infrastructure</p>
+        <p class="cdr-small">Padrões repetíveis viram workflows e agentes que aprendem e escalam.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 05 APLICAÇÕES ====================== -->
+<section id="aplicacoes" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Aplicações</h2><span class="cdr-slide__num">05</span>
+    </div>
+    <div class="cdr-grid" style="grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))">
+
+      <!-- Pôster -->
+      <article class="cdr-poster">
+        <div class="cdr-poster__head">
+          <span class="cdr-lockup cdr-lockup--sm">
+            <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+              <rect width="64" height="64" rx="14" fill="#000"/>
+              <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+            </svg>
+            <span class="cdr-lockup__word">Cadrian</span>
+          </span>
+          <h3 class="cdr-title cdr-poster__hed">AI isn’t<br>waiting</h3>
+        </div>
+        <div class="cdr-poster__art">
+          <canvas data-cdr-dither="chevrons" data-ramp="0.12,1" data-angle="0"
+                  data-cell="4" data-opts='{"n":2,"gap":0.06}' aria-label="Setas em dither"></canvas>
+        </div>
+        <div class="cdr-poster__foot">
+          <p class="cdr-lead">We launch systems<br>in weeks, not months</p>
+          <span class="cdr-small">Visit Cadrian.ai</span>
+        </div>
+      </article>
+
+      <!-- Outdoor / OOH -->
+      <div style="display:flex;flex-direction:column;gap:var(--cdr-sp-5)">
+        <article class="cdr-card" style="padding:0;overflow:hidden">
+          <div style="background:var(--cdr-white);padding:var(--cdr-sp-5);display:grid;
+                      grid-template-columns:1fr auto;gap:var(--cdr-sp-4);align-items:center">
+            <div>
+              <h3 class="cdr-h1">From noise<br>to signal</h3>
+              <p class="cdr-small" style="margin-top:var(--cdr-sp-3);max-width:36ch">
+                A Cadrian descobre o que vale automatizar, constrói sistemas focados
+                dentro das ferramentas que você já usa, e faz a IA entregar valor desde o dia um.
+              </p>
+              <span class="cdr-lockup cdr-lockup--sm" style="margin-top:var(--cdr-sp-4)">
+                <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+                  <rect width="64" height="64" rx="14" fill="#000"/>
+                  <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+                </svg>
+                <span class="cdr-lockup__word">Cadrian</span>
+              </span>
+            </div>
+            <div class="cdr-stage cdr-stage--light cdr-stage--flat cdr-stage--bare" style="--stage-ar:1/1;width:min(220px,34vw)">
+              <canvas data-cdr-dither="noiseToSignal" data-ramp="0.03,1" data-cell="3"></canvas>
+            </div>
+          </div>
+          <p class="cdr-micro" style="padding:var(--cdr-sp-3) var(--cdr-sp-5)">Outdoor · campo claro</p>
+        </article>
+
+        <!-- Cartão / merch -->
+        <article class="cdr-card" style="background:var(--cdr-black);color:var(--cdr-white);
+                 aspect-ratio:1.75/1;max-width:520px;justify-content:space-between;position:relative;overflow:hidden">
+          <canvas data-cdr-dither="mark" data-ramp="0.01,0.26" data-angle="180" data-cell="3"
+                  style="position:absolute;inset:0;width:100%;height:100%;color:var(--cdr-white)"
+                  aria-hidden="true"></canvas>
+          <div style="position:relative;display:contents">
+          <span class="cdr-lockup cdr-lockup--sm" style="color:#fff">
+            <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+              <rect width="64" height="64" rx="14" fill="#fff"/>
+              <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+            </svg>
+            <span class="cdr-lockup__word">Cadrian</span>
+          </span>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:1rem">
+            <div>
+              <p style="margin:0;font-weight:var(--cdr-w-medium)">Dan Preiss</p>
+              <p class="cdr-small" style="margin:0">CEO · dan@cadrian.ai</p>
+            </div>
+            <span class="cdr-small">310 928 2123</span>
+          </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 06 VOZ & REGRAS ====================== -->
+<section id="voz" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Voz &amp; regras</h2><span class="cdr-slide__num">06</span>
+    </div>
+
+    <div class="cdr-grid cdr-grid--2">
+      <div class="cdr-card">
+        <p class="cdr-micro">Como a marca fala</p>
+        <p class="cdr-lead">Frases curtas. Verbo na frente. Promessa mensurável.</p>
+        <ul class="spec-list cdr-small">
+          <li><span>“Prioritize. Automate. Deliver.”</span><span class="cdr-muted">assinatura</span></li>
+          <li><span>“From noise to signal”</span><span class="cdr-muted">tese</span></li>
+          <li><span>“We launch systems in weeks, not months”</span><span class="cdr-muted">prova</span></li>
+          <li><span>“The outcome isn’t a slide, it’s a running system”</span><span class="cdr-muted">postura</span></li>
+        </ul>
+      </div>
+      <div class="cdr-grid" style="gap:var(--cdr-sp-5)">
+        <div class="cdr-card cdr-rule-card cdr-rule-card--do">
+          <span class="cdr-rule-card__flag">Faça</span>
+          <ul class="spec-list cdr-small">
+            <li><span>Deixe o preto ocupar área grande e contínua</span></li>
+            <li><span>Gere o dither — nunca reproduza como imagem esticada</span></li>
+            <li><span>Mantenha o título em Light com tracking negativo</span></li>
+            <li><span>Uma direção de rampa por peça</span></li>
+          </ul>
+        </div>
+        <div class="cdr-card cdr-rule-card cdr-rule-card--dont">
+          <span class="cdr-rule-card__flag">Não faça</span>
+          <ul class="spec-list cdr-small">
+            <li><span>Cor de destaque, gradiente ou sombra colorida</span></li>
+            <li><span>Bold/Black nos títulos</span></li>
+            <li><span>Distorcer, rotacionar ou recolorir o símbolo</span></li>
+            <li><span>Partícula redonda — a célula é quadrada</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="cdr-section" style="background:var(--cdr-black);color:var(--cdr-white)">
+  <div class="cdr-shell" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--cdr-sp-4)">
+    <span class="cdr-lockup cdr-lockup--sm" style="color:#fff">
+      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cdr-lockup__word">Cadrian</span>
+    </span>
+    <span class="cdr-small">Sistema visual v1.0 · tokens + motor de dither + componentes</span>
+  </div>
+</footer>
+</main>
+
+<script type="module">
+import { init } from './src/dither.js';
+
+/* --- Swatches gerados a partir dos tokens --- */
+const COLORS = [
+  ['Black', '--cdr-black', 'Superfícies primárias, tinta'],
+  ['Steel', '--cdr-steel', 'Painel escuro secundário'],
+  ['Grey 55', '--cdr-grey-55', 'Texto secundário, numerais'],
+  ['Grey 20', '--cdr-grey-20', 'Réguas e bordas'],
+  ['Canvas', '--cdr-canvas', 'Fundo institucional'],
+  ['Paper', '--cdr-paper', 'Papel de peças impressas'],
+];
+const cs = getComputedStyle(document.documentElement);
+document.getElementById('swatches').innerHTML = COLORS.map(([n, v, use]) => `
+  <div class="cdr-swatch">
+    <div class="cdr-swatch__chip" style="--chip:var(${v})"></div>
+    <div class="cdr-swatch__meta">
+      <span class="cdr-small" style="color:var(--cdr-text)">${n}</span>
+      <code class="cdr-small">${cs.getPropertyValue(v).trim().toUpperCase()}</code>
+    </div>
+    <p class="cdr-micro">${use}</p>
+  </div>`).join('');
+
+/* --- Specimens do motor gráfico --- */
+const SPECS = [
+  ['noiseToSignal', 'Ruído → sinal', 'O grafismo-âncora. Anel disperso resolvendo em massa.', '0.02,1', 0, null],
+  ['bars', 'Campo de barras', 'Padrão bruto virando estrutura repetível.', '0.06,1', 0, null],
+  ['chevrons', 'Cadência', 'Velocidade como repetição. Deploy.', '0.12,1', 0, null],
+  ['loop', 'Laço', 'Entra, circula, sai melhor. Refinamento contínuo.', '0.03,1', 0, null, true],
+  ['layers', 'Camadas', 'Infraestrutura empilhada.', '0.28,1', 0, null],
+  ['mark', 'Marca dissolvida', 'O próprio símbolo em partículas. Merch e capas.', '0.03,1', 180, null],
+];
+document.getElementById('specimens').innerHTML = SPECS.map(([shape, title, desc, ramp, angle, opts, mirror]) => `
+  <figure style="margin:0;display:flex;flex-direction:column;gap:var(--cdr-sp-3)">
+    <div class="cdr-stage" style="--stage-ar:16/9">
+      <canvas data-cdr-dither="${shape}" data-ramp="${ramp}" data-angle="${angle}"
+              data-cell="4" ${mirror ? 'data-mirror="true"' : ''}
+              ${opts ? `data-opts='${opts}'` : ''} aria-label="${title}"></canvas>
+    </div>
+    <figcaption>
+      <p class="cdr-lead">${title}</p>
+      <p class="cdr-small">${desc} · <code>${shape}</code></p>
+    </figcaption>
+  </figure>`).join('');
+
+/* --- Os seis slides de processo --- */
+const STEPS = [
+  ['Signal', 'noiseToSignal', 'Find the right signal in the noise', 'Pattern recognition. Business intuition.',
+   'Analisamos suas operações para achar atrito, ineficiência e potencial escondido. Procuramos padrões, dores e melhorias de baixo esforço que geram resultado real.', '0.02,1', 0],
+  ['Transform', 'bars', 'Turn insight into infrastructure', 'Build once, then scale it across your org.',
+   'Identificamos padrões repetíveis e construímos workflows e agentes para operacionalizá-los. Esses sistemas não funcionam uma vez só — eles aprendem, escalam e criam impacto duradouro.', '0.05,1', 0],
+  ['Deploy', 'chevrons', 'The outcome isn’t a slide, it’s a running system', 'We deliver impactful outcomes.',
+   'Não entregamos e desaparecemos. Ficamos perto para dirigir adoção, medir resultados reais e continuar melhorando. O objetivo é mudança duradoura, não vitória rápida.', '0.12,1', 0],
+  ['Refine', 'loop|mirror', 'Keep building, keep improving', 'This is where performance compounds.',
+   'Depois do lançamento, ajustamos com dados vivos e feedback. Dobramos no que funciona, cortamos o que não funciona. Refinamento é como ganhos pequenos viram vantagem permanente.', '0.05,1', 0],
+  ['Measure', 'layers', 'If it doesn’t move a number, it didn’t happen', 'Outcomes, not activity.',
+   'Cada sistema entra com uma métrica declarada antes do primeiro commit. Tempo economizado, erro evitado, receita destravada — medido no seu painel, não no nosso.', '0.28,1', 0],
+  ['Repeat', 'mark', 'The second system costs a fraction of the first', 'Compounding by design.',
+   'O que foi construído vira base para o próximo. Padrões, conectores e guard-rails são reaproveitados, e cada ciclo fica mais barato e mais rápido que o anterior.', '0.03,1', 180],
+];
+document.getElementById('processo-grid').innerHTML = STEPS.map(
+  ([name, shape, lead, kicker, body, ramp, angle], i) => `
+  <article class="cdr-slide">
+    <div class="cdr-slide__head">
+      <h3 class="cdr-title">${name}</h3>
+      <span class="cdr-slide__num">0${i + 1}</span>
+    </div>
+    <div class="cdr-slide__stage">
+      <canvas data-cdr-dither="${shape.split('|')[0]}" data-ramp="${ramp}" data-angle="${angle}"
+              data-cell="4" data-seed="${3 + i * 7}"
+              ${shape.includes('|mirror') ? 'data-mirror="true"' : ''} aria-label="${name}"></canvas>
+    </div>
+    <div class="cdr-slide__caption">
+      <p class="cdr-lead">${lead}</p>
+      <span class="cdr-small">${kicker}</span>
+    </div>
+    <p class="cdr-small cdr-body--justified">${body}</p>
+  </article>`).join('');
+
+init();   /* ativa os canvas injetados acima */
+</script>
+</body>
+</html>

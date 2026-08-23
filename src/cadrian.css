@@ -1,0 +1,206 @@
+/* ==========================================================================
+   Cadrian — Camada de componentes
+   Depende de tokens/tokens.css. Nenhum valor mágico aqui.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cdr-bg);
+  color: var(--cdr-text);
+  font-family: var(--cdr-font);
+  font-size: var(--cdr-fs-body);
+  font-weight: var(--cdr-w-book);
+  line-height: var(--cdr-lh-normal);
+  letter-spacing: var(--cdr-tr-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Tipografia ---------------------------------------------------------- */
+.cdr-display, .cdr-title, .cdr-h1, .cdr-h2 {
+  font-weight: var(--cdr-w-light);
+  margin: 0;
+  text-wrap: balance;
+}
+.cdr-display { font-size: var(--cdr-fs-display); line-height: var(--cdr-lh-tight); letter-spacing: var(--cdr-tr-display); }
+.cdr-title   { font-size: var(--cdr-fs-title);   line-height: var(--cdr-lh-tight); letter-spacing: var(--cdr-tr-display); }
+.cdr-h1      { font-size: var(--cdr-fs-h1);      line-height: var(--cdr-lh-snug);  letter-spacing: var(--cdr-tr-title); }
+.cdr-h2      { font-size: var(--cdr-fs-h2);      line-height: var(--cdr-lh-snug);  letter-spacing: var(--cdr-tr-title); }
+.cdr-lead    { font-size: var(--cdr-fs-lead);    line-height: 1.3; font-weight: var(--cdr-w-book); margin: 0; }
+.cdr-body    { max-width: var(--cdr-measure); margin: 0; }
+.cdr-body--justified { text-align: justify; hyphens: auto; }
+.cdr-small   { font-size: var(--cdr-fs-small); color: var(--cdr-text-muted); }
+.cdr-micro {
+  font-size: var(--cdr-fs-micro);
+  letter-spacing: var(--cdr-tr-micro);
+  text-transform: uppercase;
+  color: var(--cdr-text-muted);
+  font-weight: var(--cdr-w-medium);
+}
+.cdr-muted { color: var(--cdr-text-muted); }
+
+/* --- Marca ---------------------------------------------------------------
+   O lockup é mark + wordmark com um espaço fixo proporcional à altura.
+   Área de proteção = metade da altura da marca em todos os lados. */
+.cdr-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34em;
+  font-size: var(--lockup-size, 2rem);
+  line-height: 1;
+  color: var(--cdr-text);
+  text-decoration: none;
+}
+.cdr-lockup__mark { width: 1em; height: 1em; flex: none; display: block; }
+.cdr-lockup__word {
+  font-size: 1em;
+  font-weight: var(--cdr-w-medium);
+  letter-spacing: -0.035em;
+}
+.cdr-lockup--sm { --lockup-size: 1.125rem; }
+.cdr-lockup--lg { --lockup-size: clamp(2.5rem, 6vw, 5rem); }
+
+/* --- Estrutura ----------------------------------------------------------- */
+.cdr-shell { max-width: var(--cdr-max); margin-inline: auto; padding-inline: var(--cdr-gutter); }
+.cdr-section { padding-block: var(--cdr-sp-9); }
+.cdr-rule { border: 0; border-top: var(--cdr-border); margin: 0; }
+.cdr-grid { display: grid; gap: var(--cdr-sp-5); }
+.cdr-grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); }
+.cdr-grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+
+/* Cabeçalho de seção: rótulo à esquerda, numeral à direita. */
+.cdr-section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--cdr-sp-4); padding-bottom: var(--cdr-sp-3);
+  border-bottom: var(--cdr-border); margin-bottom: var(--cdr-sp-6);
+}
+
+/* --- Slide de processo ---------------------------------------------------
+   O componente-assinatura do deck: título + numeral, painel preto com o
+   grafismo, linha de chamada, kicker à direita e corpo em cinza. */
+.cdr-slide {
+  background: var(--cdr-surface);
+  border-radius: var(--cdr-r-card);
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  display: flex; flex-direction: column; gap: var(--cdr-sp-4);
+  container-type: inline-size;
+}
+.cdr-slide__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cdr-sp-4); }
+/* Título e numeral escalam com a LARGURA DO CARD, não da viewport: é o que
+   impede um título longo ("Transform") de encostar no numeral. */
+.cdr-slide .cdr-title,
+.cdr-slide .cdr-slide__num { font-size: clamp(1.5rem, 13cqi, 3.25rem); }
+.cdr-slide .cdr-title { min-width: 0; overflow-wrap: break-word; }
+.cdr-slide .cdr-slide__num { flex: none; }
+.cdr-slide__num {
+  font-size: var(--cdr-fs-title);
+  font-weight: var(--cdr-w-light);
+  letter-spacing: var(--cdr-tr-display);
+  color: var(--cdr-grey-35);
+  line-height: var(--cdr-lh-tight);
+  font-variant-numeric: tabular-nums;
+}
+.cdr-slide__stage {
+  background: var(--cdr-black);
+  aspect-ratio: 16 / 6;
+  width: 100%;
+  color: var(--cdr-particle);   /* o canvas herda daqui */
+  overflow: hidden;
+}
+.cdr-slide__stage canvas { display: block; width: 100%; height: 100%; }
+.cdr-slide__caption { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cdr-sp-4); }
+@container (max-width: 420px) {
+  .cdr-slide__caption { flex-direction: column; gap: var(--cdr-sp-1); }
+}
+
+/* --- Palco de grafismo genérico ------------------------------------------ */
+.cdr-stage {
+  position: relative;
+  background: var(--cdr-black);
+  color: var(--cdr-particle);
+  border-radius: var(--cdr-r-panel);
+  overflow: hidden;
+  aspect-ratio: var(--stage-ar, 16 / 9);
+}
+.cdr-stage--light { background: var(--cdr-paper); color: var(--cdr-particle-inv); }
+.cdr-stage--flat { border-radius: 0; }
+.cdr-stage--bare { background: transparent; }
+.cdr-stage canvas { display: block; width: 100%; height: 100%; }
+
+/* --- Card ---------------------------------------------------------------- */
+.cdr-card {
+  background: var(--cdr-surface);
+  border-radius: var(--cdr-r-card);
+  padding: var(--cdr-sp-5);
+  display: flex; flex-direction: column; gap: var(--cdr-sp-3);
+}
+.cdr-card--outline { background: transparent; border: var(--cdr-border); }
+
+/* --- Botão ---------------------------------------------------------------
+   Pílula. Sólida em preto, ou contorno. Sem gradiente, nunca. */
+.cdr-btn {
+  display: inline-flex; align-items: center; gap: var(--cdr-sp-2);
+  padding: 0.7em 1.35em;
+  border-radius: var(--cdr-r-pill);
+  border: 1px solid transparent;
+  background: var(--cdr-black); color: var(--cdr-white);
+  font: inherit; font-weight: var(--cdr-w-medium); font-size: var(--cdr-fs-small);
+  letter-spacing: var(--cdr-tr-body);
+  cursor: pointer; text-decoration: none;
+  transition: transform var(--cdr-dur-fast) var(--cdr-ease),
+              background-color var(--cdr-dur-fast) var(--cdr-ease),
+              color var(--cdr-dur-fast) var(--cdr-ease);
+}
+.cdr-btn:hover { transform: translateY(-1px); }
+.cdr-btn:active { transform: translateY(0); }
+.cdr-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.cdr-btn--ghost { background: transparent; color: var(--cdr-text); border-color: var(--cdr-rule); }
+.cdr-btn--ghost:hover { border-color: var(--cdr-text); }
+.cdr-btn--inverse { background: var(--cdr-white); color: var(--cdr-black); }
+
+/* --- Tag / pílula informativa -------------------------------------------- */
+.cdr-tag {
+  display: inline-flex; align-items: center; gap: var(--cdr-sp-2);
+  padding: 0.35em 0.85em; border-radius: var(--cdr-r-pill);
+  border: 1px solid currentColor;
+  font-size: var(--cdr-fs-micro); letter-spacing: var(--cdr-tr-micro);
+  text-transform: uppercase; font-weight: var(--cdr-w-medium);
+  text-decoration: none; color: inherit;
+}
+a.cdr-tag:hover { background: currentColor; }
+a.cdr-tag:hover > * { color: var(--cdr-bg); }
+
+/* --- Swatches ------------------------------------------------------------ */
+.cdr-swatch { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
+.cdr-swatch__chip {
+  aspect-ratio: 3 / 2; border-radius: var(--cdr-r-card);
+  border: var(--cdr-border); background: var(--chip);
+}
+.cdr-swatch__meta { display: flex; justify-content: space-between; gap: var(--cdr-sp-2); }
+
+/* --- Pôster / peça de campanha ------------------------------------------- */
+.cdr-poster {
+  background: var(--cdr-paper); color: var(--cdr-black);
+  aspect-ratio: 3 / 4; padding: clamp(1rem, 3cqi, 2.25rem);
+  display: grid; grid-template-rows: auto 1fr auto; gap: var(--cdr-sp-4);
+  container-type: inline-size; box-shadow: var(--cdr-shadow-2);
+}
+.cdr-poster__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cdr-sp-4); }
+.cdr-poster__hed { text-align: right; font-size: clamp(1.5rem, 9cqi, 4rem); }
+.cdr-poster__art { position: relative; color: var(--cdr-particle-inv); }
+.cdr-poster__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cdr-poster__foot { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--cdr-sp-4); }
+
+/* --- Do / Don't ---------------------------------------------------------- */
+.cdr-rule-card { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+.cdr-rule-card__flag { font-weight: var(--cdr-w-medium); display: flex; align-items: center; gap: var(--cdr-sp-2); }
+.cdr-rule-card--do .cdr-rule-card__flag::before { content: "＋"; }
+.cdr-rule-card--dont .cdr-rule-card__flag::before { content: "−"; }
+.cdr-rule-card--dont { color: var(--cdr-text-muted); }
+
+/* --- Acessibilidade ------------------------------------------------------ */
+:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}

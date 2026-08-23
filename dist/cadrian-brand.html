@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cadrian — Sistema Visual</title>
+<meta name="description" content="Sistema de identidade visual da Cadrian: tokens, motor de dithering e componentes.">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwMDAiLz48cGF0aCBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zMiAxMmEyMCAyMCAwIDEgMCAwIDQwIDIwIDIwIDAgMCAwIDE5LjYtMTZINDEuMkExMC41IDEwLjUgMCAxIDEgNDEuMiAyOGgxMC40QTIwIDIwIDAgMCAwIDMyIDEyWiIvPjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   Cadrian — Design Tokens
+   Extraídos da exploração de identidade visual (moodboard, deck, pôster).
+   Fonte única de verdade. Nada de valores soltos nos componentes.
+   ========================================================================== */
+
+:root {
+  /* --- Cor ---------------------------------------------------------------
+     A identidade é monocromática por convicção: preto puro, branco puro e
+     uma escada de cinzas neutros. Sem cor de destaque — o destaque é o
+     contraste e a densidade do dither. */
+  --cdr-black:        #000000;   /* superfícies primárias, tinta */
+  --cdr-ink:          #0A0A0A;   /* preto de tela, evita smear em OLED */
+  --cdr-steel:        #3F3F3F;   /* painel escuro secundário (specimen tipográfico) */
+  --cdr-grey-70:      #6E6E6E;
+  --cdr-grey-55:      #8C8C8C;   /* numerais de processo, kickers */
+  --cdr-grey-35:      #B5B5B5;
+  --cdr-grey-20:      #D6D6D6;   /* réguas, bordas */
+  --cdr-canvas:       #E4E4E4;   /* fundo de moodboard / plano de fundo institucional */
+  --cdr-paper:        #F2F0EE;   /* papel do pôster, levemente quente */
+  --cdr-white:        #FFFFFF;
+
+  /* Papéis semânticos — use estes nos componentes */
+  --cdr-bg:           var(--cdr-canvas);
+  --cdr-surface:      var(--cdr-white);
+  --cdr-surface-inv:  var(--cdr-black);
+  --cdr-text:         var(--cdr-black);
+  --cdr-text-muted:   var(--cdr-grey-55);
+  --cdr-text-inv:     var(--cdr-white);
+  --cdr-rule:         var(--cdr-grey-20);
+  --cdr-particle:     var(--cdr-white);   /* dither sobre preto */
+  --cdr-particle-inv: var(--cdr-black);   /* dither sobre claro */
+
+  /* --- Tipografia --------------------------------------------------------
+     Inter Tight em três pesos. Títulos em Light com tracking negativo:
+     é o que dá o ar de engenharia calma dos prints. */
+  --cdr-font: "Inter Tight", "Inter", ui-sans-serif, system-ui,
+              -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --cdr-font-mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
+
+  --cdr-w-light:  300;
+  --cdr-w-book:   400;
+  --cdr-w-medium: 500;
+
+  /* Escala fluida (min → max entre 400px e 1600px) */
+  --cdr-fs-display: clamp(3.5rem, 1.5rem + 8vw, 8rem);
+  --cdr-fs-title:   clamp(2.25rem, 1.2rem + 4.2vw, 4.5rem);
+  --cdr-fs-h1:      clamp(1.75rem, 1.1rem + 2.6vw, 3rem);
+  --cdr-fs-h2:      clamp(1.375rem, 1rem + 1.5vw, 2rem);
+  --cdr-fs-lead:    clamp(1.0625rem, 0.95rem + 0.6vw, 1.375rem);
+  --cdr-fs-body:    1rem;
+  --cdr-fs-small:   0.8125rem;
+  --cdr-fs-micro:   0.6875rem;
+
+  --cdr-lh-tight:   0.94;   /* display */
+  --cdr-lh-snug:    1.08;   /* títulos */
+  --cdr-lh-normal:  1.45;   /* texto corrido */
+
+  --cdr-tr-display: -0.035em;
+  --cdr-tr-title:   -0.025em;
+  --cdr-tr-body:    -0.01em;
+  --cdr-tr-micro:   0.02em;
+
+  /* --- Espaçamento (base 4) --------------------------------------------- */
+  --cdr-sp-1:  0.25rem;  --cdr-sp-2:  0.5rem;   --cdr-sp-3: 0.75rem;
+  --cdr-sp-4:  1rem;     --cdr-sp-5:  1.5rem;   --cdr-sp-6: 2rem;
+  --cdr-sp-7:  3rem;     --cdr-sp-8:  4rem;     --cdr-sp-9: 6rem;
+  --cdr-sp-10: 8rem;
+
+  --cdr-gutter: clamp(1.25rem, 3vw, 3rem);
+  --cdr-measure: 62ch;          /* medida máxima de leitura */
+  --cdr-max: 1440px;
+
+  /* --- Forma -------------------------------------------------------------
+     Raio grande e generoso, herdado do squircle da marca. */
+  --cdr-r-mark:  22%;      /* proporcional ao lado — assinatura da marca */
+  --cdr-r-card:  14px;
+  --cdr-r-panel: 20px;
+  --cdr-r-pill:  999px;
+
+  --cdr-border: 1px solid var(--cdr-rule);
+
+  /* --- Elevação ----------------------------------------------------------
+     Quase inexistente. A hierarquia vem de campo preto vs. campo claro. */
+  --cdr-shadow-0: none;
+  --cdr-shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+  --cdr-shadow-2: 0 2px 4px rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.14);
+
+  /* --- Dither (o motor gráfico) ------------------------------------------
+     Estes tokens governam o grafismo de partículas. */
+  --cdr-cell: 4px;              /* aresta da célula da grade de partículas */
+  --cdr-dither-min: 0.02;       /* densidade na ponta "ruído" */
+  --cdr-dither-max: 1;          /* densidade na ponta "sinal" */
+  --cdr-dither-jitter: 0.3;     /* deslocamento aleatório dentro da célula */
+
+  /* --- Movimento ---------------------------------------------------------
+     Uma curva só. Tudo resolve de ruído para forma. */
+  --cdr-ease: cubic-bezier(.2,.7,.2,1);
+  --cdr-dur-fast: 180ms;
+  --cdr-dur-base: 420ms;
+  --cdr-dur-slow: 900ms;
+  --cdr-dur-resolve: 1600ms;    /* revelação do dither */
+
+  --cdr-z-base: 0; --cdr-z-sticky: 100; --cdr-z-overlay: 500;
+}
+
+/* Campo escuro: inverte os papéis semânticos sem tocar na paleta. */
+.cdr-inverse,
+[data-cdr-field="dark"] {
+  --cdr-bg:         var(--cdr-black);
+  --cdr-surface:    var(--cdr-black);
+  --cdr-text:       var(--cdr-white);
+  --cdr-text-muted: var(--cdr-grey-55);
+  --cdr-rule:       #2A2A2A;
+  --cdr-particle:   var(--cdr-white);
+}
+
+</style>
+<style>
+/* ==========================================================================
+   Cadrian — Camada de componentes
+   Depende de tokens/tokens.css. Nenhum valor mágico aqui.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cdr-bg);
+  color: var(--cdr-text);
+  font-family: var(--cdr-font);
+  font-size: var(--cdr-fs-body);
+  font-weight: var(--cdr-w-book);
+  line-height: var(--cdr-lh-normal);
+  letter-spacing: var(--cdr-tr-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Tipografia ---------------------------------------------------------- */
+.cdr-display, .cdr-title, .cdr-h1, .cdr-h2 {
+  font-weight: var(--cdr-w-light);
+  margin: 0;
+  text-wrap: balance;
+}
+.cdr-display { font-size: var(--cdr-fs-display); line-height: var(--cdr-lh-tight); letter-spacing: var(--cdr-tr-display); }
+.cdr-title   { font-size: var(--cdr-fs-title);   line-height: var(--cdr-lh-tight); letter-spacing: var(--cdr-tr-display); }
+.cdr-h1      { font-size: var(--cdr-fs-h1);      line-height: var(--cdr-lh-snug);  letter-spacing: var(--cdr-tr-title); }
+.cdr-h2      { font-size: var(--cdr-fs-h2);      line-height: var(--cdr-lh-snug);  letter-spacing: var(--cdr-tr-title); }
+.cdr-lead    { font-size: var(--cdr-fs-lead);    line-height: 1.3; font-weight: var(--cdr-w-book); margin: 0; }
+.cdr-body    { max-width: var(--cdr-measure); margin: 0; }
+.cdr-body--justified { text-align: justify; hyphens: auto; }
+.cdr-small   { font-size: var(--cdr-fs-small); color: var(--cdr-text-muted); }
+.cdr-micro {
+  font-size: var(--cdr-fs-micro);
+  letter-spacing: var(--cdr-tr-micro);
+  text-transform: uppercase;
+  color: var(--cdr-text-muted);
+  font-weight: var(--cdr-w-medium);
+}
+.cdr-muted { color: var(--cdr-text-muted); }
+
+/* --- Marca ---------------------------------------------------------------
+   O lockup é mark + wordmark com um espaço fixo proporcional à altura.
+   Área de proteção = metade da altura da marca em todos os lados. */
+.cdr-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34em;
+  font-size: var(--lockup-size, 2rem);
+  line-height: 1;
+  color: var(--cdr-text);
+  text-decoration: none;
+}
+.cdr-lockup__mark { width: 1em; height: 1em; flex: none; display: block; }
+.cdr-lockup__word {
+  font-size: 1em;
+  font-weight: var(--cdr-w-medium);
+  letter-spacing: -0.035em;
+}
+.cdr-lockup--sm { --lockup-size: 1.125rem; }
+.cdr-lockup--lg { --lockup-size: clamp(2.5rem, 6vw, 5rem); }
+
+/* --- Estrutura ----------------------------------------------------------- */
+.cdr-shell { max-width: var(--cdr-max); margin-inline: auto; padding-inline: var(--cdr-gutter); }
+.cdr-section { padding-block: var(--cdr-sp-9); }
+.cdr-rule { border: 0; border-top: var(--cdr-border); margin: 0; }
+.cdr-grid { display: grid; gap: var(--cdr-sp-5); }
+.cdr-grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); }
+.cdr-grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+
+/* Cabeçalho de seção: rótulo à esquerda, numeral à direita. */
+.cdr-section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--cdr-sp-4); padding-bottom: var(--cdr-sp-3);
+  border-bottom: var(--cdr-border); margin-bottom: var(--cdr-sp-6);
+}
+
+/* --- Slide de processo ---------------------------------------------------
+   O componente-assinatura do deck: título + numeral, painel preto com o
+   grafismo, linha de chamada, kicker à direita e corpo em cinza. */
+.cdr-slide {
+  background: var(--cdr-surface);
+  border-radius: var(--cdr-r-card);
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  display: flex; flex-direction: column; gap: var(--cdr-sp-4);
+  container-type: inline-size;
+}
+.cdr-slide__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cdr-sp-4); }
+/* Título e numeral escalam com a LARGURA DO CARD, não da viewport: é o que
+   impede um título longo ("Transform") de encostar no numeral. */
+.cdr-slide .cdr-title,
+.cdr-slide .cdr-slide__num { font-size: clamp(1.5rem, 13cqi, 3.25rem); }
+.cdr-slide .cdr-title { min-width: 0; overflow-wrap: break-word; }
+.cdr-slide .cdr-slide__num { flex: none; }
+.cdr-slide__num {
+  font-size: var(--cdr-fs-title);
+  font-weight: var(--cdr-w-light);
+  letter-spacing: var(--cdr-tr-display);
+  color: var(--cdr-grey-35);
+  line-height: var(--cdr-lh-tight);
+  font-variant-numeric: tabular-nums;
+}
+.cdr-slide__stage {
+  background: var(--cdr-black);
+  aspect-ratio: 16 / 6;
+  width: 100%;
+  color: var(--cdr-particle);   /* o canvas herda daqui */
+  overflow: hidden;
+}
+.cdr-slide__stage canvas { display: block; width: 100%; height: 100%; }
+.cdr-slide__caption { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cdr-sp-4); }
+@container (max-width: 420px) {
+  .cdr-slide__caption { flex-direction: column; gap: var(--cdr-sp-1); }
+}
+
+/* --- Palco de grafismo genérico ------------------------------------------ */
+.cdr-stage {
+  position: relative;
+  background: var(--cdr-black);
+  color: var(--cdr-particle);
+  border-radius: var(--cdr-r-panel);
+  overflow: hidden;
+  aspect-ratio: var(--stage-ar, 16 / 9);
+}
+.cdr-stage--light { background: var(--cdr-paper); color: var(--cdr-particle-inv); }
+.cdr-stage--flat { border-radius: 0; }
+.cdr-stage--bare { background: transparent; }
+.cdr-stage canvas { display: block; width: 100%; height: 100%; }
+
+/* --- Card ---------------------------------------------------------------- */
+.cdr-card {
+  background: var(--cdr-surface);
+  border-radius: var(--cdr-r-card);
+  padding: var(--cdr-sp-5);
+  display: flex; flex-direction: column; gap: var(--cdr-sp-3);
+}
+.cdr-card--outline { background: transparent; border: var(--cdr-border); }
+
+/* --- Botão ---------------------------------------------------------------
+   Pílula. Sólida em preto, ou contorno. Sem gradiente, nunca. */
+.cdr-btn {
+  display: inline-flex; align-items: center; gap: var(--cdr-sp-2);
+  padding: 0.7em 1.35em;
+  border-radius: var(--cdr-r-pill);
+  border: 1px solid transparent;
+  background: var(--cdr-black); color: var(--cdr-white);
+  font: inherit; font-weight: var(--cdr-w-medium); font-size: var(--cdr-fs-small);
+  letter-spacing: var(--cdr-tr-body);
+  cursor: pointer; text-decoration: none;
+  transition: transform var(--cdr-dur-fast) var(--cdr-ease),
+              background-color var(--cdr-dur-fast) var(--cdr-ease),
+              color var(--cdr-dur-fast) var(--cdr-ease);
+}
+.cdr-btn:hover { transform: translateY(-1px); }
+.cdr-btn:active { transform: translateY(0); }
+.cdr-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.cdr-btn--ghost { background: transparent; color: var(--cdr-text); border-color: var(--cdr-rule); }
+.cdr-btn--ghost:hover { border-color: var(--cdr-text); }
+.cdr-btn--inverse { background: var(--cdr-white); color: var(--cdr-black); }
+
+/* --- Tag / pílula informativa -------------------------------------------- */
+.cdr-tag {
+  display: inline-flex; align-items: center; gap: var(--cdr-sp-2);
+  padding: 0.35em 0.85em; border-radius: var(--cdr-r-pill);
+  border: 1px solid currentColor;
+  font-size: var(--cdr-fs-micro); letter-spacing: var(--cdr-tr-micro);
+  text-transform: uppercase; font-weight: var(--cdr-w-medium);
+  text-decoration: none; color: inherit;
+}
+a.cdr-tag:hover { background: currentColor; }
+a.cdr-tag:hover > * { color: var(--cdr-bg); }
+
+/* --- Swatches ------------------------------------------------------------ */
+.cdr-swatch { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
+.cdr-swatch__chip {
+  aspect-ratio: 3 / 2; border-radius: var(--cdr-r-card);
+  border: var(--cdr-border); background: var(--chip);
+}
+.cdr-swatch__meta { display: flex; justify-content: space-between; gap: var(--cdr-sp-2); }
+
+/* --- Pôster / peça de campanha ------------------------------------------- */
+.cdr-poster {
+  background: var(--cdr-paper); color: var(--cdr-black);
+  aspect-ratio: 3 / 4; padding: clamp(1rem, 3cqi, 2.25rem);
+  display: grid; grid-template-rows: auto 1fr auto; gap: var(--cdr-sp-4);
+  container-type: inline-size; box-shadow: var(--cdr-shadow-2);
+}
+.cdr-poster__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cdr-sp-4); }
+.cdr-poster__hed { text-align: right; font-size: clamp(1.5rem, 9cqi, 4rem); }
+.cdr-poster__art { position: relative; color: var(--cdr-particle-inv); }
+.cdr-poster__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cdr-poster__foot { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--cdr-sp-4); }
+
+/* --- Do / Don't ---------------------------------------------------------- */
+.cdr-rule-card { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+.cdr-rule-card__flag { font-weight: var(--cdr-w-medium); display: flex; align-items: center; gap: var(--cdr-sp-2); }
+.cdr-rule-card--do .cdr-rule-card__flag::before { content: "＋"; }
+.cdr-rule-card--dont .cdr-rule-card__flag::before { content: "−"; }
+.cdr-rule-card--dont { color: var(--cdr-text-muted); }
+
+/* --- Acessibilidade ------------------------------------------------------ */
+:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}
+
+</style>
+<style>
+  /* Estilos só do guia — não fazem parte do sistema. */
+  .guide-hero { background: var(--cdr-black); color: var(--cdr-white); }
+  .guide-hero .cdr-shell { padding-block: clamp(3rem, 8vw, 7rem); }
+  .guide-nav { display: flex; flex-wrap: wrap; gap: var(--cdr-sp-2); }
+  .guide-toc a { color: inherit; }
+  .spec-list { display: grid; gap: var(--cdr-sp-2); margin: 0; padding: 0; list-style: none; }
+  .spec-list li { display: flex; justify-content: space-between; gap: var(--cdr-sp-4);
+                  border-bottom: var(--cdr-border); padding-block: var(--cdr-sp-2); }
+  code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
+  .clearspace { align-self: flex-start; padding: 1rem; outline: 1px dashed var(--cdr-grey-35); }
+</style>
+</head>
+<body>
+
+<!-- ====================== HERO ====================== -->
+<header class="guide-hero cdr-inverse">
+  <div class="cdr-shell">
+    <a class="cdr-lockup cdr-lockup--sm" href="#" style="color:var(--cdr-white)">
+      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cdr-lockup__word">Cadrian</span>
+    </a>
+
+    <h1 class="cdr-display" style="margin-top:var(--cdr-sp-6)">Prioritize.<br>Automate.<br>Deliver.</h1>
+    <p class="cdr-lead cdr-muted" style="margin-top:var(--cdr-sp-4);max-width:34ch">
+      AI systems built right in your stack. Sistema visual — versão 1.0.
+    </p>
+
+    <div class="cdr-stage cdr-stage--flat" style="--stage-ar:16/5;margin-top:var(--cdr-sp-7)">
+      <canvas data-cdr-dither="noiseToSignal" data-ramp="0.02,1" data-angle="0"
+              data-cell="4" data-duration="2200" aria-label="Grafismo: de ruído a sinal"></canvas>
+    </div>
+
+    <nav class="guide-nav guide-toc" style="margin-top:var(--cdr-sp-6)">
+      <a class="cdr-tag" href="#fundacao"><span>01 Fundação</span></a>
+      <a class="cdr-tag" href="#dither"><span>02 Motor gráfico</span></a>
+      <a class="cdr-tag" href="#processo"><span>03 Processo</span></a>
+      <a class="cdr-tag" href="#componentes"><span>04 Componentes</span></a>
+      <a class="cdr-tag" href="#aplicacoes"><span>05 Aplicações</span></a>
+      <a class="cdr-tag" href="#voz"><span>06 Voz &amp; regras</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ====================== 01 FUNDAÇÃO ====================== -->
+<section id="fundacao" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Fundação</h2><span class="cdr-slide__num">01</span>
+    </div>
+
+    <!-- Marca -->
+    <h3 class="cdr-h2">Marca</h3>
+    <p class="cdr-body cdr-muted" style="margin-block:var(--cdr-sp-3) var(--cdr-sp-5)">
+      Um “C” geométrico com contraforma circular perfeita, alojado num squircle.
+      O símbolo funciona sozinho a partir de 16&nbsp;px. O lockup horizontal é o
+      uso padrão; a área de proteção equivale a metade da altura do símbolo.
+    </p>
+
+    <div class="cdr-grid cdr-grid--3">
+      <div class="cdr-card">
+        <div class="clearspace">
+          <svg width="88" height="88" style="display:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Cadrian">
+  <title>Cadrian</title>
+  <defs>
+    <mask id="c">
+      <rect width="64" height="64" fill="#000"/>
+      <circle cx="32" cy="32" r="20" fill="#fff"/>
+      <circle cx="32" cy="32" r="10.5" fill="#000"/>
+      <rect x="32" y="24.5" width="34" height="15" fill="#000"/>
+    </mask>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#000"/>
+  <rect width="64" height="64" fill="#fff" mask="url(#c)"/>
+</svg>
+
+        </div>
+        <p class="cdr-micro">Símbolo · positivo · área de proteção</p>
+      </div>
+      <div class="cdr-card" style="background:var(--cdr-black)">
+        <span class="cdr-lockup" style="color:#fff">
+          <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <rect width="64" height="64" rx="14" fill="#fff"/>
+            <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+          </svg>
+          <span class="cdr-lockup__word">Cadrian</span>
+        </span>
+        <p class="cdr-micro">Lockup · negativo</p>
+      </div>
+      <div class="cdr-card cdr-card--outline">
+        <span class="cdr-lockup" style="color:var(--cdr-black)">
+          <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+          </svg>
+          <span class="cdr-lockup__word">Cadrian</span>
+        </span>
+        <p class="cdr-micro">Glifo em uma cor · currentColor</p>
+      </div>
+    </div>
+
+    <!-- Cor -->
+    <h3 class="cdr-h2" style="margin-top:var(--cdr-sp-8)">Cor</h3>
+    <p class="cdr-body cdr-muted" style="margin-block:var(--cdr-sp-3) var(--cdr-sp-5)">
+      Monocromática por convicção. Não existe cor de destaque — o destaque é o
+      contraste e a densidade das partículas. Preto e branco são puros; os cinzas
+      são neutros e servem a texto secundário, réguas e numerais.
+    </p>
+    <div class="cdr-grid cdr-grid--3" id="swatches"></div>
+
+    <!-- Tipografia -->
+    <h3 class="cdr-h2" style="margin-top:var(--cdr-sp-8)">Tipografia</h3>
+    <div class="cdr-grid cdr-grid--2" style="margin-top:var(--cdr-sp-5)">
+      <div class="cdr-card" style="background:var(--cdr-steel);color:var(--cdr-white)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem">
+          <span class="cdr-h1">Inter Tight</span>
+          <span class="cdr-tag">Google Fonts</span>
+        </div>
+        <p class="cdr-h2" style="font-weight:var(--cdr-w-book)">
+          Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn<br>
+          Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz<br>0 1 2 3 4 5 6 7 8 9
+        </p>
+      </div>
+      <div class="cdr-card">
+        <ul class="spec-list cdr-small">
+          <li><span>Display · Light 300</span><code>-0.035em / 0.94</code></li>
+          <li><span>Título · Light 300</span><code>-0.035em / 0.94</code></li>
+          <li><span>H1–H2 · Light 300</span><code>-0.025em / 1.08</code></li>
+          <li><span>Lead · Regular 400</span><code>-0.01em / 1.3</code></li>
+          <li><span>Corpo · Regular 400</span><code>-0.01em / 1.45</code></li>
+          <li><span>Micro · Medium 500</span><code>+0.02em / caixa alta</code></li>
+        </ul>
+        <p class="cdr-small">
+          Regra: títulos sempre em <strong>Light</strong> com tracking negativo.
+          Peso Medium só em rótulos micro, botões e no wordmark.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 02 DITHER ====================== -->
+<section id="dither" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Motor gráfico</h2><span class="cdr-slide__num">02</span>
+    </div>
+    <p class="cdr-body" style="margin-bottom:var(--cdr-sp-6)">
+      Todo grafismo da marca é a mesma operação: uma <strong>forma</strong> amostrada por
+      uma <strong>grade de partículas quadradas</strong>, cuja probabilidade de existir varia
+      ao longo de uma <strong>rampa de densidade</strong>. Ruído de um lado, sinal do outro.
+      Nada é ilustrado à mão — tudo é gerado, então escala de um favicon a um outdoor
+      sem perder o grão.
+    </p>
+
+    <div class="cdr-grid cdr-grid--2" id="specimens"></div>
+
+    <div class="cdr-card cdr-card--outline" style="margin-top:var(--cdr-sp-6)">
+      <h3 class="cdr-h2">Parâmetros</h3>
+      <ul class="spec-list cdr-small">
+        <li><code>shape</code><span>disc · ring · chevrons · bars · loop · layers · mark · noiseToSignal</span></li>
+        <li><code>cell</code><span>aresta da célula em px (4 padrão; 6–8 em peças grandes)</span></li>
+        <li><code>ramp</code><span>[densidade mínima, máxima] — o eixo ruído→sinal</span></li>
+        <li><code>angle</code><span>0° ruído à esquerda · 180° à direita · 90° embaixo</span></li>
+        <li><code>curve</code><span>&gt;1 prolonga a dispersão antes de resolver</span></li>
+        <li><code>seed</code><span>hash determinístico: o mesmo grafismo sempre</span></li>
+      </ul>
+      <p class="cdr-small">
+        <code>&lt;canvas data-cdr-dither="chevrons" data-ramp="0.05,1" data-angle="180"&gt;&lt;/canvas&gt;</code>
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 03 PROCESSO ====================== -->
+<section id="processo" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Processo</h2><span class="cdr-slide__num">03</span>
+    </div>
+    <p class="cdr-body cdr-muted" style="margin-bottom:var(--cdr-sp-6)">
+      Seis etapas, seis grafismos. Cada slide segue a mesma gramática:
+      título + numeral, painel preto, linha de chamada com kicker à direita, corpo em cinza.
+    </p>
+    <div class="cdr-grid cdr-grid--2" id="processo-grid"></div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 04 COMPONENTES ====================== -->
+<section id="componentes" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Componentes</h2><span class="cdr-slide__num">04</span>
+    </div>
+    <div class="cdr-grid cdr-grid--3">
+      <div class="cdr-card">
+        <p class="cdr-micro">Botões</p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--cdr-sp-2)">
+          <button class="cdr-btn">Falar com a Cadrian</button>
+          <button class="cdr-btn cdr-btn--ghost">Ver casos</button>
+        </div>
+      </div>
+      <div class="cdr-card" style="background:var(--cdr-black);color:var(--cdr-white)">
+        <p class="cdr-micro">Em campo escuro</p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--cdr-sp-2)">
+          <button class="cdr-btn cdr-btn--inverse">Começar</button>
+          <span class="cdr-tag">Signal</span>
+        </div>
+      </div>
+      <div class="cdr-card">
+        <p class="cdr-micro">Card</p>
+        <p class="cdr-lead">Turn insight into infrastructure</p>
+        <p class="cdr-small">Padrões repetíveis viram workflows e agentes que aprendem e escalam.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 05 APLICAÇÕES ====================== -->
+<section id="aplicacoes" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Aplicações</h2><span class="cdr-slide__num">05</span>
+    </div>
+    <div class="cdr-grid" style="grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))">
+
+      <!-- Pôster -->
+      <article class="cdr-poster">
+        <div class="cdr-poster__head">
+          <span class="cdr-lockup cdr-lockup--sm">
+            <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+              <rect width="64" height="64" rx="14" fill="#000"/>
+              <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+            </svg>
+            <span class="cdr-lockup__word">Cadrian</span>
+          </span>
+          <h3 class="cdr-title cdr-poster__hed">AI isn’t<br>waiting</h3>
+        </div>
+        <div class="cdr-poster__art">
+          <canvas data-cdr-dither="chevrons" data-ramp="0.12,1" data-angle="0"
+                  data-cell="4" data-opts='{"n":2,"gap":0.06}' aria-label="Setas em dither"></canvas>
+        </div>
+        <div class="cdr-poster__foot">
+          <p class="cdr-lead">We launch systems<br>in weeks, not months</p>
+          <span class="cdr-small">Visit Cadrian.ai</span>
+        </div>
+      </article>
+
+      <!-- Outdoor / OOH -->
+      <div style="display:flex;flex-direction:column;gap:var(--cdr-sp-5)">
+        <article class="cdr-card" style="padding:0;overflow:hidden">
+          <div style="background:var(--cdr-white);padding:var(--cdr-sp-5);display:grid;
+                      grid-template-columns:1fr auto;gap:var(--cdr-sp-4);align-items:center">
+            <div>
+              <h3 class="cdr-h1">From noise<br>to signal</h3>
+              <p class="cdr-small" style="margin-top:var(--cdr-sp-3);max-width:36ch">
+                A Cadrian descobre o que vale automatizar, constrói sistemas focados
+                dentro das ferramentas que você já usa, e faz a IA entregar valor desde o dia um.
+              </p>
+              <span class="cdr-lockup cdr-lockup--sm" style="margin-top:var(--cdr-sp-4)">
+                <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+                  <rect width="64" height="64" rx="14" fill="#000"/>
+                  <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+                </svg>
+                <span class="cdr-lockup__word">Cadrian</span>
+              </span>
+            </div>
+            <div class="cdr-stage cdr-stage--light cdr-stage--flat cdr-stage--bare" style="--stage-ar:1/1;width:min(220px,34vw)">
+              <canvas data-cdr-dither="noiseToSignal" data-ramp="0.03,1" data-cell="3"></canvas>
+            </div>
+          </div>
+          <p class="cdr-micro" style="padding:var(--cdr-sp-3) var(--cdr-sp-5)">Outdoor · campo claro</p>
+        </article>
+
+        <!-- Cartão / merch -->
+        <article class="cdr-card" style="background:var(--cdr-black);color:var(--cdr-white);
+                 aspect-ratio:1.75/1;max-width:520px;justify-content:space-between;position:relative;overflow:hidden">
+          <canvas data-cdr-dither="mark" data-ramp="0.01,0.26" data-angle="180" data-cell="3"
+                  style="position:absolute;inset:0;width:100%;height:100%;color:var(--cdr-white)"
+                  aria-hidden="true"></canvas>
+          <div style="position:relative;display:contents">
+          <span class="cdr-lockup cdr-lockup--sm" style="color:#fff">
+            <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+              <rect width="64" height="64" rx="14" fill="#fff"/>
+              <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+            </svg>
+            <span class="cdr-lockup__word">Cadrian</span>
+          </span>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:1rem">
+            <div>
+              <p style="margin:0;font-weight:var(--cdr-w-medium)">Dan Preiss</p>
+              <p class="cdr-small" style="margin:0">CEO · dan@cadrian.ai</p>
+            </div>
+            <span class="cdr-small">310 928 2123</span>
+          </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="cdr-rule">
+
+<!-- ====================== 06 VOZ & REGRAS ====================== -->
+<section id="voz" class="cdr-section">
+  <div class="cdr-shell">
+    <div class="cdr-section-head">
+      <h2 class="cdr-h1">Voz &amp; regras</h2><span class="cdr-slide__num">06</span>
+    </div>
+
+    <div class="cdr-grid cdr-grid--2">
+      <div class="cdr-card">
+        <p class="cdr-micro">Como a marca fala</p>
+        <p class="cdr-lead">Frases curtas. Verbo na frente. Promessa mensurável.</p>
+        <ul class="spec-list cdr-small">
+          <li><span>“Prioritize. Automate. Deliver.”</span><span class="cdr-muted">assinatura</span></li>
+          <li><span>“From noise to signal”</span><span class="cdr-muted">tese</span></li>
+          <li><span>“We launch systems in weeks, not months”</span><span class="cdr-muted">prova</span></li>
+          <li><span>“The outcome isn’t a slide, it’s a running system”</span><span class="cdr-muted">postura</span></li>
+        </ul>
+      </div>
+      <div class="cdr-grid" style="gap:var(--cdr-sp-5)">
+        <div class="cdr-card cdr-rule-card cdr-rule-card--do">
+          <span class="cdr-rule-card__flag">Faça</span>
+          <ul class="spec-list cdr-small">
+            <li><span>Deixe o preto ocupar área grande e contínua</span></li>
+            <li><span>Gere o dither — nunca reproduza como imagem esticada</span></li>
+            <li><span>Mantenha o título em Light com tracking negativo</span></li>
+            <li><span>Uma direção de rampa por peça</span></li>
+          </ul>
+        </div>
+        <div class="cdr-card cdr-rule-card cdr-rule-card--dont">
+          <span class="cdr-rule-card__flag">Não faça</span>
+          <ul class="spec-list cdr-small">
+            <li><span>Cor de destaque, gradiente ou sombra colorida</span></li>
+            <li><span>Bold/Black nos títulos</span></li>
+            <li><span>Distorcer, rotacionar ou recolorir o símbolo</span></li>
+            <li><span>Partícula redonda — a célula é quadrada</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="cdr-section" style="background:var(--cdr-black);color:var(--cdr-white)">
+  <div class="cdr-shell" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--cdr-sp-4)">
+    <span class="cdr-lockup cdr-lockup--sm" style="color:#fff">
+      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cdr-lockup__word">Cadrian</span>
+    </span>
+    <span class="cdr-small">Sistema visual v1.0 · tokens + motor de dither + componentes</span>
+  </div>
+</footer>
+</main>
+
+<script type="module">
+/* ==========================================================================
+   Cadrian — Dither Engine
+   --------------------------------------------------------------------------
+   Todo grafismo da marca é a mesma ideia: uma FORMA amostrada por uma GRADE
+   de partículas quadradas, cuja probabilidade de existir varia ao longo de
+   uma RAMPA. Ruído de um lado, sinal do outro. É a tese da empresa desenhada.
+
+   Uso declarativo:
+     <canvas data-cdr-dither="ring" data-ramp="0.02,1" data-angle="0"></canvas>
+
+   Uso programático:
+     import { render, fields } from './dither.js'
+     render(canvas, { shape: 'chevrons', ramp: [0.05, 1], angle: 180 })
+   ========================================================================== */
+
+/* --- PRNG determinístico -------------------------------------------------
+   Hash por célula (não sequencial): a mesma célula devolve sempre o mesmo
+   número, então redimensionar ou animar não faz o grafismo "ferver". */
+function hash(x, y, seed) {
+  let h = x * 374761393 + y * 668265263 + seed * 1274126177;
+  h = (h ^ (h >>> 13)) >>> 0;
+  h = Math.imul(h, 1274126177) >>> 0;
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+
+const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+/* Borda macia: converte distância assinada em cobertura 0..1 */
+const edge = (d, soft) => clamp01(0.5 - d / (soft || 0.012));
+
+/* --- Campos de forma -----------------------------------------------------
+   Cada campo é f(u, v) -> cobertura 0..1, em espaço normalizado onde
+   u ∈ [0,1] e v é corrigido pela proporção (v ∈ [0, h/w]). */
+const fields = {
+  /* `k` = meia-altura do campo: deixa toda forma se ajustar à proporção do
+     canvas sem que ninguém precise recalcular raios na mão. */
+
+  /* Sinal: o disco cheio. Massa resolvida. */
+  disc: ({ r = 0.82, soft = 0.02 } = {}) => (u, v, ar) => {
+    const k = Math.min(0.5, ar / 2);
+    return edge(Math.hypot(u - 0.5, v - ar / 2) - k * r, soft);
+  },
+
+  /* Ruído: o anel. Mesma forma, sem miolo. */
+  ring: ({ r = 0.82, w = 0.26, soft = 0.02 } = {}) => (u, v, ar) => {
+    const k = Math.min(0.5, ar / 2);
+    return edge(Math.abs(Math.hypot(u - 0.5, v - ar / 2) - k * r) - (k * w) / 2, soft);
+  },
+
+  /* Deploy: cadência de setas. Velocidade como repetição. */
+  chevrons: ({ n = 3, gap = 0.02, soft = 0.012 } = {}) => (u, v, ar) => {
+    const span = (1 - gap * (n - 1)) / n;
+    for (let i = 0; i < n; i++) {
+      const t = (u - i * (span + gap)) / span;
+      if (t < 0 || t > 1) continue;
+      const half = (1 - t) * ar * 0.46;          /* triângulo apontando à direita */
+      return edge(Math.abs(v - ar / 2) - half, soft);
+    }
+    return 0;
+  },
+
+  /* Transform: matriz de blocos. Padrão bruto virando estrutura. */
+  bars: ({ cols = 20, rows = 5, duty = 0.5 } = {}) => (u, v, ar) => {
+    if ((u * cols) % 1 > duty) return 0;
+    const col = Math.floor(u * cols);
+    const rv = (v / ar) * rows;
+    const row = Math.floor(rv);
+    if (row < 0 || row >= rows) return 0;
+    /* algumas colunas viram barras inteiras: é o que dá o ritmo do print */
+    const full = hash(col, 0, 91) > 0.78;
+    if (full) return 1;
+    return (rv % 1) < 0.62 && hash(col, row, 17) > 0.22 ? 1 : 0;
+  },
+
+  /* Refine: o laço. Círculo com caudas que entram e saem. */
+  loop: ({ r = 0.62, w = 0.2, soft = 0.014 } = {}) => (u, v, ar) => {
+    const k = Math.min(0.5, ar / 2), R = k * r, W = k * w;
+    const cy = ar / 2;
+    const ringD = Math.abs(Math.hypot(u - 0.5, v - cy) - R) - W / 2;
+    const tailD = Math.abs(v - cy) - W / 2;
+    const inTail = u < 0.5 - R * 0.5 || u > 0.5 + R * 0.5;
+    return edge(inTail ? Math.min(ringD, tailD) : ringD, soft);
+  },
+
+  /* Camadas: losangos isométricos empilhados. Infraestrutura. */
+  layers: ({ n = 3, rx = 0.3, soft = 0.014 } = {}) => (u, v, ar) => {
+    const ry = ar * 0.11, gap = ar * 0.34;
+    const base = ar / 2 - ((n - 1) * gap) / 2;
+    for (let i = 0; i < n; i++) {
+      const d = Math.abs(u - 0.5) / rx + Math.abs(v - (base + i * gap)) / ry - 1;
+      if (d < 0) return edge(d * ry, soft);
+    }
+    return 0;
+  },
+
+  /* A marca: o "C" dele mesmo, dissolvido. Camiseta, capa, hero. */
+  mark: ({ r = 0.78, w = 0.3, aperture = 0.36, soft = 0.016 } = {}) => (u, v, ar) => {
+    const k = Math.min(0.5, ar / 2), R = k * r, W = k * w, cy = ar / 2;
+    if (u > 0.5 && Math.abs(v - cy) < R * aperture) return 0;   /* abertura do C */
+    return edge(Math.abs(Math.hypot(u - 0.5, v - cy) - R) - W / 2, soft);
+  },
+
+  /* Grafismo-âncora: anel de ruído + disco de sinal, lado a lado. */
+  noiseToSignal: ({ soft = 0.02 } = {}) => (u, v, ar) => {
+    const cy = ar / 2, R = Math.min(0.21, ar * 0.4);
+    const a = Math.abs(Math.hypot(u - 0.3, v - cy) - R) - R * 0.28;
+    const b = Math.hypot(u - 0.7, v - cy) - R;
+    return Math.max(edge(a, soft), edge(b, soft));
+  },
+};
+
+/* --- Rampa de densidade --------------------------------------------------
+   Projeta cada ponto num eixo girado e interpola de `from` a `to`.
+   angle 0 = ruído à esquerda; 180 = ruído à direita; 90 = de baixo. */
+function axis(u, v, ar, angle) {
+  const rad = (angle * Math.PI) / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  const proj = (u - 0.5) * cos + (v - ar / 2) * sin;
+  const half = (Math.abs(cos) + Math.abs(sin) * ar) / 2;   /* extensão real do eixo */
+  return clamp01(proj / (2 * half) + 0.5);
+}
+
+function rampAt(u, v, ar, { from, to, angle, curve, mirror }) {
+  let t = axis(u, v, ar, angle);
+  /* mirror: pico no centro do eixo, dispersando para os dois lados */
+  if (mirror) t = 1 - Math.abs(t * 2 - 1);
+  return from + (to - from) * Math.pow(t, curve);
+}
+
+const DEFAULTS = {
+  shape: 'disc',
+  cell: 4,           /* px lógicos por célula */
+  ramp: [0.03, 1],   /* densidade [ruído, sinal] */
+  angle: 0,
+  curve: 1.35,       /* > 1 mantém a dispersão por mais tempo */
+  seed: 7,
+  jitter: 0.3,       /* deslocamento dentro da célula */
+  color: null,       /* null = herda currentColor do canvas */
+  scale: true,       /* partícula cresce com a densidade local */
+  mirror: false,     /* rampa espelhada: denso no centro, disperso nas pontas */
+  progress: 1,       /* 0..1 para animar a resolução */
+  opts: null,        /* parâmetros do campo */
+};
+
+/**
+ * Desenha o grafismo de partículas num <canvas>.
+ * @param {HTMLCanvasElement} canvas
+ * @param {object} config  ver DEFAULTS
+ */
+function render(canvas, config = {}) {
+  const cfg = { ...DEFAULTS, ...config };
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = canvas.clientWidth || 640;
+  const h = canvas.clientHeight || 240;
+  if (!w || !h) return;
+
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle =
+    cfg.color || getComputedStyle(canvas).getPropertyValue('color').trim() || '#fff';
+
+  const field =
+    typeof cfg.shape === 'function'
+      ? cfg.shape
+      : (fields[cfg.shape] || fields.disc)(cfg.opts || {});
+
+  const ar = h / w;                       /* v vai de 0 a ar */
+  const cell = Math.max(2, cfg.cell);
+  const cols = Math.ceil(w / cell);
+  const rows = Math.ceil(h / cell);
+  const [from, to] = cfg.ramp;
+  const p = clamp01(cfg.progress);
+
+  for (let j = 0; j < rows; j++) {
+    for (let i = 0; i < cols; i++) {
+      const u = ((i + 0.5) * cell) / w;
+      const v = ((j + 0.5) * cell) / w;   /* mesma escala de u: preserva proporção */
+      const cov = field(u, v, ar);
+      if (cov <= 0) continue;
+
+      let d = cov * rampAt(u, v, ar,
+        { from, to, angle: cfg.angle, curve: cfg.curve, mirror: cfg.mirror });
+      /* Revelação: uma frente de onda atravessa o eixo da rampa, resolvendo
+         primeiro a ponta densa (sinal) e depois a dispersa (ruído). */
+      if (p < 1) {
+        const BAND = 0.55;
+        const behind = 1 - axis(u, v, ar, cfg.angle);
+        d *= clamp01((p - behind * BAND) / (1 - BAND));
+      }
+
+      const r = hash(i, j, cfg.seed);
+      if (r >= d) continue;
+
+      const size = cfg.scale
+        ? Math.max(1, cell * (0.5 + 0.5 * clamp01(d)))
+        : Math.max(1, cell * 0.8);
+      const jx = (hash(i, j, cfg.seed + 11) - 0.5) * cfg.jitter * cell;
+      const jy = (hash(i, j, cfg.seed + 23) - 0.5) * cfg.jitter * cell;
+      ctx.fillRect(i * cell + jx, j * cell + jy, size, size);
+    }
+  }
+}
+
+/** Anima a resolução de ruído → forma uma única vez. */
+function resolve(canvas, config = {}, duration = 1600) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return render(canvas, { ...config, progress: 1 });
+  }
+  const t0 = performance.now();
+  const step = (now) => {
+    const t = clamp01((now - t0) / duration);
+    const eased = 1 - Math.pow(1 - t, 3);
+    render(canvas, { ...config, progress: eased });
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+/* --- Bootstrap declarativo ----------------------------------------------- */
+const num = (s, f) => (s == null || s === '' ? f : Number(s));
+
+function configFromEl(el) {
+  const d = el.dataset;
+  return {
+    shape: d.cdrDither || 'disc',
+    cell: num(d.cell, DEFAULTS.cell),
+    ramp: d.ramp ? d.ramp.split(',').map(Number) : DEFAULTS.ramp,
+    angle: num(d.angle, DEFAULTS.angle),
+    curve: num(d.curve, DEFAULTS.curve),
+    seed: num(d.seed, DEFAULTS.seed),
+    jitter: num(d.jitter, DEFAULTS.jitter),
+    mirror: d.mirror === 'true',
+    opts: d.opts ? JSON.parse(d.opts) : null,
+  };
+}
+
+/**
+ * Ativa todos os `[data-cdr-dither]` do documento: desenha ao entrar na tela,
+ * redesenha ao redimensionar.
+ */
+function init(root = document) {
+  const nodes = [...root.querySelectorAll('canvas[data-cdr-dither]')];
+  if (!nodes.length) return;
+
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting || e.target.dataset.cdrDone) continue;
+      e.target.dataset.cdrDone = '1';
+      resolve(e.target, configFromEl(e.target),
+        num(e.target.dataset.duration, 1600));
+    }
+  }, { rootMargin: '80px' });
+
+  nodes.forEach((n) => io.observe(n));
+
+  let raf;
+  addEventListener('resize', () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() =>
+      nodes.forEach((n) => n.dataset.cdrDone && render(n, configFromEl(n)))
+    );
+  });
+}
+
+
+
+/* --- Swatches gerados a partir dos tokens --- */
+const COLORS = [
+  ['Black', '--cdr-black', 'Superfícies primárias, tinta'],
+  ['Steel', '--cdr-steel', 'Painel escuro secundário'],
+  ['Grey 55', '--cdr-grey-55', 'Texto secundário, numerais'],
+  ['Grey 20', '--cdr-grey-20', 'Réguas e bordas'],
+  ['Canvas', '--cdr-canvas', 'Fundo institucional'],
+  ['Paper', '--cdr-paper', 'Papel de peças impressas'],
+];
+const cs = getComputedStyle(document.documentElement);
+document.getElementById('swatches').innerHTML = COLORS.map(([n, v, use]) => `
+  <div class="cdr-swatch">
+    <div class="cdr-swatch__chip" style="--chip:var(${v})"></div>
+    <div class="cdr-swatch__meta">
+      <span class="cdr-small" style="color:var(--cdr-text)">${n}</span>
+      <code class="cdr-small">${cs.getPropertyValue(v).trim().toUpperCase()}</code>
+    </div>
+    <p class="cdr-micro">${use}</p>
+  </div>`).join('');
+
+/* --- Specimens do motor gráfico --- */
+const SPECS = [
+  ['noiseToSignal', 'Ruído → sinal', 'O grafismo-âncora. Anel disperso resolvendo em massa.', '0.02,1', 0, null],
+  ['bars', 'Campo de barras', 'Padrão bruto virando estrutura repetível.', '0.06,1', 0, null],
+  ['chevrons', 'Cadência', 'Velocidade como repetição. Deploy.', '0.12,1', 0, null],
+  ['loop', 'Laço', 'Entra, circula, sai melhor. Refinamento contínuo.', '0.03,1', 0, null, true],
+  ['layers', 'Camadas', 'Infraestrutura empilhada.', '0.28,1', 0, null],
+  ['mark', 'Marca dissolvida', 'O próprio símbolo em partículas. Merch e capas.', '0.03,1', 180, null],
+];
+document.getElementById('specimens').innerHTML = SPECS.map(([shape, title, desc, ramp, angle, opts, mirror]) => `
+  <figure style="margin:0;display:flex;flex-direction:column;gap:var(--cdr-sp-3)">
+    <div class="cdr-stage" style="--stage-ar:16/9">
+      <canvas data-cdr-dither="${shape}" data-ramp="${ramp}" data-angle="${angle}"
+              data-cell="4" ${mirror ? 'data-mirror="true"' : ''}
+              ${opts ? `data-opts='${opts}'` : ''} aria-label="${title}"></canvas>
+    </div>
+    <figcaption>
+      <p class="cdr-lead">${title}</p>
+      <p class="cdr-small">${desc} · <code>${shape}</code></p>
+    </figcaption>
+  </figure>`).join('');
+
+/* --- Os seis slides de processo --- */
+const STEPS = [
+  ['Signal', 'noiseToSignal', 'Find the right signal in the noise', 'Pattern recognition. Business intuition.',
+   'Analisamos suas operações para achar atrito, ineficiência e potencial escondido. Procuramos padrões, dores e melhorias de baixo esforço que geram resultado real.', '0.02,1', 0],
+  ['Transform', 'bars', 'Turn insight into infrastructure', 'Build once, then scale it across your org.',
+   'Identificamos padrões repetíveis e construímos workflows e agentes para operacionalizá-los. Esses sistemas não funcionam uma vez só — eles aprendem, escalam e criam impacto duradouro.', '0.05,1', 0],
+  ['Deploy', 'chevrons', 'The outcome isn’t a slide, it’s a running system', 'We deliver impactful outcomes.',
+   'Não entregamos e desaparecemos. Ficamos perto para dirigir adoção, medir resultados reais e continuar melhorando. O objetivo é mudança duradoura, não vitória rápida.', '0.12,1', 0],
+  ['Refine', 'loop|mirror', 'Keep building, keep improving', 'This is where performance compounds.',
+   'Depois do lançamento, ajustamos com dados vivos e feedback. Dobramos no que funciona, cortamos o que não funciona. Refinamento é como ganhos pequenos viram vantagem permanente.', '0.05,1', 0],
+  ['Measure', 'layers', 'If it doesn’t move a number, it didn’t happen', 'Outcomes, not activity.',
+   'Cada sistema entra com uma métrica declarada antes do primeiro commit. Tempo economizado, erro evitado, receita destravada — medido no seu painel, não no nosso.', '0.28,1', 0],
+  ['Repeat', 'mark', 'The second system costs a fraction of the first', 'Compounding by design.',
+   'O que foi construído vira base para o próximo. Padrões, conectores e guard-rails são reaproveitados, e cada ciclo fica mais barato e mais rápido que o anterior.', '0.03,1', 180],
+];
+document.getElementById('processo-grid').innerHTML = STEPS.map(
+  ([name, shape, lead, kicker, body, ramp, angle], i) => `
+  <article class="cdr-slide">
+    <div class="cdr-slide__head">
+      <h3 class="cdr-title">${name}</h3>
+      <span class="cdr-slide__num">0${i + 1}</span>
+    </div>
+    <div class="cdr-slide__stage">
+      <canvas data-cdr-dither="${shape.split('|')[0]}" data-ramp="${ramp}" data-angle="${angle}"
+              data-cell="4" data-seed="${3 + i * 7}"
+              ${shape.includes('|mirror') ? 'data-mirror="true"' : ''} aria-label="${name}"></canvas>
+    </div>
+    <div class="cdr-slide__caption">
+      <p class="cdr-lead">${lead}</p>
+      <span class="cdr-small">${kicker}</span>
+    </div>
+    <p class="cdr-small cdr-body--justified">${body}</p>
+  </article>`).join('');
+
+init();   /* ativa os canvas injetados acima */
+</script>
+</body>
+</html>
