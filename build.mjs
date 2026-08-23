@@ -25,7 +25,7 @@ const ARTIFACT_URLS = {
   'cadrian-brand.html': 'https://claude.ai/code/artifact/dbceae6a-0ea9-4fcf-9845-bdc238b4baa4',
   'cadrian-extensoes.html': 'https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2',
   'cadrian-nome.html': 'https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60',
-  'cadrian-studio.html': '',   /* preenchido após a primeira publicação */
+  'cadrian-studio.html': 'https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5',
 };
 
 mkdirSync('dist', { recursive: true });
