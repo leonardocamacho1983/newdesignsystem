@@ -18,113 +18,113 @@
      A identidade é monocromática por convicção: preto puro, branco puro e
      uma escada de cinzas neutros. Sem cor de destaque — o destaque é o
      contraste e a densidade do dither. */
-  --cdr-black:        #000000;   /* superfícies primárias, tinta */
-  --cdr-ink:          #0A0A0A;   /* preto de tela, evita smear em OLED */
-  --cdr-steel:        #3F3F3F;   /* painel escuro secundário (specimen tipográfico) */
-  --cdr-grey-70:      #6E6E6E;
-  --cdr-grey-55:      #8C8C8C;   /* numerais de processo, kickers */
-  --cdr-grey-35:      #B5B5B5;
-  --cdr-grey-20:      #D6D6D6;   /* réguas, bordas */
-  --cdr-canvas:       #E4E4E4;   /* fundo de moodboard / plano de fundo institucional */
-  --cdr-paper:        #F2F0EE;   /* papel do pôster, levemente quente */
-  --cdr-white:        #FFFFFF;
+  --cmc-black:        #000000;   /* superfícies primárias, tinta */
+  --cmc-ink:          #0A0A0A;   /* preto de tela, evita smear em OLED */
+  --cmc-steel:        #3F3F3F;   /* painel escuro secundário (specimen tipográfico) */
+  --cmc-grey-70:      #6E6E6E;
+  --cmc-grey-55:      #8C8C8C;   /* numerais de processo, kickers */
+  --cmc-grey-35:      #B5B5B5;
+  --cmc-grey-20:      #D6D6D6;   /* réguas, bordas */
+  --cmc-canvas:       #E4E4E4;   /* fundo de moodboard / plano de fundo institucional */
+  --cmc-paper:        #F2F0EE;   /* papel do pôster, levemente quente */
+  --cmc-white:        #FFFFFF;
 
   /* Papéis semânticos — use estes nos componentes */
-  --cdr-bg:           var(--cdr-canvas);
-  --cdr-surface:      var(--cdr-white);
-  --cdr-surface-inv:  var(--cdr-black);
-  --cdr-text:         var(--cdr-black);
-  --cdr-text-muted:   var(--cdr-grey-55);
-  --cdr-text-inv:     var(--cdr-white);
-  --cdr-rule:         var(--cdr-grey-20);
-  --cdr-particle:     var(--cdr-white);   /* dither sobre preto */
-  --cdr-particle-inv: var(--cdr-black);   /* dither sobre claro */
+  --cmc-bg:           var(--cmc-canvas);
+  --cmc-surface:      var(--cmc-white);
+  --cmc-surface-inv:  var(--cmc-black);
+  --cmc-text:         var(--cmc-black);
+  --cmc-text-muted:   var(--cmc-grey-55);
+  --cmc-text-inv:     var(--cmc-white);
+  --cmc-rule:         var(--cmc-grey-20);
+  --cmc-particle:     var(--cmc-white);   /* dither sobre preto */
+  --cmc-particle-inv: var(--cmc-black);   /* dither sobre claro */
 
   /* --- Tipografia --------------------------------------------------------
      Inter Tight em três pesos. Títulos em Light com tracking negativo:
      é o que dá o ar de engenharia calma dos prints. */
-  --cdr-font: "Inter Tight", "Inter", ui-sans-serif, system-ui,
+  --cmc-font: "Inter Tight", "Inter", ui-sans-serif, system-ui,
               -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-  --cdr-font-mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
+  --cmc-font-mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
 
-  --cdr-w-light:  300;
-  --cdr-w-book:   400;
-  --cdr-w-medium: 500;
+  --cmc-w-light:  300;
+  --cmc-w-book:   400;
+  --cmc-w-medium: 500;
 
   /* Escala fluida (min → max entre 400px e 1600px) */
-  --cdr-fs-display: clamp(3.5rem, 1.5rem + 8vw, 8rem);
-  --cdr-fs-title:   clamp(2.25rem, 1.2rem + 4.2vw, 4.5rem);
-  --cdr-fs-h1:      clamp(1.75rem, 1.1rem + 2.6vw, 3rem);
-  --cdr-fs-h2:      clamp(1.375rem, 1rem + 1.5vw, 2rem);
-  --cdr-fs-lead:    clamp(1.0625rem, 0.95rem + 0.6vw, 1.375rem);
-  --cdr-fs-body:    1rem;
-  --cdr-fs-small:   0.8125rem;
-  --cdr-fs-micro:   0.6875rem;
+  --cmc-fs-display: clamp(3.5rem, 1.5rem + 8vw, 8rem);
+  --cmc-fs-title:   clamp(2.25rem, 1.2rem + 4.2vw, 4.5rem);
+  --cmc-fs-h1:      clamp(1.75rem, 1.1rem + 2.6vw, 3rem);
+  --cmc-fs-h2:      clamp(1.375rem, 1rem + 1.5vw, 2rem);
+  --cmc-fs-lead:    clamp(1.0625rem, 0.95rem + 0.6vw, 1.375rem);
+  --cmc-fs-body:    1rem;
+  --cmc-fs-small:   0.8125rem;
+  --cmc-fs-micro:   0.6875rem;
 
-  --cdr-lh-tight:   0.94;   /* display */
-  --cdr-lh-snug:    1.08;   /* títulos */
-  --cdr-lh-normal:  1.45;   /* texto corrido */
+  --cmc-lh-tight:   0.94;   /* display */
+  --cmc-lh-snug:    1.08;   /* títulos */
+  --cmc-lh-normal:  1.45;   /* texto corrido */
 
-  --cdr-tr-display: -0.035em;
-  --cdr-tr-title:   -0.025em;
-  --cdr-tr-body:    -0.01em;
-  --cdr-tr-micro:   0.02em;
+  --cmc-tr-display: -0.035em;
+  --cmc-tr-title:   -0.025em;
+  --cmc-tr-body:    -0.01em;
+  --cmc-tr-micro:   0.02em;
 
   /* --- Espaçamento (base 4) --------------------------------------------- */
-  --cdr-sp-1:  0.25rem;  --cdr-sp-2:  0.5rem;   --cdr-sp-3: 0.75rem;
-  --cdr-sp-4:  1rem;     --cdr-sp-5:  1.5rem;   --cdr-sp-6: 2rem;
-  --cdr-sp-7:  3rem;     --cdr-sp-8:  4rem;     --cdr-sp-9: 6rem;
-  --cdr-sp-10: 8rem;
+  --cmc-sp-1:  0.25rem;  --cmc-sp-2:  0.5rem;   --cmc-sp-3: 0.75rem;
+  --cmc-sp-4:  1rem;     --cmc-sp-5:  1.5rem;   --cmc-sp-6: 2rem;
+  --cmc-sp-7:  3rem;     --cmc-sp-8:  4rem;     --cmc-sp-9: 6rem;
+  --cmc-sp-10: 8rem;
 
-  --cdr-gutter: clamp(1.25rem, 3vw, 3rem);
-  --cdr-measure: 62ch;          /* medida máxima de leitura */
-  --cdr-max: 1440px;
+  --cmc-gutter: clamp(1.25rem, 3vw, 3rem);
+  --cmc-measure: 62ch;          /* medida máxima de leitura */
+  --cmc-max: 1440px;
 
   /* --- Forma -------------------------------------------------------------
      Raio grande e generoso, herdado do squircle da marca. */
-  --cdr-r-mark:  22%;      /* proporcional ao lado — assinatura da marca */
-  --cdr-r-card:  14px;
-  --cdr-r-panel: 20px;
-  --cdr-r-pill:  999px;
+  --cmc-r-mark:  22%;      /* proporcional ao lado — assinatura da marca */
+  --cmc-r-card:  14px;
+  --cmc-r-panel: 20px;
+  --cmc-r-pill:  999px;
 
-  --cdr-border: 1px solid var(--cdr-rule);
+  --cmc-border: 1px solid var(--cmc-rule);
 
   /* Altura única de controle: é o que faz botão e tag alinharem lado a lado. */
-  --cdr-control-h: 2.5rem;
+  --cmc-control-h: 2.5rem;
 
   /* --- Elevação ----------------------------------------------------------
      Quase inexistente. A hierarquia vem de campo preto vs. campo claro. */
-  --cdr-shadow-0: none;
-  --cdr-shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
-  --cdr-shadow-2: 0 2px 4px rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.14);
+  --cmc-shadow-0: none;
+  --cmc-shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+  --cmc-shadow-2: 0 2px 4px rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.14);
 
   /* --- Dither (o motor gráfico) ------------------------------------------
      Estes tokens governam o grafismo de partículas. */
-  --cdr-cell: 4px;              /* aresta da célula da grade de partículas */
-  --cdr-dither-min: 0.02;       /* densidade na ponta "ruído" */
-  --cdr-dither-max: 1;          /* densidade na ponta "sinal" */
-  --cdr-dither-jitter: 0.3;     /* deslocamento aleatório dentro da célula */
+  --cmc-cell: 4px;              /* aresta da célula da grade de partículas */
+  --cmc-dither-min: 0.02;       /* densidade na ponta "ruído" */
+  --cmc-dither-max: 1;          /* densidade na ponta "sinal" */
+  --cmc-dither-jitter: 0.3;     /* deslocamento aleatório dentro da célula */
 
   /* --- Movimento ---------------------------------------------------------
      Uma curva só. Tudo resolve de ruído para forma. */
-  --cdr-ease: cubic-bezier(.2,.7,.2,1);
-  --cdr-dur-fast: 180ms;
-  --cdr-dur-base: 420ms;
-  --cdr-dur-slow: 900ms;
-  --cdr-dur-resolve: 1600ms;    /* revelação do dither */
+  --cmc-ease: cubic-bezier(.2,.7,.2,1);
+  --cmc-dur-fast: 180ms;
+  --cmc-dur-base: 420ms;
+  --cmc-dur-slow: 900ms;
+  --cmc-dur-resolve: 1600ms;    /* revelação do dither */
 
-  --cdr-z-base: 0; --cdr-z-sticky: 100; --cdr-z-overlay: 500;
+  --cmc-z-base: 0; --cmc-z-sticky: 100; --cmc-z-overlay: 500;
 }
 
 /* Campo escuro: inverte os papéis semânticos sem tocar na paleta. */
-.cdr-inverse,
-[data-cdr-field="dark"] {
-  --cdr-bg:         var(--cdr-black);
-  --cdr-surface:    var(--cdr-black);
-  --cdr-text:       var(--cdr-white);
-  --cdr-text-muted: var(--cdr-grey-55);
-  --cdr-rule:       #2A2A2A;
-  --cdr-particle:   var(--cdr-white);
+.cmc-inverse,
+[data-cmc-field="dark"] {
+  --cmc-bg:         var(--cmc-black);
+  --cmc-surface:    var(--cmc-black);
+  --cmc-text:       var(--cmc-white);
+  --cmc-text-muted: var(--cmc-grey-55);
+  --cmc-rule:       #2A2A2A;
+  --cmc-particle:   var(--cmc-white);
 }
 
 </style>
@@ -138,50 +138,50 @@
 
 body {
   margin: 0;
-  background: var(--cdr-bg);
-  color: var(--cdr-text);
-  font-family: var(--cdr-font);
-  font-size: var(--cdr-fs-body);
-  font-weight: var(--cdr-w-book);
-  line-height: var(--cdr-lh-normal);
-  letter-spacing: var(--cdr-tr-body);
+  background: var(--cmc-bg);
+  color: var(--cmc-text);
+  font-family: var(--cmc-font);
+  font-size: var(--cmc-fs-body);
+  font-weight: var(--cmc-w-book);
+  line-height: var(--cmc-lh-normal);
+  letter-spacing: var(--cmc-tr-body);
   -webkit-font-smoothing: antialiased;
 }
 
 /* --- Tipografia ---------------------------------------------------------- */
-.cdr-display, .cdr-title, .cdr-h1, .cdr-h2 {
-  font-weight: var(--cdr-w-light);
+.cmc-display, .cmc-title, .cmc-h1, .cmc-h2 {
+  font-weight: var(--cmc-w-light);
   margin: 0;
   text-wrap: balance;
 }
-.cdr-display { font-size: var(--cdr-fs-display); line-height: var(--cdr-lh-tight); letter-spacing: var(--cdr-tr-display); }
-.cdr-title   { font-size: var(--cdr-fs-title);   line-height: var(--cdr-lh-tight); letter-spacing: var(--cdr-tr-display); }
-.cdr-h1      { font-size: var(--cdr-fs-h1);      line-height: var(--cdr-lh-snug);  letter-spacing: var(--cdr-tr-title); }
-.cdr-h2      { font-size: var(--cdr-fs-h2);      line-height: var(--cdr-lh-snug);  letter-spacing: var(--cdr-tr-title); }
-.cdr-lead    { font-size: var(--cdr-fs-lead);    line-height: 1.3; font-weight: var(--cdr-w-book); margin: 0; }
-.cdr-body    { max-width: var(--cdr-measure); margin: 0; }
-.cdr-body--justified { text-align: justify; hyphens: auto; }
+.cmc-display { font-size: var(--cmc-fs-display); line-height: var(--cmc-lh-tight); letter-spacing: var(--cmc-tr-display); }
+.cmc-title   { font-size: var(--cmc-fs-title);   line-height: var(--cmc-lh-tight); letter-spacing: var(--cmc-tr-display); }
+.cmc-h1      { font-size: var(--cmc-fs-h1);      line-height: var(--cmc-lh-snug);  letter-spacing: var(--cmc-tr-title); }
+.cmc-h2      { font-size: var(--cmc-fs-h2);      line-height: var(--cmc-lh-snug);  letter-spacing: var(--cmc-tr-title); }
+.cmc-lead    { font-size: var(--cmc-fs-lead);    line-height: 1.3; font-weight: var(--cmc-w-book); margin: 0; }
+.cmc-body    { max-width: var(--cmc-measure); margin: 0; }
+.cmc-body--justified { text-align: justify; hyphens: auto; }
 /* Corpo do slide: empurrado para a base, para que slides vizinhos de alturas
    diferentes alinhem o rodapé. Justificado só quando a coluna é larga o
    bastante — abaixo disso o justificado abre rios e piora a leitura. */
-.cdr-slide__body { margin: 0; margin-top: auto; }
+.cmc-slide__body { margin: 0; margin-top: auto; }
 @container (min-width: 26rem) {
-  .cdr-slide__body { text-align: justify; hyphens: auto; }
+  .cmc-slide__body { text-align: justify; hyphens: auto; }
 }
-.cdr-small   { font-size: var(--cdr-fs-small); color: var(--cdr-text-muted); }
-.cdr-micro {
-  font-size: var(--cdr-fs-micro);
-  letter-spacing: var(--cdr-tr-micro);
+.cmc-small   { font-size: var(--cmc-fs-small); color: var(--cmc-text-muted); }
+.cmc-micro {
+  font-size: var(--cmc-fs-micro);
+  letter-spacing: var(--cmc-tr-micro);
   text-transform: uppercase;
-  color: var(--cdr-text-muted);
-  font-weight: var(--cdr-w-medium);
+  color: var(--cmc-text-muted);
+  font-weight: var(--cmc-w-medium);
 }
-.cdr-muted { color: var(--cdr-text-muted); }
+.cmc-muted { color: var(--cmc-text-muted); }
 
 /* --- Marca ---------------------------------------------------------------
    O lockup é mark + wordmark com um espaço fixo proporcional à altura.
    Área de proteção = metade da altura da marca em todos os lados. */
-.cdr-lockup {
+.cmc-lockup {
   display: inline-flex;
   align-items: center;
   gap: 0.34em;
@@ -190,167 +190,167 @@ body {
   color: inherit;          /* herda o campo; nunca fixa preto sobre preto */
   text-decoration: none;
 }
-.cdr-lockup__mark { width: 1em; height: 1em; flex: none; display: block; }
+.cmc-lockup__mark { width: 1em; height: 1em; flex: none; display: block; }
 /* O glifo sem o squircle ocupa menos da caixa, então compensa opticamente
    para pesar igual ao símbolo completo ao lado do wordmark. */
-.cdr-lockup--glyph .cdr-lockup__mark { width: 1.14em; height: 1.14em; }
-.cdr-lockup__word {
+.cmc-lockup--glyph .cmc-lockup__mark { width: 1.14em; height: 1.14em; }
+.cmc-lockup__word {
   font-size: 1em;
-  font-weight: var(--cdr-w-medium);
+  font-weight: var(--cmc-w-medium);
   letter-spacing: -0.035em;
 }
-.cdr-lockup--sm { --lockup-size: 1.125rem; }
-.cdr-lockup--lg { --lockup-size: clamp(2.5rem, 6vw, 5rem); }
+.cmc-lockup--sm { --lockup-size: 1.125rem; }
+.cmc-lockup--lg { --lockup-size: clamp(2.5rem, 6vw, 5rem); }
 
 /* --- Estrutura ----------------------------------------------------------- */
-.cdr-shell { max-width: var(--cdr-max); margin-inline: auto; padding-inline: var(--cdr-gutter); }
-.cdr-section { padding-block: var(--cdr-sp-9); }
-.cdr-rule { border: 0; border-top: var(--cdr-border); margin: 0; }
-.cdr-grid { display: grid; gap: var(--cdr-sp-5); }
-.cdr-grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); }
-.cdr-grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+.cmc-shell { max-width: var(--cmc-max); margin-inline: auto; padding-inline: var(--cmc-gutter); }
+.cmc-section { padding-block: var(--cmc-sp-9); }
+.cmc-rule { border: 0; border-top: var(--cmc-border); margin: 0; }
+.cmc-grid { display: grid; gap: var(--cmc-sp-5); }
+.cmc-grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); }
+.cmc-grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
 
 /* Cabeçalho de seção: rótulo à esquerda, numeral à direita. */
-.cdr-section-head {
+.cmc-section-head {
   display: flex; align-items: baseline; justify-content: space-between;
-  gap: var(--cdr-sp-4); padding-bottom: var(--cdr-sp-3);
-  border-bottom: var(--cdr-border); margin-bottom: var(--cdr-sp-6);
+  gap: var(--cmc-sp-4); padding-bottom: var(--cmc-sp-3);
+  border-bottom: var(--cmc-border); margin-bottom: var(--cmc-sp-6);
 }
 
 /* --- Slide de processo ---------------------------------------------------
    O componente-assinatura do deck: título + numeral, painel preto com o
    grafismo, linha de chamada, kicker à direita e corpo em cinza. */
-.cdr-slide {
-  background: var(--cdr-surface);
-  border-radius: var(--cdr-r-card);
+.cmc-slide {
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-r-card);
   padding: clamp(1.25rem, 2.4vw, 2rem);
-  display: flex; flex-direction: column; gap: var(--cdr-sp-4);
+  display: flex; flex-direction: column; gap: var(--cmc-sp-4);
   container-type: inline-size;
 }
-.cdr-slide__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cdr-sp-4); }
+.cmc-slide__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cmc-sp-4); }
 /* Título e numeral escalam com a LARGURA DO CARD, não da viewport: é o que
    impede um título longo ("Transform") de encostar no numeral. */
-.cdr-slide .cdr-title,
-.cdr-slide .cdr-slide__num { font-size: clamp(1.5rem, 13cqi, 3.25rem); }
-.cdr-slide .cdr-title { min-width: 0; overflow-wrap: break-word; }
-.cdr-slide .cdr-slide__num { flex: none; }
-.cdr-slide__num {
-  font-size: var(--cdr-fs-title);
-  font-weight: var(--cdr-w-light);
-  letter-spacing: var(--cdr-tr-display);
-  color: var(--cdr-grey-35);
-  line-height: var(--cdr-lh-tight);
+.cmc-slide .cmc-title,
+.cmc-slide .cmc-slide__num { font-size: clamp(1.5rem, 13cqi, 3.25rem); }
+.cmc-slide .cmc-title { min-width: 0; overflow-wrap: break-word; }
+.cmc-slide .cmc-slide__num { flex: none; }
+.cmc-slide__num {
+  font-size: var(--cmc-fs-title);
+  font-weight: var(--cmc-w-light);
+  letter-spacing: var(--cmc-tr-display);
+  color: var(--cmc-grey-35);
+  line-height: var(--cmc-lh-tight);
   font-variant-numeric: tabular-nums;
 }
-.cdr-slide__stage {
-  background: var(--cdr-black);
+.cmc-slide__stage {
+  background: var(--cmc-black);
   aspect-ratio: 16 / 6;
   width: 100%;
-  color: var(--cdr-particle);   /* o canvas herda daqui */
+  color: var(--cmc-particle);   /* o canvas herda daqui */
   overflow: hidden;
 }
-.cdr-slide__stage canvas { display: block; width: 100%; height: 100%; }
-.cdr-slide__caption { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cdr-sp-4); }
+.cmc-slide__stage canvas { display: block; width: 100%; height: 100%; }
+.cmc-slide__caption { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cmc-sp-4); }
 @container (max-width: 420px) {
-  .cdr-slide__caption { flex-direction: column; gap: var(--cdr-sp-1); }
+  .cmc-slide__caption { flex-direction: column; gap: var(--cmc-sp-1); }
 }
 
 /* --- Palco de grafismo genérico ------------------------------------------ */
-.cdr-stage {
+.cmc-stage {
   position: relative;
-  background: var(--cdr-black);
-  color: var(--cdr-particle);
-  border-radius: var(--cdr-r-panel);
+  background: var(--cmc-black);
+  color: var(--cmc-particle);
+  border-radius: var(--cmc-r-panel);
   overflow: hidden;
   aspect-ratio: var(--stage-ar, 16 / 9);
 }
-.cdr-stage--light { background: var(--cdr-paper); color: var(--cdr-particle-inv); }
-.cdr-stage--flat { border-radius: 0; }
-.cdr-stage--bare { background: transparent; }
-.cdr-stage canvas { display: block; width: 100%; height: 100%; }
+.cmc-stage--light { background: var(--cmc-paper); color: var(--cmc-particle-inv); }
+.cmc-stage--flat { border-radius: 0; }
+.cmc-stage--bare { background: transparent; }
+.cmc-stage canvas { display: block; width: 100%; height: 100%; }
 
 /* --- Card ---------------------------------------------------------------- */
-.cdr-card {
-  background: var(--cdr-surface);
-  border-radius: var(--cdr-r-card);
-  padding: var(--cdr-sp-5);
-  display: flex; flex-direction: column; gap: var(--cdr-sp-3);
+.cmc-card {
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-r-card);
+  padding: var(--cmc-sp-5);
+  display: flex; flex-direction: column; gap: var(--cmc-sp-3);
 }
-.cdr-card--outline { background: transparent; border: var(--cdr-border); }
+.cmc-card--outline { background: transparent; border: var(--cmc-border); }
 
 /* --- Botão ---------------------------------------------------------------
    Pílula. Sólida em preto, ou contorno. Sem gradiente, nunca. */
-.cdr-btn {
+.cmc-btn {
   display: inline-flex; align-items: center; justify-content: center;
-  gap: var(--cdr-sp-2);
-  min-height: var(--cdr-control-h); padding: 0 1.35em;
-  border-radius: var(--cdr-r-pill);
+  gap: var(--cmc-sp-2);
+  min-height: var(--cmc-control-h); padding: 0 1.35em;
+  border-radius: var(--cmc-r-pill);
   border: 1px solid transparent;
-  background: var(--cdr-black); color: var(--cdr-white);
-  font: inherit; font-weight: var(--cdr-w-medium); font-size: var(--cdr-fs-small);
-  letter-spacing: var(--cdr-tr-body);
+  background: var(--cmc-black); color: var(--cmc-white);
+  font: inherit; font-weight: var(--cmc-w-medium); font-size: var(--cmc-fs-small);
+  letter-spacing: var(--cmc-tr-body);
   cursor: pointer; text-decoration: none;
-  transition: transform var(--cdr-dur-fast) var(--cdr-ease),
-              background-color var(--cdr-dur-fast) var(--cdr-ease),
-              color var(--cdr-dur-fast) var(--cdr-ease);
+  transition: transform var(--cmc-dur-fast) var(--cmc-ease),
+              background-color var(--cmc-dur-fast) var(--cmc-ease),
+              color var(--cmc-dur-fast) var(--cmc-ease);
 }
-.cdr-btn:hover { transform: translateY(-1px); }
-.cdr-btn:active { transform: translateY(0); }
-.cdr-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.cmc-btn:hover { transform: translateY(-1px); }
+.cmc-btn:active { transform: translateY(0); }
+.cmc-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 /* O contorno herda a cor do campo em que está: assim o mesmo botão funciona
    sobre branco e sobre preto sem variante extra. */
-.cdr-btn--ghost {
+.cmc-btn--ghost {
   background: transparent; color: inherit;
   border-color: color-mix(in srgb, currentColor 32%, transparent);
 }
-.cdr-btn--ghost:hover { border-color: currentColor; }
-.cdr-btn--inverse { background: var(--cdr-white); color: var(--cdr-black); }
+.cmc-btn--ghost:hover { border-color: currentColor; }
+.cmc-btn--inverse { background: var(--cmc-white); color: var(--cmc-black); }
 
 /* --- Tag / pílula informativa -------------------------------------------- */
-.cdr-tag {
+.cmc-tag {
   display: inline-flex; align-items: center; justify-content: center;
-  gap: var(--cdr-sp-2);
-  min-height: var(--cdr-control-h); padding: 0 0.95em;
-  border-radius: var(--cdr-r-pill);
+  gap: var(--cmc-sp-2);
+  min-height: var(--cmc-control-h); padding: 0 0.95em;
+  border-radius: var(--cmc-r-pill);
   border: 1px solid currentColor;
-  font-size: var(--cdr-fs-micro); letter-spacing: var(--cdr-tr-micro);
-  text-transform: uppercase; font-weight: var(--cdr-w-medium);
+  font-size: var(--cmc-fs-micro); letter-spacing: var(--cmc-tr-micro);
+  text-transform: uppercase; font-weight: var(--cmc-w-medium);
   text-decoration: none; color: inherit;
 }
-a.cdr-tag:hover { background: currentColor; }
-a.cdr-tag:hover > * { color: var(--cdr-bg); }
+a.cmc-tag:hover { background: currentColor; }
+a.cmc-tag:hover > * { color: var(--cmc-bg); }
 
 /* Fila de controles: botões e tags dividem a mesma altura e alinham. */
-.cdr-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cdr-sp-2); }
-.cdr-controls--split { justify-content: space-between; }
+.cmc-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cmc-sp-2); }
+.cmc-controls--split { justify-content: space-between; }
 
 /* --- Swatches ------------------------------------------------------------ */
-.cdr-swatch { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
-.cdr-swatch__chip {
-  aspect-ratio: 3 / 2; border-radius: var(--cdr-r-card);
-  border: var(--cdr-border); background: var(--chip);
+.cmc-swatch { display: flex; flex-direction: column; gap: var(--cmc-sp-2); }
+.cmc-swatch__chip {
+  aspect-ratio: 3 / 2; border-radius: var(--cmc-r-card);
+  border: var(--cmc-border); background: var(--chip);
 }
-.cdr-swatch__meta { display: flex; justify-content: space-between; gap: var(--cdr-sp-2); }
+.cmc-swatch__meta { display: flex; justify-content: space-between; gap: var(--cmc-sp-2); }
 
 /* --- Pôster / peça de campanha ------------------------------------------- */
-.cdr-poster {
-  background: var(--cdr-paper); color: var(--cdr-black);
+.cmc-poster {
+  background: var(--cmc-paper); color: var(--cmc-black);
   aspect-ratio: 3 / 4; padding: clamp(1rem, 3cqi, 2.25rem);
-  display: grid; grid-template-rows: auto 1fr auto; gap: var(--cdr-sp-4);
-  container-type: inline-size; box-shadow: var(--cdr-shadow-2);
+  display: grid; grid-template-rows: auto 1fr auto; gap: var(--cmc-sp-4);
+  container-type: inline-size; box-shadow: var(--cmc-shadow-2);
 }
-.cdr-poster__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cdr-sp-4); }
-.cdr-poster__hed { text-align: right; font-size: clamp(1.5rem, 9cqi, 4rem); }
-.cdr-poster__art { position: relative; color: var(--cdr-particle-inv); }
-.cdr-poster__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.cdr-poster__foot { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--cdr-sp-4); }
+.cmc-poster__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cmc-sp-4); }
+.cmc-poster__hed { text-align: right; font-size: clamp(1.5rem, 9cqi, 4rem); }
+.cmc-poster__art { position: relative; color: var(--cmc-particle-inv); }
+.cmc-poster__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cmc-poster__foot { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--cmc-sp-4); }
 
 /* --- Do / Don't ---------------------------------------------------------- */
-.cdr-rule-card { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
-.cdr-rule-card__flag { font-weight: var(--cdr-w-medium); display: flex; align-items: center; gap: var(--cdr-sp-2); }
-.cdr-rule-card--do .cdr-rule-card__flag::before { content: "＋"; }
-.cdr-rule-card--dont .cdr-rule-card__flag::before { content: "−"; }
-.cdr-rule-card--dont { color: var(--cdr-text-muted); }
+.cmc-rule-card { display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
+.cmc-rule-card__flag { font-weight: var(--cmc-w-medium); display: flex; align-items: center; gap: var(--cmc-sp-2); }
+.cmc-rule-card--do .cmc-rule-card__flag::before { content: "＋"; }
+.cmc-rule-card--dont .cmc-rule-card__flag::before { content: "−"; }
+.cmc-rule-card--dont { color: var(--cmc-text-muted); }
 
 /* --- Acessibilidade ------------------------------------------------------ */
 :focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
@@ -368,35 +368,35 @@ a.cdr-tag:hover > * { color: var(--cdr-bg); }
 
 /* --- Ritmo vertical -------------------------------------------------------
    Um empilhamento com uma medida só. Nada de margin-top avulso. */
-.stack   { display: flex; flex-direction: column; gap: var(--cdr-sp-4); }
-.stack-5 { display: flex; flex-direction: column; gap: var(--cdr-sp-5); }
-.stack-7 { display: flex; flex-direction: column; gap: var(--cdr-sp-7); }
+.stack   { display: flex; flex-direction: column; gap: var(--cmc-sp-4); }
+.stack-5 { display: flex; flex-direction: column; gap: var(--cmc-sp-5); }
+.stack-7 { display: flex; flex-direction: column; gap: var(--cmc-sp-7); }
 
 /* Bloco de documentação: rótulo, intro e conteúdo com respiro previsível. */
-.block { display: flex; flex-direction: column; gap: var(--cdr-sp-5); }
-.block__intro { max-width: 58ch; color: var(--cdr-text-muted); margin: 0; }
+.block { display: flex; flex-direction: column; gap: var(--cmc-sp-5); }
+.block__intro { max-width: 58ch; color: var(--cmc-text-muted); margin: 0; }
 
 /* --- Hero ----------------------------------------------------------------- */
-.hero { background: var(--cdr-black); color: var(--cdr-white); }
-.hero > .cdr-shell {
-  display: flex; flex-direction: column; gap: var(--cdr-sp-7);
+.hero { background: var(--cmc-black); color: var(--cmc-white); }
+.hero > .cmc-shell {
+  display: flex; flex-direction: column; gap: var(--cmc-sp-7);
   padding-block: clamp(2.5rem, 7vw, 6rem);
 }
-.hero__nav { display: flex; flex-wrap: wrap; gap: var(--cdr-sp-2); }
+.hero__nav { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-2); }
 
 /* --- Cartões de especificação --------------------------------------------
    Área de amostra que cresce, legenda ancorada embaixo: é isso que faz
    cartões vizinhos alinharem a legenda mesmo com amostras de alturas
    diferentes. Sem isso o grid estica e sobra buraco branco. */
 .spec {
-  display: flex; flex-direction: column; gap: var(--cdr-sp-4);
-  background: var(--cdr-surface); border-radius: var(--cdr-r-card);
-  padding: var(--cdr-sp-5);
+  display: flex; flex-direction: column; gap: var(--cmc-sp-4);
+  background: var(--cmc-surface); border-radius: var(--cmc-r-card);
+  padding: var(--cmc-sp-5);
 }
-.spec--dark    { background: var(--cdr-black); color: var(--cdr-white); }
-.spec--steel   { background: var(--cdr-steel); color: var(--cdr-white); }
-.spec--outline { background: transparent; border: var(--cdr-border); }
-.spec__body { flex: 1; display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+.spec--dark    { background: var(--cmc-black); color: var(--cmc-white); }
+.spec--steel   { background: var(--cmc-steel); color: var(--cmc-white); }
+.spec--outline { background: transparent; border: var(--cmc-border); }
+.spec__body { flex: 1; display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
 .spec__demo { flex: 1; display: flex; align-items: center; min-height: 7rem; }
 .spec__demo--center { justify-content: center; }
 .spec__foot { margin-top: auto; }
@@ -405,46 +405,46 @@ a.cdr-tag:hover > * { color: var(--cdr-bg); }
 .specs { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
 .specs > li {
   display: flex; justify-content: space-between; align-items: baseline;
-  gap: var(--cdr-sp-5); padding-block: var(--cdr-sp-3);
-  border-bottom: var(--cdr-border);
+  gap: var(--cmc-sp-5); padding-block: var(--cmc-sp-3);
+  border-bottom: var(--cmc-border);
 }
 .specs > li:first-child { padding-top: 0; }
 .specs > li:last-child  { border-bottom: 0; padding-bottom: 0; }  /* sem régua solta */
-.specs__key { color: var(--cdr-text); }
-.specs__val { color: var(--cdr-text-muted); text-align: right; flex: none; }
+.specs__key { color: var(--cmc-text); }
+.specs__val { color: var(--cmc-text-muted); text-align: right; flex: none; }
 
 /* --- Cor ------------------------------------------------------------------ */
 .swatches {
-  display: grid; gap: var(--cdr-sp-4);
+  display: grid; gap: var(--cmc-sp-4);
   grid-template-columns: repeat(auto-fit, minmax(min(9.5rem, 45%), 1fr));
 }
-.swatch { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
+.swatch { display: flex; flex-direction: column; gap: var(--cmc-sp-2); }
 .swatch__chip {
-  aspect-ratio: 4 / 3; border-radius: var(--cdr-r-card);
-  background: var(--chip); border: var(--cdr-border);
+  aspect-ratio: 4 / 3; border-radius: var(--cmc-r-card);
+  background: var(--chip); border: var(--cmc-border);
 }
 .swatch__meta {
   display: flex; justify-content: space-between; align-items: baseline;
-  gap: var(--cdr-sp-2); font-size: var(--cdr-fs-small);
+  gap: var(--cmc-sp-2); font-size: var(--cmc-fs-small);
 }
-.swatch__hex { color: var(--cdr-text-muted); font-family: var(--cdr-font-mono); }
+.swatch__hex { color: var(--cmc-text-muted); font-family: var(--cmc-font-mono); }
 
 /* --- Área de proteção ----------------------------------------------------- */
-.clearspace { align-self: flex-start; padding: 1.5rem; outline: 1px dashed var(--cdr-grey-35); }
+.clearspace { align-self: flex-start; padding: 1.5rem; outline: 1px dashed var(--cmc-grey-35); }
 .clearspace > svg { display: block; width: 5.5rem; height: 5.5rem; }
 
 /* --- Grade de amostras do motor gráfico ----------------------------------- */
 .specimens {
-  display: grid; gap: var(--cdr-sp-6);
+  display: grid; gap: var(--cmc-sp-6);
   grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
 }
-.specimen { display: flex; flex-direction: column; gap: var(--cdr-sp-3); margin: 0; }
-.specimen figcaption { display: flex; flex-direction: column; gap: var(--cdr-sp-1); }
+.specimen { display: flex; flex-direction: column; gap: var(--cmc-sp-3); margin: 0; }
+.specimen figcaption { display: flex; flex-direction: column; gap: var(--cmc-sp-1); }
 
 /* --- Grades ---------------------------------------------------------------
    `align-items: start` é o detalhe que evita cartão esticado com buraco
    branco embaixo quando o vizinho é mais alto. */
-.grid       { display: grid; gap: var(--cdr-sp-5); align-items: start; }
+.grid       { display: grid; gap: var(--cmc-sp-5); align-items: start; }
 .grid--2    { grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr)); }
 .grid--3    { grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr)); }
 .grid--even { align-items: stretch; }   /* quando a altura igual é intencional */
@@ -453,8 +453,8 @@ a.cdr-tag:hover > * { color: var(--cdr-bg); }
    Os sinais "+" e "−" são desenhados com gradientes, não com glifos de
    largura cheia — glifo fullwidth desalinha do texto ao lado. */
 .rules__flag {
-  display: flex; align-items: center; gap: var(--cdr-sp-3);
-  font-weight: var(--cdr-w-medium); font-size: var(--cdr-fs-lead);
+  display: flex; align-items: center; gap: var(--cmc-sp-3);
+  font-weight: var(--cmc-w-medium); font-size: var(--cmc-fs-lead);
 }
 .rules__flag::before {
   content: ""; width: 0.75rem; height: 0.75rem; flex: none;
@@ -465,24 +465,24 @@ a.cdr-tag:hover > * { color: var(--cdr-bg); }
     linear-gradient(currentColor, currentColor) center/100% 2px no-repeat,
     linear-gradient(currentColor, currentColor) center/2px 100% no-repeat;
 }
-.rules--dont .rules__flag { color: var(--cdr-grey-55); }
+.rules--dont .rules__flag { color: var(--cmc-grey-55); }
 
 /* --- Aplicações ----------------------------------------------------------- */
 .showcase {
-  display: grid; gap: var(--cdr-sp-6); align-items: start;
+  display: grid; gap: var(--cmc-sp-6); align-items: start;
   grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
 }
-.showcase__col { display: flex; flex-direction: column; gap: var(--cdr-sp-6); }
+.showcase__col { display: flex; flex-direction: column; gap: var(--cmc-sp-6); }
 
 /* Outdoor */
 .ooh {
-  background: var(--cdr-white); border-radius: var(--cdr-r-card); overflow: hidden;
+  background: var(--cmc-white); border-radius: var(--cmc-r-card); overflow: hidden;
 }
 .ooh__inner {
-  display: grid; grid-template-columns: 1fr auto; gap: var(--cdr-sp-5);
-  align-items: center; padding: var(--cdr-sp-6);
+  display: grid; grid-template-columns: 1fr auto; gap: var(--cmc-sp-5);
+  align-items: center; padding: var(--cmc-sp-6);
 }
-.ooh__copy { display: flex; flex-direction: column; gap: var(--cdr-sp-4); max-width: 34ch; }
+.ooh__copy { display: flex; flex-direction: column; gap: var(--cmc-sp-4); max-width: 34ch; }
 .ooh__art { width: min(13rem, 32vw); }
 @media (max-width: 30rem) {
   .ooh__inner { grid-template-columns: 1fr; }
@@ -493,15 +493,15 @@ a.cdr-tag:hover > * { color: var(--cdr-bg); }
 .bizcard {
   position: relative; overflow: hidden;
   aspect-ratio: 1.75 / 1; max-width: 32rem;
-  background: var(--cdr-black); color: var(--cdr-white);
-  border-radius: var(--cdr-r-card); padding: var(--cdr-sp-5);
+  background: var(--cmc-black); color: var(--cmc-white);
+  border-radius: var(--cmc-r-card); padding: var(--cmc-sp-5);
   display: flex; flex-direction: column; justify-content: space-between;
 }
 /* A marca d'água ocupa só a faixa superior direita: o rodapé de contato
    precisa de fundo limpo. Grafismo bonito que cobre texto é defeito. */
 .bizcard__art {
   position: absolute; top: -6%; bottom: 30%; right: -4%; width: 46%;
-  color: var(--cdr-white); pointer-events: none;
+  color: var(--cmc-white); pointer-events: none;
 }
 .bizcard__art canvas { width: 100%; height: 100%; display: block; }
 .bizcard > *:not(.bizcard__art) { position: relative; }
@@ -509,19 +509,19 @@ a.cdr-tag:hover > * { color: var(--cdr-bg); }
 
 /* --- Rodapé --------------------------------------------------------------- */
 .guide-foot {
-  background: var(--cdr-black); color: var(--cdr-white);
-  padding-block: var(--cdr-sp-7);
+  background: var(--cmc-black); color: var(--cmc-white);
+  padding-block: var(--cmc-sp-7);
 }
-.guide-foot > .cdr-shell {
+.guide-foot > .cmc-shell {
   display: flex; flex-wrap: wrap; justify-content: space-between;
-  align-items: center; gap: var(--cdr-sp-4);
+  align-items: center; gap: var(--cmc-sp-4);
 }
 
 figure { margin: 0; }
-code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
+code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
 
 /* Espécime tipográfico: o alfabeto em peso de leitura, não em Light. */
-.type-specimen { font-weight: var(--cdr-w-book); }
+.type-specimen { font-weight: var(--cmc-w-book); }
 
 /* ==========================================================================
    Extensões — formatos de aplicação
@@ -529,7 +529,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 
 /* Galeria de formatos — agrupada por família, porque misturar 9:16 com 4:1
    numa grade automática só produz buracos. Cada família tem seu ritmo. */
-.formats { display: grid; gap: var(--cdr-sp-6); align-items: start; }
+.formats { display: grid; gap: var(--cmc-sp-6); align-items: start; }
 .formats--social { grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); }
 .formats--wide { grid-template-columns: 1fr; }
 .formats--pair {
@@ -537,7 +537,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 }
 @media (max-width: 48rem) { .formats--pair { grid-template-columns: 1fr; } }
 
-.format { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+.format { display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
 
 /* Cada peça é dividida em FAIXAS: cabeçalho, arte, pé. O canvas ocupa a
    própria linha do grid em vez de ficar absoluto por trás de tudo — assim é
@@ -545,15 +545,15 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
    primeira versão desta seção. */
 .format__frame {
   overflow: hidden;
-  border-radius: var(--cdr-r-card);
-  background: var(--cdr-black); color: var(--cdr-white);
+  border-radius: var(--cmc-r-card);
+  background: var(--cmc-black); color: var(--cmc-white);
   aspect-ratio: var(--ar, 1);
   container-type: inline-size;
   display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 4cqi; padding: 6cqi;
 }
-.format__frame--paper { background: var(--cdr-paper); color: var(--cdr-black); }
-.format__frame--white { background: var(--cdr-white); color: var(--cdr-black); }
+.format__frame--paper { background: var(--cmc-paper); color: var(--cmc-black); }
+.format__frame--white { background: var(--cmc-white); color: var(--cmc-black); }
 
 /* Peças largas: texto de um lado, arte do outro. A coluna da arte precisa
    ESTICAR (o canvas é absoluto e não tem altura própria); só o texto se
@@ -572,148 +572,148 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 
 .format__hed {
   font-size: var(--hed, 12cqi); line-height: 0.98; letter-spacing: -0.03em;
-  font-weight: var(--cdr-w-light); margin: 0; text-wrap: balance;
+  font-weight: var(--cmc-w-light); margin: 0; text-wrap: balance;
 }
 .format__note { font-size: var(--note, 4.5cqi); line-height: 1.4; margin: 0; }
-.format__note--muted { color: var(--cdr-text-muted); }
+.format__note--muted { color: var(--cmc-text-muted); }
 .format__copy { display: flex; flex-direction: column; gap: 2cqi; }
 /* O lockup escala com a peça, mas com teto: em peça larga, cqi cresce demais. */
 .format__lockup { --lockup-size: clamp(0.7rem, 7cqi, 1.4rem); }
 
 /* --- Laboratório ---------------------------------------------------------- */
-.lab { display: grid; gap: var(--cdr-sp-6); grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr); }
+.lab { display: grid; gap: var(--cmc-sp-6); grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr); }
 @media (max-width: 52rem) { .lab { grid-template-columns: 1fr; } }
-.lab__stage { position: sticky; top: var(--cdr-sp-4); }
-.lab__panel { display: flex; flex-direction: column; gap: var(--cdr-sp-4); }
-.field { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
+.lab__stage { position: sticky; top: var(--cmc-sp-4); }
+.lab__panel { display: flex; flex-direction: column; gap: var(--cmc-sp-4); }
+.field { display: flex; flex-direction: column; gap: var(--cmc-sp-2); }
 /* `display` de classe vence o estilo de agente do atributo hidden: sem isto,
    um campo marcado hidden continua aparecendo. */
 .field[hidden] { display: none; }
-.field__row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cdr-sp-3); }
-.field__val { font-family: var(--cdr-font-mono); font-size: var(--cdr-fs-small);
-              color: var(--cdr-text-muted); font-variant-numeric: tabular-nums; }
+.field__row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cmc-sp-3); }
+.field__val { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+              color: var(--cmc-text-muted); font-variant-numeric: tabular-nums; }
 .field select, .field input[type="text"], .field textarea {
-  font: inherit; font-size: var(--cdr-fs-small); color: var(--cdr-text);
-  background: var(--cdr-surface); border: var(--cdr-border);
-  border-radius: var(--cdr-r-pill); padding: 0 0.9em;
-  min-height: var(--cdr-control-h); width: 100%;
+  font: inherit; font-size: var(--cmc-fs-small); color: var(--cmc-text);
+  background: var(--cmc-surface); border: var(--cmc-border);
+  border-radius: var(--cmc-r-pill); padding: 0 0.9em;
+  min-height: var(--cmc-control-h); width: 100%;
 }
 .field input[type="range"] {
-  width: 100%; accent-color: var(--cdr-black);
+  width: 100%; accent-color: var(--cmc-black);
   margin: 0;   /* o UA aplica margem lateral no range, que estoura a coluna */
 }
 .field textarea {
-  min-height: 4.5rem; padding: 0.6em 0.9em; border-radius: var(--cdr-r-card);
+  min-height: 4.5rem; padding: 0.6em 0.9em; border-radius: var(--cmc-r-card);
   resize: vertical; line-height: 1.35;
 }
 .lab__code {
-  font-family: var(--cdr-font-mono); font-size: var(--cdr-fs-small);
-  background: var(--cdr-black); color: var(--cdr-white);
-  border-radius: var(--cdr-r-card); padding: var(--cdr-sp-4);
+  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+  background: var(--cmc-black); color: var(--cmc-white);
+  border-radius: var(--cmc-r-card); padding: var(--cmc-sp-4);
   overflow-x: auto; margin: 0; white-space: pre; line-height: 1.5;
 }
 
 /* ==========================================================================
    Teste de nome — comparação lado a lado
    ========================================================================== */
-.versus { display: grid; gap: var(--cdr-sp-5); align-items: start;
+.versus { display: grid; gap: var(--cmc-sp-5); align-items: start;
           grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); }
-.versus__col { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
-.versus__label { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cdr-sp-3); }
+.versus__col { display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
+.versus__label { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cmc-sp-3); }
 
 /* Régua de medição: mostra a largura relativa do wordmark de cada nome. */
-.gauge { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
-.gauge__bar { height: 0.5rem; border-radius: var(--cdr-r-pill); background: var(--cdr-black);
+.gauge { display: flex; flex-direction: column; gap: var(--cmc-sp-2); }
+.gauge__bar { height: 0.5rem; border-radius: var(--cmc-r-pill); background: var(--cmc-black);
               width: var(--w); }
-.gauge__bar--alt { background: var(--cdr-grey-55); }
-.gauge__track { background: var(--cdr-grey-20); border-radius: var(--cdr-r-pill); }
+.gauge__bar--alt { background: var(--cmc-grey-55); }
+.gauge__track { background: var(--cmc-grey-20); border-radius: var(--cmc-r-pill); }
 
-.verdict { display: flex; flex-direction: column; gap: var(--cdr-sp-4);
-           border-left: 3px solid var(--cdr-black); padding-left: var(--cdr-sp-5); }
+.verdict { display: flex; flex-direction: column; gap: var(--cmc-sp-4);
+           border-left: 3px solid var(--cmc-black); padding-left: var(--cmc-sp-5); }
 
 /* ==========================================================================
    Estúdio de print
    ========================================================================== */
-.studio { display: grid; gap: var(--cdr-sp-6); grid-template-columns: minmax(0, 1fr) minmax(0, 20rem); }
+.studio { display: grid; gap: var(--cmc-sp-6); grid-template-columns: minmax(0, 1fr) minmax(0, 20rem); }
 .studio > * { min-width: 0; }
 @media (max-width: 56rem) { .studio { grid-template-columns: 1fr; } }
 
-.studio__stage { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+.studio__stage { display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
 .studio__frame {
   position: relative; overflow: hidden;
-  border-radius: var(--cdr-r-panel);
+  border-radius: var(--cmc-r-panel);
   aspect-ratio: var(--ar, 4/3);
-  background: var(--field, var(--cdr-black));
-  color: var(--ink, var(--cdr-white));
-  box-shadow: var(--cdr-shadow-1);
+  background: var(--field, var(--cmc-black));
+  color: var(--ink, var(--cmc-white));
+  box-shadow: var(--cmc-shadow-1);
 }
 .studio__frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 
-.studio__panel { display: flex; flex-direction: column; gap: var(--cdr-sp-5); }
-.studio__group { display: flex; flex-direction: column; gap: var(--cdr-sp-4); }
-.studio__group > .cdr-micro { padding-bottom: var(--cdr-sp-2); border-bottom: var(--cdr-border); }
+.studio__panel { display: flex; flex-direction: column; gap: var(--cmc-sp-5); }
+.studio__group { display: flex; flex-direction: column; gap: var(--cmc-sp-4); }
+.studio__group > .cmc-micro { padding-bottom: var(--cmc-sp-2); border-bottom: var(--cmc-border); }
 
 /* Botões de preset: uma fila que quebra, com o ativo marcado. */
-.presets { display: flex; flex-wrap: wrap; gap: var(--cdr-sp-2); }
+.presets { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-2); }
 .preset {
-  font: inherit; font-size: var(--cdr-fs-micro); letter-spacing: var(--cdr-tr-micro);
-  text-transform: uppercase; font-weight: var(--cdr-w-medium);
-  min-height: var(--cdr-control-h); padding: 0 0.95em;
-  border-radius: var(--cdr-r-pill); cursor: pointer;
+  font: inherit; font-size: var(--cmc-fs-micro); letter-spacing: var(--cmc-tr-micro);
+  text-transform: uppercase; font-weight: var(--cmc-w-medium);
+  min-height: var(--cmc-control-h); padding: 0 0.95em;
+  border-radius: var(--cmc-r-pill); cursor: pointer;
   background: transparent; color: inherit;
   border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
-  transition: background-color var(--cdr-dur-fast) var(--cdr-ease),
-              color var(--cdr-dur-fast) var(--cdr-ease);
+  transition: background-color var(--cmc-dur-fast) var(--cmc-ease),
+              color var(--cmc-dur-fast) var(--cmc-ease);
 }
 .preset:hover { border-color: currentColor; }
-.preset[aria-pressed="true"] { background: var(--cdr-black); color: var(--cdr-white); border-color: var(--cdr-black); }
+.preset[aria-pressed="true"] { background: var(--cmc-black); color: var(--cmc-white); border-color: var(--cmc-black); }
 
 /* Segmentado (campo, proporção): rádios que parecem um controle só. */
-.segmented { display: flex; gap: 0; border: var(--cdr-border); border-radius: var(--cdr-r-pill); overflow: hidden; }
+.segmented { display: flex; gap: 0; border: var(--cmc-border); border-radius: var(--cmc-r-pill); overflow: hidden; }
 .segmented input { position: absolute; opacity: 0; pointer-events: none; }
 .segmented label {
   flex: 1; text-align: center; cursor: pointer;
-  font-size: var(--cdr-fs-micro); letter-spacing: var(--cdr-tr-micro);
-  text-transform: uppercase; font-weight: var(--cdr-w-medium);
-  min-height: var(--cdr-control-h); display: flex; align-items: center; justify-content: center;
+  font-size: var(--cmc-fs-micro); letter-spacing: var(--cmc-tr-micro);
+  text-transform: uppercase; font-weight: var(--cmc-w-medium);
+  min-height: var(--cmc-control-h); display: flex; align-items: center; justify-content: center;
   padding: 0 0.4em; white-space: nowrap; min-width: 0;
 }
-.segmented input:checked + label { background: var(--cdr-black); color: var(--cdr-white); }
+.segmented input:checked + label { background: var(--cmc-black); color: var(--cmc-white); }
 .segmented input:focus-visible + label { outline: 2px solid currentColor; outline-offset: -2px; }
 
 .studio__status { min-height: 1.4em; }
 
 </style>
 <!-- ============================ HERO ============================ -->
-<header class="hero cdr-inverse">
-  <div class="cdr-shell">
-    <a class="cdr-lockup cdr-lockup--sm" href="#fundacao">
-      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+<header class="hero cmc-inverse">
+  <div class="cmc-shell">
+    <a class="cmc-lockup cmc-lockup--sm" href="#fundacao">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
         <rect width="64" height="64" rx="14" fill="#fff"/>
         <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
-      <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
+      <span class="cmc-lockup__word" data-brand="name">Cadrian</span>
     </a>
 
     <div class="stack">
-      <h1 class="cdr-display">Prioritize.<br>Automate.<br>Deliver.</h1>
-      <p class="cdr-lead cdr-muted">AI systems built right in your stack.</p>
+      <h1 class="cmc-display">Prioritize.<br>Automate.<br>Deliver.</h1>
+      <p class="cmc-lead cmc-muted">AI systems built right in your stack.</p>
     </div>
 
-    <div class="cdr-stage cdr-stage--flat" style="--stage-ar:16/5">
-      <canvas data-cdr-dither="noiseToSignal" data-ramp="0.02,1" data-angle="0"
+    <div class="cmc-stage cmc-stage--flat" style="--stage-ar:16/5">
+      <canvas data-cmc-dither="noiseToSignal" data-ramp="0.02,1" data-angle="0"
               data-cell="4" data-duration="2200"
               aria-label="Grafismo da marca: um anel disperso resolvendo em massa sólida"></canvas>
     </div>
 
     <nav class="hero__nav" aria-label="Seções do guia">
-      <a class="cdr-tag" href="#fundacao"><span>01 Fundação</span></a>
-      <a class="cdr-tag" href="#dither"><span>02 Motor gráfico</span></a>
-      <a class="cdr-tag" href="#processo"><span>03 Processo</span></a>
-      <a class="cdr-tag" href="#componentes"><span>04 Componentes</span></a>
-      <a class="cdr-tag" href="#aplicacoes"><span>05 Aplicações</span></a>
-      <a class="cdr-tag" href="#voz"><span>06 Voz e regras</span></a>
-      <a class="cdr-tag" href="https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2"><span>Extensões →</span></a>
+      <a class="cmc-tag" href="#fundacao"><span>01 Fundação</span></a>
+      <a class="cmc-tag" href="#dither"><span>02 Motor gráfico</span></a>
+      <a class="cmc-tag" href="#processo"><span>03 Processo</span></a>
+      <a class="cmc-tag" href="#componentes"><span>04 Componentes</span></a>
+      <a class="cmc-tag" href="#aplicacoes"><span>05 Aplicações</span></a>
+      <a class="cmc-tag" href="#voz"><span>06 Voz e regras</span></a>
+      <a class="cmc-tag" href="https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2"><span>Extensões →</span></a>
     </nav>
   </div>
 </header>
@@ -721,15 +721,15 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 <main>
 
 <!-- ========================= 01 FUNDAÇÃO ========================= -->
-<section id="fundacao" class="cdr-section">
-  <div class="cdr-shell stack-7">
-    <div class="cdr-section-head">
-      <h2 class="cdr-h1">Fundação</h2><span class="cdr-slide__num">01</span>
+<section id="fundacao" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Fundação</h2><span class="cmc-slide__num">01</span>
     </div>
 
     <!-- Marca -->
     <div class="block">
-      <h3 class="cdr-h2">Marca</h3>
+      <h3 class="cmc-h2">Marca</h3>
       <p class="block__intro">
         Um “C” geométrico de contraforma circular, alojado num squircle. O símbolo
         funciona sozinho a partir de 16&nbsp;px. O lockup horizontal é o uso padrão;
@@ -745,39 +745,39 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
               </svg>
             </div>
           </div>
-          <p class="cdr-micro spec__foot">Símbolo · positivo · área de proteção</p>
+          <p class="cmc-micro spec__foot">Símbolo · positivo · área de proteção</p>
         </div>
 
         <div class="spec spec--dark">
           <div class="spec__demo">
-            <span class="cdr-lockup">
-              <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <span class="cmc-lockup">
+              <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
                 <rect width="64" height="64" rx="14" fill="#fff"/>
                 <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
               </svg>
-              <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
+              <span class="cmc-lockup__word" data-brand="name">Cadrian</span>
             </span>
           </div>
-          <p class="cdr-micro spec__foot">Lockup · negativo</p>
+          <p class="cmc-micro spec__foot">Lockup · negativo</p>
         </div>
 
         <div class="spec spec--outline">
           <div class="spec__demo">
-            <span class="cdr-lockup cdr-lockup--glyph">
-              <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <span class="cmc-lockup cmc-lockup--glyph">
+              <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
                 <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
               </svg>
-              <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
+              <span class="cmc-lockup__word" data-brand="name">Cadrian</span>
             </span>
           </div>
-          <p class="cdr-micro spec__foot">Glifo em uma cor · herda currentColor</p>
+          <p class="cmc-micro spec__foot">Glifo em uma cor · herda currentColor</p>
         </div>
       </div>
     </div>
 
     <!-- Cor -->
     <div class="block">
-      <h3 class="cdr-h2">Cor</h3>
+      <h3 class="cmc-h2">Cor</h3>
       <p class="block__intro">
         Monocromática por convicção. Não existe cor de destaque — o destaque é o
         contraste e a densidade das partículas. Preto e branco são puros; os cinzas
@@ -788,20 +788,20 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 
     <!-- Tipografia -->
     <div class="block">
-      <h3 class="cdr-h2">Tipografia</h3>
+      <h3 class="cmc-h2">Tipografia</h3>
       <div class="grid grid--2">
         <div class="spec spec--steel">
-          <div class="cdr-controls cdr-controls--split">
-            <span class="cdr-h1">Inter Tight</span>
-            <span class="cdr-tag">Google Fonts</span>
+          <div class="cmc-controls cmc-controls--split">
+            <span class="cmc-h1">Inter Tight</span>
+            <span class="cmc-tag">Google Fonts</span>
           </div>
-          <p class="cdr-h2 spec__foot type-specimen">
+          <p class="cmc-h2 spec__foot type-specimen">
             Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn<br>
             Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz<br>0 1 2 3 4 5 6 7 8 9
           </p>
         </div>
         <div class="spec">
-          <ul class="specs cdr-small">
+          <ul class="specs cmc-small">
             <li><span class="specs__key">Display · Light 300</span><code class="specs__val">−0.035em / 0.94</code></li>
             <li><span class="specs__key">Título · Light 300</span><code class="specs__val">−0.035em / 0.94</code></li>
             <li><span class="specs__key">H1–H2 · Light 300</span><code class="specs__val">−0.025em / 1.08</code></li>
@@ -809,7 +809,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
             <li><span class="specs__key">Corpo · Regular 400</span><code class="specs__val">−0.01em / 1.45</code></li>
             <li><span class="specs__key">Micro · Medium 500</span><code class="specs__val">+0.02em / caixa alta</code></li>
           </ul>
-          <p class="cdr-small spec__foot">
+          <p class="cmc-small spec__foot">
             Títulos sempre em Light com tracking negativo. Medium só em rótulos
             micro, botões e no wordmark.
           </p>
@@ -819,16 +819,16 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
   </div>
 </section>
 
-<hr class="cdr-rule">
+<hr class="cmc-rule">
 
 <!-- ======================= 02 MOTOR GRÁFICO ======================= -->
-<section id="dither" class="cdr-section">
-  <div class="cdr-shell stack-7">
-    <div class="cdr-section-head">
-      <h2 class="cdr-h1">Motor gráfico</h2><span class="cdr-slide__num">02</span>
+<section id="dither" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Motor gráfico</h2><span class="cmc-slide__num">02</span>
     </div>
 
-    <p class="cdr-body">
+    <p class="cmc-body">
       Todo grafismo da marca é a mesma operação: uma <strong>forma</strong> amostrada por
       uma <strong>grade de partículas quadradas</strong>, cuja probabilidade de existir varia
       ao longo de uma <strong>rampa de densidade</strong>. Ruído de um lado, sinal do outro.
@@ -839,8 +839,8 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
     <div class="specimens" id="specimens"></div>
 
     <div class="spec spec--outline">
-      <h3 class="cdr-h2">Parâmetros</h3>
-      <ul class="specs cdr-small">
+      <h3 class="cmc-h2">Parâmetros</h3>
+      <ul class="specs cmc-small">
         <li><code class="specs__key">shape</code><span class="specs__val">disc · ring · chevrons · bars · loop · layers · mark · noiseToSignal</span></li>
         <li><code class="specs__key">cell</code><span class="specs__val">aresta da célula em px — 4 padrão, 6 a 8 em peças grandes</span></li>
         <li><code class="specs__key">ramp</code><span class="specs__val">[densidade mínima, máxima] — o eixo ruído→sinal</span></li>
@@ -849,20 +849,20 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
         <li><code class="specs__key">curve</code><span class="specs__val">acima de 1 prolonga a dispersão antes de resolver</span></li>
         <li><code class="specs__key">seed</code><span class="specs__val">hash determinístico por célula — o mesmo grafismo sempre</span></li>
       </ul>
-      <p class="cdr-small spec__foot">
-        <code>&lt;canvas data-cdr-dither="chevrons" data-ramp="0.12,1" data-angle="0"&gt;&lt;/canvas&gt;</code>
+      <p class="cmc-small spec__foot">
+        <code>&lt;canvas data-cmc-dither="chevrons" data-ramp="0.12,1" data-angle="0"&gt;&lt;/canvas&gt;</code>
       </p>
     </div>
   </div>
 </section>
 
-<hr class="cdr-rule">
+<hr class="cmc-rule">
 
 <!-- ========================= 03 PROCESSO ========================= -->
-<section id="processo" class="cdr-section">
-  <div class="cdr-shell stack-7">
-    <div class="cdr-section-head">
-      <h2 class="cdr-h1">Processo</h2><span class="cdr-slide__num">03</span>
+<section id="processo" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Processo</h2><span class="cmc-slide__num">03</span>
     </div>
     <p class="block__intro">
       Seis etapas, seis grafismos. Cada slide segue a mesma gramática: título e
@@ -873,100 +873,100 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
   </div>
 </section>
 
-<hr class="cdr-rule">
+<hr class="cmc-rule">
 
 <!-- ======================== 04 COMPONENTES ======================== -->
-<section id="componentes" class="cdr-section">
-  <div class="cdr-shell stack-7">
-    <div class="cdr-section-head">
-      <h2 class="cdr-h1">Componentes</h2><span class="cdr-slide__num">04</span>
+<section id="componentes" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Componentes</h2><span class="cmc-slide__num">04</span>
     </div>
     <p class="block__intro">
       Poucos componentes, e todos com a mesma altura de controle
-      (<code>--cdr-control-h</code>), para que botão e tag alinhem quando ficam
+      (<code>--cmc-control-h</code>), para que botão e tag alinhem quando ficam
       lado a lado.
     </p>
 
     <div class="grid grid--3 grid--even">
       <div class="spec">
-        <p class="cdr-micro">Botão · campo claro</p>
+        <p class="cmc-micro">Botão · campo claro</p>
         <div class="spec__body">
-          <div class="cdr-controls">
-            <button class="cdr-btn" type="button">Falar com a Cadrian</button>
-            <button class="cdr-btn cdr-btn--ghost" type="button">Ver casos</button>
+          <div class="cmc-controls">
+            <button class="cmc-btn" type="button">Falar com a Cadrian</button>
+            <button class="cmc-btn cmc-btn--ghost" type="button">Ver casos</button>
           </div>
-          <div class="cdr-controls">
-            <span class="cdr-tag">Signal</span>
-            <span class="cdr-tag">Transform</span>
+          <div class="cmc-controls">
+            <span class="cmc-tag">Signal</span>
+            <span class="cmc-tag">Transform</span>
           </div>
         </div>
-        <p class="cdr-small spec__foot">Sólido para a ação principal, contorno para a secundária.</p>
+        <p class="cmc-small spec__foot">Sólido para a ação principal, contorno para a secundária.</p>
       </div>
 
       <div class="spec spec--dark">
-        <p class="cdr-micro">Botão · campo escuro</p>
+        <p class="cmc-micro">Botão · campo escuro</p>
         <div class="spec__body">
-          <div class="cdr-controls">
-            <button class="cdr-btn cdr-btn--inverse" type="button">Começar</button>
-            <button class="cdr-btn cdr-btn--ghost" type="button">Ver casos</button>
+          <div class="cmc-controls">
+            <button class="cmc-btn cmc-btn--inverse" type="button">Começar</button>
+            <button class="cmc-btn cmc-btn--ghost" type="button">Ver casos</button>
           </div>
-          <div class="cdr-controls">
-            <span class="cdr-tag">Deploy</span>
-            <span class="cdr-tag">Refine</span>
+          <div class="cmc-controls">
+            <span class="cmc-tag">Deploy</span>
+            <span class="cmc-tag">Refine</span>
           </div>
         </div>
-        <p class="cdr-small spec__foot">Os mesmos papéis, invertidos. Nunca cinza sobre preto num botão.</p>
+        <p class="cmc-small spec__foot">Os mesmos papéis, invertidos. Nunca cinza sobre preto num botão.</p>
       </div>
 
       <div class="spec">
-        <p class="cdr-micro">Card</p>
+        <p class="cmc-micro">Card</p>
         <div class="spec__body">
-          <p class="cdr-lead">Turn insight into infrastructure</p>
-          <p class="cdr-small">
+          <p class="cmc-lead">Turn insight into infrastructure</p>
+          <p class="cmc-small">
             Padrões repetíveis viram workflows e agentes que aprendem, escalam e
             criam impacto duradouro.
           </p>
         </div>
-        <p class="cdr-small spec__foot"><code>.cdr-card</code> · raio 14&nbsp;px, sem sombra.</p>
+        <p class="cmc-small spec__foot"><code>.cmc-card</code> · raio 14&nbsp;px, sem sombra.</p>
       </div>
     </div>
   </div>
 </section>
 
-<hr class="cdr-rule">
+<hr class="cmc-rule">
 
 <!-- ========================= 05 APLICAÇÕES ========================= -->
-<section id="aplicacoes" class="cdr-section">
-  <div class="cdr-shell stack-7">
-    <div class="cdr-section-head">
-      <h2 class="cdr-h1">Aplicações</h2><span class="cdr-slide__num">05</span>
+<section id="aplicacoes" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Aplicações</h2><span class="cmc-slide__num">05</span>
     </div>
 
     <div class="showcase">
       <!-- Pôster -->
       <figure class="stack">
-        <article class="cdr-poster">
-          <div class="cdr-poster__head">
-            <span class="cdr-lockup cdr-lockup--sm">
-              <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <article class="cmc-poster">
+          <div class="cmc-poster__head">
+            <span class="cmc-lockup cmc-lockup--sm">
+              <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
                 <rect width="64" height="64" rx="14" fill="#000"/>
                 <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
               </svg>
-              <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
+              <span class="cmc-lockup__word" data-brand="name">Cadrian</span>
             </span>
-            <h3 class="cdr-title cdr-poster__hed">AI isn’t<br>waiting</h3>
+            <h3 class="cmc-title cmc-poster__hed">AI isn’t<br>waiting</h3>
           </div>
-          <div class="cdr-poster__art">
-            <canvas data-cdr-dither="chevrons" data-ramp="0.12,1" data-angle="0"
+          <div class="cmc-poster__art">
+            <canvas data-cmc-dither="chevrons" data-ramp="0.12,1" data-angle="0"
                     data-cell="4" data-opts='{"n":2,"gap":0.06}'
                     aria-label="Duas setas em dither adensando à direita"></canvas>
           </div>
-          <div class="cdr-poster__foot">
-            <p class="cdr-lead">We launch systems<br>in weeks, not months</p>
-            <span class="cdr-small">Visit <span data-brand="domain">cadrian.ai</span></span>
+          <div class="cmc-poster__foot">
+            <p class="cmc-lead">We launch systems<br>in weeks, not months</p>
+            <span class="cmc-small">Visit <span data-brand="domain">cadrian.ai</span></span>
           </div>
         </article>
-        <figcaption class="cdr-micro">Pôster A2 · papel</figcaption>
+        <figcaption class="cmc-micro">Pôster A2 · papel</figcaption>
       </figure>
 
       <div class="showcase__col">
@@ -975,71 +975,71 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
           <article class="ooh">
             <div class="ooh__inner">
               <div class="ooh__copy">
-                <h3 class="cdr-h1">From noise<br>to signal</h3>
-                <p class="cdr-small">
+                <h3 class="cmc-h1">From noise<br>to signal</h3>
+                <p class="cmc-small">
                   A Cadrian descobre o que vale automatizar, constrói sistemas focados
                   dentro das ferramentas que você já usa, e faz a IA entregar valor
                   desde o dia um.
                 </p>
-                <span class="cdr-lockup cdr-lockup--sm">
-                  <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+                <span class="cmc-lockup cmc-lockup--sm">
+                  <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
                     <rect width="64" height="64" rx="14" fill="#000"/>
                     <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
                   </svg>
-                  <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
+                  <span class="cmc-lockup__word" data-brand="name">Cadrian</span>
                 </span>
               </div>
-              <div class="cdr-stage cdr-stage--light cdr-stage--flat cdr-stage--bare ooh__art"
+              <div class="cmc-stage cmc-stage--light cmc-stage--flat cmc-stage--bare ooh__art"
                    style="--stage-ar:4/3">
-                <canvas data-cdr-dither="noiseToSignal" data-ramp="0.03,1" data-cell="3"
+                <canvas data-cmc-dither="noiseToSignal" data-ramp="0.03,1" data-cell="3"
                         aria-label="Grafismo de ruído a sinal em campo claro"></canvas>
               </div>
             </div>
           </article>
-          <figcaption class="cdr-micro">Outdoor · campo claro</figcaption>
+          <figcaption class="cmc-micro">Outdoor · campo claro</figcaption>
         </figure>
 
         <!-- Cartão de visita -->
         <figure class="stack">
           <article class="bizcard">
             <div class="bizcard__art">
-              <canvas data-cdr-dither="mark" data-ramp="0.01,0.34" data-angle="180"
+              <canvas data-cmc-dither="mark" data-ramp="0.01,0.34" data-angle="180"
                       data-cell="3" aria-hidden="true"></canvas>
             </div>
-            <span class="cdr-lockup cdr-lockup--sm">
-              <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <span class="cmc-lockup cmc-lockup--sm">
+              <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
                 <rect width="64" height="64" rx="14" fill="#fff"/>
                 <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
               </svg>
-              <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
+              <span class="cmc-lockup__word" data-brand="name">Cadrian</span>
             </span>
             <div class="bizcard__foot">
-              <p class="cdr-lead" data-brand="person">Dan Preiss</p>
-              <p class="cdr-small"><span data-brand="role">CEO</span> · <span data-brand="email">dan@cadrian.ai</span></p>
-              <p class="cdr-small" data-brand="phone">310 928 2123</p>
+              <p class="cmc-lead" data-brand="person">Dan Preiss</p>
+              <p class="cmc-small"><span data-brand="role">CEO</span> · <span data-brand="email">dan@cadrian.ai</span></p>
+              <p class="cmc-small" data-brand="phone">310 928 2123</p>
             </div>
           </article>
-          <figcaption class="cdr-micro">Cartão de visita · 85 × 55&nbsp;mm</figcaption>
+          <figcaption class="cmc-micro">Cartão de visita · 85 × 55&nbsp;mm</figcaption>
         </figure>
       </div>
     </div>
   </div>
 </section>
 
-<hr class="cdr-rule">
+<hr class="cmc-rule">
 
 <!-- ========================= 06 VOZ E REGRAS ========================= -->
-<section id="voz" class="cdr-section">
-  <div class="cdr-shell stack-7">
-    <div class="cdr-section-head">
-      <h2 class="cdr-h1">Voz e regras</h2><span class="cdr-slide__num">06</span>
+<section id="voz" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Voz e regras</h2><span class="cmc-slide__num">06</span>
     </div>
 
     <div class="grid grid--2">
       <div class="spec">
-        <p class="cdr-micro">Como a marca fala</p>
-        <p class="cdr-lead">Frases curtas. Verbo na frente. Promessa mensurável.</p>
-        <ul class="specs cdr-small">
+        <p class="cmc-micro">Como a marca fala</p>
+        <p class="cmc-lead">Frases curtas. Verbo na frente. Promessa mensurável.</p>
+        <ul class="specs cmc-small">
           <li><span class="specs__key">“Prioritize. Automate. Deliver.”</span><span class="specs__val">assinatura</span></li>
           <li><span class="specs__key">“From noise to signal”</span><span class="specs__val">tese</span></li>
           <li><span class="specs__key">“We launch systems in weeks, not months”</span><span class="specs__val">prova</span></li>
@@ -1050,7 +1050,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
       <div class="stack-5">
         <div class="spec rules rules--do">
           <span class="rules__flag">Faça</span>
-          <ul class="specs cdr-small">
+          <ul class="specs cmc-small">
             <li><span class="specs__key">Deixe o preto ocupar área grande e contínua</span></li>
             <li><span class="specs__key">Gere o dither — nunca reproduza como imagem esticada</span></li>
             <li><span class="specs__key">Mantenha o título em Light com tracking negativo</span></li>
@@ -1059,7 +1059,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
         </div>
         <div class="spec rules rules--dont">
           <span class="rules__flag">Não faça</span>
-          <ul class="specs cdr-small">
+          <ul class="specs cmc-small">
             <li><span class="specs__key">Cor de destaque, gradiente ou sombra colorida</span></li>
             <li><span class="specs__key">Bold ou Black nos títulos</span></li>
             <li><span class="specs__key">Distorcer, rotacionar ou recolorir o símbolo</span></li>
@@ -1072,16 +1072,16 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 </section>
 </main>
 
-<footer class="guide-foot cdr-inverse">
-  <div class="cdr-shell">
-    <span class="cdr-lockup cdr-lockup--sm">
-      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+<footer class="guide-foot cmc-inverse">
+  <div class="cmc-shell">
+    <span class="cmc-lockup cmc-lockup--sm">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
         <rect width="64" height="64" rx="14" fill="#fff"/>
         <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
-      <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
+      <span class="cmc-lockup__word" data-brand="name">Cadrian</span>
     </span>
-    <span class="cdr-small">
+    <span class="cmc-small">
       Sistema visual v1.0 · tokens, motor de dither e componentes ·
       <a href="https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2" style="color:inherit">extensões</a> ·
       <a href="https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60" style="color:inherit">teste de nome</a> ·
@@ -1099,7 +1099,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
    uma RAMPA. Ruído de um lado, sinal do outro. É a tese da empresa desenhada.
 
    Uso declarativo:
-     <canvas data-cdr-dither="ring" data-ramp="0.02,1" data-angle="0"></canvas>
+     <canvas data-cmc-dither="ring" data-ramp="0.02,1" data-angle="0"></canvas>
 
    Uso programático:
      import { render, fields } from './dither.js'
@@ -1512,7 +1512,7 @@ const num = (s, f) => (s == null || s === '' ? f : Number(s));
 function configFromEl(el) {
   const d = el.dataset;
   return {
-    shape: d.cdrDither || 'disc',
+    shape: d.cmcDither || 'disc',
     cell: num(d.cell, DEFAULTS.cell),
     ramp: d.ramp ? d.ramp.split(',').map(Number) : DEFAULTS.ramp,
     angle: num(d.angle, DEFAULTS.angle),
@@ -1527,24 +1527,24 @@ function configFromEl(el) {
 }
 
 /**
- * Ativa todos os `[data-cdr-dither]` do documento: desenha ao entrar na tela,
+ * Ativa todos os `[data-cmc-dither]` do documento: desenha ao entrar na tela,
  * redesenha ao redimensionar.
  */
 function init(root = document) {
-  const nodes = [...root.querySelectorAll('canvas[data-cdr-dither]')];
+  const nodes = [...root.querySelectorAll('canvas[data-cmc-dither]')];
   if (!nodes.length) return;
 
   /* O campo `text` mede a fonte para se ajustar. Antes de a Inter Tight
      carregar, a medição sai da fonte de fallback e o grafismo nasce torto —
      então redesenha o que já foi desenhado assim que as fontes ficam prontas. */
   document.fonts?.ready.then(() => {
-    nodes.forEach((n) => n.dataset.cdrDone && render(n, configFromEl(n)));
+    nodes.forEach((n) => n.dataset.cmcDone && render(n, configFromEl(n)));
   });
 
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
-      if (!e.isIntersecting || e.target.dataset.cdrDone) continue;
-      e.target.dataset.cdrDone = '1';
+      if (!e.isIntersecting || e.target.dataset.cmcDone) continue;
+      e.target.dataset.cmcDone = '1';
       resolve(e.target, configFromEl(e.target),
         num(e.target.dataset.duration, 1600));
     }
@@ -1556,7 +1556,7 @@ function init(root = document) {
   addEventListener('resize', () => {
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() =>
-      nodes.forEach((n) => n.dataset.cdrDone && render(n, configFromEl(n)))
+      nodes.forEach((n) => n.dataset.cmcDone && render(n, configFromEl(n)))
     );
   });
 }
@@ -1610,7 +1610,7 @@ function applyBrand(root = document, brand = BRAND) {
   root.querySelectorAll('canvas[data-brand-canvas]').forEach((el) => {
     const opts = el.dataset.opts ? JSON.parse(el.dataset.opts) : {};
     el.dataset.opts = JSON.stringify({ ...opts, text: brand.name });
-    delete el.dataset.cdrDone;
+    delete el.dataset.cmcDone;
   });
 
   return values;
@@ -1624,12 +1624,12 @@ function brandFromUrl(fallback = BRAND) {
 
 /* --- Cor: os swatches saem dos próprios tokens, nunca de hex digitado --- */
 const COLORS = [
-  ['Black',   '--cdr-black',   'Superfícies primárias, tinta'],
-  ['Steel',   '--cdr-steel',   'Painel escuro secundário'],
-  ['Grey 55', '--cdr-grey-55', 'Texto secundário, numerais'],
-  ['Grey 20', '--cdr-grey-20', 'Réguas e bordas'],
-  ['Canvas',  '--cdr-canvas',  'Fundo institucional'],
-  ['Paper',   '--cdr-paper',   'Papel de peças impressas'],
+  ['Black',   '--cmc-black',   'Superfícies primárias, tinta'],
+  ['Steel',   '--cmc-steel',   'Painel escuro secundário'],
+  ['Grey 55', '--cmc-grey-55', 'Texto secundário, numerais'],
+  ['Grey 20', '--cmc-grey-20', 'Réguas e bordas'],
+  ['Canvas',  '--cmc-canvas',  'Fundo institucional'],
+  ['Paper',   '--cmc-paper',   'Papel de peças impressas'],
 ];
 const css = getComputedStyle(document.documentElement);
 document.getElementById('swatches').innerHTML = COLORS.map(([name, token, use]) => `
@@ -1639,7 +1639,7 @@ document.getElementById('swatches').innerHTML = COLORS.map(([name, token, use]) 
       <span>${name}</span>
       <span class="swatch__hex">${css.getPropertyValue(token).trim().toUpperCase()}</span>
     </div>
-    <p class="cdr-micro">${use}</p>
+    <p class="cmc-micro">${use}</p>
   </div>`).join('');
 
 /* --- Amostras do motor gráfico --- */
@@ -1659,14 +1659,14 @@ const SPECIMENS = [
 ];
 document.getElementById('specimens').innerHTML = SPECIMENS.map((s) => `
   <figure class="specimen">
-    <div class="cdr-stage" style="--stage-ar:16/9">
-      <canvas data-cdr-dither="${s.shape}" data-ramp="${s.ramp}" data-angle="${s.angle}"
+    <div class="cmc-stage" style="--stage-ar:16/9">
+      <canvas data-cmc-dither="${s.shape}" data-ramp="${s.ramp}" data-angle="${s.angle}"
               data-cell="4"${s.mirror ? ' data-mirror="true"' : ''}
               aria-label="${s.title}"></canvas>
     </div>
     <figcaption>
-      <p class="cdr-lead">${s.title}</p>
-      <p class="cdr-small">${s.desc} · <code>${s.shape}</code></p>
+      <p class="cmc-lead">${s.title}</p>
+      <p class="cmc-small">${s.desc} · <code>${s.shape}</code></p>
     </figcaption>
   </figure>`).join('');
 
@@ -1692,21 +1692,21 @@ const STEPS = [
     body: 'O que foi construído vira base para o próximo. Padrões, conectores e guard-rails são reaproveitados, e cada ciclo fica mais barato e mais rápido que o anterior.' },
 ];
 document.getElementById('processo-grid').innerHTML = STEPS.map((s, i) => `
-  <article class="cdr-slide">
-    <div class="cdr-slide__head">
-      <h3 class="cdr-title">${s.name}</h3>
-      <span class="cdr-slide__num">${String(i + 1).padStart(2, '0')}</span>
+  <article class="cmc-slide">
+    <div class="cmc-slide__head">
+      <h3 class="cmc-title">${s.name}</h3>
+      <span class="cmc-slide__num">${String(i + 1).padStart(2, '0')}</span>
     </div>
-    <div class="cdr-slide__stage">
-      <canvas data-cdr-dither="${s.shape}" data-ramp="${s.ramp}" data-angle="${s.angle}"
+    <div class="cmc-slide__stage">
+      <canvas data-cmc-dither="${s.shape}" data-ramp="${s.ramp}" data-angle="${s.angle}"
               data-cell="4" data-seed="${3 + i * 7}"${s.mirror ? ' data-mirror="true"' : ''}
               aria-label="${s.name}"></canvas>
     </div>
-    <div class="cdr-slide__caption">
-      <p class="cdr-lead">${s.lead}</p>
-      <span class="cdr-small">${s.kicker}</span>
+    <div class="cmc-slide__caption">
+      <p class="cmc-lead">${s.lead}</p>
+      <span class="cmc-small">${s.kicker}</span>
     </div>
-    <p class="cdr-small cdr-slide__body">${s.body}</p>
+    <p class="cmc-small cmc-slide__body">${s.body}</p>
   </article>`).join('');
 
 applyBrand(document, brandFromUrl());   /* preenche os encaixes de marca */

@@ -9,111 +9,111 @@
      A identidade é monocromática por convicção: preto puro, branco puro e
      uma escada de cinzas neutros. Sem cor de destaque — o destaque é o
      contraste e a densidade do dither. */
-  --cdr-black:        #000000;   /* superfícies primárias, tinta */
-  --cdr-ink:          #0A0A0A;   /* preto de tela, evita smear em OLED */
-  --cdr-steel:        #3F3F3F;   /* painel escuro secundário (specimen tipográfico) */
-  --cdr-grey-70:      #6E6E6E;
-  --cdr-grey-55:      #8C8C8C;   /* numerais de processo, kickers */
-  --cdr-grey-35:      #B5B5B5;
-  --cdr-grey-20:      #D6D6D6;   /* réguas, bordas */
-  --cdr-canvas:       #E4E4E4;   /* fundo de moodboard / plano de fundo institucional */
-  --cdr-paper:        #F2F0EE;   /* papel do pôster, levemente quente */
-  --cdr-white:        #FFFFFF;
+  --cmc-black:        #000000;   /* superfícies primárias, tinta */
+  --cmc-ink:          #0A0A0A;   /* preto de tela, evita smear em OLED */
+  --cmc-steel:        #3F3F3F;   /* painel escuro secundário (specimen tipográfico) */
+  --cmc-grey-70:      #6E6E6E;
+  --cmc-grey-55:      #8C8C8C;   /* numerais de processo, kickers */
+  --cmc-grey-35:      #B5B5B5;
+  --cmc-grey-20:      #D6D6D6;   /* réguas, bordas */
+  --cmc-canvas:       #E4E4E4;   /* fundo de moodboard / plano de fundo institucional */
+  --cmc-paper:        #F2F0EE;   /* papel do pôster, levemente quente */
+  --cmc-white:        #FFFFFF;
 
   /* Papéis semânticos — use estes nos componentes */
-  --cdr-bg:           var(--cdr-canvas);
-  --cdr-surface:      var(--cdr-white);
-  --cdr-surface-inv:  var(--cdr-black);
-  --cdr-text:         var(--cdr-black);
-  --cdr-text-muted:   var(--cdr-grey-55);
-  --cdr-text-inv:     var(--cdr-white);
-  --cdr-rule:         var(--cdr-grey-20);
-  --cdr-particle:     var(--cdr-white);   /* dither sobre preto */
-  --cdr-particle-inv: var(--cdr-black);   /* dither sobre claro */
+  --cmc-bg:           var(--cmc-canvas);
+  --cmc-surface:      var(--cmc-white);
+  --cmc-surface-inv:  var(--cmc-black);
+  --cmc-text:         var(--cmc-black);
+  --cmc-text-muted:   var(--cmc-grey-55);
+  --cmc-text-inv:     var(--cmc-white);
+  --cmc-rule:         var(--cmc-grey-20);
+  --cmc-particle:     var(--cmc-white);   /* dither sobre preto */
+  --cmc-particle-inv: var(--cmc-black);   /* dither sobre claro */
 
   /* --- Tipografia --------------------------------------------------------
      Inter Tight em três pesos. Títulos em Light com tracking negativo:
      é o que dá o ar de engenharia calma dos prints. */
-  --cdr-font: "Inter Tight", "Inter", ui-sans-serif, system-ui,
+  --cmc-font: "Inter Tight", "Inter", ui-sans-serif, system-ui,
               -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-  --cdr-font-mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
+  --cmc-font-mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
 
-  --cdr-w-light:  300;
-  --cdr-w-book:   400;
-  --cdr-w-medium: 500;
+  --cmc-w-light:  300;
+  --cmc-w-book:   400;
+  --cmc-w-medium: 500;
 
   /* Escala fluida (min → max entre 400px e 1600px) */
-  --cdr-fs-display: clamp(3.5rem, 1.5rem + 8vw, 8rem);
-  --cdr-fs-title:   clamp(2.25rem, 1.2rem + 4.2vw, 4.5rem);
-  --cdr-fs-h1:      clamp(1.75rem, 1.1rem + 2.6vw, 3rem);
-  --cdr-fs-h2:      clamp(1.375rem, 1rem + 1.5vw, 2rem);
-  --cdr-fs-lead:    clamp(1.0625rem, 0.95rem + 0.6vw, 1.375rem);
-  --cdr-fs-body:    1rem;
-  --cdr-fs-small:   0.8125rem;
-  --cdr-fs-micro:   0.6875rem;
+  --cmc-fs-display: clamp(3.5rem, 1.5rem + 8vw, 8rem);
+  --cmc-fs-title:   clamp(2.25rem, 1.2rem + 4.2vw, 4.5rem);
+  --cmc-fs-h1:      clamp(1.75rem, 1.1rem + 2.6vw, 3rem);
+  --cmc-fs-h2:      clamp(1.375rem, 1rem + 1.5vw, 2rem);
+  --cmc-fs-lead:    clamp(1.0625rem, 0.95rem + 0.6vw, 1.375rem);
+  --cmc-fs-body:    1rem;
+  --cmc-fs-small:   0.8125rem;
+  --cmc-fs-micro:   0.6875rem;
 
-  --cdr-lh-tight:   0.94;   /* display */
-  --cdr-lh-snug:    1.08;   /* títulos */
-  --cdr-lh-normal:  1.45;   /* texto corrido */
+  --cmc-lh-tight:   0.94;   /* display */
+  --cmc-lh-snug:    1.08;   /* títulos */
+  --cmc-lh-normal:  1.45;   /* texto corrido */
 
-  --cdr-tr-display: -0.035em;
-  --cdr-tr-title:   -0.025em;
-  --cdr-tr-body:    -0.01em;
-  --cdr-tr-micro:   0.02em;
+  --cmc-tr-display: -0.035em;
+  --cmc-tr-title:   -0.025em;
+  --cmc-tr-body:    -0.01em;
+  --cmc-tr-micro:   0.02em;
 
   /* --- Espaçamento (base 4) --------------------------------------------- */
-  --cdr-sp-1:  0.25rem;  --cdr-sp-2:  0.5rem;   --cdr-sp-3: 0.75rem;
-  --cdr-sp-4:  1rem;     --cdr-sp-5:  1.5rem;   --cdr-sp-6: 2rem;
-  --cdr-sp-7:  3rem;     --cdr-sp-8:  4rem;     --cdr-sp-9: 6rem;
-  --cdr-sp-10: 8rem;
+  --cmc-sp-1:  0.25rem;  --cmc-sp-2:  0.5rem;   --cmc-sp-3: 0.75rem;
+  --cmc-sp-4:  1rem;     --cmc-sp-5:  1.5rem;   --cmc-sp-6: 2rem;
+  --cmc-sp-7:  3rem;     --cmc-sp-8:  4rem;     --cmc-sp-9: 6rem;
+  --cmc-sp-10: 8rem;
 
-  --cdr-gutter: clamp(1.25rem, 3vw, 3rem);
-  --cdr-measure: 62ch;          /* medida máxima de leitura */
-  --cdr-max: 1440px;
+  --cmc-gutter: clamp(1.25rem, 3vw, 3rem);
+  --cmc-measure: 62ch;          /* medida máxima de leitura */
+  --cmc-max: 1440px;
 
   /* --- Forma -------------------------------------------------------------
      Raio grande e generoso, herdado do squircle da marca. */
-  --cdr-r-mark:  22%;      /* proporcional ao lado — assinatura da marca */
-  --cdr-r-card:  14px;
-  --cdr-r-panel: 20px;
-  --cdr-r-pill:  999px;
+  --cmc-r-mark:  22%;      /* proporcional ao lado — assinatura da marca */
+  --cmc-r-card:  14px;
+  --cmc-r-panel: 20px;
+  --cmc-r-pill:  999px;
 
-  --cdr-border: 1px solid var(--cdr-rule);
+  --cmc-border: 1px solid var(--cmc-rule);
 
   /* Altura única de controle: é o que faz botão e tag alinharem lado a lado. */
-  --cdr-control-h: 2.5rem;
+  --cmc-control-h: 2.5rem;
 
   /* --- Elevação ----------------------------------------------------------
      Quase inexistente. A hierarquia vem de campo preto vs. campo claro. */
-  --cdr-shadow-0: none;
-  --cdr-shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
-  --cdr-shadow-2: 0 2px 4px rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.14);
+  --cmc-shadow-0: none;
+  --cmc-shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+  --cmc-shadow-2: 0 2px 4px rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.14);
 
   /* --- Dither (o motor gráfico) ------------------------------------------
      Estes tokens governam o grafismo de partículas. */
-  --cdr-cell: 4px;              /* aresta da célula da grade de partículas */
-  --cdr-dither-min: 0.02;       /* densidade na ponta "ruído" */
-  --cdr-dither-max: 1;          /* densidade na ponta "sinal" */
-  --cdr-dither-jitter: 0.3;     /* deslocamento aleatório dentro da célula */
+  --cmc-cell: 4px;              /* aresta da célula da grade de partículas */
+  --cmc-dither-min: 0.02;       /* densidade na ponta "ruído" */
+  --cmc-dither-max: 1;          /* densidade na ponta "sinal" */
+  --cmc-dither-jitter: 0.3;     /* deslocamento aleatório dentro da célula */
 
   /* --- Movimento ---------------------------------------------------------
      Uma curva só. Tudo resolve de ruído para forma. */
-  --cdr-ease: cubic-bezier(.2,.7,.2,1);
-  --cdr-dur-fast: 180ms;
-  --cdr-dur-base: 420ms;
-  --cdr-dur-slow: 900ms;
-  --cdr-dur-resolve: 1600ms;    /* revelação do dither */
+  --cmc-ease: cubic-bezier(.2,.7,.2,1);
+  --cmc-dur-fast: 180ms;
+  --cmc-dur-base: 420ms;
+  --cmc-dur-slow: 900ms;
+  --cmc-dur-resolve: 1600ms;    /* revelação do dither */
 
-  --cdr-z-base: 0; --cdr-z-sticky: 100; --cdr-z-overlay: 500;
+  --cmc-z-base: 0; --cmc-z-sticky: 100; --cmc-z-overlay: 500;
 }
 
 /* Campo escuro: inverte os papéis semânticos sem tocar na paleta. */
-.cdr-inverse,
-[data-cdr-field="dark"] {
-  --cdr-bg:         var(--cdr-black);
-  --cdr-surface:    var(--cdr-black);
-  --cdr-text:       var(--cdr-white);
-  --cdr-text-muted: var(--cdr-grey-55);
-  --cdr-rule:       #2A2A2A;
-  --cdr-particle:   var(--cdr-white);
+.cmc-inverse,
+[data-cmc-field="dark"] {
+  --cmc-bg:         var(--cmc-black);
+  --cmc-surface:    var(--cmc-black);
+  --cmc-text:       var(--cmc-white);
+  --cmc-text-muted: var(--cmc-grey-55);
+  --cmc-rule:       #2A2A2A;
+  --cmc-particle:   var(--cmc-white);
 }

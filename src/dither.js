@@ -6,7 +6,7 @@
    uma RAMPA. Ruído de um lado, sinal do outro. É a tese da empresa desenhada.
 
    Uso declarativo:
-     <canvas data-cdr-dither="ring" data-ramp="0.02,1" data-angle="0"></canvas>
+     <canvas data-cmc-dither="ring" data-ramp="0.02,1" data-angle="0"></canvas>
 
    Uso programático:
      import { render, fields } from './dither.js'
@@ -419,7 +419,7 @@ const num = (s, f) => (s == null || s === '' ? f : Number(s));
 function configFromEl(el) {
   const d = el.dataset;
   return {
-    shape: d.cdrDither || 'disc',
+    shape: d.cmcDither || 'disc',
     cell: num(d.cell, DEFAULTS.cell),
     ramp: d.ramp ? d.ramp.split(',').map(Number) : DEFAULTS.ramp,
     angle: num(d.angle, DEFAULTS.angle),
@@ -434,24 +434,24 @@ function configFromEl(el) {
 }
 
 /**
- * Ativa todos os `[data-cdr-dither]` do documento: desenha ao entrar na tela,
+ * Ativa todos os `[data-cmc-dither]` do documento: desenha ao entrar na tela,
  * redesenha ao redimensionar.
  */
 export function init(root = document) {
-  const nodes = [...root.querySelectorAll('canvas[data-cdr-dither]')];
+  const nodes = [...root.querySelectorAll('canvas[data-cmc-dither]')];
   if (!nodes.length) return;
 
   /* O campo `text` mede a fonte para se ajustar. Antes de a Inter Tight
      carregar, a medição sai da fonte de fallback e o grafismo nasce torto —
      então redesenha o que já foi desenhado assim que as fontes ficam prontas. */
   document.fonts?.ready.then(() => {
-    nodes.forEach((n) => n.dataset.cdrDone && render(n, configFromEl(n)));
+    nodes.forEach((n) => n.dataset.cmcDone && render(n, configFromEl(n)));
   });
 
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
-      if (!e.isIntersecting || e.target.dataset.cdrDone) continue;
-      e.target.dataset.cdrDone = '1';
+      if (!e.isIntersecting || e.target.dataset.cmcDone) continue;
+      e.target.dataset.cmcDone = '1';
       resolve(e.target, configFromEl(e.target),
         num(e.target.dataset.duration, 1600));
     }
@@ -463,7 +463,7 @@ export function init(root = document) {
   addEventListener('resize', () => {
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() =>
-      nodes.forEach((n) => n.dataset.cdrDone && render(n, configFromEl(n)))
+      nodes.forEach((n) => n.dataset.cmcDone && render(n, configFromEl(n)))
     );
   });
 }

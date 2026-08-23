@@ -15,35 +15,35 @@
 </head>
 <body>
 
-<header class="hero cdr-inverse">
-  <div class="cdr-shell">
-    <a class="cdr-lockup cdr-lockup--sm" href="index.html">
-      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+<header class="hero cmc-inverse">
+  <div class="cmc-shell">
+    <a class="cmc-lockup cmc-lockup--sm" href="index.html">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
         <rect width="64" height="64" rx="14" fill="#fff"/>
         <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
-      <span class="cdr-lockup__word">Camacho</span>
+      <span class="cmc-lockup__word">Camacho</span>
     </a>
 
     <div class="stack">
-      <h1 class="cdr-display">Estúdio<br>de print</h1>
-      <p class="cdr-lead cdr-muted">
+      <h1 class="cmc-display">Estúdio<br>de print</h1>
+      <p class="cmc-lead cmc-muted">
         Ajuste o print do nome em partículas e leve o PNG. O que você vê na
         prévia é exatamente o que sai no arquivo.
       </p>
     </div>
 
     <nav class="hero__nav">
-      <a class="cdr-tag" href="nome.html"><span>← Teste de nome</span></a>
-      <a class="cdr-tag" href="extensoes.html"><span>Extensões</span></a>
-      <a class="cdr-tag" href="index.html"><span>Sistema base</span></a>
+      <a class="cmc-tag" href="nome.html"><span>← Teste de nome</span></a>
+      <a class="cmc-tag" href="extensoes.html"><span>Extensões</span></a>
+      <a class="cmc-tag" href="index.html"><span>Sistema base</span></a>
     </nav>
   </div>
 </header>
 
 <main>
-<section class="cdr-section">
-  <div class="cdr-shell stack-7">
+<section class="cmc-section">
+  <div class="cmc-shell stack-7">
 
     <div class="studio">
       <!-- Prévia -->
@@ -52,8 +52,8 @@
           <canvas id="print" aria-label="Prévia do print"></canvas>
         </div>
         <div class="versus__label">
-          <p class="cdr-micro" id="dims">—</p>
-          <p class="cdr-micro" id="status" role="status" aria-live="polite"></p>
+          <p class="cmc-micro" id="dims">—</p>
+          <p class="cmc-micro" id="status" role="status" aria-live="polite"></p>
         </div>
       </div>
 
@@ -61,27 +61,27 @@
       <form class="studio__panel" id="panel">
 
         <div class="studio__group">
-          <p class="cdr-micro">Ponto de partida</p>
+          <p class="cmc-micro">Ponto de partida</p>
           <div class="presets" id="presets"></div>
         </div>
 
         <div class="studio__group">
-          <p class="cdr-micro">Palavra</p>
+          <p class="cmc-micro">Palavra</p>
           <div class="field">
             <textarea id="text" name="text" rows="2" maxlength="60"
                       aria-label="Palavra do print">Camacho</textarea>
-            <p class="cdr-micro">Quebre a linha com ⏎ para compor em duas linhas.</p>
+            <p class="cmc-micro">Quebre a linha com ⏎ para compor em duas linhas.</p>
           </div>
           <div class="field">
             <div class="field__row">
-              <label class="cdr-micro" for="weight">Peso</label>
+              <label class="cmc-micro" for="weight">Peso</label>
               <output class="field__val" id="weight-out">300</output>
             </div>
             <input type="range" id="weight" name="weight" min="300" max="500" step="100" value="300">
           </div>
           <div class="field">
             <div class="field__row">
-              <label class="cdr-micro" for="fit">Margem</label>
+              <label class="cmc-micro" for="fit">Margem</label>
               <output class="field__val" id="fit-out">8%</output>
             </div>
             <input type="range" id="fit" name="fit" min="0.6" max="0.99" step="0.01" value="0.92">
@@ -89,30 +89,30 @@
         </div>
 
         <div class="studio__group">
-          <p class="cdr-micro">Grão</p>
+          <p class="cmc-micro">Grão</p>
           <div class="field">
             <div class="field__row">
-              <label class="cdr-micro" for="min">Preenchimento</label>
+              <label class="cmc-micro" for="min">Preenchimento</label>
               <output class="field__val" id="min-out">0.82</output>
             </div>
             <input type="range" id="min" name="min" min="0" max="1" step="0.01" value="0.82">
           </div>
           <div class="field">
             <div class="field__row">
-              <label class="cdr-micro" for="max">Densidade no pico</label>
+              <label class="cmc-micro" for="max">Densidade no pico</label>
               <output class="field__val" id="max-out">1.00</output>
             </div>
             <input type="range" id="max" name="max" min="0.2" max="1" step="0.01" value="1">
           </div>
           <div class="field">
             <div class="field__row">
-              <label class="cdr-micro" for="cell">Célula</label>
+              <label class="cmc-micro" for="cell">Célula</label>
               <output class="field__val" id="cell-out">4 px</output>
             </div>
             <input type="range" id="cell" name="cell" min="2" max="14" step="1" value="4">
           </div>
           <div class="field">
-            <label class="cdr-micro" for="texture">Textura</label>
+            <label class="cmc-micro" for="texture">Textura</label>
             <select id="texture" name="texture">
               <option value="grain">grain · grão</option>
               <option value="screen">screen · trama</option>
@@ -122,9 +122,9 @@
         </div>
 
         <div class="studio__group">
-          <p class="cdr-micro">Rampa</p>
+          <p class="cmc-micro">Rampa</p>
           <div class="field">
-            <label class="cdr-micro" for="rampmode">Direção</label>
+            <label class="cmc-micro" for="rampmode">Direção</label>
             <select id="rampmode" name="rampmode">
               <option value="linear">linear · de um lado ao outro</option>
               <option value="mirror">mirror · densa no centro</option>
@@ -133,14 +133,14 @@
           </div>
           <div class="field">
             <div class="field__row">
-              <label class="cdr-micro" for="angle">Ângulo</label>
+              <label class="cmc-micro" for="angle">Ângulo</label>
               <output class="field__val" id="angle-out">0°</output>
             </div>
             <input type="range" id="angle" name="angle" min="0" max="350" step="10" value="0">
           </div>
           <div class="field">
             <div class="field__row">
-              <label class="cdr-micro" for="curve">Curva</label>
+              <label class="cmc-micro" for="curve">Curva</label>
               <output class="field__val" id="curve-out">1.35</output>
             </div>
             <input type="range" id="curve" name="curve" min="0.6" max="3" step="0.05" value="1.35">
@@ -148,9 +148,9 @@
         </div>
 
         <div class="studio__group">
-          <p class="cdr-micro">Formato</p>
+          <p class="cmc-micro">Formato</p>
           <div class="field">
-            <label class="cdr-micro" for="field-dark">Campo</label>
+            <label class="cmc-micro" for="field-dark">Campo</label>
             <div class="segmented" role="radiogroup" aria-label="Campo">
               <input type="radio" name="field" id="field-dark" value="dark" checked>
               <label for="field-dark">Escuro</label>
@@ -161,7 +161,7 @@
             </div>
           </div>
           <div class="field">
-            <label class="cdr-micro" for="ar-43">Proporção</label>
+            <label class="cmc-micro" for="ar-43">Proporção</label>
             <div class="segmented" role="radiogroup" aria-label="Proporção">
               <input type="radio" name="ar" id="ar-43" value="4/3" checked>
               <label for="ar-43">4:3</label>
@@ -176,28 +176,28 @@
         </div>
 
         <div class="studio__group">
-          <p class="cdr-micro">Exportar</p>
+          <p class="cmc-micro">Exportar</p>
           <div class="field">
-            <label class="cdr-micro" for="size">Largura do PNG</label>
+            <label class="cmc-micro" for="size">Largura do PNG</label>
             <select id="size" name="size">
               <option value="1200">1200 px · web</option>
               <option value="2400" selected>2400 px · social</option>
               <option value="4000">4000 px · impressão</option>
             </select>
           </div>
-          <div class="cdr-controls">
-            <button class="cdr-btn" type="button" id="save">Baixar PNG</button>
-            <button class="cdr-btn cdr-btn--ghost" type="button" id="shuffle">Nova semente</button>
+          <div class="cmc-controls">
+            <button class="cmc-btn" type="button" id="save">Baixar PNG</button>
+            <button class="cmc-btn cmc-btn--ghost" type="button" id="shuffle">Nova semente</button>
           </div>
-          <p class="cdr-small studio__status" id="save-msg"></p>
+          <p class="cmc-small studio__status" id="save-msg"></p>
         </div>
       </form>
     </div>
 
     <div class="spec spec--outline">
-      <p class="cdr-micro">O mesmo print, em código</p>
+      <p class="cmc-micro">O mesmo print, em código</p>
       <pre class="lab__code" id="code"></pre>
-      <p class="cdr-small spec__foot">
+      <p class="cmc-small spec__foot">
         Cole num canvas de qualquer página que carregue <code>src/dither.js</code>.
         O <code>seed</code> é o que garante que o grão saia idêntico ao da prévia.
       </p>
@@ -206,16 +206,16 @@
 </section>
 </main>
 
-<footer class="guide-foot cdr-inverse">
-  <div class="cdr-shell">
-    <span class="cdr-lockup cdr-lockup--sm">
-      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+<footer class="guide-foot cmc-inverse">
+  <div class="cmc-shell">
+    <span class="cmc-lockup cmc-lockup--sm">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
         <rect width="64" height="64" rx="14" fill="#fff"/>
         <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
-      <span class="cdr-lockup__word">Camacho</span>
+      <span class="cmc-lockup__word">Camacho</span>
     </span>
-    <span class="cdr-small">Estúdio de print · <a href="nome.html" style="color:inherit">teste de nome</a></span>
+    <span class="cmc-small">Estúdio de print · <a href="nome.html" style="color:inherit">teste de nome</a></span>
   </div>
 </footer>
 
@@ -302,7 +302,7 @@ const draw = () => {
   $('curve-out').value = f.curve.toFixed(2);
 
   const attrs = [
-    'data-cdr-dither="text"',
+    'data-cmc-dither="text"',
     `data-ramp="${Math.min(f.min, f.max)},${f.max}"`,
     f.angle && f.rampmode === 'linear' ? `data-angle="${f.angle}"` : '',
     `data-cell="${f.cell}"`,

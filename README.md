@@ -47,13 +47,13 @@ build.mjs             Gera dist/cadrian-brand.html (página única autocontida)
 | **Cor** | Monocromática por convicção. Preto e branco puros + cinzas neutros. Não existe cor de destaque: o destaque é o contraste e a densidade das partículas. |
 | **Tipo** | Inter Tight (Google Fonts). Títulos sempre em Light 300 com tracking negativo (−0.035em). Medium 500 só em rótulos micro, botões e no wordmark. |
 | **Marca** | "C" geométrico de contraforma circular num squircle. Área de proteção = metade da altura do símbolo. Legível a partir de 16 px. |
-| **Movimento** | Uma curva só (`--cdr-ease`). Tudo resolve de ruído para forma. |
-| **Controles** | Botão e tag dividem `--cdr-control-h`, então alinham lado a lado. Componentes herdam `currentColor` em vez de fixar preto — o mesmo botão de contorno funciona sobre branco e sobre preto. |
+| **Movimento** | Uma curva só (`--cmc-ease`). Tudo resolve de ruído para forma. |
+| **Controles** | Botão e tag dividem `--cmc-control-h`, então alinham lado a lado. Componentes herdam `currentColor` em vez de fixar preto — o mesmo botão de contorno funciona sobre branco e sobre preto. |
 
 ## Motor gráfico
 
 ```html
-<canvas data-cdr-dither="chevrons" data-ramp="0.12,1" data-angle="0"></canvas>
+<canvas data-cmc-dither="chevrons" data-ramp="0.12,1" data-angle="0"></canvas>
 ```
 
 ```js
@@ -75,7 +75,7 @@ de impressão) e `halftone` (toda célula existe, varia o tamanho do ponto).
 o alpha como cobertura, então qualquer manchete vira grafismo da marca:
 
 ```html
-<canvas data-cdr-dither="text" data-opts='{"text":"From noise\nto signal"}'></canvas>
+<canvas data-cmc-dither="text" data-opts='{"text":"From noise\nto signal"}'></canvas>
 ```
 
 **Parâmetros**
@@ -93,7 +93,7 @@ o alpha como cobertura, então qualquer manchete vira grafismo da marca:
 
 A revelação (`resolve`) é uma frente de onda que atravessa o eixo da rampa: resolve
 primeiro o lado do sinal, depois o do ruído. Respeita `prefers-reduced-motion`.
-Elementos com `[data-cdr-dither]` animam sozinhos ao entrar na tela.
+Elementos com `[data-cmc-dither]` animam sozinhos ao entrar na tela.
 
 ## Trocar o nome da marca
 

@@ -47,7 +47,7 @@ export function applyBrand(root = document, brand = BRAND) {
   root.querySelectorAll('canvas[data-brand-canvas]').forEach((el) => {
     const opts = el.dataset.opts ? JSON.parse(el.dataset.opts) : {};
     el.dataset.opts = JSON.stringify({ ...opts, text: brand.name });
-    delete el.dataset.cdrDone;
+    delete el.dataset.cmcDone;
   });
 
   return values;
