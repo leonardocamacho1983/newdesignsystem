@@ -33,7 +33,7 @@ mkdirSync('dist', { recursive: true });
 for (const page of PAGES) {
   let html = read(page.src);
 
-  for (const file of ['tokens/tokens.css', 'src/cadrian.css', 'src/guide.css']) {
+  for (const file of ['tokens/tokens.css', 'src/camacho.css', 'src/guide.css']) {
     html = html.replace(`<link rel="stylesheet" href="${file}">`,
       () => `<style>\n${read(file)}\n</style>`);
   }
