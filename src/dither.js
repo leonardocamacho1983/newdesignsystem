@@ -252,6 +252,93 @@ export const fields = {
     return edge(d - w / 2, soft);
   },
 
+  /* --- Vocabulário da transformação -------------------------------------
+     A costura, a incorporação, a medida e a transferência: as quatro ideias
+     que o vocabulário anterior (todo sobre matéria e sistema) não dizia. */
+
+  /* A COSTURA — o grafismo-âncora. Dois fios entram separados, com fases
+     opostas, e se entrelaçam até virar um só. É a tese da marca: técnico e
+     humano não correm em paralelo, eles se costuram. */
+  weave: ({ cycles = 2.5, amp = 0.42, w = 0.09, inset = 0.04, soft = 0.014 } = {}) =>
+    (u0, v, ar) => {
+      /* `inset` mantém a ponta costurada dentro do quadro: fio encostando na
+         borda lê como corte, não como conclusão. */
+      const u = (u0 - inset) / (1 - inset * 2);
+      if (u < 0 || u > 1) return 0;
+      const cy = ar / 2;
+      /* A amplitude decai até zero: no fim do percurso os dois fios ocupam
+         a mesma linha, que é o que faz "dois viram um" e não "dois lado a lado". */
+      const abertura = Math.pow(1 - u, 1.6) * ar * amp;
+      const fase = u * cycles * Math.PI * 2;
+      const fioA = cy + Math.sin(fase) * abertura;
+      const fioB = cy - Math.sin(fase) * abertura;
+      const meia = (ar * w) / 2;
+      return Math.max(
+        edge(Math.abs(v - fioA) - meia, soft),
+        edge(Math.abs(v - fioB) - meia, soft),
+      );
+    },
+
+  /* INCORPORAR — pessoas entrando em sintonia. Marcas dispersas à esquerda
+     que se alinham numa linha à direita. O desalinhamento é função de x, não
+     do tempo: o mesmo grafismo sempre, sem animação por trás. */
+  cohort: ({ n = 12, r = 0.5, inset = 0.04, soft = 0.012 } = {}) => (u, v, ar) => {
+    const cy = ar / 2, util = 1 - inset * 2, passo = util / n;
+    /* raio limitado pelos dois eixos: em 1:1 um raio só horizontal estoura */
+    const R = Math.min(passo * r, ar * 0.09);
+    let cov = 0;
+    const col = Math.round((u - inset) / passo);
+    for (let d = -1; d <= 1; d++) {
+      const i = col + d;
+      if (i < 0 || i >= n) continue;
+      const cx = inset + (i + 0.5) * passo;
+      const t = (cx - inset) / util;
+      /* dispersão que se fecha conforme avança */
+      const solta = (hash(i, 0, 41) - 0.5) * 2;
+      const y = cy + solta * (ar / 2 - R) * 0.9 * Math.pow(1 - t, 1.7);
+      cov = Math.max(cov, edge(Math.hypot(u - cx, v - y) - R, soft));
+    }
+    return cov;
+  },
+
+  /* MEDIR — a marca virando instrumento. O mesmo "C" repetido com a abertura
+     fechando: uma escala de maturidade. Aberto = lacuna grande; quase fechado
+     = capacidade instalada. */
+  gauge: ({ n = 5, w = 0.34, de = 0.62, ate = 0.06, inset = 0.05, soft = 0.014 } = {}) =>
+    (u, v, ar) => {
+      const util = 1 - inset * 2, passo = util / n;
+      if (u < inset || u > 1 - inset) return 0;
+      const i = Math.min(n - 1, Math.floor((u - inset) / passo));
+      const cx = inset + (i + 0.5) * passo, cy = ar / 2;
+      const R = Math.min(passo * 0.38, ar * 0.36);
+      const W = R * w * 2;
+      const t = n === 1 ? 0 : i / (n - 1);
+      const abertura = de + (ate - de) * t;      /* fecha da esquerda p/ direita */
+      const dx = u - cx, dy = v - cy;
+      if (dx > 0 && Math.abs(dy) < R * abertura) return 0;   /* o vão do C */
+      return edge(Math.abs(Math.hypot(dx, dy) - R) - W / 2, soft);
+    },
+
+  /* TRANSFERIR — a capacidade mudando de mãos. Um recipiente que esvazia à
+     esquerda, um que enche à direita, e o fluxo entre eles. O diferencial
+     declarado: o objetivo não é criar dependência permanente. */
+  handoff: ({ r = 0.6, w = 0.22, canal = 0.05, vao = 0.58, soft = 0.014 } = {}) =>
+    (u, v, ar) => {
+      const cy = ar / 2, xEsq = (1 - vao) / 2, xDir = 1 - xEsq;
+      /* o raio precisa caber na vertical E na folga entre os dois centros,
+         senão em 1:1 os recipientes se atravessam */
+      const R = Math.min(ar * 0.42, (vao / 2) * r);
+      const dEsq = Math.hypot(u - xEsq, v - cy);
+      const dDir = Math.hypot(u - xDir, v - cy);
+      /* esquerda: só o contorno (esvaziou) · direita: massa cheia (recebeu) */
+      const esq = edge(Math.abs(dEsq - R) - (R * w) / 2, soft);
+      const dir = edge(dDir - R, soft);
+      /* o canal só existe entre os dois */
+      const canalCov = u > xEsq && u < xDir
+        ? edge(Math.abs(v - cy) - ar * canal, soft) : 0;
+      return Math.max(esq, Math.max(dir, canalCov));
+    },
+
   /* Grafismo-âncora: anel de ruído + disco de sinal, lado a lado. */
   noiseToSignal: ({ soft = 0.02 } = {}) => (u, v, ar) => {
     const cy = ar / 2, R = Math.min(0.21, ar * 0.4);
