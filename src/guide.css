@@ -243,3 +243,21 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
   border-radius: var(--cdr-r-card); padding: var(--cdr-sp-4);
   overflow-x: auto; margin: 0; white-space: pre; line-height: 1.5;
 }
+
+/* ==========================================================================
+   Teste de nome — comparação lado a lado
+   ========================================================================== */
+.versus { display: grid; gap: var(--cdr-sp-5); align-items: start;
+          grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); }
+.versus__col { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+.versus__label { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cdr-sp-3); }
+
+/* Régua de medição: mostra a largura relativa do wordmark de cada nome. */
+.gauge { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
+.gauge__bar { height: 0.5rem; border-radius: var(--cdr-r-pill); background: var(--cdr-black);
+              width: var(--w); }
+.gauge__bar--alt { background: var(--cdr-grey-55); }
+.gauge__track { background: var(--cdr-grey-20); border-radius: var(--cdr-r-pill); }
+
+.verdict { display: flex; flex-direction: column; gap: var(--cdr-sp-4);
+           border-left: 3px solid var(--cdr-black); padding-left: var(--cdr-sp-5); }

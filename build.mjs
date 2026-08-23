@@ -7,11 +7,14 @@ const read = (p) => readFileSync(p, 'utf8');
 const PAGES = [
   { src: 'index.html', out: 'cadrian-brand' },
   { src: 'extensoes.html', out: 'cadrian-extensoes' },
+  { src: 'nome.html', out: 'cadrian-nome' },
 ];
 
 const engine = read('src/dither.js')
   .replace(/^export /gm, '')
   .replace(/\n?if \(typeof document[\s\S]*$/, '\n');
+
+const brand = read('src/brand.js').replace(/^export /gm, '');
 
 const favicon = Buffer.from(read('assets/favicon.svg')).toString('base64');
 
@@ -20,6 +23,7 @@ const favicon = Buffer.from(read('assets/favicon.svg')).toString('base64');
 const ARTIFACT_URLS = {
   'cadrian-brand.html': 'https://claude.ai/code/artifact/dbceae6a-0ea9-4fcf-9845-bdc238b4baa4',
   'cadrian-extensoes.html': 'https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2',
+  'cadrian-nome.html': '',   /* preenchido após a primeira publicação */
 };
 
 mkdirSync('dist', { recursive: true });
@@ -34,12 +38,16 @@ for (const page of PAGES) {
 
   /* O módulo passa a ser inline: troca o import por um IIFE no mesmo escopo. */
   html = html
-    .replace(/import \{[^}]+\} from '\.\/src\/dither\.js';/, engine)
+    .replace(/import \{[^}]+\} from '\.\/src\/dither\.js';\n?/, engine)
+    .replace(/import \{[^}]+\} from '\.\/src\/brand\.js';\n?/, brand)
     .replace('<link rel="icon" href="assets/favicon.svg">',
       `<link rel="icon" href="data:image/svg+xml;base64,${favicon}">`)
     /* entre as páginas do dist os links apontam para os arquivos gerados */
-    .replace(/href="index\.html"/g, 'href="cadrian-brand.html"')
-    .replace(/href="extensoes\.html"/g, 'href="cadrian-extensoes.html"');
+    /* Links entre as páginas passam a apontar para os arquivos gerados,
+       preservando qualquer query string (ex.: ?brand=Camacho). */
+    .replace(/href="index\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-brand.html${q || ''}"`)
+    .replace(/href="extensoes\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-extensoes.html${q || ''}"`)
+    .replace(/href="nome\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-nome.html${q || ''}"`);
 
   /* Trava: qualquer referência local sobrevivente quebraria a página
      autocontida (e um artifact publicado, onde o host bloqueia origens
@@ -57,7 +65,11 @@ for (const page of PAGES) {
      fornecem o próprio esqueleto de página (ex.: publicação como artifact). */
   let fragment = html;
   for (const [file, url] of Object.entries(ARTIFACT_URLS)) {
-    fragment = fragment.replaceAll(`href="${file}"`, `href="${url}"`);
+    if (!url) continue;
+    fragment = fragment.replace(
+      new RegExp(`href="${file.replace('.', '\\.')}(\\?[^"]*)?"`, 'g'),
+      (_, q) => `href="${url}${q || ''}"`,
+    );
   }
   const head = fragment.slice(fragment.indexOf('<head>') + 6, fragment.indexOf('</head>'));
   const body = fragment.slice(fragment.indexOf('<body>') + 6, fragment.lastIndexOf('</body>'));

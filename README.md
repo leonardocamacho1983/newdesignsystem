@@ -4,9 +4,10 @@ Sistema de identidade da **Cadrian** (consultoria de sistemas de IA), extraído 
 explorações de marca e transformado em código executável: tokens, um motor gráfico
 generativo e uma camada de componentes.
 
-**Guias vivos:** `index.html` (sistema base) e `extensoes.html` (texturas,
-vocabulário estendido, tipografia dissolvida, formatos e laboratório). As duas
-saem também como arquivo único autocontido em `dist/`.
+**Guias vivos:** `index.html` (sistema base), `extensoes.html` (texturas,
+vocabulário estendido, tipografia dissolvida, formatos e laboratório) e
+`nome.html` (teste de troca de nome). As três saem também como arquivo único
+autocontido em `dist/`.
 
 ---
 
@@ -33,6 +34,8 @@ src/guide.css         Estilos só da documentação — fora do sistema, de prop
 assets/               Símbolo em SVG (positivo, negativo, glifo, favicon)
 index.html            Guia vivo do sistema base
 extensoes.html        Guia das extensões, com laboratório interativo
+nome.html             Teste de nome: o que sobrevive a uma troca de marca
+src/brand.js          O nome da marca, num lugar só
 build.mjs             Gera dist/cadrian-brand.html (página única autocontida)
 ```
 
@@ -90,6 +93,15 @@ o alpha como cobertura, então qualquer manchete vira grafismo da marca:
 A revelação (`resolve`) é uma frente de onda que atravessa o eixo da rampa: resolve
 primeiro o lado do sinal, depois o do ruído. Respeita `prefers-reduced-motion`.
 Elementos com `[data-cdr-dither]` animam sozinhos ao entrar na tela.
+
+## Trocar o nome da marca
+
+O nome mora em `src/brand.js`; as páginas declaram encaixes (`data-brand="name"`)
+que o módulo preenche. Para experimentar sem editar nada, qualquer página aceita
+`?brand=` na URL.
+
+O símbolo é o único ponto do sistema que depende do nome — ele é uma letra. Um
+nome que não comece com C exige redesenhar a marca; todo o resto é configuração.
 
 ## Regras
 

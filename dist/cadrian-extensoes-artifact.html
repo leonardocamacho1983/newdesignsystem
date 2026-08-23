@@ -606,6 +606,24 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
   overflow-x: auto; margin: 0; white-space: pre; line-height: 1.5;
 }
 
+/* ==========================================================================
+   Teste de nome — comparação lado a lado
+   ========================================================================== */
+.versus { display: grid; gap: var(--cdr-sp-5); align-items: start;
+          grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); }
+.versus__col { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+.versus__label { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cdr-sp-3); }
+
+/* Régua de medição: mostra a largura relativa do wordmark de cada nome. */
+.gauge { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
+.gauge__bar { height: 0.5rem; border-radius: var(--cdr-r-pill); background: var(--cdr-black);
+              width: var(--w); }
+.gauge__bar--alt { background: var(--cdr-grey-55); }
+.gauge__track { background: var(--cdr-grey-20); border-radius: var(--cdr-r-pill); }
+
+.verdict { display: flex; flex-direction: column; gap: var(--cdr-sp-4);
+           border-left: 3px solid var(--cdr-black); padding-left: var(--cdr-sp-5); }
+
 </style>
 <header class="hero cdr-inverse">
   <div class="cdr-shell">
@@ -614,7 +632,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
         <rect width="64" height="64" rx="14" fill="#fff"/>
         <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
-      <span class="cdr-lockup__word">Cadrian</span>
+      <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
     </a>
 
     <div class="stack">
@@ -627,7 +645,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 
     <div class="cdr-stage cdr-stage--flat" style="--stage-ar:16/5">
       <canvas data-cdr-dither="text" data-ramp="0.05,1" data-angle="0" data-cell="4"
-              data-duration="2200" data-opts='{"text":"Cadrian","weight":300}'
+              data-duration="2200" data-brand-canvas data-opts='{"text":"Cadrian","weight":300}'
               aria-label="A palavra Cadrian composta em partículas"></canvas>
     </div>
 
@@ -737,13 +755,13 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
             <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
               <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
             </svg>
-            <span class="cdr-lockup__word">Cadrian</span>
+            <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
           </span>
             <div class="format__art">
               <canvas data-cdr-dither="text" data-ramp="0.18,1" data-cell="3"
                       data-opts='{"text":"AI isn’t\nwaiting","fit":0.99}' aria-hidden="true"></canvas>
             </div>
-            <p class="format__note format__note--muted">Cadrian.ai</p>
+            <p class="format__note format__note--muted" data-brand="domain">cadrian.ai</p>
           </div>
           <figcaption class="cdr-micro">Post · 1:1</figcaption>
         </figure>
@@ -754,7 +772,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
             <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
               <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
             </svg>
-            <span class="cdr-lockup__word">Cadrian</span>
+            <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
           </span>
             <div class="format__art">
               <canvas data-cdr-dither="orbit" data-ramp="0.3,1" data-cell="4"
@@ -762,7 +780,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
             </div>
             <div class="format__copy">
               <h3 class="format__hed" style="--hed:11cqi">Prioritize.<br>Automate.<br>Deliver.</h3>
-              <p class="format__note format__note--muted" style="--note:3.6cqi">Cadrian.ai</p>
+              <p class="format__note format__note--muted" style="--note:3.6cqi" data-brand="domain">cadrian.ai</p>
             </div>
           </div>
           <figcaption class="cdr-micro">Story · 9:16</figcaption>
@@ -791,7 +809,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
             <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
               <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
             </svg>
-            <span class="cdr-lockup__word">Cadrian</span>
+            <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
           </span>
             <div class="format__art">
               <canvas data-cdr-dither="mesh" data-ramp="0.3,1" data-cell="3"
@@ -812,7 +830,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
             <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
               <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
             </svg>
-            <span class="cdr-lockup__word">Cadrian</span>
+            <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
           </span>
               <h3 class="format__hed" style="--hed:7cqi">The second system<br>costs a fraction<br>of the first</h3>
               <p class="format__note format__note--muted" style="--note:3.2cqi">Abertura de apresentação</p>
@@ -839,10 +857,10 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
             <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
               <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
             </svg>
-            <span class="cdr-lockup__word">Cadrian</span>
+            <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
           </span>
               <h3 class="format__hed" style="--hed:4.6cqi">Sistemas de IA no seu stack</h3>
-              <p class="format__note format__note--muted" style="--note:2.4cqi">Cadrian.ai</p>
+              <p class="format__note format__note--muted" style="--note:2.4cqi" data-brand="domain">cadrian.ai</p>
             </div>
             <div class="format__art">
               <canvas data-cdr-dither="wave" data-ramp="0.06,1" data-cell="4"
@@ -859,7 +877,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
             <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
               <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
             </svg>
-            <span class="cdr-lockup__word">Cadrian</span>
+            <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
           </span>
               <p class="format__note" style="--note:2.2cqi">
                 <strong>Dan Preiss</strong> · CEO<br>
@@ -970,7 +988,7 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
         <rect width="64" height="64" rx="14" fill="#fff"/>
         <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
-      <span class="cdr-lockup__word">Cadrian</span>
+      <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
     </a>
     <span class="cdr-small">Extensões · voltar ao <a href="https://claude.ai/code/artifact/dbceae6a-0ea9-4fcf-9845-bdc238b4baa4" style="color:inherit">sistema base</a></span>
   </div>
@@ -1436,7 +1454,66 @@ function init(root = document) {
   });
 }
 
+/* ==========================================================================
+   Cadrian — Configuração de marca
+   --------------------------------------------------------------------------
+   O nome da marca mora AQUI, num lugar só. As páginas declaram encaixes
+   (`data-brand="name"`) e este módulo os preenche. Trocar o nome do negócio
+   passa a ser trocar uma linha, não caçar strings em três arquivos.
 
+   Para experimentar sem editar nada: ?brand=Camacho na URL.
+   ========================================================================== */
+
+const BRAND = {
+  name: 'Cadrian',
+  domain: 'cadrian.ai',
+  person: 'Dan Preiss',
+  role: 'CEO',
+  phone: '310 928 2123',
+};
+
+/** Deriva domínio e e-mail de um nome novo, mantendo o resto. */
+function deriveBrand(name, base = BRAND) {
+  const slug = name.toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g, '');
+  return { ...base, name, domain: `${slug}.ai` };
+}
+
+/**
+ * O símbolo é uma LETRA, e é o único ponto do sistema que depende do nome.
+ * Todo o resto — motor, paleta, tipografia, grade — é indiferente a ele.
+ */
+const markFitsName = (name) => name.trim().toUpperCase().startsWith('C');
+
+/**
+ * Preenche os encaixes de marca do documento.
+ *   data-brand="name" | "domain" | "person" | "role" | "phone"
+ *   data-brand="email"          → person em minúsculas @ domínio
+ *   data-brand-canvas           → redesenha o wordmark ditherizado
+ */
+function applyBrand(root = document, brand = BRAND) {
+  const email = `${brand.person.split(' ')[0].toLowerCase()}@${brand.domain}`;
+  const values = { ...brand, email };
+
+  root.querySelectorAll('[data-brand]').forEach((el) => {
+    const value = values[el.dataset.brand];
+    if (value != null) el.textContent = value;
+  });
+
+  /* Canvas que compõem o próprio nome em partículas */
+  root.querySelectorAll('canvas[data-brand-canvas]').forEach((el) => {
+    const opts = el.dataset.opts ? JSON.parse(el.dataset.opts) : {};
+    el.dataset.opts = JSON.stringify({ ...opts, text: brand.name });
+    delete el.dataset.cdrDone;
+  });
+
+  return values;
+}
+
+/** Lê ?brand= da URL, se houver. */
+function brandFromUrl(fallback = BRAND) {
+  const param = new URLSearchParams(location.search).get('brand');
+  return param ? deriveBrand(param.trim(), fallback) : fallback;
+}
 
 const stage = (attrs, ar = '16/9', cls = '') => `
   <div class="cdr-stage ${cls}" style="--stage-ar:${ar}">
@@ -1566,5 +1643,6 @@ addEventListener('resize', draw);
 document.fonts?.ready.then(draw);
 draw();
 
+applyBrand(document, brandFromUrl());
 init();
 </script>

@@ -23,7 +23,7 @@
         <rect width="64" height="64" rx="14" fill="#fff"/>
         <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
-      <span class="cdr-lockup__word">Cadrian</span>
+      <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
     </a>
 
     <div class="stack">
@@ -86,7 +86,7 @@
                 <rect width="64" height="64" rx="14" fill="#fff"/>
                 <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
               </svg>
-              <span class="cdr-lockup__word">Cadrian</span>
+              <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
             </span>
           </div>
           <p class="cdr-micro spec__foot">Lockup · negativo</p>
@@ -98,7 +98,7 @@
               <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
                 <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
               </svg>
-              <span class="cdr-lockup__word">Cadrian</span>
+              <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
             </span>
           </div>
           <p class="cdr-micro spec__foot">Glifo em uma cor · herda currentColor</p>
@@ -283,7 +283,7 @@
                 <rect width="64" height="64" rx="14" fill="#000"/>
                 <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
               </svg>
-              <span class="cdr-lockup__word">Cadrian</span>
+              <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
             </span>
             <h3 class="cdr-title cdr-poster__hed">AI isn’t<br>waiting</h3>
           </div>
@@ -294,7 +294,7 @@
           </div>
           <div class="cdr-poster__foot">
             <p class="cdr-lead">We launch systems<br>in weeks, not months</p>
-            <span class="cdr-small">Visit Cadrian.ai</span>
+            <span class="cdr-small">Visit <span data-brand="domain">cadrian.ai</span></span>
           </div>
         </article>
         <figcaption class="cdr-micro">Pôster A2 · papel</figcaption>
@@ -317,7 +317,7 @@
                     <rect width="64" height="64" rx="14" fill="#000"/>
                     <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
                   </svg>
-                  <span class="cdr-lockup__word">Cadrian</span>
+                  <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
                 </span>
               </div>
               <div class="cdr-stage cdr-stage--light cdr-stage--flat cdr-stage--bare ooh__art"
@@ -342,12 +342,12 @@
                 <rect width="64" height="64" rx="14" fill="#fff"/>
                 <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
               </svg>
-              <span class="cdr-lockup__word">Cadrian</span>
+              <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
             </span>
             <div class="bizcard__foot">
-              <p class="cdr-lead">Dan Preiss</p>
-              <p class="cdr-small">CEO · dan@cadrian.ai</p>
-              <p class="cdr-small">310 928 2123</p>
+              <p class="cdr-lead" data-brand="person">Dan Preiss</p>
+              <p class="cdr-small"><span data-brand="role">CEO</span> · <span data-brand="email">dan@cadrian.ai</span></p>
+              <p class="cdr-small" data-brand="phone">310 928 2123</p>
             </div>
           </article>
           <figcaption class="cdr-micro">Cartão de visita · 85 × 55&nbsp;mm</figcaption>
@@ -410,17 +410,19 @@
         <rect width="64" height="64" rx="14" fill="#fff"/>
         <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
-      <span class="cdr-lockup__word">Cadrian</span>
+      <span class="cdr-lockup__word" data-brand="name">Cadrian</span>
     </span>
     <span class="cdr-small">
       Sistema visual v1.0 · tokens, motor de dither e componentes ·
-      <a href="extensoes.html" style="color:inherit">extensões</a>
+      <a href="extensoes.html" style="color:inherit">extensões</a> ·
+      <a href="nome.html" style="color:inherit">teste de nome</a>
     </span>
   </div>
 </footer>
 
 <script type="module">
 import { init } from './src/dither.js';
+import { applyBrand, brandFromUrl } from './src/brand.js';
 
 /* --- Cor: os swatches saem dos próprios tokens, nunca de hex digitado --- */
 const COLORS = [
@@ -509,6 +511,7 @@ document.getElementById('processo-grid').innerHTML = STEPS.map((s, i) => `
     <p class="cdr-small cdr-slide__body">${s.body}</p>
   </article>`).join('');
 
+applyBrand(document, brandFromUrl());   /* preenche os encaixes de marca */
 init();   /* ativa os canvas injetados acima */
 </script>
 </body>
