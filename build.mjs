@@ -18,7 +18,7 @@ const PAGES = [
   { src: 'studio.html',     out: 'cadrian-studio',    url: 'https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5' },
   /* Página nova: escolhe o nome que quiser; a url entra depois da primeira
      publicação. Até lá o aviso em stderr lembra que falta. */
-  { src: 'kv.html',         out: 'camacho-kv',         url: '' },
+  { src: 'kv.html',         out: 'camacho-kv',         url: 'https://claude.ai/code/artifact/448e707f-5e22-4fcf-a574-aaacd463b0fa' },
   { src: 'aplicacoes.html', out: 'camacho-aplicacoes', url: 'https://claude.ai/code/artifact/40b9d44b-fb1e-4c86-b6ba-bde9c92e27a0' },
 ];
 
