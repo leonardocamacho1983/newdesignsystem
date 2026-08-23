@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Cadrian — Dither Engine
+   Camacho — Dither Engine
    --------------------------------------------------------------------------
    Todo grafismo da marca é a mesma ideia: uma FORMA amostrada por uma GRADE
    de partículas quadradas, cuja probabilidade de existir varia ao longo de
@@ -125,7 +125,7 @@ export const fields = {
      Com isso qualquer palavra vira grafismo da marca: manchete de pôster,
      post de social, capa de relatório. A máscara é construída na primeira
      chamada, quando a proporção já é conhecida, e reaproveitada depois. */
-  text: ({ text = 'Cadrian', weight = 300, tracking = '-0.04em', fit = 0.92,
+  text: ({ text = 'Camacho', weight = 300, tracking = '-0.04em', fit = 0.92,
            lineHeight = 0.98 } = {}) => {
     let mask = null, mw = 0, mh = 0, builtFor = -1;
 

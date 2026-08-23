@@ -1,6 +1,6 @@
-# Cadrian — Sistema Visual
+# Camacho — Sistema Visual
 
-Sistema de identidade da **Cadrian** (consultoria de sistemas de IA), extraído das
+Sistema de identidade do **Camacho** (consultoria de transformação com IA), extraído das
 explorações de marca e transformado em código executável: tokens, um motor gráfico
 generativo e uma camada de componentes.
 
@@ -29,7 +29,7 @@ produz peça nova sem abrir o Illustrator.
 tokens/tokens.css     Fonte única de verdade (cor, tipo, espaço, forma, movimento)
 tokens/tokens.json    Os mesmos tokens em JSON, gerados do CSS
 src/dither.js         Motor gráfico: campos de forma, rampa, render e animação
-src/cadrian.css       Componentes: lockup, slide, pôster, card, botão, tag
+src/camacho.css       Componentes: lockup, slide, pôster, card, botão, tag
 src/guide.css         Estilos só da documentação — fora do sistema, de propósito
 assets/               Símbolo em SVG (positivo, negativo, glifo, favicon)
 index.html            Guia vivo do sistema base
@@ -37,7 +37,7 @@ extensoes.html        Guia das extensões, com laboratório interativo
 nome.html             Teste de nome: o que sobrevive a uma troca de marca
 studio.html           Estúdio de print: compõe e exporta o wordmark em PNG
 src/brand.js          O nome da marca, num lugar só
-build.mjs             Gera dist/cadrian-brand.html (página única autocontida)
+build.mjs             Gera as páginas autocontidas em dist/
 ```
 
 ## Fundação

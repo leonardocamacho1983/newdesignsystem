@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Cadrian — Configuração de marca
+   Camacho — Configuração de marca
    --------------------------------------------------------------------------
    O nome da marca mora AQUI, num lugar só. As páginas declaram encaixes
    (`data-brand="name"`) e este módulo os preenche. Trocar o nome do negócio
@@ -9,12 +9,14 @@
    ========================================================================== */
 
 export const BRAND = {
-  name: 'Cadrian',
+  name: 'Camacho',
   version: '1.0.0',
-  domain: 'cadrian.ai',
-  person: 'Dan Preiss',
-  role: 'CEO',
-  phone: '310 928 2123',
+  domain: 'camacho.ai',
+  person: 'Leonardo Camacho',
+  role: 'Consultor',
+  /* Placeholder explícito: o telefone real ainda não foi definido. Trocar
+     antes de qualquer peça impressa — ver Pendências no README. */
+  phone: '+55 11 90000-0000',
 };
 
 /** Deriva domínio e e-mail de um nome novo, mantendo o resto. */
