@@ -16,6 +16,9 @@ const PAGES = [
   { src: 'extensoes.html',  out: 'cadrian-extensoes', url: 'https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2' },
   { src: 'posicionamento.html', out: 'cadrian-nome',  url: 'https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60' },
   { src: 'studio.html',     out: 'cadrian-studio',    url: 'https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5' },
+  /* Página nova: escolhe o nome que quiser; a url entra depois da primeira
+     publicação. Até lá o aviso em stderr lembra que falta. */
+  { src: 'aplicacoes.html', out: 'camacho-aplicacoes', url: '' },
 ];
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

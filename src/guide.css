@@ -320,3 +320,46 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
 .segmented input:focus-visible + label { outline: 2px solid currentColor; outline-offset: -2px; }
 
 .studio__status { min-height: 1.4em; }
+
+/* ==========================================================================
+   Aplicações da prática
+   ========================================================================== */
+
+/* Relatório de diagnóstico: capa editorial com escala de maturidade. */
+.laudo {
+  background: var(--cmc-white); color: var(--cmc-black);
+  border-radius: var(--cmc-r-card); overflow: hidden;
+  container-type: inline-size;
+  display: grid; grid-template-rows: auto auto 1fr auto; gap: 4cqi;
+  padding: 6cqi; aspect-ratio: var(--ar, 3/4);
+}
+.laudo__hed { font-size: 9cqi; line-height: 1; letter-spacing: -0.03em;
+              font-weight: var(--cmc-w-light); margin: 0; }
+.laudo__art { position: relative; min-height: 0; color: var(--cmc-black); }
+.laudo__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.laudo__meta { font-family: var(--cmc-font-mono); font-size: 2.6cqi;
+               display: flex; justify-content: space-between; gap: 3cqi; }
+
+/* Barra de nível: o nível é densidade, então a barra é a própria densidade. */
+.nivel { display: grid; grid-template-columns: auto 1fr auto; gap: var(--cmc-sp-4);
+         align-items: center; }
+.nivel__nome { font-size: var(--cmc-fs-small); }
+.nivel__barra { position: relative; height: 2.25rem; background: var(--cmc-black);
+                border-radius: 4px; overflow: hidden; color: var(--cmc-white); }
+.nivel__barra canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.nivel__val { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+              font-variant-numeric: tabular-nums; color: var(--cmc-text-muted); }
+
+/* Slide de workshop: campo escuro, título grande, sem enfeite. */
+.workshop {
+  background: var(--cmc-black); color: var(--cmc-white);
+  border-radius: var(--cmc-r-card); overflow: hidden; container-type: inline-size;
+  display: grid; grid-template-rows: auto 1fr auto; gap: 4cqi;
+  padding: 6cqi; aspect-ratio: 16/9;
+}
+.workshop__hed { font-size: 8cqi; line-height: 1; letter-spacing: -0.03em;
+                 font-weight: var(--cmc-w-light); margin: 0; }
+.workshop__art { position: relative; min-height: 0; }
+.workshop__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.workshop__pe { font-family: var(--cmc-font-mono); font-size: 2.6cqi; margin: 0;
+                display: flex; justify-content: space-between; gap: 3cqi; }

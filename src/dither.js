@@ -252,6 +252,11 @@ export const fields = {
     return edge(d - w / 2, soft);
   },
 
+  /* Área cheia: cobertura 1 em todo o quadro. Sozinho não desenha nada — o
+     que ele faz é entregar a superfície inteira para a rampa, de modo que a
+     DENSIDADE vire o conteúdo. É como uma barra de nível é desenhada. */
+  fill: () => () => 1,
+
   /* --- Vocabulário da transformação -------------------------------------
      A costura, a incorporação, a medida e a transferência: as quatro ideias
      que o vocabulário anterior (todo sobre matéria e sistema) não dizia. */
