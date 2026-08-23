@@ -4,8 +4,9 @@ Sistema de identidade da **Cadrian** (consultoria de sistemas de IA), extraído 
 explorações de marca e transformado em código executável: tokens, um motor gráfico
 generativo e uma camada de componentes.
 
-**Guia vivo:** abra `index.html` (via servidor local) ou `dist/cadrian-brand.html`
-(arquivo único, autocontido, pronto para mandar por e‑mail).
+**Guias vivos:** `index.html` (sistema base) e `extensoes.html` (texturas,
+vocabulário estendido, tipografia dissolvida, formatos e laboratório). As duas
+saem também como arquivo único autocontido em `dist/`.
 
 ---
 
@@ -30,7 +31,8 @@ src/dither.js         Motor gráfico: campos de forma, rampa, render e animaçã
 src/cadrian.css       Componentes: lockup, slide, pôster, card, botão, tag
 src/guide.css         Estilos só da documentação — fora do sistema, de propósito
 assets/               Símbolo em SVG (positivo, negativo, glifo, favicon)
-index.html            Guia vivo — a documentação é a própria peça
+index.html            Guia vivo do sistema base
+extensoes.html        Guia das extensões, com laboratório interativo
 build.mjs             Gera dist/cadrian-brand.html (página única autocontida)
 ```
 
@@ -55,8 +57,22 @@ import { render, resolve, fields } from './src/dither.js';
 render(canvas, { shape: 'mark', ramp: [0.03, 1], angle: 180, cell: 4 });
 ```
 
-**Formas:** `disc` `ring` `chevrons` `bars` `loop` `layers` `mark` `noiseToSignal`
-— ou passe sua própria função `f(u, v, ar) → cobertura 0..1`.
+**Formas.** Base: `disc` `ring` `chevrons` `bars` `loop` `layers` `mark`
+`noiseToSignal`. Estendidas: `funnel` (prioriza), `wave` (o sinal), `orbit`
+(agentes em volta do stack), `mesh` (a rede), `staircase` (ganhos que compõem),
+`spiral` (o ciclo que avança) e `text`. Ou passe sua própria função
+`f(u, v, ar) → cobertura 0..1`.
+
+**Texturas.** A mesma forma, três lógicas de amostragem: `grain` (limiar
+aleatório, orgânico — o padrão), `screen` (limiar ordenado por Bayer 8×8, trama
+de impressão) e `halftone` (toda célula existe, varia o tamanho do ponto).
+
+**Tipografia dissolvida.** O campo `text` rasteriza a palavra fora da tela e usa
+o alpha como cobertura, então qualquer manchete vira grafismo da marca:
+
+```html
+<canvas data-cdr-dither="text" data-opts='{"text":"From noise\nto signal"}'></canvas>
+```
 
 **Parâmetros**
 
@@ -66,6 +82,8 @@ render(canvas, { shape: 'mark', ramp: [0.03, 1], angle: 180, cell: 4 });
 | `ramp` | `[densidade mínima, máxima]` — o eixo ruído→sinal. |
 | `angle` | 0° adensa à direita · 180° à esquerda · 90° embaixo. |
 | `mirror` | Rampa espelhada: denso no centro, disperso nas duas pontas. |
+| `radial` | Rampa radial: denso no miolo, disperso nas bordas. Funciona em qualquer proporção. |
+| `texture` | `grain` · `screen` · `halftone`. |
 | `curve` | `> 1` prolonga a dispersão antes de resolver. |
 | `seed` | Hash determinístico por célula — o mesmo grafismo sempre, e nada "ferve" ao redimensionar ou animar. |
 
@@ -89,7 +107,7 @@ célula é quadrada).
 python3 -m http.server 8899     # o guia usa módulos ES: precisa de http, não file://
 open http://localhost:8899/
 
-node build.mjs                  # regenera dist/cadrian-brand.html
+node build.mjs                  # regenera as páginas autocontidas em dist/
 ```
 
 ## Pendências para fechar a v1

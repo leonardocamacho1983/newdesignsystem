@@ -160,3 +160,86 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 
 /* Espécime tipográfico: o alfabeto em peso de leitura, não em Light. */
 .type-specimen { font-weight: var(--cdr-w-book); }
+
+/* ==========================================================================
+   Extensões — formatos de aplicação
+   ========================================================================== */
+
+/* Galeria de formatos — agrupada por família, porque misturar 9:16 com 4:1
+   numa grade automática só produz buracos. Cada família tem seu ritmo. */
+.formats { display: grid; gap: var(--cdr-sp-6); align-items: start; }
+.formats--social { grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); }
+.formats--wide { grid-template-columns: 1fr; }
+.formats--pair {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+}
+@media (max-width: 48rem) { .formats--pair { grid-template-columns: 1fr; } }
+
+.format { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+
+/* Cada peça é dividida em FAIXAS: cabeçalho, arte, pé. O canvas ocupa a
+   própria linha do grid em vez de ficar absoluto por trás de tudo — assim é
+   impossível o grafismo cruzar com a tipografia. Foi o remendo que falhou na
+   primeira versão desta seção. */
+.format__frame {
+  overflow: hidden;
+  border-radius: var(--cdr-r-card);
+  background: var(--cdr-black); color: var(--cdr-white);
+  aspect-ratio: var(--ar, 1);
+  container-type: inline-size;
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 4cqi; padding: 6cqi;
+}
+.format__frame--paper { background: var(--cdr-paper); color: var(--cdr-black); }
+.format__frame--white { background: var(--cdr-white); color: var(--cdr-black); }
+
+/* Peças largas: texto de um lado, arte do outro. A coluna da arte precisa
+   ESTICAR (o canvas é absoluto e não tem altura própria); só o texto se
+   centraliza. Centralizar a linha inteira zera a altura do canvas. */
+.format__frame--split {
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: stretch; gap: 6cqi;
+}
+.format__frame--split .format__copy { align-self: center; }
+/* Peça sem texto (ícone): a arte ocupa tudo. */
+.format__frame--center { grid-template-rows: 1fr; padding: 0; }
+
+.format__art { position: relative; min-height: 0; min-width: 0; }
+.format__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.format__hed {
+  font-size: var(--hed, 12cqi); line-height: 0.98; letter-spacing: -0.03em;
+  font-weight: var(--cdr-w-light); margin: 0; text-wrap: balance;
+}
+.format__note { font-size: var(--note, 4.5cqi); line-height: 1.4; margin: 0; }
+.format__note--muted { color: var(--cdr-text-muted); }
+.format__copy { display: flex; flex-direction: column; gap: 2cqi; }
+/* O lockup escala com a peça, mas com teto: em peça larga, cqi cresce demais. */
+.format__lockup { --lockup-size: clamp(0.7rem, 7cqi, 1.4rem); }
+
+/* --- Laboratório ---------------------------------------------------------- */
+.lab { display: grid; gap: var(--cdr-sp-6); grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr); }
+@media (max-width: 52rem) { .lab { grid-template-columns: 1fr; } }
+.lab__stage { position: sticky; top: var(--cdr-sp-4); }
+.lab__panel { display: flex; flex-direction: column; gap: var(--cdr-sp-4); }
+.field { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
+/* `display` de classe vence o estilo de agente do atributo hidden: sem isto,
+   um campo marcado hidden continua aparecendo. */
+.field[hidden] { display: none; }
+.field__row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cdr-sp-3); }
+.field__val { font-family: var(--cdr-font-mono); font-size: var(--cdr-fs-small);
+              color: var(--cdr-text-muted); font-variant-numeric: tabular-nums; }
+.field select, .field input[type="text"] {
+  font: inherit; font-size: var(--cdr-fs-small); color: var(--cdr-text);
+  background: var(--cdr-surface); border: var(--cdr-border);
+  border-radius: var(--cdr-r-pill); padding: 0 0.9em;
+  min-height: var(--cdr-control-h); width: 100%;
+}
+.field input[type="range"] { width: 100%; accent-color: var(--cdr-black); }
+.lab__code {
+  font-family: var(--cdr-font-mono); font-size: var(--cdr-fs-small);
+  background: var(--cdr-black); color: var(--cdr-white);
+  border-radius: var(--cdr-r-card); padding: var(--cdr-sp-4);
+  overflow-x: auto; margin: 0; white-space: pre; line-height: 1.5;
+}
