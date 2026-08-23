@@ -1,131 +1,143 @@
-# Camacho — Sistema Visual
+# Camacho — Sistema de marca
 
-Sistema de identidade do **Camacho** (consultoria de transformação com IA), extraído das
-explorações de marca e transformado em código executável: tokens, um motor gráfico
-generativo e uma camada de componentes.
+Sistema de identidade do **Camacho** — consultoria sênior de estratégia,
+transformação com IA e desenvolvimento de lideranças. Não é um PDF de manual:
+é código executável, e os guias são as próprias peças.
 
-**Guias vivos:** `index.html` (sistema base), `extensoes.html` (texturas,
-vocabulário estendido, tipografia dissolvida, formatos e laboratório) e
-`nome.html` (teste de troca de nome). As três saem também como arquivo único
-autocontido em `dist/`.
+**Guias vivos:** `index.html` (sistema), `posicionamento.html` (tese e oferta),
+`aplicacoes.html` (peças da prática), `extensoes.html` (motor gráfico e
+laboratório) e `studio.html` (estúdio de print). Todos saem também como arquivo
+único autocontido em `dist/`.
 
 ---
 
-## A ideia central
+## A tese
 
-A marca tem uma tese — *from noise to signal* — e o sistema gráfico **é** essa tese.
-Todo grafismo é a mesma operação:
+> **Clareza é vantagem.**
 
-> uma **forma** amostrada por uma **grade de partículas quadradas**, cuja
-> probabilidade de existir varia ao longo de uma **rampa de densidade**.
+Empresas não perdem capacidade por falta de tecnologia, talento ou informação.
+Perdem quando a complexidade cresce mais rápido do que sua forma de decidir,
+operar e liderar. A cadeia que o trabalho percorre:
 
-Ruído de um lado, sinal do outro. Nada é ilustrado à mão — tudo é gerado. Por isso
-escala de um favicon a um outdoor sem perder o grão, e qualquer pessoa da equipe
-produz peça nova sem abrir o Illustrator.
+**complexidade → clareza → decisões → capacidade de execução**
+
+Essa cadeia é o que a rampa do motor gráfico significa. Todo grafismo é a mesma
+operação — uma **forma** amostrada por uma **grade de partículas quadradas**,
+cuja probabilidade de existir varia ao longo de uma **rampa de densidade** — e o
+que se ganha na ponta densa não é dado limpo: é capacidade.
+
+### A costura
+
+Não são duas ofertas. É uma: transformação com IA que funciona. Para entregá-la
+é preciso costurar o lado técnico e o lado humano na estratégia do negócio. O
+mercado separa os dois, e separá-los é exatamente o que faz a transformação
+falhar. O grafismo-âncora (`weave`) desenha isso: dois fios entram separados e
+saem como um.
+
+### O método
+
+Diagnosticar · Priorizar · Estruturar · Implementar · **Incorporar** · Medir
+
+Incorporar é a etapa que quase todo projeto pula, e é onde a capacidade fica
+instalada.
 
 ## Estrutura
 
 ```
-tokens/tokens.css     Fonte única de verdade (cor, tipo, espaço, forma, movimento)
-tokens/tokens.json    Os mesmos tokens em JSON, gerados do CSS
-src/dither.js         Motor gráfico: campos de forma, rampa, render e animação
-src/camacho.css       Componentes: lockup, slide, pôster, card, botão, tag
-src/guide.css         Estilos só da documentação — fora do sistema, de propósito
-assets/               Símbolo em SVG (positivo, negativo, glifo, favicon)
-index.html            Guia vivo do sistema base
-extensoes.html        Guia das extensões, com laboratório interativo
-nome.html             Teste de nome: o que sobrevive a uma troca de marca
-studio.html           Estúdio de print: compõe e exporta o wordmark em PNG
-src/brand.js          O nome da marca, num lugar só
-build.mjs             Gera as páginas autocontidas em dist/
+tokens/tokens.css        Fonte única de verdade (cor, tipo, espaço, forma, níveis, movimento)
+tokens/tokens.json       Gerado do CSS pelo build — nunca editar à mão
+tokens/build-tokens.mjs  Gera o JSON e trava o fechamento token/uso
+src/dither.js            Motor gráfico: 20 campos de forma, rampa, texturas, render e animação
+src/camacho.css          Componentes do sistema
+src/guide.css            Estilos só da documentação — fora do sistema, de propósito
+src/brand.js             O nome da marca, num lugar só
+assets/                  Símbolo em SVG (positivo, negativo, glifo, favicon)
+build.mjs                Tabela única de páginas; gera dist/ autocontido
 ```
 
 ## Fundação
 
 | | |
 |---|---|
-| **Cor** | Monocromática por convicção. Preto e branco puros + cinzas neutros. Não existe cor de destaque: o destaque é o contraste e a densidade das partículas. |
-| **Tipo** | Inter Tight (Google Fonts). Títulos sempre em Light 300 com tracking negativo (−0.035em). Medium 500 só em rótulos micro, botões e no wordmark. |
-| **Marca** | "C" geométrico de contraforma circular num squircle. Área de proteção = metade da altura do símbolo. Legível a partir de 16 px. |
-| **Movimento** | Uma curva só (`--cmc-ease`). Tudo resolve de ruído para forma. |
-| **Controles** | Botão e tag dividem `--cmc-control-h`, então alinham lado a lado. Componentes herdam `currentColor` em vez de fixar preto — o mesmo botão de contorno funciona sobre branco e sobre preto. |
+| **Cor** | Monocromática **por argumento**. Num sistema que comunica nível (maturidade, prioridade, risco), o nível é densidade de partícula, não matiz — a mesma gramática do motor. Uma cor de destaque criaria um segundo sistema concorrente. |
+| **Tipo** | Três vozes: **Inter Tight** (sistema, interface, marca), **Source Serif 4** (diagnóstico, artigo, formação), **IBM Plex Mono** (indicador, nível, dado). Elas se sucedem, mas não disputam papel: rótulo e número não vão em serifada, texto longo não vai em mono. |
+| **Marca** | "C" geométrico num squircle. A **abertura** representa a lacuna entre a complexidade enfrentada e a capacidade instalada — daí a marca-medida: o mesmo C em N aberturas é uma escala de maturidade. |
+| **Voz** | Primeira pessoa do singular. Quem conduz é uma pessoa, que compõe associados conforme a necessidade. |
 
 ## Motor gráfico
 
 ```html
-<canvas data-cmc-dither="chevrons" data-ramp="0.12,1" data-angle="0"></canvas>
+<canvas data-cmc-dither="weave" data-ramp="0.04,1" data-angle="0"></canvas>
 ```
 
 ```js
 import { render, resolve, fields } from './src/dither.js';
-render(canvas, { shape: 'mark', ramp: [0.03, 1], angle: 180, cell: 4 });
+render(canvas, { shape: 'gauge', ramp: [0.1, 1], cell: 4 });
 ```
 
-**Formas.** Base: `disc` `ring` `chevrons` `bars` `loop` `layers` `mark`
-`noiseToSignal`. Estendidas: `funnel` (prioriza), `wave` (o sinal), `orbit`
-(agentes em volta do stack), `mesh` (a rede), `staircase` (ganhos que compõem),
-`spiral` (o ciclo que avança) e `text`. Ou passe sua própria função
+**Formas.** Base: `disc` `ring` `chevrons` `bars` `loop` `layers` `mark` `text`
+`fill` `noiseToSignal`. Estendidas: `funnel` `wave` `orbit` `staircase` `mesh`
+`spiral`. Da transformação: `weave` (a costura) `cohort` (incorporar)
+`gauge` (medir) `handoff` (transferir). Ou passe sua própria função
 `f(u, v, ar) → cobertura 0..1`.
 
-**Texturas.** A mesma forma, três lógicas de amostragem: `grain` (limiar
-aleatório, orgânico — o padrão), `screen` (limiar ordenado por Bayer 8×8, trama
-de impressão) e `halftone` (toda célula existe, varia o tamanho do ponto).
+**Texturas.** A mesma forma, três lógicas: `grain` (limiar aleatório — padrão),
+`screen` (Bayer 8×8, trama de impressão), `halftone` (varia o tamanho do ponto).
 
 **Tipografia dissolvida.** O campo `text` rasteriza a palavra fora da tela e usa
-o alpha como cobertura, então qualquer manchete vira grafismo da marca:
+o alpha como cobertura — qualquer manchete vira grafismo da marca.
 
-```html
-<canvas data-cmc-dither="text" data-opts='{"text":"From noise\nto signal"}'></canvas>
-```
-
-**Parâmetros**
-
-| | |
+| Parâmetro | |
 |---|---|
 | `cell` | Aresta da célula em px. 4 padrão; 6–8 em peças grandes. |
-| `ramp` | `[densidade mínima, máxima]` — o eixo ruído→sinal. |
+| `ramp` | `[densidade mínima, máxima]`. |
 | `angle` | 0° adensa à direita · 180° à esquerda · 90° embaixo. |
-| `mirror` | Rampa espelhada: denso no centro, disperso nas duas pontas. |
-| `radial` | Rampa radial: denso no miolo, disperso nas bordas. Funciona em qualquer proporção. |
+| `mirror` | Denso no centro, disperso nas duas pontas. |
+| `radial` | Denso no miolo. Funciona em qualquer proporção. |
 | `texture` | `grain` · `screen` · `halftone`. |
-| `curve` | `> 1` prolonga a dispersão antes de resolver. |
-| `seed` | Hash determinístico por célula — o mesmo grafismo sempre, e nada "ferve" ao redimensionar ou animar. |
-
-A revelação (`resolve`) é uma frente de onda que atravessa o eixo da rampa: resolve
-primeiro o lado do sinal, depois o do ruído. Respeita `prefers-reduced-motion`.
-Elementos com `[data-cmc-dither]` animam sozinhos ao entrar na tela.
+| `seed` | Hash determinístico por célula — o mesmo grafismo sempre. |
+| `width`/`height` | Renderiza no tamanho pedido, ignorando o layout: é o caminho de exportação em alta resolução. |
 
 ## Trocar o nome da marca
 
 O nome mora em `src/brand.js`; as páginas declaram encaixes (`data-brand="name"`)
-que o módulo preenche. Para experimentar sem editar nada, qualquer página aceita
-`?brand=` na URL.
-
-O símbolo é o único ponto do sistema que depende do nome — ele é uma letra. Um
-nome que não comece com C exige redesenhar a marca; todo o resto é configuração.
-
-## Regras
-
-**Faça** — deixe o preto ocupar área grande e contínua · gere o dither, nunca
-reproduza como imagem esticada · título em Light com tracking negativo · uma
-direção de rampa por peça.
-
-**Não faça** — cor de destaque, gradiente ou sombra colorida · Bold/Black nos
-títulos · distorcer, rotacionar ou recolorir o símbolo · partícula redonda (a
-célula é quadrada).
+que o módulo preenche. Qualquer página aceita `?brand=` na URL para experimentar.
+O símbolo é o único ponto dependente do nome — ele é uma letra.
 
 ## Rodar
 
 ```bash
-python3 -m http.server 8899     # o guia usa módulos ES: precisa de http, não file://
-open http://localhost:8899/
-
-node build.mjs                  # regenera as páginas autocontidas em dist/
+python3 -m http.server 8899     # módulos ES exigem http, não file://
+node build.mjs                  # tokens + páginas autocontidas em dist/
 ```
 
-## Pendências para fechar a v1
+`build.mjs` falha se qualquer `href`/`src` local sobreviver ao embutimento, e
+`build-tokens.mjs` falha se algum `var(--cmc-*)` referenciado não existir
+declarado. Um token órfão não emite erro no navegador — ele aplica valor vazio e
+o layout desaba em silêncio.
 
-- Confirmar o nome legal e o domínio antes de aplicar em peça impressa.
-- Os textos do processo (Measure, Repeat) foram escritos aqui para completar as seis
-  etapas — os prints só traziam os quatro primeiros. Revisar com o time.
-- Definir a versão do símbolo para favicon 16 px (o squircle fecha demais nesse tamanho).
+## Registro da transição
+
+O sistema nasceu sob o nome **Cadrian** e foi herdado inteiro: motor, paleta,
+grade e componentes não dependem de como a marca se chama. O que mudou:
+
+- O prefixo `cdr` virou `cmc` (73 tokens, 40 classes, 2 data-attributes e 2
+  identificadores camelCase), num commit mecânico isolado de diff visual zero,
+  para que a comparação de screenshots servisse de oráculo.
+- A rampa deixou de significar "ruído → sinal", um fato sobre dados, e passou a
+  significar "complexidade → clareza", uma afirmação sobre capacidade.
+- As seis etapas do processo, todas sobre o sistema, deram lugar às seis do
+  método, que incluem **Incorporar** — a capacidade humana não tinha lugar.
+- O símbolo sobreviveu sem redesenho porque é uma letra e o nome novo começa com
+  a mesma. A abertura ganhou significado.
+- Os nomes de arquivo em `dist/` continuam `cadrian-*`: são o endereço a que os
+  artifacts publicados estão ligados, e a URL pública não os contém. `out` é
+  endereço e nunca muda; `src` e conteúdo são assunto.
+
+## Pendências
+
+- **Telefone**: `BRAND.phone` é placeholder explícito. Trocar antes de peça impressa.
+- **Domínio**: `camacho.ai` é sobrenome comum — verificar disponibilidade.
+- **Assinatura**: as peças assinam "Camacho"; o nome completo aparece na
+  assinatura de pessoa. Confirmar.
+- **Favicon 16 px**: o squircle fecha demais nesse tamanho; definir uma versão própria.
