@@ -35,6 +35,7 @@ assets/               Símbolo em SVG (positivo, negativo, glifo, favicon)
 index.html            Guia vivo do sistema base
 extensoes.html        Guia das extensões, com laboratório interativo
 nome.html             Teste de nome: o que sobrevive a uma troca de marca
+studio.html           Estúdio de print: compõe e exporta o wordmark em PNG
 src/brand.js          O nome da marca, num lugar só
 build.mjs             Gera dist/cadrian-brand.html (página única autocontida)
 ```

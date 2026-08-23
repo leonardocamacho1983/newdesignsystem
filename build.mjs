@@ -8,6 +8,7 @@ const PAGES = [
   { src: 'index.html', out: 'cadrian-brand' },
   { src: 'extensoes.html', out: 'cadrian-extensoes' },
   { src: 'nome.html', out: 'cadrian-nome' },
+  { src: 'studio.html', out: 'cadrian-studio' },
 ];
 
 const engine = read('src/dither.js')
@@ -24,6 +25,7 @@ const ARTIFACT_URLS = {
   'cadrian-brand.html': 'https://claude.ai/code/artifact/dbceae6a-0ea9-4fcf-9845-bdc238b4baa4',
   'cadrian-extensoes.html': 'https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2',
   'cadrian-nome.html': 'https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60',
+  'cadrian-studio.html': '',   /* preenchido após a primeira publicação */
 };
 
 mkdirSync('dist', { recursive: true });
@@ -47,7 +49,8 @@ for (const page of PAGES) {
        preservando qualquer query string (ex.: ?brand=Camacho). */
     .replace(/href="index\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-brand.html${q || ''}"`)
     .replace(/href="extensoes\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-extensoes.html${q || ''}"`)
-    .replace(/href="nome\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-nome.html${q || ''}"`);
+    .replace(/href="nome\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-nome.html${q || ''}"`)
+    .replace(/href="studio\.html(\?[^"]*)?"/g, (_, q) => `href="cadrian-studio.html${q || ''}"`);
 
   /* Trava: qualquer referência local sobrevivente quebraria a página
      autocontida (e um artifact publicado, onde o host bloqueia origens

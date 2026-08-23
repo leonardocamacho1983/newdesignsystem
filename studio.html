@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estúdio de Print Camacho</title>
+<meta name="description" content="Ajuste e exporte o print do wordmark Camacho em partículas.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/cadrian.css">
+<link rel="stylesheet" href="src/guide.css">
+</head>
+<body>
+
+<header class="hero cdr-inverse">
+  <div class="cdr-shell">
+    <a class="cdr-lockup cdr-lockup--sm" href="index.html">
+      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cdr-lockup__word">Camacho</span>
+    </a>
+
+    <div class="stack">
+      <h1 class="cdr-display">Estúdio<br>de print</h1>
+      <p class="cdr-lead cdr-muted">
+        Ajuste o print do nome em partículas e leve o PNG. O que você vê na
+        prévia é exatamente o que sai no arquivo.
+      </p>
+    </div>
+
+    <nav class="hero__nav">
+      <a class="cdr-tag" href="nome.html"><span>← Teste de nome</span></a>
+      <a class="cdr-tag" href="extensoes.html"><span>Extensões</span></a>
+      <a class="cdr-tag" href="index.html"><span>Sistema base</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="cdr-section">
+  <div class="cdr-shell stack-7">
+
+    <div class="studio">
+      <!-- Prévia -->
+      <div class="studio__stage">
+        <div class="studio__frame" id="frame" style="--ar:4/3">
+          <canvas id="print" aria-label="Prévia do print"></canvas>
+        </div>
+        <div class="versus__label">
+          <p class="cdr-micro" id="dims">—</p>
+          <p class="cdr-micro" id="status" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <!-- Controles -->
+      <form class="studio__panel" id="panel">
+
+        <div class="studio__group">
+          <p class="cdr-micro">Ponto de partida</p>
+          <div class="presets" id="presets"></div>
+        </div>
+
+        <div class="studio__group">
+          <p class="cdr-micro">Palavra</p>
+          <div class="field">
+            <textarea id="text" name="text" rows="2" maxlength="60"
+                      aria-label="Palavra do print">Camacho</textarea>
+            <p class="cdr-micro">Quebre a linha com ⏎ para compor em duas linhas.</p>
+          </div>
+          <div class="field">
+            <div class="field__row">
+              <label class="cdr-micro" for="weight">Peso</label>
+              <output class="field__val" id="weight-out">300</output>
+            </div>
+            <input type="range" id="weight" name="weight" min="300" max="500" step="100" value="300">
+          </div>
+          <div class="field">
+            <div class="field__row">
+              <label class="cdr-micro" for="fit">Margem</label>
+              <output class="field__val" id="fit-out">8%</output>
+            </div>
+            <input type="range" id="fit" name="fit" min="0.6" max="0.99" step="0.01" value="0.92">
+          </div>
+        </div>
+
+        <div class="studio__group">
+          <p class="cdr-micro">Grão</p>
+          <div class="field">
+            <div class="field__row">
+              <label class="cdr-micro" for="min">Preenchimento</label>
+              <output class="field__val" id="min-out">0.82</output>
+            </div>
+            <input type="range" id="min" name="min" min="0" max="1" step="0.01" value="0.82">
+          </div>
+          <div class="field">
+            <div class="field__row">
+              <label class="cdr-micro" for="max">Densidade no pico</label>
+              <output class="field__val" id="max-out">1.00</output>
+            </div>
+            <input type="range" id="max" name="max" min="0.2" max="1" step="0.01" value="1">
+          </div>
+          <div class="field">
+            <div class="field__row">
+              <label class="cdr-micro" for="cell">Célula</label>
+              <output class="field__val" id="cell-out">4 px</output>
+            </div>
+            <input type="range" id="cell" name="cell" min="2" max="14" step="1" value="4">
+          </div>
+          <div class="field">
+            <label class="cdr-micro" for="texture">Textura</label>
+            <select id="texture" name="texture">
+              <option value="grain">grain · grão</option>
+              <option value="screen">screen · trama</option>
+              <option value="halftone">halftone · meio-tom</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="studio__group">
+          <p class="cdr-micro">Rampa</p>
+          <div class="field">
+            <label class="cdr-micro" for="rampmode">Direção</label>
+            <select id="rampmode" name="rampmode">
+              <option value="linear">linear · de um lado ao outro</option>
+              <option value="mirror">mirror · densa no centro</option>
+              <option value="radial">radial · densa no miolo</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field__row">
+              <label class="cdr-micro" for="angle">Ângulo</label>
+              <output class="field__val" id="angle-out">0°</output>
+            </div>
+            <input type="range" id="angle" name="angle" min="0" max="350" step="10" value="0">
+          </div>
+          <div class="field">
+            <div class="field__row">
+              <label class="cdr-micro" for="curve">Curva</label>
+              <output class="field__val" id="curve-out">1.35</output>
+            </div>
+            <input type="range" id="curve" name="curve" min="0.6" max="3" step="0.05" value="1.35">
+          </div>
+        </div>
+
+        <div class="studio__group">
+          <p class="cdr-micro">Formato</p>
+          <div class="field">
+            <label class="cdr-micro" for="field-dark">Campo</label>
+            <div class="segmented" role="radiogroup" aria-label="Campo">
+              <input type="radio" name="field" id="field-dark" value="dark" checked>
+              <label for="field-dark">Escuro</label>
+              <input type="radio" name="field" id="field-paper" value="paper">
+              <label for="field-paper">Papel</label>
+              <input type="radio" name="field" id="field-white" value="white">
+              <label for="field-white">Branco</label>
+            </div>
+          </div>
+          <div class="field">
+            <label class="cdr-micro" for="ar-43">Proporção</label>
+            <div class="segmented" role="radiogroup" aria-label="Proporção">
+              <input type="radio" name="ar" id="ar-43" value="4/3" checked>
+              <label for="ar-43">4:3</label>
+              <input type="radio" name="ar" id="ar-11" value="1/1">
+              <label for="ar-11">1:1</label>
+              <input type="radio" name="ar" id="ar-34" value="3/4">
+              <label for="ar-34">3:4</label>
+              <input type="radio" name="ar" id="ar-169" value="16/9">
+              <label for="ar-169">16:9</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="studio__group">
+          <p class="cdr-micro">Exportar</p>
+          <div class="field">
+            <label class="cdr-micro" for="size">Largura do PNG</label>
+            <select id="size" name="size">
+              <option value="1200">1200 px · web</option>
+              <option value="2400" selected>2400 px · social</option>
+              <option value="4000">4000 px · impressão</option>
+            </select>
+          </div>
+          <div class="cdr-controls">
+            <button class="cdr-btn" type="button" id="save">Baixar PNG</button>
+            <button class="cdr-btn cdr-btn--ghost" type="button" id="shuffle">Nova semente</button>
+          </div>
+          <p class="cdr-small studio__status" id="save-msg"></p>
+        </div>
+      </form>
+    </div>
+
+    <div class="spec spec--outline">
+      <p class="cdr-micro">O mesmo print, em código</p>
+      <pre class="lab__code" id="code"></pre>
+      <p class="cdr-small spec__foot">
+        Cole num canvas de qualquer página que carregue <code>src/dither.js</code>.
+        O <code>seed</code> é o que garante que o grão saia idêntico ao da prévia.
+      </p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="guide-foot cdr-inverse">
+  <div class="cdr-shell">
+    <span class="cdr-lockup cdr-lockup--sm">
+      <svg class="cdr-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cdr-lockup__word">Camacho</span>
+    </span>
+    <span class="cdr-small">Estúdio de print · <a href="nome.html" style="color:inherit">teste de nome</a></span>
+  </div>
+</footer>
+
+<script type="module">
+import { render } from './src/dither.js';
+
+const FIELDS = {
+  dark:  { bg: '#000000', ink: '#FFFFFF' },
+  paper: { bg: '#F2F0EE', ink: '#000000' },
+  white: { bg: '#FFFFFF', ink: '#000000' },
+};
+
+/* Pontos de partida. "Cheio" é o padrão: a palavra sólida com grão, que é o
+   oposto do dissolvido que o sistema já usava. */
+const PRESETS = {
+  Cheio:      { min: 0.82, max: 1, cell: 4, texture: 'grain',    rampmode: 'linear', angle: 0,   curve: 1.35, weight: 300 },
+  Sólido:     { min: 0.95, max: 1, cell: 3, texture: 'grain',    rampmode: 'linear', angle: 0,   curve: 1,    weight: 400 },
+  Dissolvido: { min: 0.04, max: 1, cell: 4, texture: 'grain',    rampmode: 'linear', angle: 0,   curve: 1.35, weight: 300 },
+  Trama:      { min: 0.45, max: 1, cell: 5, texture: 'screen',   rampmode: 'linear', angle: 0,   curve: 1.2,  weight: 300 },
+  'Meio-tom': { min: 0.35, max: 1, cell: 6, texture: 'halftone', rampmode: 'linear', angle: 0,   curve: 1.2,  weight: 300 },
+  Núcleo:     { min: 0.15, max: 1, cell: 4, texture: 'grain',    rampmode: 'radial', angle: 0,   curve: 1.4,  weight: 300 },
+  Vertical:   { min: 0.3,  max: 1, cell: 4, texture: 'grain',    rampmode: 'linear', angle: 270, curve: 1.5,  weight: 300 },
+};
+
+const $ = (id) => document.getElementById(id);
+const canvas = $('print');
+const frame = $('frame');
+const panel = $('panel');
+let seed = 7;
+let activePreset = 'Cheio';
+
+$('presets').innerHTML = Object.keys(PRESETS).map((name) =>
+  `<button class="preset" type="button" data-preset="${name}"
+           aria-pressed="${name === activePreset}">${name}</button>`).join('');
+
+const readForm = () => ({
+  text: $('text').value || 'Camacho',
+  weight: Number($('weight').value),
+  fit: Number($('fit').value),
+  min: Number($('min').value),
+  max: Number($('max').value),
+  cell: Number($('cell').value),
+  texture: $('texture').value,
+  rampmode: $('rampmode').value,
+  angle: Number($('angle').value),
+  curve: Number($('curve').value),
+  field: panel.querySelector('input[name="field"]:checked').value,
+  ar: panel.querySelector('input[name="ar"]:checked').value,
+});
+
+/* Uma configuração só alimenta a prévia e a exportação — é o que garante que
+   o PNG saia idêntico ao que está na tela. */
+const toConfig = (f) => ({
+  shape: 'text',
+  opts: { text: f.text, weight: f.weight, fit: f.fit },
+  ramp: [Math.min(f.min, f.max), f.max],
+  cell: f.cell,
+  texture: f.texture,
+  angle: f.angle,
+  curve: f.curve,
+  mirror: f.rampmode === 'mirror',
+  radial: f.rampmode === 'radial',
+  seed,
+  color: FIELDS[f.field].ink,
+});
+
+const draw = () => {
+  const f = readForm();
+  frame.style.setProperty('--ar', f.ar);
+  frame.style.setProperty('--field', FIELDS[f.field].bg);
+  frame.style.setProperty('--ink', FIELDS[f.field].ink);
+  render(canvas, toConfig(f));
+
+  const [w, h] = f.ar.split('/').map(Number);
+  const px = Number($('size').value);
+  $('dims').textContent = `${f.ar.replace('/', ':')} · exporta ${px} × ${Math.round(px * h / w)} px`;
+
+  $('weight-out').value = f.weight;
+  $('fit-out').value = `${Math.round((1 - f.fit) * 100)}%`;
+  $('min-out').value = f.min.toFixed(2);
+  $('max-out').value = f.max.toFixed(2);
+  $('cell-out').value = `${f.cell} px`;
+  $('angle-out').value = `${f.angle}°`;
+  $('curve-out').value = f.curve.toFixed(2);
+
+  const attrs = [
+    'data-cdr-dither="text"',
+    `data-ramp="${Math.min(f.min, f.max)},${f.max}"`,
+    f.angle && f.rampmode === 'linear' ? `data-angle="${f.angle}"` : '',
+    `data-cell="${f.cell}"`,
+    f.curve !== 1.35 ? `data-curve="${f.curve}"` : '',
+    f.texture !== 'grain' ? `data-texture="${f.texture}"` : '',
+    f.rampmode === 'mirror' ? 'data-mirror="true"' : '',
+    f.rampmode === 'radial' ? 'data-radial="true"' : '',
+    `data-seed="${seed}"`,
+    `data-opts='${JSON.stringify({ text: f.text, weight: f.weight, fit: f.fit })}'`,
+  ].filter(Boolean);
+  $('code').textContent = `<canvas ${attrs.join('\n        ')}></canvas>`;
+};
+
+panel.addEventListener('input', (e) => {
+  /* Mexer num controle solta o preset: o botão deixa de estar marcado. */
+  if (e.target.dataset.preset === undefined) {
+    activePreset = null;
+    document.querySelectorAll('.preset').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+  }
+  draw();
+});
+panel.addEventListener('change', draw);
+
+$('presets').addEventListener('click', (e) => {
+  const name = e.target.dataset.preset;
+  if (!name) return;
+  activePreset = name;
+  Object.entries(PRESETS[name]).forEach(([k, v]) => {
+    const el = $(k);
+    if (el) el.value = v;
+  });
+  document.querySelectorAll('.preset').forEach((b) =>
+    b.setAttribute('aria-pressed', String(b.dataset.preset === name)));
+  draw();
+});
+
+$('shuffle').addEventListener('click', () => { seed = (seed * 7 + 13) % 997; draw(); });
+
+/* --- Exportação -----------------------------------------------------------
+   Renderiza fora da tela no tamanho pedido, escalando a célula na mesma
+   proporção para que o grão saia com o mesmo peso visual da prévia. */
+const downloads = typeof window.claude?.use === 'function'
+  ? await window.claude.use('downloads').catch(() => null)
+  : null;
+const saveBtn = $('save');
+const msg = $('save-msg');
+if (!downloads) {
+  saveBtn.hidden = true;
+  msg.textContent = 'Download indisponível nesta visualização — use o código abaixo.';
+}
+
+saveBtn.addEventListener('click', async () => {
+  const f = readForm();
+  const [aw, ah] = f.ar.split('/').map(Number);
+  const width = Number($('size').value);
+  const height = Math.round((width * ah) / aw);
+  const scale = width / (canvas.clientWidth || width);
+
+  const out = document.createElement('canvas');
+  out.width = width; out.height = height;
+  render(out, {
+    ...toConfig(f),
+    width, height,
+    cell: Math.max(2, Math.round(f.cell * scale)),
+    background: FIELDS[f.field].bg,
+  });
+
+  msg.textContent = 'Preparando…';
+  const blob = await new Promise((r) => out.toBlob(r, 'image/png'));
+  const slug = f.text.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  try {
+    await downloads.save({ filename: `${slug || 'print'}-${width}px.png`, data: blob });
+    msg.textContent = 'Salvo.';
+  } catch (err) {
+    msg.textContent = err?.code === 'declined'
+      ? 'Download cancelado.'
+      : `Não foi possível salvar (${err?.code || 'erro'}).`;
+  }
+});
+
+addEventListener('resize', draw);
+document.fonts?.ready.then(draw);
+draw();
+</script>
+</body>
+</html>

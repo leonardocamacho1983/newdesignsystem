@@ -297,6 +297,9 @@ const DEFAULTS = {
   seed: 7,
   jitter: 0.3,       /* deslocamento dentro da célula */
   color: null,       /* null = herda currentColor do canvas */
+  background: null,  /* preenche o fundo antes de desenhar (útil ao exportar) */
+  width: null,       /* força a largura em px lógicos, ignorando o layout */
+  height: null,      /* idem para a altura — é o que permite exportar grande */
   scale: true,       /* partícula cresce com a densidade local */
   mirror: false,     /* rampa espelhada: denso no centro, disperso nas pontas */
   radial: false,     /* rampa radial: denso no miolo, disperso nas bordas */
@@ -313,15 +316,23 @@ const DEFAULTS = {
 export function render(canvas, config = {}) {
   const cfg = { ...DEFAULTS, ...config };
   const ctx = canvas.getContext('2d');
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const w = canvas.clientWidth || 640;
-  const h = canvas.clientHeight || 240;
+  /* Com width/height explícitos o canvas é desenhado no tamanho pedido em vez
+     do tamanho de layout — é o caminho de exportação em alta resolução. Nesse
+     caso não há dpr a aplicar: os pixels pedidos já são os pixels finais. */
+  const forced = cfg.width != null && cfg.height != null;
+  const dpr = forced ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+  const w = forced ? cfg.width : (canvas.clientWidth || 640);
+  const h = forced ? cfg.height : (canvas.clientHeight || 240);
   if (!w || !h) return;
 
   canvas.width = Math.round(w * dpr);
   canvas.height = Math.round(h * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
+  if (cfg.background) {
+    ctx.fillStyle = cfg.background;
+    ctx.fillRect(0, 0, w, h);
+  }
   ctx.fillStyle =
     cfg.color || getComputedStyle(canvas).getPropertyValue('color').trim() || '#fff';
 

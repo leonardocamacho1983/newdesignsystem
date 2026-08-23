@@ -592,13 +592,20 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 .field__row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cdr-sp-3); }
 .field__val { font-family: var(--cdr-font-mono); font-size: var(--cdr-fs-small);
               color: var(--cdr-text-muted); font-variant-numeric: tabular-nums; }
-.field select, .field input[type="text"] {
+.field select, .field input[type="text"], .field textarea {
   font: inherit; font-size: var(--cdr-fs-small); color: var(--cdr-text);
   background: var(--cdr-surface); border: var(--cdr-border);
   border-radius: var(--cdr-r-pill); padding: 0 0.9em;
   min-height: var(--cdr-control-h); width: 100%;
 }
-.field input[type="range"] { width: 100%; accent-color: var(--cdr-black); }
+.field input[type="range"] {
+  width: 100%; accent-color: var(--cdr-black);
+  margin: 0;   /* o UA aplica margem lateral no range, que estoura a coluna */
+}
+.field textarea {
+  min-height: 4.5rem; padding: 0.6em 0.9em; border-radius: var(--cdr-r-card);
+  resize: vertical; line-height: 1.35;
+}
 .lab__code {
   font-family: var(--cdr-font-mono); font-size: var(--cdr-fs-small);
   background: var(--cdr-black); color: var(--cdr-white);
@@ -623,6 +630,58 @@ code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
 
 .verdict { display: flex; flex-direction: column; gap: var(--cdr-sp-4);
            border-left: 3px solid var(--cdr-black); padding-left: var(--cdr-sp-5); }
+
+/* ==========================================================================
+   Estúdio de print
+   ========================================================================== */
+.studio { display: grid; gap: var(--cdr-sp-6); grid-template-columns: minmax(0, 1fr) minmax(0, 20rem); }
+.studio > * { min-width: 0; }
+@media (max-width: 56rem) { .studio { grid-template-columns: 1fr; } }
+
+.studio__stage { display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+.studio__frame {
+  position: relative; overflow: hidden;
+  border-radius: var(--cdr-r-panel);
+  aspect-ratio: var(--ar, 4/3);
+  background: var(--field, var(--cdr-black));
+  color: var(--ink, var(--cdr-white));
+  box-shadow: var(--cdr-shadow-1);
+}
+.studio__frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.studio__panel { display: flex; flex-direction: column; gap: var(--cdr-sp-5); }
+.studio__group { display: flex; flex-direction: column; gap: var(--cdr-sp-4); }
+.studio__group > .cdr-micro { padding-bottom: var(--cdr-sp-2); border-bottom: var(--cdr-border); }
+
+/* Botões de preset: uma fila que quebra, com o ativo marcado. */
+.presets { display: flex; flex-wrap: wrap; gap: var(--cdr-sp-2); }
+.preset {
+  font: inherit; font-size: var(--cdr-fs-micro); letter-spacing: var(--cdr-tr-micro);
+  text-transform: uppercase; font-weight: var(--cdr-w-medium);
+  min-height: var(--cdr-control-h); padding: 0 0.95em;
+  border-radius: var(--cdr-r-pill); cursor: pointer;
+  background: transparent; color: inherit;
+  border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+  transition: background-color var(--cdr-dur-fast) var(--cdr-ease),
+              color var(--cdr-dur-fast) var(--cdr-ease);
+}
+.preset:hover { border-color: currentColor; }
+.preset[aria-pressed="true"] { background: var(--cdr-black); color: var(--cdr-white); border-color: var(--cdr-black); }
+
+/* Segmentado (campo, proporção): rádios que parecem um controle só. */
+.segmented { display: flex; gap: 0; border: var(--cdr-border); border-radius: var(--cdr-r-pill); overflow: hidden; }
+.segmented input { position: absolute; opacity: 0; pointer-events: none; }
+.segmented label {
+  flex: 1; text-align: center; cursor: pointer;
+  font-size: var(--cdr-fs-micro); letter-spacing: var(--cdr-tr-micro);
+  text-transform: uppercase; font-weight: var(--cdr-w-medium);
+  min-height: var(--cdr-control-h); display: flex; align-items: center; justify-content: center;
+  padding: 0 0.4em; white-space: nowrap; min-width: 0;
+}
+.segmented input:checked + label { background: var(--cdr-black); color: var(--cdr-white); }
+.segmented input:focus-visible + label { outline: 2px solid currentColor; outline-offset: -2px; }
+
+.studio__status { min-height: 1.4em; }
 
 </style>
 <header class="hero cdr-inverse">
@@ -1294,6 +1353,9 @@ const DEFAULTS = {
   seed: 7,
   jitter: 0.3,       /* deslocamento dentro da célula */
   color: null,       /* null = herda currentColor do canvas */
+  background: null,  /* preenche o fundo antes de desenhar (útil ao exportar) */
+  width: null,       /* força a largura em px lógicos, ignorando o layout */
+  height: null,      /* idem para a altura — é o que permite exportar grande */
   scale: true,       /* partícula cresce com a densidade local */
   mirror: false,     /* rampa espelhada: denso no centro, disperso nas pontas */
   radial: false,     /* rampa radial: denso no miolo, disperso nas bordas */
@@ -1310,15 +1372,23 @@ const DEFAULTS = {
 function render(canvas, config = {}) {
   const cfg = { ...DEFAULTS, ...config };
   const ctx = canvas.getContext('2d');
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const w = canvas.clientWidth || 640;
-  const h = canvas.clientHeight || 240;
+  /* Com width/height explícitos o canvas é desenhado no tamanho pedido em vez
+     do tamanho de layout — é o caminho de exportação em alta resolução. Nesse
+     caso não há dpr a aplicar: os pixels pedidos já são os pixels finais. */
+  const forced = cfg.width != null && cfg.height != null;
+  const dpr = forced ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+  const w = forced ? cfg.width : (canvas.clientWidth || 640);
+  const h = forced ? cfg.height : (canvas.clientHeight || 240);
   if (!w || !h) return;
 
   canvas.width = Math.round(w * dpr);
   canvas.height = Math.round(h * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
+  if (cfg.background) {
+    ctx.fillStyle = cfg.background;
+    ctx.fillRect(0, 0, w, h);
+  }
   ctx.fillStyle =
     cfg.color || getComputedStyle(canvas).getPropertyValue('color').trim() || '#fff';
 
