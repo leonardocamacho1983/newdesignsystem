@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deck Comercial Camacho</title>
+<meta name="description" content="Apresentação de proposta: o problema, a costura, o método em seis etapas, escopo e próximo passo.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/site.css">
+</head>
+<body class="dk">
+
+<div class="cmc-shell">
+  <div class="dk__barra">
+    <a class="cmc-lockup cmc-lockup--sm" href="site.html" style="color:#fff">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </a>
+    <div class="cmc-controls">
+      <span class="dk__conta" id="conta">01 / 09</span>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="anterior" aria-label="Slide anterior">←</button>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="proximo" aria-label="Próximo slide">→</button>
+      <button class="cmc-btn cmc-btn--inverse" type="button" id="tela">Tela cheia</button>
+    </div>
+  </div>
+
+  <div class="dk__palco" id="palco" tabindex="0" aria-label="Apresentação. Use as setas para navegar."></div>
+
+  <p class="cmc-small" style="padding-block:var(--cmc-sp-4)">
+    Setas ou espaço para navegar · <kbd>F</kbd> para tela cheia · imprima para PDF pelo navegador.
+  </p>
+</div>
+
+<script type="module">
+import { init, render } from './src/dither.js';
+import { applyBrand, brandFromUrl } from './src/brand.js';
+const marca = applyBrand(document, brandFromUrl());
+
+const LOCK = (inv) => `
+  <span class="cmc-lockup dk__lockup">
+    <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+      <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+    </svg><span class="cmc-lockup__word">${marca.name}</span>
+  </span>`;
+
+const arte = (shape, ramp, seed, extra = '') =>
+  `<div class="dk__art"><canvas data-cmc-dither="${shape}" data-ramp="${ramp}"
+     data-cell="4" data-seed="${seed}" ${extra} aria-hidden="true"></canvas></div>`;
+
+/* Nove slides: abertura, problema, tese, costura, método, incorporar,
+   medida, escopo e próximo passo. Um argumento por slide. */
+const SLIDES = [
+  { campo: 'escuro', topo: LOCK(), meio: arte('weave', '0.04,1', 7),
+    pe: `<h2 class="dk__hed dk__hed--grande">Clareza<br>é vantagem.</h2>`,
+    rodape: 'Proposta de transformação com IA' },
+
+  { campo: 'papel', topo: `<p class="cmc-micro">O problema</p>`,
+    meio: `<h2 class="dk__hed">Empresas não perdem capacidade por falta de tecnologia.</h2>`,
+    pe: `<p class="dk__corpo dk__corpo--serif">Perdem quando a complexidade cresce mais rápido do que sua forma de decidir, operar e liderar.</p>` },
+
+  { campo: 'escuro', topo: `<p class="cmc-micro">A cadeia</p>`,
+    meio: arte('noiseToSignal', '0.03,1', 11),
+    pe: `<div class="dk__grade" style="--cols:4">
+        <div class="dk__item"><h4>Complexidade</h4><p>o estado de chegada</p></div>
+        <div class="dk__item"><h4>Clareza</h4><p>o que o diagnóstico produz</p></div>
+        <div class="dk__item"><h4>Decisões</h4><p>o que a clareza destrava</p></div>
+        <div class="dk__item"><h4>Capacidade</h4><p>o que fica quando eu saio</p></div>
+      </div>` },
+
+  { campo: 'escuro', topo: `<p class="cmc-micro">Como eu trabalho</p>`,
+    meio: arte('weave', '0.05,1', 19),
+    pe: `<h2 class="dk__hed">Não vendo duas coisas.</h2>
+         <p class="dk__corpo">O lado técnico e o lado humano, costurados na estratégia do negócio. Separá-los é o que faz a transformação falhar.</p>` },
+
+  { campo: 'papel', topo: `<p class="cmc-micro">O método</p>`,
+    meio: `<div class="dk__grade" style="--cols:3">
+        <div class="dk__item"><h4>01 Diagnosticar</h4><p>Entender antes de propor</p></div>
+        <div class="dk__item"><h4>02 Priorizar</h4><p>Urgência não é importância</p></div>
+        <div class="dk__item"><h4>03 Estruturar</h4><p>Arquitetura antes de automação</p></div>
+        <div class="dk__item"><h4>04 Implementar</h4><p>Até funcionar na operação</p></div>
+        <div class="dk__item"><h4>05 Incorporar</h4><p>Líderes e times junto</p></div>
+        <div class="dk__item"><h4>06 Medir</h4><p>No painel do cliente</p></div>
+      </div>`,
+    pe: `<p class="dk__corpo">Seis etapas. A quinta é a que quase todo projeto pula.</p>` },
+
+  { campo: 'escuro', topo: `<p class="cmc-micro">05 · Incorporar</p>`,
+    meio: arte('cohort', '0.14,1', 31),
+    pe: `<h2 class="dk__hed">Mudar processo sem mudar como as pessoas decidem não instala capacidade.</h2>` },
+
+  { campo: 'papel', topo: `<p class="cmc-micro">06 · Medir</p>`,
+    meio: arte('gauge', '0.16,1', 23),
+    pe: `<h2 class="dk__hed">A lacuna dá para medir.</h2>
+         <p class="dk__corpo">Cada frente entra com a métrica declarada antes da primeira linha de código.</p>` },
+
+  { campo: 'escuro', topo: `<p class="cmc-micro">Escopo sugerido</p>`,
+    meio: `<div class="dk__grade" style="--cols:2">
+        <div class="dk__item"><h4>Diagnóstico · 3 semanas</h4><p>AI Assessment, achados priorizados e roadmap</p></div>
+        <div class="dk__item"><h4>Estruturação · 6 semanas</h4><p>Dados, processos e indicadores</p></div>
+        <div class="dk__item"><h4>Implementação · contínuo</h4><p>Analytics, automação e agentes</p></div>
+        <div class="dk__item"><h4>Incorporação · paralelo</h4><p>Líderes e times, do início</p></div>
+      </div>`,
+    pe: `<p class="dk__corpo">Contratável por etapa. O diagnóstico é a porta de entrada e já entrega decisão.</p>` },
+
+  { campo: 'escuro', topo: LOCK(), meio: arte('handoff', '0.12,1', 41),
+    pe: `<h2 class="dk__hed">O objetivo não é dependência.</h2>
+         <p class="dk__corpo">Você precisa entender, usar e sustentar o que foi construído.</p>`,
+    rodape: 'contato' },
+];
+
+const CAMPOS = { escuro: ['#000000', '#FFFFFF'], papel: ['#F2F0EE', '#000000'] };
+const palco = document.getElementById('palco');
+palco.innerHTML = SLIDES.map((s, i) => {
+  const [bg, ink] = CAMPOS[s.campo];
+  const rodape = s.rodape === 'contato'
+    ? `<span>${marca.email}</span><span>${marca.domain}</span>`
+    : `<span>${s.rodape || marca.domain}</span><span>${String(i + 1).padStart(2, '0')} / ${String(SLIDES.length).padStart(2, '0')}</span>`;
+  return `<section class="dk__slide" data-i="${i}" style="--slide-bg:${bg};--slide-ink:${ink}">
+    <div>${s.topo || ''}</div>
+    ${s.meio.startsWith('<div class="dk__art"') ? s.meio : `<div style="display:flex;align-items:center">${s.meio}</div>`}
+    <div>${s.pe || ''}<div class="dk__pe" style="margin-top:2cqi">${rodape}</div></div>
+  </section>`;
+}).join('');
+
+let atual = 0;
+const conta = document.getElementById('conta');
+function mostrar(i) {
+  atual = Math.max(0, Math.min(SLIDES.length - 1, i));
+  palco.querySelectorAll('.dk__slide').forEach((s, k) => {
+    s.toggleAttribute('data-ativo', k === atual);
+  });
+  conta.textContent = `${String(atual + 1).padStart(2, '0')} / ${String(SLIDES.length).padStart(2, '0')}`;
+  /* Redesenha o grafismo do slide que entrou: o motor só desenha o que já
+     esteve visível, e um slide escondido tem tamanho zero. */
+  const cv = palco.querySelector(`.dk__slide[data-i="${atual}"] canvas`);
+  if (cv) { delete cv.dataset.cmcDone; init(palco); }
+}
+mostrar(0);
+
+document.getElementById('proximo').addEventListener('click', () => mostrar(atual + 1));
+document.getElementById('anterior').addEventListener('click', () => mostrar(atual - 1));
+document.getElementById('tela').addEventListener('click', () => {
+  (document.fullscreenElement ? document.exitFullscreen() : palco.requestFullscreen()).catch(() => {});
+});
+addEventListener('keydown', (e) => {
+  if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); mostrar(atual + 1); }
+  if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); mostrar(atual - 1); }
+  if (e.key === 'Home') mostrar(0);
+  if (e.key === 'End') mostrar(SLIDES.length - 1);
+  if (e.key.toLowerCase() === 'f') document.getElementById('tela').click();
+});
+addEventListener('resize', () => mostrar(atual));
+palco.focus();
+</script>
+</body>
+</html>

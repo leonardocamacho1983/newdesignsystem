@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carrossel LinkedIn Camacho</title>
+<meta name="description" content="Carrossel de LinkedIn em seis páginas: por que transformações com IA falham e o que instala capacidade.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/site.css">
+</head>
+<body>
+
+<div class="cmc-shell">
+  <div class="cmc-controls naoimprime" style="padding-block:var(--cmc-sp-5);justify-content:space-between">
+    <p class="cmc-small" style="margin:0">
+      Carrossel de LinkedIn — a plataforma publica como <strong>documento PDF</strong>.
+      Imprima em 1080 × 1350 e suba o arquivo.
+    </p>
+    <button class="cmc-btn" type="button" onclick="print()">Salvar em PDF</button>
+  </div>
+
+  <div class="cr" id="carrossel"></div>
+
+  <p class="cmc-micro naoimprime" style="padding-block:var(--cmc-sp-7)">
+    <a href="site.html" style="color:inherit">← Site</a>
+  </p>
+</div>
+
+<script type="module">
+import { init } from './src/dither.js';
+import { applyBrand, brandFromUrl } from './src/brand.js';
+const marca = applyBrand(document, brandFromUrl());
+
+const LOCK = `<span class="cmc-lockup cr__lockup">
+  <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+    <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+  </svg><span class="cmc-lockup__word">${marca.name}</span></span>`;
+
+const arte = (shape, ramp, seed, extra = '') =>
+  `<div class="cr__art"><canvas data-cmc-dither="${shape}" data-ramp="${ramp}" data-cell="4"
+     data-seed="${seed}" ${extra} aria-hidden="true"></canvas></div>`;
+
+/* Seis páginas, um argumento cada. A primeira precisa parar o scroll; a
+   última precisa pedir uma ação. */
+const PAGINAS = [
+  { campo: 'escuro', topo: LOCK,
+    meio: `<div style="display:flex;align-items:center"><h2 class="cr__hed">A maioria das transformações com IA falha pelo mesmo motivo.</h2></div>`,
+    pe: `<p class="cr__corpo">E não é o modelo.</p>` },
+
+  { campo: 'papel', topo: `<p class="cmc-micro">01</p>`,
+    meio: arte('mesh', '0.28,1', 13),
+    pe: `<h2 class="cr__hed" style="font-size:6.5cqi">A empresa compra ferramenta antes de arrumar a decisão.</h2>
+         <p class="cr__corpo cr__corpo--serif">Dado em três lugares, dono indefinido, reunião semanal discutindo qual número está certo.</p>` },
+
+  { campo: 'escuro', topo: `<p class="cmc-micro">02</p>`,
+    meio: arte('chevrons', '0.14,1', 21),
+    pe: `<h2 class="cr__hed" style="font-size:6.5cqi">O piloto funciona e morre a dois passos do processo real.</h2>
+         <p class="cr__corpo">Impressiona na demo, não encosta na operação.</p>` },
+
+  { campo: 'escuro', topo: `<p class="cmc-micro">03</p>`,
+    meio: arte('cohort', '0.16,1', 33),
+    pe: `<h2 class="cr__hed" style="font-size:6.5cqi">Ninguém foi preparado para operar diferente.</h2>
+         <p class="cr__corpo">Mudar processo sem mudar como as pessoas decidem devolve a operação ao estado anterior em poucos meses.</p>` },
+
+  { campo: 'papel', topo: `<p class="cmc-micro">O que muda o resultado</p>`,
+    meio: arte('weave', '0.05,1', 7),
+    pe: `<h2 class="cr__hed" style="font-size:6.5cqi">Costurar o lado técnico e o humano na estratégia do negócio.</h2>
+         <p class="cr__corpo cr__corpo--serif">O mercado separa os dois. Separá-los é o que faz a transformação falhar.</p>` },
+
+  { campo: 'escuro', topo: LOCK,
+    meio: arte('handoff', '0.12,1', 41),
+    pe: `<h2 class="cr__hed">Clareza é vantagem.</h2>
+         <p class="cr__corpo">Se isso descreve o momento da sua operação, me chame para uma conversa.</p>`,
+    rodape: true },
+];
+
+const CAMPOS = { escuro: ['#000000', '#FFFFFF'], papel: ['#F2F0EE', '#000000'] };
+document.getElementById('carrossel').innerHTML = PAGINAS.map((p, i) => {
+  const [bg, ink] = CAMPOS[p.campo];
+  const pe = p.rodape
+    ? `<span>${marca.email}</span><span>${marca.domain}</span>`
+    : `<span>${marca.domain}</span><span>${i + 1} / ${PAGINAS.length}</span>`;
+  return `<article class="cr__pag" style="--pag-bg:${bg};--pag-ink:${ink}">
+    <div class="cr__inner">
+      <div>${p.topo}</div>
+      ${p.meio.startsWith('<div class="cr__art"') ? p.meio : p.meio}
+      <div style="display:flex;flex-direction:column;gap:3cqi">${p.pe}<div class="cr__pe">${pe}</div></div>
+    </div>
+  </article>`;
+}).join('');
+
+init();
+</script>
+</body>
+</html>

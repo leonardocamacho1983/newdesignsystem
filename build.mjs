@@ -18,6 +18,11 @@ const PAGES = [
   { src: 'studio.html',     out: 'cadrian-studio',    url: 'https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5' },
   /* Página nova: escolhe o nome que quiser; a url entra depois da primeira
      publicação. Até lá o aviso em stderr lembra que falta. */
+  { src: 'site.html',       out: 'camacho-site',       url: '' },
+  { src: 'deck.html',       out: 'camacho-deck',       url: '' },
+  { src: 'proposta.html',   out: 'camacho-proposta',   url: '' },
+  { src: 'assinatura.html', out: 'camacho-assinatura', url: '' },
+  { src: 'carrossel.html',  out: 'camacho-carrossel',  url: '' },
   { src: 'kv.html',         out: 'camacho-kv',         url: 'https://claude.ai/code/artifact/448e707f-5e22-4fcf-a574-aaacd463b0fa' },
   { src: 'aplicacoes.html', out: 'camacho-aplicacoes', url: 'https://claude.ai/code/artifact/40b9d44b-fb1e-4c86-b6ba-bde9c92e27a0' },
 ];
@@ -50,7 +55,7 @@ mkdirSync('dist', { recursive: true });
 for (const page of PAGES) {
   let html = read(page.src);
 
-  for (const file of ['tokens/tokens.css', 'src/camacho.css', 'src/guide.css']) {
+  for (const file of ['tokens/tokens.css', 'src/camacho.css', 'src/guide.css', 'src/site.css']) {
     html = html.replace(`<link rel="stylesheet" href="${file}">`,
       () => `<style>\n${read(file)}\n</style>`);
   }
@@ -76,7 +81,8 @@ for (const page of PAGES) {
      autocontida (e um artifact publicado, onde o host bloqueia origens
      externas). Links entre as próprias páginas do dist são esperados. */
   const allowed = new Set(PAGES.map((p) => `${p.out}.html`));
-  const dangling = [...html.matchAll(/(?:href|src)="((?!https?:|data:|#)[^"]+)"/g)]
+  /* mailto: e tel: são esquemas legítimos, não referência a arquivo local. */
+  const dangling = [...html.matchAll(/(?:href|src)="((?!https?:|data:|mailto:|tel:|#)[^"]+)"/g)]
     .map((m) => m[1])
     .filter((ref) => !allowed.has(ref.split('?')[0]));
   if (dangling.length) {

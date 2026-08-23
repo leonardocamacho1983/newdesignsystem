@@ -52,8 +52,10 @@ src/camacho.css          Componentes do sistema
 src/guide.css            Estilos só da documentação — fora do sistema, de propósito
 src/brand.js             O nome da marca, num lugar só
 src/kv.js                Os key visuals como dado: formatos, campos e calibração
+src/site.css             Componentes das peças (site, deck, proposta, carrossel)
 tools/export-kv.mjs      Exporta os KVs em PNG e as animações em GIF/WebP
 tools/anim-frames.py     Monta as animações a partir dos quadros
+tools/export-pecas.mjs   Exporta as peças reais: PNGs de LinkedIn e PDFs
 assets/                  Símbolo em SVG (positivo, negativo, glifo, favicon)
 build.mjs                Tabela única de páginas; gera dist/ autocontido
 ```
@@ -124,6 +126,32 @@ empresa pode estar usando na mesma semana.
 
 As animações saem em GIF e WebP, ambos sem perda: a marca é feita de partícula
 de borda dura, e codec com perda borra exatamente o grão que a identifica.
+
+## Peças
+
+Entregáveis que funcionam, não imagens de entregáveis:
+
+| Peça | Arquivo | O que é |
+|---|---|---|
+| Site | `site.html` | Landing page com hero, problema, atuação, método e contato |
+| Deck | `deck.html` | Nove slides navegáveis por teclado; imprime em paisagem |
+| Proposta | `proposta.html` | Documento para ler e enviar; `?ref=` e `?data=` geram a versão de cada cliente |
+| Carrossel | `carrossel.html` | Documento de LinkedIn em seis páginas 1080×1350 |
+| Assinatura | `assinatura.html` | Tabela com estilo inline, com botão de copiar |
+
+```bash
+node tools/export-pecas.mjs          # capa e avatar de LinkedIn + 3 PDFs
+```
+
+**A assinatura não tem logo, e isso é decisão, não esquecimento.** Símbolo em
+e-mail exige um PNG hospedado em URL pública, e vários clientes bloqueiam imagem
+remota por padrão — a marca viraria um retângulo vazio no primeiro contato. Até
+haver domínio no ar, a assinatura tipográfica é a que sempre funciona.
+
+**Exportar PDF exige emular mídia de impressão antes de desenhar.** O deck
+esconde os slides fora do atual, e um elemento escondido tem tamanho zero: sem
+emular `print` primeiro, o motor desenha em cima de nada e metade das páginas
+sai vazia.
 
 ## Trocar o nome da marca
 

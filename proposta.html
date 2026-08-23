@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proposta Camacho</title>
+<meta name="description" content="Proposta modelo: contexto, escopo por etapa, entregáveis, investimento e condições.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/site.css">
+</head>
+<body style="background:var(--cmc-white)">
+
+<div class="cmc-shell">
+  <div class="cmc-controls naoimprime" style="padding-block:var(--cmc-sp-5);justify-content:flex-end">
+    <a class="cmc-btn cmc-btn--ghost" href="site.html">← Site</a>
+    <button class="cmc-btn" type="button" onclick="print()">Imprimir ou salvar em PDF</button>
+  </div>
+
+  <article class="pr">
+    <header class="pr__capa">
+      <span class="cmc-lockup cmc-lockup--sm">
+        <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="14" fill="#000"/>
+          <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+        </svg>
+        <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+      </span>
+      <h1 class="cmc-title">Da avaliação<br>à capacidade instalada</h1>
+      <div class="pr__art">
+        <canvas data-cmc-dither="weave" data-ramp="0.06,1" data-cell="3"
+                aria-hidden="true"></canvas>
+      </div>
+      <p class="cmc-measure">PROPOSTA · <span id="ref">—</span> · <span id="data">—</span></p>
+    </header>
+
+    <section class="pr__sec">
+      <p class="pr__rot">01 · CONTEXTO</p>
+      <p class="cmc-editorial">
+        Esta proposta parte da premissa de que a complexidade da operação passou
+        a crescer mais rápido do que a capacidade de decidir sobre ela. O
+        trabalho começa por entender o que já existe — dados, processos,
+        capacidades e liderança — porque sem esse mapa qualquer recomendação é
+        chute bem-vestido.
+      </p>
+    </section>
+
+    <section class="pr__sec">
+      <p class="pr__rot">02 · ESCOPO</p>
+      <table class="pr__tabela">
+        <thead><tr><th>Etapa</th><th>O que entra</th><th>Prazo</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Diagnosticar</strong></td><td>AI Assessment &amp; Opportunities, leitura de dados, processos e capacidades, achados priorizados</td><td>3 semanas</td></tr>
+          <tr><td><strong>Priorizar</strong></td><td>Roadmap com critério declarado de impacto e esforço; o que fica de fora, dito com clareza</td><td>1 semana</td></tr>
+          <tr><td><strong>Estruturar</strong></td><td>Arquitetura gerencial, definição de indicadores, donos e rotina de decisão</td><td>6 semanas</td></tr>
+          <tr><td><strong>Implementar</strong></td><td>Analytics, automação e agentes, construídos até funcionarem na operação real</td><td>contínuo</td></tr>
+          <tr><td><strong>Incorporar</strong></td><td>Preparação de líderes e times, em paralelo à construção</td><td>paralelo</td></tr>
+          <tr><td><strong>Medir</strong></td><td>Métrica declarada antes da construção, avaliada no painel do cliente</td><td>mensal</td></tr>
+        </tbody>
+      </table>
+      <p class="cmc-small" style="margin-top:var(--cmc-sp-4)">
+        Contratável por etapa. O diagnóstico é a porta de entrada e já entrega
+        decisão, mesmo que nada seja construído depois.
+      </p>
+    </section>
+
+    <section class="pr__sec">
+      <p class="pr__rot">03 · O QUE VOCÊ RECEBE</p>
+      <ul class="st-lista">
+        <li>Relatório de diagnóstico com achados priorizados por impacto e esforço</li>
+        <li>Roadmap de transformação com critério de escolha explícito</li>
+        <li>Arquitetura de indicadores e rotina de decisão</li>
+        <li>Sistemas em operação — analytics, automações e agentes</li>
+        <li>Líderes e times preparados para operar e sustentar o que foi construído</li>
+        <li>Painel de resultado no ambiente do cliente, não no meu</li>
+      </ul>
+    </section>
+
+    <section class="pr__sec">
+      <p class="pr__rot">04 · COMO EU TRABALHO</p>
+      <div class="st-oferta">
+        <div>
+          <p class="cmc-lead">Senioridade direta</p>
+          <p class="cmc-small">Eu conduzo o trabalho, e componho associados conforme a necessidade. Você fala comigo, não com um time de contas.</p>
+        </div>
+        <div>
+          <p class="cmc-lead">Transferência de capacidade</p>
+          <p class="cmc-small">O objetivo não é dependência permanente. A empresa e seus líderes precisam entender, usar e sustentar o resultado.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pr__sec">
+      <p class="pr__rot">05 · INVESTIMENTO</p>
+      <table class="pr__tabela">
+        <thead><tr><th>Frente</th><th>Formato</th><th>Investimento</th></tr></thead>
+        <tbody>
+          <tr><td>Diagnóstico</td><td>Projeto fechado</td><td>a definir</td></tr>
+          <tr><td>Estruturação e implementação</td><td>Mensal, por frente</td><td>a definir</td></tr>
+          <tr><td>Desenvolvimento de lideranças</td><td>Jornada ou avulso</td><td>a definir</td></tr>
+        </tbody>
+      </table>
+      <p class="cmc-small" style="margin-top:var(--cmc-sp-4)">
+        Os valores desta proposta modelo estão em aberto de propósito: são
+        definidos após o alinhamento de escopo.
+      </p>
+    </section>
+
+    <section class="pr__sec" style="border-bottom:0">
+      <p class="pr__rot">06 · PRÓXIMO PASSO</p>
+      <p class="cmc-editorial">
+        Uma conversa de uma hora sobre o momento da operação e o que já foi
+        tentado. Dela sai o recorte do diagnóstico e uma estimativa de prazo.
+      </p>
+      <p class="cmc-lead" style="margin-top:var(--cmc-sp-4)">
+        <span data-brand="person">Leonardo Camacho</span><br>
+        <span class="cmc-measure" data-brand="email">leonardo@camacho.ai</span>
+      </p>
+    </section>
+  </article>
+
+  <p class="cmc-micro naoimprime" style="padding-block:var(--cmc-sp-7)">
+    Clareza é vantagem · <span data-brand="domain">camacho.ai</span>
+  </p>
+</div>
+
+<script type="module">
+import { init } from './src/dither.js';
+import { applyBrand, brandFromUrl } from './src/brand.js';
+applyBrand(document, brandFromUrl());
+
+/* Referência e data ficam fora do HTML: uma proposta com data chumbada nasce
+   velha. `?ref=` e `?data=` permitem gerar a versão de cada cliente. */
+const q = new URLSearchParams(location.search);
+const hoje = new Date();
+document.getElementById('ref').textContent =
+  q.get('ref') || 'MODELO';
+document.getElementById('data').textContent =
+  q.get('data') || hoje.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+init();
+</script>
+</body>
+</html>

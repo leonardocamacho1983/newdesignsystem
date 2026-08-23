@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assinatura de E-mail Camacho</title>
+<meta name="description" content="Assinatura de e-mail da marca Camacho, pronta para colar no Gmail, Outlook e Apple Mail.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/guide.css">
+<link rel="stylesheet" href="src/site.css">
+</head>
+<body>
+
+<header class="hero cmc-inverse">
+  <div class="cmc-shell">
+    <a class="cmc-lockup cmc-lockup--sm" href="site.html">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </a>
+    <div class="stack">
+      <h1 class="cmc-display">Assinatura<br>de e-mail</h1>
+      <p class="cmc-lead cmc-muted">
+        Pronta para colar. Feita com o que cliente de e-mail realmente suporta —
+        tabela e estilo inline —, não com o que seria bonito.
+      </p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="cmc-section">
+  <div class="cmc-shell stack-7">
+
+    <div class="block">
+      <h2 class="cmc-h1">Prévia</h2>
+      <p class="block__intro">
+        É assim que ela chega. Sem imagem, sem SVG e sem fonte da marca — os três
+        são descartados ou bloqueados na maioria dos clientes, e uma assinatura
+        que depende deles quebra justamente no primeiro contato com o cliente.
+      </p>
+      <div class="spec" style="background:var(--cmc-white)">
+        <div id="previa"></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2 class="cmc-h2">Colar</h2>
+      <div class="cmc-controls">
+        <button class="cmc-btn" type="button" id="copiar">Copiar assinatura</button>
+        <button class="cmc-btn cmc-btn--ghost" type="button" id="copiar-html">Copiar o HTML</button>
+        <span class="cmc-small" id="aviso" role="status" aria-live="polite"></span>
+      </div>
+      <ul class="specs cmc-small">
+        <li><span class="specs__key">Gmail</span><span class="specs__val">Configurações → Ver todas → Assinatura → colar</span></li>
+        <li><span class="specs__key">Outlook</span><span class="specs__val">Arquivo → Opções → E-mail → Assinaturas → colar</span></li>
+        <li><span class="specs__key">Apple Mail</span><span class="specs__val">Preferências → Assinaturas → colar, e desmarque “usar fonte padrão”</span></li>
+      </ul>
+      <pre class="lab__code" id="fonte"></pre>
+    </div>
+
+    <div class="spec spec--outline">
+      <p class="cmc-micro">Por que não tem logo</p>
+      <p class="cmc-editorial">
+        Um símbolo em e-mail precisa ser um PNG hospedado numa URL pública — e
+        vários clientes bloqueiam imagem remota por padrão, deixando um retângulo
+        vazio no lugar da marca. Enquanto não houver um domínio no ar para
+        hospedar o arquivo, a assinatura tipográfica é a versão que sempre
+        funciona. Quando <span data-brand="domain">camacho.ai</span> estiver de pé,
+        troque o bloco do nome por
+        <code>&lt;img src="https://.../camacho-marca.png" width="120" alt="Camacho"&gt;</code>
+        e mantenha o resto.
+      </p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="guide-foot cmc-inverse">
+  <div class="cmc-shell">
+    <a class="cmc-lockup cmc-lockup--sm" href="site.html">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </a>
+    <span class="cmc-small">Assinatura · <a href="site.html" style="color:inherit">site</a></span>
+  </div>
+</footer>
+
+<script type="module">
+import { applyBrand, brandFromUrl } from './src/brand.js';
+const marca = applyBrand(document, brandFromUrl());
+
+/* Tabela e estilo inline, nada mais: é o subconjunto que Gmail, Outlook e
+   Apple Mail rendem sem reescrever. A pilha de fontes cai em Helvetica/Arial,
+   porque webfont não carrega em e-mail — o que sustenta a marca aqui é a
+   hierarquia e a régua, não a fonte. */
+const FONTE = `-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif`;
+const html = `<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:${FONTE};color:#000000;">
+  <tr>
+    <td style="padding:0 0 10px 0;">
+      <span style="font-size:17px;font-weight:600;letter-spacing:-0.02em;color:#000000;">${marca.person}</span><br>
+      <span style="font-size:13px;color:#6E6E6E;">${marca.role} · ${marca.name}</span>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 0 10px 0;border-top:2px solid #000000;"></td>
+  </tr>
+  <tr>
+    <td style="padding:0 0 4px 0;font-size:13px;line-height:1.5;color:#000000;">
+      <a href="mailto:${marca.email}" style="color:#000000;text-decoration:none;">${marca.email}</a><br>
+      <a href="https://${marca.domain}" style="color:#000000;text-decoration:none;">${marca.domain}</a>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:8px 0 0 0;font-size:12px;color:#8C8C8C;">
+      Clareza é vantagem · Estratégia, IA e liderança para transformar e escalar empresas
+    </td>
+  </tr>
+</table>`;
+
+document.getElementById('previa').innerHTML = html;
+document.getElementById('fonte').textContent = html;
+
+const aviso = document.getElementById('aviso');
+const dizer = (t) => { aviso.textContent = t; setTimeout(() => { aviso.textContent = ''; }, 2600); };
+
+/* "Copiar assinatura" põe HTML formatado na área de transferência, que é o que
+   o campo de assinatura do Gmail espera; "copiar o HTML" põe o código. */
+document.getElementById('copiar').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html], { type: 'text/html' }),
+      'text/plain': new Blob([document.getElementById('previa').innerText], { type: 'text/plain' }),
+    })]);
+    dizer('Copiado. Cole no campo de assinatura.');
+  } catch {
+    /* Sem permissão de área de transferência: seleciona para o usuário copiar. */
+    const r = document.createRange();
+    r.selectNodeContents(document.getElementById('previa'));
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    dizer('Selecionado — use Ctrl+C ou ⌘C.');
+  }
+});
+document.getElementById('copiar-html').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(html); dizer('HTML copiado.'); }
+  catch { dizer('Copie o bloco de código abaixo.'); }
+});
+</script>
+</body>
+</html>

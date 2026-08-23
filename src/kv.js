@@ -29,6 +29,8 @@ export const FORMATOS = [
   { id: '1x1',   nome: 'Post',                 ar: '1/1',   w: 1440, h: 1440, base: 9 },
   { id: '4x5',   nome: 'Feed vertical',        ar: '4/5',   w: 1440, h: 1800, base: 11 },
   { id: '9x16',  nome: 'Story',                ar: '9/16',  w: 1080, h: 1920, base: 14 },
+  /* Capa de LinkedIn: a proporção e os pixels são os que a plataforma usa. */
+  { id: 'capa',  nome: 'Capa de LinkedIn',      ar: '1584/396', w: 1584, h: 396, base: 3.4 },
 ];
 
 /**
