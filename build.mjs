@@ -18,11 +18,11 @@ const PAGES = [
   { src: 'studio.html',     out: 'cadrian-studio',    url: 'https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5' },
   /* Página nova: escolhe o nome que quiser; a url entra depois da primeira
      publicação. Até lá o aviso em stderr lembra que falta. */
-  { src: 'site.html',       out: 'camacho-site',       url: '' },
-  { src: 'deck.html',       out: 'camacho-deck',       url: '' },
-  { src: 'proposta.html',   out: 'camacho-proposta',   url: '' },
-  { src: 'assinatura.html', out: 'camacho-assinatura', url: '' },
-  { src: 'carrossel.html',  out: 'camacho-carrossel',  url: '' },
+  { src: 'site.html',       out: 'camacho-site',       url: 'https://claude.ai/code/artifact/9e647b50-f137-4809-99bb-24a33fa5fb7f' },
+  { src: 'deck.html',       out: 'camacho-deck',       url: 'https://claude.ai/code/artifact/45cd514d-11de-4b2b-b697-5b96a37c055d' },
+  { src: 'proposta.html',   out: 'camacho-proposta',   url: 'https://claude.ai/code/artifact/db54627a-1bd4-4187-980e-1f5d7732ec38' },
+  { src: 'assinatura.html', out: 'camacho-assinatura', url: 'https://claude.ai/code/artifact/53ba8c56-291d-4762-85c2-f84a59928bf9' },
+  { src: 'carrossel.html',  out: 'camacho-carrossel',  url: 'https://claude.ai/code/artifact/2f6e7c1e-5e81-4fab-a4df-4c29fc946288' },
   { src: 'kv.html',         out: 'camacho-kv',         url: 'https://claude.ai/code/artifact/448e707f-5e22-4fcf-a574-aaacd463b0fa' },
   { src: 'aplicacoes.html', out: 'camacho-aplicacoes', url: 'https://claude.ai/code/artifact/40b9d44b-fb1e-4c86-b6ba-bde9c92e27a0' },
 ];
