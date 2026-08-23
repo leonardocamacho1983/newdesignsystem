@@ -28,6 +28,7 @@ tokens/tokens.css     Fonte única de verdade (cor, tipo, espaço, forma, movime
 tokens/tokens.json    Os mesmos tokens em JSON, gerados do CSS
 src/dither.js         Motor gráfico: campos de forma, rampa, render e animação
 src/cadrian.css       Componentes: lockup, slide, pôster, card, botão, tag
+src/guide.css         Estilos só da documentação — fora do sistema, de propósito
 assets/               Símbolo em SVG (positivo, negativo, glifo, favicon)
 index.html            Guia vivo — a documentação é a própria peça
 build.mjs             Gera dist/cadrian-brand.html (página única autocontida)
@@ -41,6 +42,7 @@ build.mjs             Gera dist/cadrian-brand.html (página única autocontida)
 | **Tipo** | Inter Tight (Google Fonts). Títulos sempre em Light 300 com tracking negativo (−0.035em). Medium 500 só em rótulos micro, botões e no wordmark. |
 | **Marca** | "C" geométrico de contraforma circular num squircle. Área de proteção = metade da altura do símbolo. Legível a partir de 16 px. |
 | **Movimento** | Uma curva só (`--cdr-ease`). Tudo resolve de ruído para forma. |
+| **Controles** | Botão e tag dividem `--cdr-control-h`, então alinham lado a lado. Componentes herdam `currentColor` em vez de fixar preto — o mesmo botão de contorno funciona sobre branco e sobre preto. |
 
 ## Motor gráfico
 

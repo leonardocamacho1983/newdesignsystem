@@ -30,6 +30,13 @@ body {
 .cdr-lead    { font-size: var(--cdr-fs-lead);    line-height: 1.3; font-weight: var(--cdr-w-book); margin: 0; }
 .cdr-body    { max-width: var(--cdr-measure); margin: 0; }
 .cdr-body--justified { text-align: justify; hyphens: auto; }
+/* Corpo do slide: empurrado para a base, para que slides vizinhos de alturas
+   diferentes alinhem o rodapé. Justificado só quando a coluna é larga o
+   bastante — abaixo disso o justificado abre rios e piora a leitura. */
+.cdr-slide__body { margin: 0; margin-top: auto; }
+@container (min-width: 26rem) {
+  .cdr-slide__body { text-align: justify; hyphens: auto; }
+}
 .cdr-small   { font-size: var(--cdr-fs-small); color: var(--cdr-text-muted); }
 .cdr-micro {
   font-size: var(--cdr-fs-micro);
@@ -49,10 +56,13 @@ body {
   gap: 0.34em;
   font-size: var(--lockup-size, 2rem);
   line-height: 1;
-  color: var(--cdr-text);
+  color: inherit;          /* herda o campo; nunca fixa preto sobre preto */
   text-decoration: none;
 }
 .cdr-lockup__mark { width: 1em; height: 1em; flex: none; display: block; }
+/* O glifo sem o squircle ocupa menos da caixa, então compensa opticamente
+   para pesar igual ao símbolo completo ao lado do wordmark. */
+.cdr-lockup--glyph .cdr-lockup__mark { width: 1.14em; height: 1.14em; }
 .cdr-lockup__word {
   font-size: 1em;
   font-weight: var(--cdr-w-medium);
@@ -140,8 +150,9 @@ body {
 /* --- Botão ---------------------------------------------------------------
    Pílula. Sólida em preto, ou contorno. Sem gradiente, nunca. */
 .cdr-btn {
-  display: inline-flex; align-items: center; gap: var(--cdr-sp-2);
-  padding: 0.7em 1.35em;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--cdr-sp-2);
+  min-height: var(--cdr-control-h); padding: 0 1.35em;
   border-radius: var(--cdr-r-pill);
   border: 1px solid transparent;
   background: var(--cdr-black); color: var(--cdr-white);
@@ -155,14 +166,21 @@ body {
 .cdr-btn:hover { transform: translateY(-1px); }
 .cdr-btn:active { transform: translateY(0); }
 .cdr-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
-.cdr-btn--ghost { background: transparent; color: var(--cdr-text); border-color: var(--cdr-rule); }
-.cdr-btn--ghost:hover { border-color: var(--cdr-text); }
+/* O contorno herda a cor do campo em que está: assim o mesmo botão funciona
+   sobre branco e sobre preto sem variante extra. */
+.cdr-btn--ghost {
+  background: transparent; color: inherit;
+  border-color: color-mix(in srgb, currentColor 32%, transparent);
+}
+.cdr-btn--ghost:hover { border-color: currentColor; }
 .cdr-btn--inverse { background: var(--cdr-white); color: var(--cdr-black); }
 
 /* --- Tag / pílula informativa -------------------------------------------- */
 .cdr-tag {
-  display: inline-flex; align-items: center; gap: var(--cdr-sp-2);
-  padding: 0.35em 0.85em; border-radius: var(--cdr-r-pill);
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--cdr-sp-2);
+  min-height: var(--cdr-control-h); padding: 0 0.95em;
+  border-radius: var(--cdr-r-pill);
   border: 1px solid currentColor;
   font-size: var(--cdr-fs-micro); letter-spacing: var(--cdr-tr-micro);
   text-transform: uppercase; font-weight: var(--cdr-w-medium);
@@ -170,6 +188,10 @@ body {
 }
 a.cdr-tag:hover { background: currentColor; }
 a.cdr-tag:hover > * { color: var(--cdr-bg); }
+
+/* Fila de controles: botões e tags dividem a mesma altura e alinham. */
+.cdr-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cdr-sp-2); }
+.cdr-controls--split { justify-content: space-between; }
 
 /* --- Swatches ------------------------------------------------------------ */
 .cdr-swatch { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }

@@ -1,0 +1,162 @@
+/* ==========================================================================
+   Cadrian — Estilos do GUIA
+   Só a documentação usa este arquivo. O sistema em si vive em cadrian.css.
+   Manter separado é o que impede o guia de virar parte da marca por acidente.
+   ========================================================================== */
+
+/* --- Ritmo vertical -------------------------------------------------------
+   Um empilhamento com uma medida só. Nada de margin-top avulso. */
+.stack   { display: flex; flex-direction: column; gap: var(--cdr-sp-4); }
+.stack-5 { display: flex; flex-direction: column; gap: var(--cdr-sp-5); }
+.stack-7 { display: flex; flex-direction: column; gap: var(--cdr-sp-7); }
+
+/* Bloco de documentação: rótulo, intro e conteúdo com respiro previsível. */
+.block { display: flex; flex-direction: column; gap: var(--cdr-sp-5); }
+.block__intro { max-width: 58ch; color: var(--cdr-text-muted); margin: 0; }
+
+/* --- Hero ----------------------------------------------------------------- */
+.hero { background: var(--cdr-black); color: var(--cdr-white); }
+.hero > .cdr-shell {
+  display: flex; flex-direction: column; gap: var(--cdr-sp-7);
+  padding-block: clamp(2.5rem, 7vw, 6rem);
+}
+.hero__nav { display: flex; flex-wrap: wrap; gap: var(--cdr-sp-2); }
+
+/* --- Cartões de especificação --------------------------------------------
+   Área de amostra que cresce, legenda ancorada embaixo: é isso que faz
+   cartões vizinhos alinharem a legenda mesmo com amostras de alturas
+   diferentes. Sem isso o grid estica e sobra buraco branco. */
+.spec {
+  display: flex; flex-direction: column; gap: var(--cdr-sp-4);
+  background: var(--cdr-surface); border-radius: var(--cdr-r-card);
+  padding: var(--cdr-sp-5);
+}
+.spec--dark    { background: var(--cdr-black); color: var(--cdr-white); }
+.spec--steel   { background: var(--cdr-steel); color: var(--cdr-white); }
+.spec--outline { background: transparent; border: var(--cdr-border); }
+.spec__body { flex: 1; display: flex; flex-direction: column; gap: var(--cdr-sp-3); }
+.spec__demo { flex: 1; display: flex; align-items: center; min-height: 7rem; }
+.spec__demo--center { justify-content: center; }
+.spec__foot { margin-top: auto; }
+
+/* --- Listas de especificação ---------------------------------------------- */
+.specs { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.specs > li {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: var(--cdr-sp-5); padding-block: var(--cdr-sp-3);
+  border-bottom: var(--cdr-border);
+}
+.specs > li:first-child { padding-top: 0; }
+.specs > li:last-child  { border-bottom: 0; padding-bottom: 0; }  /* sem régua solta */
+.specs__key { color: var(--cdr-text); }
+.specs__val { color: var(--cdr-text-muted); text-align: right; flex: none; }
+
+/* --- Cor ------------------------------------------------------------------ */
+.swatches {
+  display: grid; gap: var(--cdr-sp-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(9.5rem, 45%), 1fr));
+}
+.swatch { display: flex; flex-direction: column; gap: var(--cdr-sp-2); }
+.swatch__chip {
+  aspect-ratio: 4 / 3; border-radius: var(--cdr-r-card);
+  background: var(--chip); border: var(--cdr-border);
+}
+.swatch__meta {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: var(--cdr-sp-2); font-size: var(--cdr-fs-small);
+}
+.swatch__hex { color: var(--cdr-text-muted); font-family: var(--cdr-font-mono); }
+
+/* --- Área de proteção ----------------------------------------------------- */
+.clearspace { align-self: flex-start; padding: 1.5rem; outline: 1px dashed var(--cdr-grey-35); }
+.clearspace > svg { display: block; width: 5.5rem; height: 5.5rem; }
+
+/* --- Grade de amostras do motor gráfico ----------------------------------- */
+.specimens {
+  display: grid; gap: var(--cdr-sp-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+}
+.specimen { display: flex; flex-direction: column; gap: var(--cdr-sp-3); margin: 0; }
+.specimen figcaption { display: flex; flex-direction: column; gap: var(--cdr-sp-1); }
+
+/* --- Grades ---------------------------------------------------------------
+   `align-items: start` é o detalhe que evita cartão esticado com buraco
+   branco embaixo quando o vizinho é mais alto. */
+.grid       { display: grid; gap: var(--cdr-sp-5); align-items: start; }
+.grid--2    { grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr)); }
+.grid--3    { grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr)); }
+.grid--even { align-items: stretch; }   /* quando a altura igual é intencional */
+
+/* --- Faça / Não faça ------------------------------------------------------
+   Os sinais "+" e "−" são desenhados com gradientes, não com glifos de
+   largura cheia — glifo fullwidth desalinha do texto ao lado. */
+.rules__flag {
+  display: flex; align-items: center; gap: var(--cdr-sp-3);
+  font-weight: var(--cdr-w-medium); font-size: var(--cdr-fs-lead);
+}
+.rules__flag::before {
+  content: ""; width: 0.75rem; height: 0.75rem; flex: none;
+  background: linear-gradient(currentColor, currentColor) center/100% 2px no-repeat;
+}
+.rules--do .rules__flag::before {
+  background:
+    linear-gradient(currentColor, currentColor) center/100% 2px no-repeat,
+    linear-gradient(currentColor, currentColor) center/2px 100% no-repeat;
+}
+.rules--dont .rules__flag { color: var(--cdr-grey-55); }
+
+/* --- Aplicações ----------------------------------------------------------- */
+.showcase {
+  display: grid; gap: var(--cdr-sp-6); align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+}
+.showcase__col { display: flex; flex-direction: column; gap: var(--cdr-sp-6); }
+
+/* Outdoor */
+.ooh {
+  background: var(--cdr-white); border-radius: var(--cdr-r-card); overflow: hidden;
+}
+.ooh__inner {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--cdr-sp-5);
+  align-items: center; padding: var(--cdr-sp-6);
+}
+.ooh__copy { display: flex; flex-direction: column; gap: var(--cdr-sp-4); max-width: 34ch; }
+.ooh__art { width: min(13rem, 32vw); }
+@media (max-width: 30rem) {
+  .ooh__inner { grid-template-columns: 1fr; }
+  .ooh__art { width: 9rem; }
+}
+
+/* Cartão de visita: marca d'água à direita, texto livre à esquerda */
+.bizcard {
+  position: relative; overflow: hidden;
+  aspect-ratio: 1.75 / 1; max-width: 32rem;
+  background: var(--cdr-black); color: var(--cdr-white);
+  border-radius: var(--cdr-r-card); padding: var(--cdr-sp-5);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+/* A marca d'água ocupa só a faixa superior direita: o rodapé de contato
+   precisa de fundo limpo. Grafismo bonito que cobre texto é defeito. */
+.bizcard__art {
+  position: absolute; top: -6%; bottom: 30%; right: -4%; width: 46%;
+  color: var(--cdr-white); pointer-events: none;
+}
+.bizcard__art canvas { width: 100%; height: 100%; display: block; }
+.bizcard > *:not(.bizcard__art) { position: relative; }
+.bizcard__foot { display: flex; flex-direction: column; gap: 0; }
+
+/* --- Rodapé --------------------------------------------------------------- */
+.guide-foot {
+  background: var(--cdr-black); color: var(--cdr-white);
+  padding-block: var(--cdr-sp-7);
+}
+.guide-foot > .cdr-shell {
+  display: flex; flex-wrap: wrap; justify-content: space-between;
+  align-items: center; gap: var(--cdr-sp-4);
+}
+
+figure { margin: 0; }
+code { font-family: var(--cdr-font-mono); font-size: 0.85em; }
+
+/* Espécime tipográfico: o alfabeto em peso de leitura, não em Light. */
+.type-specimen { font-weight: var(--cdr-w-book); }

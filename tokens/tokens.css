@@ -80,6 +80,9 @@
 
   --cdr-border: 1px solid var(--cdr-rule);
 
+  /* Altura única de controle: é o que faz botão e tag alinharem lado a lado. */
+  --cdr-control-h: 2.5rem;
+
   /* --- Elevação ----------------------------------------------------------
      Quase inexistente. A hierarquia vem de campo preto vs. campo claro. */
   --cdr-shadow-0: none;

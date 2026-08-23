@@ -15,6 +15,7 @@ const inline = (tag, file) => {
 
 inline('<link rel="stylesheet" href="tokens/tokens.css">', 'tokens/tokens.css');
 inline('<link rel="stylesheet" href="src/cadrian.css">', 'src/cadrian.css');
+inline('<link rel="stylesheet" href="src/guide.css">', 'src/guide.css');
 
 /* O módulo passa a ser inline: troca o import por um IIFE no mesmo escopo. */
 const engine = read('src/dither.js')
@@ -26,6 +27,14 @@ html = html
     `<link rel="icon" href="data:image/svg+xml;base64,${Buffer.from(read('assets/favicon.svg')).toString('base64')}">`)
   .replace('<img src="assets/mark.svg" alt="Símbolo Cadrian" width="88" height="88" style="display:block">',
     read('assets/mark.svg').replace('<svg ', '<svg width="88" height="88" style="display:block" '));
+
+/* Trava: qualquer referência local sobrevivente quebraria a página autocontida
+   (e um artifact publicado, onde o host bloqueia origens externas). */
+const dangling = [...html.matchAll(/(?:href|src)="((?!https?:|data:|#)[^"]+)"/g)].map((m) => m[1]);
+if (dangling.length) {
+  console.error('Referências locais não embutidas:\n  ' + dangling.join('\n  '));
+  process.exit(1);
+}
 
 mkdirSync('dist', { recursive: true });
 writeFileSync('dist/cadrian-brand.html', html);

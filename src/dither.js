@@ -47,10 +47,12 @@ export const fields = {
   },
 
   /* Deploy: cadência de setas. Velocidade como repetição. */
-  chevrons: ({ n = 3, gap = 0.02, soft = 0.012 } = {}) => (u, v, ar) => {
-    const span = (1 - gap * (n - 1)) / n;
+  chevrons: ({ n = 3, gap = 0.02, inset = 0.03, soft = 0.012 } = {}) => (u, v, ar) => {
+    /* `inset` mantém a ponta da última seta dentro do quadro, sem parecer cortada */
+    const usable = 1 - inset * 2;
+    const span = (usable - gap * (n - 1)) / n;
     for (let i = 0; i < n; i++) {
-      const t = (u - i * (span + gap)) / span;
+      const t = (u - inset - i * (span + gap)) / span;
       if (t < 0 || t > 1) continue;
       const half = (1 - t) * ar * 0.46;          /* triângulo apontando à direita */
       return edge(Math.abs(v - ar / 2) - half, soft);
@@ -82,8 +84,8 @@ export const fields = {
   },
 
   /* Camadas: losangos isométricos empilhados. Infraestrutura. */
-  layers: ({ n = 3, rx = 0.3, soft = 0.014 } = {}) => (u, v, ar) => {
-    const ry = ar * 0.11, gap = ar * 0.34;
+  layers: ({ n = 3, rx = 0.24, soft = 0.014 } = {}) => (u, v, ar) => {
+    const ry = ar * 0.15, gap = ar * 0.33;
     const base = ar / 2 - ((n - 1) * gap) / 2;
     for (let i = 0; i < n; i++) {
       const d = Math.abs(u - 0.5) / rx + Math.abs(v - (base + i * gap)) / ry - 1;
