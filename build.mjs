@@ -15,6 +15,13 @@ const engine = read('src/dither.js')
 
 const favicon = Buffer.from(read('assets/favicon.svg')).toString('base64');
 
+/* Nas variantes publicadas como artifact não existe sistema de arquivos: os
+   links entre as páginas precisam apontar para as URLs publicadas. */
+const ARTIFACT_URLS = {
+  'cadrian-brand.html': 'https://claude.ai/code/artifact/dbceae6a-0ea9-4fcf-9845-bdc238b4baa4',
+  'cadrian-extensoes.html': 'https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2',
+};
+
 mkdirSync('dist', { recursive: true });
 
 for (const page of PAGES) {
@@ -48,8 +55,12 @@ for (const page of PAGES) {
 
   /* Variante fragmento: sem <!doctype>/<html>/<head>/<body>, para hosts que
      fornecem o próprio esqueleto de página (ex.: publicação como artifact). */
-  const head = html.slice(html.indexOf('<head>') + 6, html.indexOf('</head>'));
-  const body = html.slice(html.indexOf('<body>') + 6, html.lastIndexOf('</body>'));
+  let fragment = html;
+  for (const [file, url] of Object.entries(ARTIFACT_URLS)) {
+    fragment = fragment.replaceAll(`href="${file}"`, `href="${url}"`);
+  }
+  const head = fragment.slice(fragment.indexOf('<head>') + 6, fragment.indexOf('</head>'));
+  const body = fragment.slice(fragment.indexOf('<body>') + 6, fragment.lastIndexOf('</body>'));
   writeFileSync(`dist/${page.out}-artifact.html`, head.trim() + '\n' + body.trim() + '\n');
 
   console.log(`dist/${page.out}.html · ${(html.length / 1024).toFixed(0)} KB`);
