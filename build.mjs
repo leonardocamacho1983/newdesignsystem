@@ -29,4 +29,12 @@ html = html
 
 mkdirSync('dist', { recursive: true });
 writeFileSync('dist/cadrian-brand.html', html);
-console.log(`dist/cadrian-brand.html · ${(html.length / 1024).toFixed(0)} KB`);
+
+/* Variante fragmento: sem <!doctype>/<html>/<head>/<body>, para hosts que
+   fornecem o próprio esqueleto de página (ex.: publicação como artifact). */
+const head = html.slice(html.indexOf('<head>') + 6, html.indexOf('</head>'));
+const body = html.slice(html.indexOf('<body>') + 6, html.lastIndexOf('</body>'));
+writeFileSync('dist/artifact.html', head.trim() + '\n' + body.trim() + '\n');
+
+for (const f of ['dist/cadrian-brand.html', 'dist/artifact.html'])
+  console.log(`${f} · ${(readFileSync(f).length / 1024).toFixed(0)} KB`);
