@@ -47,6 +47,31 @@ body {
 }
 .cmc-muted { color: var(--cmc-text-muted); }
 
+/* --- As três vozes -------------------------------------------------------
+   Cada uma com um trabalho declarado. A regra é que não competem no mesmo
+   bloco: um parágrafo editorial não recebe rótulo em mono ao lado, e um
+   painel de números não abre com serifada. */
+.cmc-editorial {
+  font-family: var(--cmc-font-serif);
+  font-size: var(--cmc-fs-lead);
+  line-height: 1.6;
+  letter-spacing: 0;
+  max-width: var(--cmc-measure);
+  margin: 0;
+}
+.cmc-editorial--lead { font-size: var(--cmc-fs-h2); line-height: 1.35; }
+.cmc-measure {
+  font-family: var(--cmc-font-mono);
+  font-size: var(--cmc-fs-small);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.cmc-measure--big {
+  font-size: var(--cmc-fs-h1);
+  font-weight: var(--cmc-w-book);
+  line-height: 1;
+}
+
 /* --- Marca ---------------------------------------------------------------
    O lockup é mark + wordmark com um espaço fixo proporcional à altura.
    Área de proteção = metade da altura da marca em todos os lados. */

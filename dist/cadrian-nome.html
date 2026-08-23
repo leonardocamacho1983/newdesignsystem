@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwMDAiLz48cGF0aCBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zMiAxMmEyMCAyMCAwIDEgMCAwIDQwIDIwIDIwIDAgMCAwIDE5LjYtMTZINDEuMkExMC41IDEwLjUgMCAxIDEgNDEuMiAyOGgxMC40QTIwIDIwIDAgMCAwIDMyIDEyWiIvPjwvc3ZnPg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ==========================================================================
    Camacho — Design Tokens
@@ -44,11 +44,17 @@
   --cmc-particle-inv: var(--cmc-black);   /* dither sobre claro */
 
   /* --- Tipografia --------------------------------------------------------
-     Inter Tight em três pesos. Títulos em Light com tracking negativo:
-     é o que dá o ar de engenharia calma dos prints. */
+     Títulos em Light com tracking negativo: é o que dá o ar de engenharia
+     calma que a marca precisa.
+     Três vozes, um trabalho cada — e a regra que impede virar mingau:
+     nunca competem no mesmo bloco.
+       sistema   sustenta a marca e a interface, e amarra as outras duas
+       editorial diagnóstico, artigo, material de formação — o lado humano
+       medição   indicador, nível, rótulo de dado — o lado técnico */
   --cmc-font: "Inter Tight", "Inter", ui-sans-serif, system-ui,
               -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-  --cmc-font-mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
+  --cmc-font-serif: "Source Serif 4", ui-serif, Georgia, "Times New Roman", serif;
+  --cmc-font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --cmc-w-light:  300;
   --cmc-w-book:   400;
@@ -100,6 +106,18 @@
   --cmc-shadow-0: none;
   --cmc-shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
   --cmc-shadow-2: 0 2px 4px rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.14);
+
+  /* --- Níveis de maturidade ----------------------------------------------
+     A marca é monocromática por argumento, não só por estética: num sistema
+     que precisa comunicar NÍVEL (maturidade, prioridade, risco), o nível é
+     codificado por densidade de partícula, não por matiz. Uma cor de destaque
+     criaria um segundo sistema concorrendo com o motor gráfico.
+     Estes valores alimentam `ramp` do dither e a opacidade de componentes. */
+  --cmc-level-1: 0.10;   /* lacuna grande — quase nada instalado */
+  --cmc-level-2: 0.30;
+  --cmc-level-3: 0.52;
+  --cmc-level-4: 0.76;
+  --cmc-level-5: 1.00;   /* capacidade instalada e sustentada */
 
   /* --- Dither (o motor gráfico) ------------------------------------------
      Estes tokens governam o grafismo de partículas. */
@@ -180,6 +198,31 @@ body {
   font-weight: var(--cmc-w-medium);
 }
 .cmc-muted { color: var(--cmc-text-muted); }
+
+/* --- As três vozes -------------------------------------------------------
+   Cada uma com um trabalho declarado. A regra é que não competem no mesmo
+   bloco: um parágrafo editorial não recebe rótulo em mono ao lado, e um
+   painel de números não abre com serifada. */
+.cmc-editorial {
+  font-family: var(--cmc-font-serif);
+  font-size: var(--cmc-fs-lead);
+  line-height: 1.6;
+  letter-spacing: 0;
+  max-width: var(--cmc-measure);
+  margin: 0;
+}
+.cmc-editorial--lead { font-size: var(--cmc-fs-h2); line-height: 1.35; }
+.cmc-measure {
+  font-family: var(--cmc-font-mono);
+  font-size: var(--cmc-fs-small);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.cmc-measure--big {
+  font-size: var(--cmc-fs-h1);
+  font-weight: var(--cmc-w-book);
+  line-height: 1;
+}
 
 /* --- Marca ---------------------------------------------------------------
    O lockup é mark + wordmark com um espaço fixo proporcional à altura.
@@ -1218,6 +1261,94 @@ const fields = {
     const d = Math.min(delta, 1 - delta) / turns;
     return edge(d - w / 2, soft);
   },
+
+  /* --- Vocabulário da transformação -------------------------------------
+     A costura, a incorporação, a medida e a transferência: as quatro ideias
+     que o vocabulário anterior (todo sobre matéria e sistema) não dizia. */
+
+  /* A COSTURA — o grafismo-âncora. Dois fios entram separados, com fases
+     opostas, e se entrelaçam até virar um só. É a tese da marca: técnico e
+     humano não correm em paralelo, eles se costuram. */
+  weave: ({ cycles = 2.5, amp = 0.42, w = 0.09, inset = 0.04, soft = 0.014 } = {}) =>
+    (u0, v, ar) => {
+      /* `inset` mantém a ponta costurada dentro do quadro: fio encostando na
+         borda lê como corte, não como conclusão. */
+      const u = (u0 - inset) / (1 - inset * 2);
+      if (u < 0 || u > 1) return 0;
+      const cy = ar / 2;
+      /* A amplitude decai até zero: no fim do percurso os dois fios ocupam
+         a mesma linha, que é o que faz "dois viram um" e não "dois lado a lado". */
+      const abertura = Math.pow(1 - u, 1.6) * ar * amp;
+      const fase = u * cycles * Math.PI * 2;
+      const fioA = cy + Math.sin(fase) * abertura;
+      const fioB = cy - Math.sin(fase) * abertura;
+      const meia = (ar * w) / 2;
+      return Math.max(
+        edge(Math.abs(v - fioA) - meia, soft),
+        edge(Math.abs(v - fioB) - meia, soft),
+      );
+    },
+
+  /* INCORPORAR — pessoas entrando em sintonia. Marcas dispersas à esquerda
+     que se alinham numa linha à direita. O desalinhamento é função de x, não
+     do tempo: o mesmo grafismo sempre, sem animação por trás. */
+  cohort: ({ n = 9, r = 0.62, inset = 0.04, soft = 0.012 } = {}) => (u, v, ar) => {
+    const cy = ar / 2, util = 1 - inset * 2, passo = util / n;
+    /* O raio precisa respeitar os dois eixos: só horizontal estoura em 1:1,
+       só vertical some em faixa larga e baixa como o palco do slide (16:6). */
+    const R = Math.min(passo * r, ar * 0.16);
+    let cov = 0;
+    const col = Math.round((u - inset) / passo);
+    for (let d = -1; d <= 1; d++) {
+      const i = col + d;
+      if (i < 0 || i >= n) continue;
+      const cx = inset + (i + 0.5) * passo;
+      const t = (cx - inset) / util;
+      /* dispersão que se fecha conforme avança */
+      const solta = (hash(i, 0, 41) - 0.5) * 2;
+      const y = cy + solta * (ar / 2 - R) * 0.9 * Math.pow(1 - t, 1.7);
+      cov = Math.max(cov, edge(Math.hypot(u - cx, v - y) - R, soft));
+    }
+    return cov;
+  },
+
+  /* MEDIR — a marca virando instrumento. O mesmo "C" repetido com a abertura
+     fechando: uma escala de maturidade. Aberto = lacuna grande; quase fechado
+     = capacidade instalada. */
+  gauge: ({ n = 5, w = 0.34, de = 0.62, ate = 0.06, inset = 0.05, soft = 0.014 } = {}) =>
+    (u, v, ar) => {
+      const util = 1 - inset * 2, passo = util / n;
+      if (u < inset || u > 1 - inset) return 0;
+      const i = Math.min(n - 1, Math.floor((u - inset) / passo));
+      const cx = inset + (i + 0.5) * passo, cy = ar / 2;
+      const R = Math.min(passo * 0.38, ar * 0.36);
+      const W = R * w * 2;
+      const t = n === 1 ? 0 : i / (n - 1);
+      const abertura = de + (ate - de) * t;      /* fecha da esquerda p/ direita */
+      const dx = u - cx, dy = v - cy;
+      if (dx > 0 && Math.abs(dy) < R * abertura) return 0;   /* o vão do C */
+      return edge(Math.abs(Math.hypot(dx, dy) - R) - W / 2, soft);
+    },
+
+  /* TRANSFERIR — a capacidade mudando de mãos. Um recipiente que esvazia à
+     esquerda, um que enche à direita, e o fluxo entre eles. O diferencial
+     declarado: o objetivo não é criar dependência permanente. */
+  handoff: ({ r = 0.6, w = 0.22, canal = 0.05, vao = 0.58, soft = 0.014 } = {}) =>
+    (u, v, ar) => {
+      const cy = ar / 2, xEsq = (1 - vao) / 2, xDir = 1 - xEsq;
+      /* o raio precisa caber na vertical E na folga entre os dois centros,
+         senão em 1:1 os recipientes se atravessam */
+      const R = Math.min(ar * 0.42, (vao / 2) * r);
+      const dEsq = Math.hypot(u - xEsq, v - cy);
+      const dDir = Math.hypot(u - xDir, v - cy);
+      /* esquerda: só o contorno (esvaziou) · direita: massa cheia (recebeu) */
+      const esq = edge(Math.abs(dEsq - R) - (R * w) / 2, soft);
+      const dir = edge(dDir - R, soft);
+      /* o canal só existe entre os dois */
+      const canalCov = u > xEsq && u < xDir
+        ? edge(Math.abs(v - cy) - ar * canal, soft) : 0;
+      return Math.max(esq, Math.max(dir, canalCov));
+    },
 
   /* Grafismo-âncora: anel de ruído + disco de sinal, lado a lado. */
   noiseToSignal: ({ soft = 0.02 } = {}) => (u, v, ar) => {

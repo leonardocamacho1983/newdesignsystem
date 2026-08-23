@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sistema Visual Camacho</title>
-<meta name="description" content="Sistema de identidade visual do Camacho: tokens, motor gráfico de dithering e componentes.">
+<meta name="description" content="Sistema de identidade do Camacho: tokens, motor gráfico de dithering, três vozes tipográficas e componentes.">
 <link rel="icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="tokens/tokens.css">
 <link rel="stylesheet" href="src/camacho.css">
 <link rel="stylesheet" href="src/guide.css">
@@ -27,14 +27,17 @@
     </a>
 
     <div class="stack">
-      <h1 class="cmc-display">Prioritize.<br>Automate.<br>Deliver.</h1>
-      <p class="cmc-lead cmc-muted">AI systems built right in your stack.</p>
+      <h1 class="cmc-display">Clareza<br>é vantagem.</h1>
+      <p class="cmc-lead cmc-muted">
+        Estratégia, transformação com IA e desenvolvimento de lideranças
+        para empresas em crescimento.
+      </p>
     </div>
 
     <div class="cmc-stage cmc-stage--flat" style="--stage-ar:16/5">
-      <canvas data-cmc-dither="noiseToSignal" data-ramp="0.02,1" data-angle="0"
+      <canvas data-cmc-dither="weave" data-ramp="0.04,1" data-angle="0"
               data-cell="4" data-duration="2200"
-              aria-label="Grafismo da marca: um anel disperso resolvendo em massa sólida"></canvas>
+              aria-label="Grafismo da marca: dois fios que se entrelaçam até virar um só"></canvas>
     </div>
 
     <nav class="hero__nav" aria-label="Seções do guia">
@@ -120,6 +123,44 @@
     <!-- Tipografia -->
     <div class="block">
       <h3 class="cmc-h2">Tipografia</h3>
+      <p class="block__intro">
+        Três vozes, um trabalho cada. A regra que impede virar mistura: elas
+        nunca competem no mesmo bloco — um parágrafo editorial não recebe
+        rótulo em mono ao lado, e um painel de números não abre com serifada.
+        As duas vozes secundárias são os dois lados do trabalho; a Inter Tight
+        é o que os amarra.
+      </p>
+
+      <div class="grid grid--3 grid--even">
+        <div class="spec spec--steel">
+          <p class="cmc-micro">Sistema · Inter Tight</p>
+          <div class="spec__body">
+            <p class="cmc-h1">Clareza é vantagem</p>
+            <p class="cmc-small">Marca, títulos, interface, rótulos, navegação.</p>
+          </div>
+          <p class="cmc-micro spec__foot">Light 300 · tracking −0,035em</p>
+        </div>
+        <div class="spec">
+          <p class="cmc-micro">Editorial · Source Serif 4</p>
+          <div class="spec__body">
+            <p class="cmc-editorial cmc-editorial--lead">Diagnóstico de capacidade</p>
+            <p class="cmc-editorial">
+              Empresas não perdem capacidade por falta de tecnologia. Perdem quando
+              a complexidade cresce mais rápido do que sua forma de decidir.
+            </p>
+          </div>
+          <p class="cmc-micro spec__foot">Diagnóstico, artigo, material de formação</p>
+        </div>
+        <div class="spec">
+          <p class="cmc-micro">Medição · IBM Plex Mono</p>
+          <div class="spec__body">
+            <p class="cmc-measure--big cmc-measure">NÍVEL 3</p>
+            <p class="cmc-measure">tempo_de_ciclo · −34,2%<br>adoção 41% → 78%</p>
+          </div>
+          <p class="cmc-micro spec__foot">Indicador, nível, rótulo de dado</p>
+        </div>
+      </div>
+
       <div class="grid grid--2">
         <div class="spec spec--steel">
           <div class="cmc-controls cmc-controls--split">
@@ -138,14 +179,28 @@
             <li><span class="specs__key">H1–H2 · Light 300</span><code class="specs__val">−0.025em / 1.08</code></li>
             <li><span class="specs__key">Lead · Regular 400</span><code class="specs__val">−0.01em / 1.3</code></li>
             <li><span class="specs__key">Corpo · Regular 400</span><code class="specs__val">−0.01em / 1.45</code></li>
+            <li><span class="specs__key">Editorial · Source Serif 400</span><code class="specs__val">0 / 1.6</code></li>
+            <li><span class="specs__key">Medição · Plex Mono 400</span><code class="specs__val">tabular-nums</code></li>
             <li><span class="specs__key">Micro · Medium 500</span><code class="specs__val">+0.02em / caixa alta</code></li>
           </ul>
-          <p class="cmc-small spec__foot">
-            Títulos sempre em Light com tracking negativo. Medium só em rótulos
-            micro, botões e no wordmark.
-          </p>
         </div>
       </div>
+    </div>
+
+    <!-- Níveis -->
+    <div class="block" id="niveis-sec">
+      <h3 class="cmc-h2">Níveis, sem cor</h3>
+      <p class="block__intro">
+        Não existe cor de destaque, e agora isso é funcional e não só estético:
+        num sistema que precisa comunicar nível — maturidade, prioridade, risco —
+        o nível é <strong>densidade de partícula</strong>, a mesma gramática do
+        motor. Uma cor de destaque criaria um segundo sistema concorrendo com ele.
+      </p>
+      <div class="cmc-stage" style="--stage-ar:16/5">
+        <canvas data-cmc-dither="gauge" data-ramp="0.1,1" data-cell="4"
+                aria-label="Escala de maturidade: o símbolo com a abertura fechando"></canvas>
+      </div>
+      <ul class="specs cmc-small" id="niveis"></ul>
     </div>
   </div>
 </section>
@@ -172,7 +227,7 @@
     <div class="spec spec--outline">
       <h3 class="cmc-h2">Parâmetros</h3>
       <ul class="specs cmc-small">
-        <li><code class="specs__key">shape</code><span class="specs__val">disc · ring · chevrons · bars · loop · layers · mark · noiseToSignal</span></li>
+        <li><code class="specs__key">shape</code><span class="specs__val" id="lista-formas">—</span></li>
         <li><code class="specs__key">cell</code><span class="specs__val">aresta da célula em px — 4 padrão, 6 a 8 em peças grandes</span></li>
         <li><code class="specs__key">ramp</code><span class="specs__val">[densidade mínima, máxima] — o eixo ruído→sinal</span></li>
         <li><code class="specs__key">angle</code><span class="specs__val">0° adensa à direita · 180° à esquerda · 90° embaixo</span></li>
@@ -422,7 +477,7 @@
 </footer>
 
 <script type="module">
-import { init } from './src/dither.js';
+import { init, fields } from './src/dither.js';
 import { applyBrand, brandFromUrl } from './src/brand.js';
 
 /* --- Cor: os swatches saem dos próprios tokens, nunca de hex digitado --- */
@@ -475,24 +530,24 @@ document.getElementById('specimens').innerHTML = SPECIMENS.map((s) => `
 
 /* --- Os seis slides de processo --- */
 const STEPS = [
-  { name: 'Signal', shape: 'noiseToSignal', ramp: '0.02,1', angle: 0,
-    lead: 'Find the right signal in the noise', kicker: 'Pattern recognition. Business intuition.',
-    body: 'Analisamos suas operações para achar atrito, ineficiência e potencial escondido. Procuramos padrões, dores e melhorias de baixo esforço que geram resultado real.' },
-  { name: 'Transform', shape: 'bars', ramp: '0.05,1', angle: 0,
-    lead: 'Turn insight into infrastructure', kicker: 'Build once, then scale it across your org.',
-    body: 'Identificamos padrões repetíveis e construímos workflows e agentes para operacionalizá-los. Esses sistemas não funcionam uma vez só — eles aprendem, escalam e criam impacto duradouro.' },
-  { name: 'Deploy', shape: 'chevrons', ramp: '0.12,1', angle: 0,
-    lead: 'The outcome isn’t a slide, it’s a running system', kicker: 'We deliver impactful outcomes.',
-    body: 'Não entregamos e desaparecemos. Ficamos perto para dirigir adoção, medir resultados reais e continuar melhorando. O objetivo é mudança duradoura, não vitória rápida.' },
-  { name: 'Refine', shape: 'loop', ramp: '0.03,1', angle: 0, mirror: true,
-    lead: 'Keep building, keep improving', kicker: 'This is where performance compounds.',
-    body: 'Depois do lançamento, ajustamos com dados vivos e feedback. Dobramos no que funciona, cortamos o que não funciona. Refinamento é como ganhos pequenos viram vantagem permanente.' },
-  { name: 'Measure', shape: 'layers', ramp: '0.28,1', angle: 0,
-    lead: 'If it doesn’t move a number, it didn’t happen', kicker: 'Outcomes, not activity.',
-    body: 'Cada sistema entra com uma métrica declarada antes do primeiro commit. Tempo economizado, erro evitado, receita destravada — medido no seu painel, não no nosso.' },
-  { name: 'Repeat', shape: 'mark', ramp: '0.03,1', angle: 180,
-    lead: 'The second system costs a fraction of the first', kicker: 'Compounding by design.',
-    body: 'O que foi construído vira base para o próximo. Padrões, conectores e guard-rails são reaproveitados, e cada ciclo fica mais barato e mais rápido que o anterior.' },
+  { name: 'Diagnosticar', shape: 'noiseToSignal', ramp: '0.03,1', angle: 0,
+    lead: 'Entender antes de propor', kicker: 'O ponto de partida é o negócio, não a ferramenta.',
+    body: 'Leio o contexto, os dados, os processos, as capacidades instaladas e os desafios de liderança. Sem esse mapa, qualquer recomendação é chute bem-vestido.' },
+  { name: 'Priorizar', shape: 'funnel', ramp: '0.1,1', angle: 0,
+    lead: 'Separar urgência de importância', kicker: 'Poucas frentes, escolhidas por impacto.',
+    body: 'Muita coisa cabe no roadmap; pouca coisa muda o resultado. Concentro recursos nas oportunidades de maior impacto e digo com clareza o que fica de fora.' },
+  { name: 'Estruturar', shape: 'mesh', ramp: '0.28,1', angle: 0,
+    lead: 'Organizar o que sustenta a decisão', kicker: 'Dados, processos, responsabilidades, indicadores.',
+    body: 'Arquitetura gerencial antes de automação. Sem dado confiável e dono definido, todo sistema construído em cima vira mais uma fonte de discordância.' },
+  { name: 'Implementar', shape: 'chevrons', ramp: '0.12,1', angle: 0,
+    lead: 'Estratégia vira sistema rodando', kicker: 'Analytics, automação e agentes.',
+    body: 'Não entrego apresentação e desapareço: participo da construção até funcionar na operação real, com quem vai operar depois.' },
+  { name: 'Incorporar', shape: 'cohort', ramp: '0.14,1', angle: 0,
+    lead: 'Preparar quem vai sustentar', kicker: 'Líderes e times, ao mesmo tempo que a organização.',
+    body: 'A etapa que quase todo projeto pula. Mudar processo sem mudar como as pessoas decidem não instala capacidade — devolve a operação ao estado anterior em poucos meses.' },
+  { name: 'Medir', shape: 'gauge', ramp: '0.16,1', angle: 0,
+    lead: 'Se não move um número, não aconteceu', kicker: 'Resultado, não atividade.',
+    body: 'Cada frente entra com a métrica declarada antes da primeira linha de código. Avalio, corrijo a escolha e amplio o que gera valor — no painel do cliente, não no meu.' },
 ];
 document.getElementById('processo-grid').innerHTML = STEPS.map((s, i) => `
   <article class="cmc-slide">
@@ -511,6 +566,23 @@ document.getElementById('processo-grid').innerHTML = STEPS.map((s, i) => `
     </div>
     <p class="cmc-small cmc-slide__body">${s.body}</p>
   </article>`).join('');
+
+/* A lista de formas sai do próprio motor: escrita à mão, ela envelhecia em
+   silêncio toda vez que um campo novo entrasse. */
+document.getElementById('lista-formas').textContent = Object.keys(fields).join(' · ');
+
+/* Os níveis saem dos tokens: densidade, não cor. */
+const cssRoot = getComputedStyle(document.documentElement);
+const NIVEIS = [
+  'Lacuna grande — pouca coisa instalada',
+  'Iniciativas isoladas, sem sustentação',
+  'Processo estruturado, adoção parcial',
+  'Operação apoiada em dado e rotina',
+  'Capacidade instalada e sustentada',
+];
+document.getElementById('niveis').innerHTML = NIVEIS.map((desc, i) => `
+  <li><span class="specs__key">Nível ${i + 1} · ${desc}</span>
+      <code class="specs__val">densidade ${cssRoot.getPropertyValue(`--cmc-level-${i + 1}`).trim()}</code></li>`).join('');
 
 applyBrand(document, brandFromUrl());   /* preenche os encaixes de marca */
 init();   /* ativa os canvas injetados acima */

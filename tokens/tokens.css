@@ -32,11 +32,17 @@
   --cmc-particle-inv: var(--cmc-black);   /* dither sobre claro */
 
   /* --- Tipografia --------------------------------------------------------
-     Inter Tight em três pesos. Títulos em Light com tracking negativo:
-     é o que dá o ar de engenharia calma dos prints. */
+     Títulos em Light com tracking negativo: é o que dá o ar de engenharia
+     calma que a marca precisa.
+     Três vozes, um trabalho cada — e a regra que impede virar mingau:
+     nunca competem no mesmo bloco.
+       sistema   sustenta a marca e a interface, e amarra as outras duas
+       editorial diagnóstico, artigo, material de formação — o lado humano
+       medição   indicador, nível, rótulo de dado — o lado técnico */
   --cmc-font: "Inter Tight", "Inter", ui-sans-serif, system-ui,
               -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-  --cmc-font-mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
+  --cmc-font-serif: "Source Serif 4", ui-serif, Georgia, "Times New Roman", serif;
+  --cmc-font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --cmc-w-light:  300;
   --cmc-w-book:   400;
@@ -88,6 +94,18 @@
   --cmc-shadow-0: none;
   --cmc-shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
   --cmc-shadow-2: 0 2px 4px rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.14);
+
+  /* --- Níveis de maturidade ----------------------------------------------
+     A marca é monocromática por argumento, não só por estética: num sistema
+     que precisa comunicar NÍVEL (maturidade, prioridade, risco), o nível é
+     codificado por densidade de partícula, não por matiz. Uma cor de destaque
+     criaria um segundo sistema concorrendo com o motor gráfico.
+     Estes valores alimentam `ramp` do dither e a opacidade de componentes. */
+  --cmc-level-1: 0.10;   /* lacuna grande — quase nada instalado */
+  --cmc-level-2: 0.30;
+  --cmc-level-3: 0.52;
+  --cmc-level-4: 0.76;
+  --cmc-level-5: 1.00;   /* capacidade instalada e sustentada */
 
   /* --- Dither (o motor gráfico) ------------------------------------------
      Estes tokens governam o grafismo de partículas. */

@@ -282,10 +282,11 @@ export const fields = {
   /* INCORPORAR — pessoas entrando em sintonia. Marcas dispersas à esquerda
      que se alinham numa linha à direita. O desalinhamento é função de x, não
      do tempo: o mesmo grafismo sempre, sem animação por trás. */
-  cohort: ({ n = 12, r = 0.5, inset = 0.04, soft = 0.012 } = {}) => (u, v, ar) => {
+  cohort: ({ n = 9, r = 0.62, inset = 0.04, soft = 0.012 } = {}) => (u, v, ar) => {
     const cy = ar / 2, util = 1 - inset * 2, passo = util / n;
-    /* raio limitado pelos dois eixos: em 1:1 um raio só horizontal estoura */
-    const R = Math.min(passo * r, ar * 0.09);
+    /* O raio precisa respeitar os dois eixos: só horizontal estoura em 1:1,
+       só vertical some em faixa larga e baixa como o palco do slide (16:6). */
+    const R = Math.min(passo * r, ar * 0.16);
     let cov = 0;
     const col = Math.round((u - inset) / passo);
     for (let d = -1; d <= 1; d++) {
