@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Direção de Arte Camacho</title>
-<meta name="description" content="Cinco registros de direção de arte da marca Camacho, cada um atravessando seis formatos a partir de uma definição só.">
+<meta name="description" content="Dez registros de direção de arte da marca Camacho, em duas camadas — composição e material — cada um atravessando seis formatos.">
 <link rel="icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,9 +26,9 @@
     </span>
     <h1 class="cmc-display">Direção<br>de arte.</h1>
     <p class="cmc-lead" style="max-width:52ch">
-      Cinco registros. Um registro não é um humor nem uma paleta — é uma regra
-      sobre onde o tipo pode sentar em relação à densidade, e qual das três
-      vozes fala.
+      Dez registros em duas camadas. A primeira é gramática — onde o tipo senta
+      em relação à densidade. A segunda é material — o que a partícula está
+      fazendo, que é onde o sistema tinha um mundo inteiro parado.
     </p>
     <nav class="hero__nav">
       <a class="cmc-tag" href="index.html"><span>Sistema</span></a>
@@ -213,7 +213,7 @@ function peca(reg, formato, id) {
       <div class="cmc-kv__art">
         <canvas data-cmc-dither="${cfg.shape}" data-ramp="${cfg.ramp.join(',')}"
                 data-angle="${cfg.angle}" data-cell="${cfg.cell}" data-seed="${cfg.seed}"
-                data-base-cell="${cfg.cell}"
+                data-base-cell="${cfg.cell}" data-texture="${cfg.texture}"
                 ${cfg.opts ? `data-opts='${JSON.stringify(cfg.opts)}'` : ''}
                 ${cfg.clareira ? `data-clareira='${JSON.stringify(cfg.clareira)}'` : ''}
                 aria-label="${reg.nome}: ${reg.regra}"></canvas>
@@ -265,7 +265,25 @@ if (solo) {
 } else {
 
 /* --- 01 Os registros, cada um na sua peça grande --- */
-document.getElementById('galeria-registros').innerHTML = REGISTROS.map((reg) => `
+const CAMADAS = [
+  ['composicao', 'Composição — onde o tipo senta',
+   'Gramática, não direção de arte: os cinco são a mesma operação com o texto em '
+   + 'lugares diferentes. Ficam porque são a base das peças do dia a dia, e porque '
+   + 'servem de controle para a camada seguinte.'],
+  ['material', 'Material — o que a partícula faz',
+   'Aqui estava o mundo parado. Nenhuma peça do sistema tinha usado <code>texture</code>, '
+   + 'nenhuma tinha saído do campo escuro, a célula nunca saiu de 3 ou 4, e o motor '
+   + 'sempre aceitou uma função como forma sem que ninguém compusesse dois campos. '
+   + 'Estes registros não movem o texto de lugar — trocam o material.'],
+];
+const bloco = (id) => REGISTROS.filter((r) => r.camada === id);
+
+document.getElementById('galeria-registros').innerHTML = CAMADAS.map(([id, titulo, intro]) => `
+  <div class="stack-5">
+    <h3 class="cmc-h2" style="margin:0">${titulo}</h3>
+    <p class="block__intro" style="margin:0">${intro}</p>
+  </div>
+  ${bloco(id).map((reg) => `
   <div class="block">
     <div class="cmc-section-head" style="margin:0;border:0;padding:0">
       <p class="cmc-h2">${reg.nome}</p>
@@ -295,10 +313,12 @@ document.getElementById('galeria-registros').innerHTML = REGISTROS.map((reg) => 
           </figure>`).join('')}
       </div>
     </div>` : ''}
-  </div>`).join('');
+  </div>`).join('')}`).join('');
 
 /* --- 02 A matriz: cada registro atravessando os seis formatos --- */
-document.getElementById('grade-matriz').innerHTML = REGISTROS.map((reg) => `
+document.getElementById('grade-matriz').innerHTML = CAMADAS.map(([id, titulo]) => `
+  <h3 class="cmc-h2" style="margin:0">${titulo}</h3>
+  ${bloco(id).map((reg) => `
   <div class="block">
     <div class="cmc-section-head" style="margin:0;border:0;padding:0">
       <p class="cmc-h2">${reg.nome}</p>
@@ -322,7 +342,7 @@ document.getElementById('grade-matriz').innerHTML = REGISTROS.map((reg) => `
           </figure>`;
       }).join('')}
     </div>
-  </div>`).join('');
+  </div>`).join('')}`).join('');
 
 /* --- 03 As vozes, com acentuação, que é onde fonte substituta se entrega --- */
 const AMOSTRA = {

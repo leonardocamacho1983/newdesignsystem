@@ -118,9 +118,11 @@ o alpha como cobertura — qualquer manchete vira grafismo da marca. A opção
 
 ## Direção de arte
 
-Um **registro** é uma regra sobre onde o tipo pode sentar em relação à densidade
-e qual das três vozes fala — não é humor nem paleta. Cinco, em `src/direcao.js`,
-cada um atravessando seis formatos a partir de uma definição só.
+Dez registros em `src/direcao.js`, em **duas camadas**, cada um atravessando seis
+formatos a partir de uma definição só.
+
+**Camada 1 — composição.** Onde o tipo senta em relação à densidade. É gramática:
+os cinco são a mesma operação com o texto em lugares diferentes.
 
 | | |
 |---|---|
@@ -129,6 +131,19 @@ cada um atravessando seis formatos a partir de uma definição só.
 | **Trama** | O campo É o léxico: as palavras da marca são as partículas. |
 | **Figura** | Uma figura que só existe onde o campo resolve. |
 | **Palavra** | O tipo é a imagem, denso o bastante para ler perfeitamente. |
+
+**Camada 2 — material.** O que a partícula está fazendo. Aqui estava o mundo
+parado: nenhuma peça do sistema tinha usado `texture`, nenhuma tinha saído do
+campo escuro, `cell` nunca saiu de 3 ou 4, e o motor sempre aceitou uma função
+como forma sem que ninguém compusesse dois campos.
+
+| | |
+|---|---|
+| **Impressão** | Ponto ordenado, tinta sobre papel. O grão estocástico é textura de tela; o ponto ordenado é de gráfica, e muda a temperatura da marca sem trocar uma forma. |
+| **Interferência** | Duas grades fora de fase. O moiré não é desenhado — emerge do desencontro e some quando elas se alinham. A tese por física, não por ilustração. |
+| **Instrumento** | A marca em N aberturas é uma escala. A abertura do C representa a lacuna entre complexidade e capacidade, então a letra repetida JÁ é uma medição. |
+| **Costura** | Dois campos, um operador: a palavra só existe onde o entrelace passa. O diferencial escrito em vez de desenhado. |
+| **Escala** | `cell` como variável de expressão. A 12 ou 18 a partícula deixa de ser textura e vira objeto. |
 
 **Figura é recrutada pelo assunto, não pela marca.** Peça institucional continua
 abstrata; figura entra quando a peça é *sobre* alguma coisa — um tema editorial

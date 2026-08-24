@@ -40,8 +40,14 @@ export const VOZES = {
  * inteira, `nota` diz por quê — um buraco medido é achado, não omissão.
  */
 export const REGISTROS = [
+  /* ---- Camada 1: COMPOSIÇÃO -------------------------------------------
+     Onde o tipo senta em relação à densidade. É gramática, não direção de
+     arte: os cinco são a mesma operação com o texto em lugares diferentes.
+     Ficam porque são a base que as peças usam todo dia — e porque servem de
+     controle para a camada de baixo. */
   {
     id: 'corte',
+    camada: 'composicao',
     nome: 'Corte',
     regra: 'A textura ocupa um lado; o tipo senta em terreno limpo do outro.',
     quando: 'O padrão. É o que o hero do site e todo KV já fazem — entra aqui '
@@ -56,6 +62,7 @@ export const REGISTROS = [
   },
   {
     id: 'campo',
+    camada: 'composicao',
     nome: 'Campo',
     regra: 'O grafismo sangra pela peça inteira; o tipo senta numa clareira de densidade.',
     quando: 'Quando a peça precisa de presença antes de precisar de argumento: '
@@ -71,6 +78,7 @@ export const REGISTROS = [
   },
   {
     id: 'trama',
+    camada: 'composicao',
     nome: 'Trama',
     regra: 'O campo É o léxico: as palavras da marca são as partículas.',
     quando: 'Peça que fala do método ou do repertório. A rampa decide onde a '
@@ -87,6 +95,7 @@ export const REGISTROS = [
   },
   {
     id: 'figura',
+    camada: 'composicao',
     nome: 'Figura',
     regra: 'Uma figura que só existe onde o campo resolve.',
     quando: 'Peça que é SOBRE alguma coisa — um tema editorial, um cliente. '
@@ -102,6 +111,7 @@ export const REGISTROS = [
   },
   {
     id: 'palavra',
+    camada: 'composicao',
     nome: 'Palavra',
     regra: 'O tipo é a imagem, denso o bastante para ler perfeitamente.',
     quando: 'Quando a frase já é a peça e qualquer grafismo ao lado dela competiria. '
@@ -118,6 +128,117 @@ export const REGISTROS = [
     optsAlto: { text: 'Clareza\né\nvantagem', fit: 0.9 },
     manchete: null,
     apoio: null,   /* o pé já carrega o domínio; repetir daria a mesma linha duas vezes */
+    formatos: GRADE,
+  },
+
+  /* ---- Camada 2: MATERIAL ----------------------------------------------
+     O que a PARTÍCULA está fazendo. Aqui estava o mundo parado: nenhuma peça
+     do sistema tinha usado `texture`, nenhuma tinha saído do campo escuro,
+     a célula nunca saiu de 3 ou 4, e o motor sempre aceitou uma função como
+     forma sem que ninguém compusesse dois campos.
+
+     Estes registros não movem o texto de lugar. Trocam o material. */
+
+  {
+    id: 'impressao',
+    camada: 'material',
+    nome: 'Impressão',
+    regra: 'Ponto ordenado, tinta sobre papel. O sistema como impresso, não como tela.',
+    quando: 'Relatório, cartão, proposta — tudo que sai numa folha. O grão '
+          + 'estocástico é uma textura de tela; o ponto ordenado é de gráfica, '
+          + 'e ele muda a temperatura da marca inteira sem trocar uma forma.',
+    layout: 'faixa',
+    voz: 'sistema',
+    campo: 'papel',
+    shape: 'weave', ramp: [0.14, 1], angle: 0, cell: 6, seed: 7,
+    texture: 'halftone',
+    manchete: 'Clareza\né vantagem.',
+    apoio: 'Estratégia, IA e liderança para transformar e escalar empresas.',
+    formatos: GRADE,
+  },
+  {
+    id: 'interferencia',
+    camada: 'material',
+    nome: 'Interferência',
+    regra: 'Duas grades fora de fase. O ruído não está em nenhuma das duas — está na relação.',
+    quando: 'A tese, desenhada por física em vez de ilustração: dois sistemas '
+          + 'que não conversam produzem ruído, e alinhados o ruído desaparece. '
+          + 'É o diagnóstico da marca (separar técnico de humano é o que faz '
+          + 'a transformação falhar) sem precisar de metáfora.',
+    layout: 'sangria',
+    voz: 'sistema',
+    campo: 'papel',
+    shape: 'interferencia', ramp: [0.7, 1], angle: 0, cell: 3, seed: 7,
+    texture: 'halftone',
+    opts: { passo: 0.07, giro: 10 },
+    copiaY: 0.5,
+    manchete: 'O ruído está\nna relação.',
+    apoio: 'Separar o técnico do humano é o que faz a transformação falhar.',
+    formatos: GRADE,
+  },
+  {
+    id: 'instrumento',
+    camada: 'material',
+    nome: 'Instrumento',
+    regra: 'A marca em N aberturas vira escala. O símbolo é o instrumento do diagnóstico.',
+    quando: 'Avaliação de maturidade, nível, lacuna. A abertura do C representa '
+          + 'a distância entre a complexidade enfrentada e a capacidade instalada '
+          + '— então a mesma letra, repetida em aberturas, JÁ é uma medição. '
+          + 'Para uma prática cuja porta de entrada é diagnóstico, o logo virar '
+          + 'o instrumento é o oposto de ornamento.',
+    layout: 'faixa',
+    voz: 'medida',
+    campo: 'papel',
+    shape: 'gauge', ramp: [0.12, 1], angle: 0, cell: 4, seed: 23,
+    texture: 'halftone',
+    manchete: 'A lacuna\ndá para medir.',
+    apoio: 'Seis dimensões, uma leitura, a sequência que fecha as lacunas na ordem certa.',
+    formatos: GRADE,
+  },
+  {
+    id: 'costura',
+    camada: 'material',
+    nome: 'Costura',
+    regra: 'Dois campos, um operador: a palavra só existe onde o entrelace passa.',
+    quando: 'O diferencial da marca escrito em vez de desenhado. O motor sempre '
+          + 'aceitou uma função como forma; compor texto com o entrelace faz a '
+          + 'mensagem depender do cruzamento dos dois fios — que é literalmente '
+          + 'o argumento.',
+    layout: 'muda',
+    voz: 'sistema',
+    campo: 'escuro',
+    shape: 'compor', ramp: [0.35, 1], angle: 0, cell: 3, seed: 7,
+    opts: {
+      a: { shape: 'text', opts: { text: 'Clareza', fit: 0.95 } },
+      b: { shape: 'weave', opts: { w: 0.75, amp: 0.6, cycles: 1.4 } },
+      modo: 'min',
+    },
+    optsAlto: {
+      a: { shape: 'text', opts: { text: 'Clareza', fit: 0.9 } },
+      b: { shape: 'weave', opts: { w: 0.9, amp: 0.7, cycles: 1.1 } },
+      modo: 'min',
+    },
+    manchete: null,
+    apoio: null,
+    formatos: GRADE,
+  },
+  {
+    id: 'escala',
+    camada: 'material',
+    nome: 'Escala',
+    regra: 'A célula como variável de expressão: a mesma forma, do fotográfico ao brutal.',
+    quando: 'Peça que precisa de peso físico — pôster, abertura, capa grande. '
+          + 'A célula é medida em px lógicos e sempre ficou em 3 ou 4; a 12 ou '
+          + '18 a partícula deixa de ser textura e vira objeto.',
+    layout: 'faixa',
+    voz: 'sistema',
+    campo: 'branco',
+    shape: 'text', ramp: [0.2, 1], angle: 0, cell: 12, seed: 17,
+    texture: 'halftone',
+    opts: { text: 'Clareza', fit: 0.95 },
+    optsAlto: { text: 'Clareza', fit: 0.9 },
+    manchete: null,
+    apoio: 'A partícula deixa de ser textura e vira objeto.',
     formatos: GRADE,
   },
 ];

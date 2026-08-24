@@ -1868,6 +1868,46 @@ const fields = {
     };
   },
 
+  /* --- Material ----------------------------------------------------------
+     Os campos acima decidem ONDE há partícula. Estes decidem o que a partícula
+     está fazendo — e é aí que o sistema tinha um mundo inteiro parado. */
+
+  /* Interferência: duas grades de linhas que entram desalinhadas e saem
+     coincidindo. O moiré NÃO é desenhado — ele emerge do desencontro, e some
+     sozinho quando as duas grades se alinham.
+
+     É a tese da marca desenhada por física em vez de ilustração: dois
+     sistemas que não conversam produzem ruído, e o ruído não está em nenhum
+     dos dois — está na relação. Alinhados, o ruído desaparece e sobra sinal.
+     Nenhum grafismo de duas linhas paralelas diz isso; este diz. */
+  interferencia: ({ passo = 0.028, giro = 9, duty = 0.46, soft = 0.004 } = {}) => {
+    const grade = (pos) => {
+      const f = pos / passo;
+      return edge(Math.abs(f - Math.round(f)) * passo - passo * duty * 0.5, soft);
+    };
+    return (u, v) => {
+      /* O desalinhamento é máximo na ponta do ruído e zero na do sinal. */
+      const r = (giro * (1 - clamp01(u)) * Math.PI) / 180;
+      return grade(v) * grade(-u * Math.sin(r) + v * Math.cos(r));
+    };
+  },
+
+  /* Composição: dois campos, um operador. O motor sempre aceitou uma função
+     como forma, e isso nunca tinha sido usado — dava para escrever a costura
+     em vez de desenhá-la.
+
+     `min` é interseção: a palavra só existe ONDE o entrelace passa. Os dois
+     fios precisam se cruzar para a mensagem existir, que é literalmente o
+     argumento da marca. `sub` é recorte; `max` é união. */
+  compor: ({ a = { shape: 'text' }, b = { shape: 'weave' }, modo = 'min' } = {}) => {
+    const fa = (fields[a.shape] || fields.disc)(a.opts || {});
+    const fb = (fields[b.shape] || fields.disc)(b.opts || {});
+    const op = modo === 'max' ? Math.max
+             : modo === 'sub' ? (x, y) => Math.min(x, 1 - y)
+             : Math.min;
+    return (u, v, ar) => op(fa(u, v, ar), fb(u, v, ar));
+  },
+
   /* --- Fotografia -------------------------------------------------------
      A foto entra como PROVA, nunca como banco de imagem. E no instante em que
      ela é amostrada pelo motor, ela deixa de ser fotografia e vira campo: sai
