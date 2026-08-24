@@ -46,6 +46,13 @@ const BAYER = (() => {
 /* Borda macia: converte distância assinada em cobertura 0..1 */
 const edge = (d, soft) => clamp01(0.5 - d / (soft || 0.012));
 
+/* Distância assinada a um retângulo centrado: negativa dentro, positiva fora.
+   Fora pelos dois eixos, a distância é ao canto — senão o canto sai quadrado. */
+const caixa = (du, dv, hw, hh) => {
+  const dx = Math.abs(du) - hw, dy = Math.abs(dv) - hh;
+  return dx > 0 && dy > 0 ? Math.hypot(dx, dy) : Math.max(dx, dy);
+};
+
 /* --- Campos de forma -----------------------------------------------------
    Cada campo é f(u, v) -> cobertura 0..1, em espaço normalizado onde
    u ∈ [0,1] e v é corrigido pela proporção (v ∈ [0, h/w]). */
@@ -391,6 +398,80 @@ export const fields = {
     },
 
   /* Grafismo-âncora: anel de ruído + disco de sinal, lado a lado. */
+  /* --- Figuras -----------------------------------------------------------
+     Figura não é ornamento: ela só existe onde o campo resolve, que é o
+     argumento da marca desenhado sobre um assunto. Peça institucional
+     continua abstrata; figura entra quando a peça é SOBRE alguma coisa — um
+     tema editorial ou um cliente.
+
+     Todas são 3–5 primitivas compostas com Math.max(edge(...)), igual ao
+     resto do vocabulário. Não é economia: é o que faz elas parecerem do
+     sistema em vez de clip-art importado, e o que as mantém independentes de
+     resolução — sem máscara, sem arquivo de origem, e a mesma figura
+     recompõe de 21:9 a 9:16. */
+
+  /* Cidade: o centro urbano, para o assunto editorial. */
+  cidade: ({ n = 9, chao = 0.86, topo = 0.10, vao = 0.18, soft = 0.01 } = {}) => {
+    /* Alturas fixas, não sorteadas: a silhueta precisa ser a MESMA em toda
+       peça, senão a figura troca de identidade ao trocar de formato. */
+    const H = [0.42, 0.74, 0.30, 0.96, 0.55, 0.82, 0.34, 0.66, 0.48];
+    return (u, v, ar) => {
+      const passo = 1 / n;
+      const i = Math.floor(u / passo);
+      if (i < 0 || i >= n) return 0;
+      const util = ar * (chao - topo);
+      const alt = util * H[i];
+      const y0 = ar * chao;
+      return edge(caixa(u - (i + 0.5) * passo, v - (y0 - alt / 2),
+                        (passo * (1 - vao)) / 2, alt / 2), soft);
+    };
+  },
+
+  /* Pessoa: o fio humano. Cabeça e ombros — o corte na altura do queixo é o
+     que faz ler busto e não boneco de neve. */
+  pessoa: ({ soft = 0.014 } = {}) => (u, v, ar) => {
+    const k = Math.min(0.5, ar / 2), cy = ar / 2;
+    const cabeca = edge(Math.hypot(u - 0.5, v - (cy - k * 0.55)) - k * 0.34, soft);
+    /* Os ombros são a metade de cima de uma elipse que sai pela base da peça.
+       O vão entre queixo e ombro precisa MEDIR: na primeira versão ele deu
+       0,64k e a figura leu como dois blobs soltos, não como uma pessoa. */
+    /* Largos e RASOS. Com rx≈ry a elipse vira círculo e a figura lê como
+       boneco de neve nos formatos altos — foi o que a medição mostrou. */
+    const rx = k * 1.42, ry = k * 0.88;
+    const e = Math.hypot((u - 0.5) / rx, (v - (cy + k * 0.76)) / ry) - 1;
+    /* A elipse normalizada não devolve distância real; multiplicar pelo menor
+       raio aproxima — mesmo recurso que `layers` usa. */
+    const ombros = edge(e * Math.min(rx, ry), soft);
+    return Math.max(cabeca, ombros);
+  },
+
+  /* Árvore: capacidade que cresce. Copa como massa, não contorno. */
+  arvore: ({ soft = 0.014 } = {}) => (u, v, ar) => {
+    const k = Math.min(0.5, ar / 2), cy = ar / 2;
+    let cov = edge(caixa(u - 0.5, v - (cy + k * 0.58), k * 0.08, k * 0.42), soft);
+    for (const [dx, dy, r] of [[0, -0.44, 0.42], [-0.34, -0.08, 0.32], [0.34, -0.08, 0.32]])
+      cov = Math.max(cov, edge(Math.hypot(u - (0.5 + k * dx), v - (cy + k * dy)) - k * r, soft));
+    return cov;
+  },
+
+  /* Banana: um disco menos outro, deslocado. Os bicos saem de graça, no ponto
+     em que os dois círculos se cruzam. */
+  banana: ({ giro = -38, esc = 0.70, soft = 0.014 } = {}) => (u, v, ar) => {
+    const k = Math.min(0.5, ar / 2), s = k * esc;
+    const rad = (giro * Math.PI) / 180, cos = Math.cos(rad), sin = Math.sin(rad);
+    const du = u - 0.5, dv = v - ar / 2;
+    const x = (du * cos + dv * sin) / s;
+    const y = (-du * sin + dv * cos) / s + 0.25;   /* centra o crescente */
+    /* O deslocamento decide a barriga: 0,30/0,94 deu um crescente fino que
+       lia como lua. 0,46/0,78 engorda para 0,68 de espessura. */
+    const arco = Math.min(edge((Math.hypot(x, y) - 1) * s, soft),
+                          1 - edge((Math.hypot(x, y + 0.46) - 0.78) * s, soft));
+    /* O cabo é o que separa fruta de lua crescente. Sai do bico de cima, no
+       ponto em que os dois círculos se cruzam (x ≈ 0,76 · y ≈ -0,66). */
+    const cabo = edge(caixa(x - 0.80, y + 0.78, 0.085, 0.20) * s, soft);
+    return Math.max(arco, cabo);
+  },
+
   noiseToSignal: ({ soft = 0.02 } = {}) => (u, v, ar) => {
     const cy = ar / 2, R = Math.min(0.21, ar * 0.4);
     const a = Math.abs(Math.hypot(u - 0.3, v - cy) - R) - R * 0.28;

@@ -831,6 +831,13 @@ const BAYER = (() => {
 /* Borda macia: converte distância assinada em cobertura 0..1 */
 const edge = (d, soft) => clamp01(0.5 - d / (soft || 0.012));
 
+/* Distância assinada a um retângulo centrado: negativa dentro, positiva fora.
+   Fora pelos dois eixos, a distância é ao canto — senão o canto sai quadrado. */
+const caixa = (du, dv, hw, hh) => {
+  const dx = Math.abs(du) - hw, dy = Math.abs(dv) - hh;
+  return dx > 0 && dy > 0 ? Math.hypot(dx, dy) : Math.max(dx, dy);
+};
+
 /* --- Campos de forma -----------------------------------------------------
    Cada campo é f(u, v) -> cobertura 0..1, em espaço normalizado onde
    u ∈ [0,1] e v é corrigido pela proporção (v ∈ [0, h/w]). */

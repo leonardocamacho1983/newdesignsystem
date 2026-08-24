@@ -47,7 +47,7 @@ instalada.
 tokens/tokens.css        Fonte única de verdade (cor, tipo, espaço, forma, níveis, movimento)
 tokens/tokens.json       Gerado do CSS pelo build — nunca editar à mão
 tokens/build-tokens.mjs  Gera o JSON e trava o fechamento token/uso
-src/dither.js            Motor gráfico: 20 campos de forma, rampa, texturas, render e animação
+src/dither.js            Motor gráfico: 24 campos de forma, rampa, clareira, texturas, render e animação
 src/camacho.css          Componentes do sistema
 src/guide.css            Estilos só da documentação — fora do sistema, de propósito
 src/brand.js             O nome da marca, num lugar só
@@ -83,14 +83,26 @@ render(canvas, { shape: 'gauge', ramp: [0.1, 1], cell: 4 });
 **Formas.** Base: `disc` `ring` `chevrons` `bars` `loop` `layers` `mark` `text`
 `fill` `noiseToSignal`. Estendidas: `funnel` `wave` `orbit` `staircase` `mesh`
 `spiral`. Da transformação: `weave` (a costura) `cohort` (incorporar)
-`gauge` (medir) `handoff` (transferir). Ou passe sua própria função
-`f(u, v, ar) → cobertura 0..1`.
+`gauge` (medir) `handoff` (transferir). Figuras: `cidade` `pessoa` `arvore`
+`banana`. Ou passe sua própria função `f(u, v, ar) → cobertura 0..1`.
+
+**Figura não é ornamento.** As figuras existem para peça que é *sobre* alguma
+coisa — um tema editorial, um cliente. Peça institucional continua abstrata.
+Todas são 3–5 primitivas compostas com `Math.max(edge(...))`, igual ao resto do
+vocabulário: é o que faz elas parecerem do sistema em vez de clip-art, e o que
+as mantém sem máscara, sem arquivo de origem e independentes de resolução.
+
+**Clareira.** `clareira: {x, y, w, h, soft, piso}` faz a densidade desabar numa
+região, para a manchete sentar em terreno limpo sem cortina de gradiente. É o
+que torna possível o campo sangrado sem violar a regra de que grafismo não
+cruza com tipografia. `x`/`w` em fração da largura, `y`/`h` da altura.
 
 **Texturas.** A mesma forma, três lógicas: `grain` (limiar aleatório — padrão),
 `screen` (Bayer 8×8, trama de impressão), `halftone` (varia o tamanho do ponto).
 
 **Tipografia dissolvida.** O campo `text` rasteriza a palavra fora da tela e usa
-o alpha como cobertura — qualquer manchete vira grafismo da marca.
+o alpha como cobertura — qualquer manchete vira grafismo da marca. A opção
+`font` escolhe a família, então o tipo dissolvido fala as três vozes.
 
 | Parâmetro | |
 |---|---|
