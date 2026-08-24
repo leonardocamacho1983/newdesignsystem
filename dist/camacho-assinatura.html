@@ -881,78 +881,143 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
 }
 .st-nav__links { display: flex; gap: var(--cmc-sp-5); align-items: center; }
 .st-nav__links a {
-  color: var(--cmc-text-muted); text-decoration: none;
-  font-size: var(--cmc-fs-small);
+  color: var(--cmc-text-muted); text-decoration: none; font-size: var(--cmc-fs-small);
 }
 .st-nav__links a:hover { color: var(--cmc-text); }
-@media (max-width: 46rem) { .st-nav__links a:not(.cmc-btn) { display: none; } }
+@media (max-width: 52rem) { .st-nav__links a:not(.cmc-btn) { display: none; } }
 
-/* --- Hero ----------------------------------------------------------------- */
+/* --- Hero -----------------------------------------------------------------
+   O grafismo sangra pela direita e a cortina protege a coluna do texto: a
+   regra do guia é manchete nunca sobre a região densa das partículas. */
 .st-hero { background: var(--cmc-black); color: var(--cmc-white); position: relative; overflow: hidden; }
-.st-hero__art { position: absolute; inset: 0; opacity: 0.9; }
+.st-hero__art { position: absolute; inset: 0 0 0 22%; }
 .st-hero__art canvas { width: 100%; height: 100%; display: block; }
-.st-hero__inner {
-  position: relative;
-  display: flex; flex-direction: column; gap: var(--cmc-sp-6);
-  padding-block: clamp(4rem, 14vh, 9rem);
-  max-width: 46rem;
-}
-/* Uma cortina do fundo para o pé garante contraste do texto sobre a região
-   densa das partículas — a regra do guia é não pôr manchete sobre ela. */
 .st-hero::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(100deg, var(--cmc-black) 34%, transparent 78%);
+  background: linear-gradient(95deg, #000 30%, rgba(0,0,0,.55) 58%, transparent 82%);
 }
-.st-hero__inner { z-index: 1; }
+.st-hero__inner {
+  position: relative; z-index: 1;
+  display: grid; gap: var(--cmc-sp-6);
+  padding-block: clamp(4.5rem, 17vh, 10rem);
+  max-width: 34ch;
+}
+.st-hero__sub { color: #D6D6D6; margin: 0; }
+.st-hero__prova {
+  display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5);
+  padding-top: var(--cmc-sp-5); border-top: 1px solid #2A2A2A;
+  font-size: var(--cmc-fs-small); color: var(--cmc-grey-55);
+}
 
-/* --- Seções --------------------------------------------------------------- */
-.st-sec { padding-block: clamp(3.5rem, 9vw, 7rem); }
+/* --- Seções ---------------------------------------------------------------- */
+.st-sec { padding-block: clamp(4rem, 10vw, 8rem); }
 .st-sec--claro { background: var(--cmc-white); }
 .st-sec--escuro { background: var(--cmc-black); color: var(--cmc-white); }
-.st-sec__head {
-  display: flex; flex-direction: column; gap: var(--cmc-sp-4);
-  max-width: 44rem; margin-bottom: var(--cmc-sp-7);
+.st-sec--papel { background: var(--cmc-paper); }
+
+/* Par assimétrico: a afirmação ocupa o peso, o detalhe acompanha. É o que
+   tira o texto da coluna estreita à esquerda e usa a largura da tela. */
+.st-par {
+  display: grid; gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  align-items: start;
+}
+@media (max-width: 60rem) { .st-par { grid-template-columns: 1fr; } }
+.st-par--inverso { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+
+.st-rot { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+          color: var(--cmc-text-muted); margin: 0 0 var(--cmc-sp-5); }
+.st-afirma {
+  font-size: clamp(2rem, 4.2vw, 3.4rem); line-height: 1.02;
+  letter-spacing: -0.03em; font-weight: var(--cmc-w-light);
+  margin: 0; text-wrap: balance;
 }
 
-/* --- Cartões de conteúdo -------------------------------------------------- */
-.st-cards { display: grid; gap: var(--cmc-sp-5); align-items: start;
-            grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr)); }
-.st-card {
-  display: flex; flex-direction: column; gap: var(--cmc-sp-3);
-  padding: var(--cmc-sp-6); border: var(--cmc-border);
-  border-radius: var(--cmc-r-card);
+/* --- Sintomas: lista numerada com régua, não cards flutuando --------------- */
+.st-sintomas { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.st-sintomas li {
+  display: grid; grid-template-columns: 3.5rem 1fr; gap: var(--cmc-sp-4);
+  padding-block: var(--cmc-sp-5); border-top: var(--cmc-border);
 }
-.st-card__num {
-  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
-  color: var(--cmc-text-muted);
-}
-.st-card__art {
-  position: relative; aspect-ratio: 16/6; background: var(--cmc-black);
-  color: var(--cmc-particle); border-radius: 6px; overflow: hidden;
-  margin-bottom: var(--cmc-sp-2);
-}
-.st-card__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.st-sintomas li:last-child { border-bottom: var(--cmc-border); }
+.st-sintomas__n { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+                  color: var(--cmc-text-muted); padding-top: 0.35em; }
+.st-sintomas h3 { margin: 0 0 var(--cmc-sp-2); font-size: var(--cmc-fs-lead);
+                  font-weight: var(--cmc-w-book); letter-spacing: -0.015em; }
+.st-sintomas p { margin: 0; font-size: var(--cmc-fs-small); color: var(--cmc-text-muted);
+                 max-width: 52ch; }
 
-/* --- Lista de oferta ------------------------------------------------------ */
-.st-oferta { display: grid; gap: var(--cmc-sp-6);
-             grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr)); }
+/* --- Momento de impacto: grafismo sangrando com frase por cima ------------- */
+.st-impacto { position: relative; background: var(--cmc-black); color: var(--cmc-white);
+              overflow: hidden; }
+.st-impacto__art { position: absolute; inset: 0; }
+.st-impacto__art canvas { width: 100%; height: 100%; display: block; }
+.st-impacto__inner {
+  position: relative; z-index: 1;
+  padding-block: clamp(5rem, 15vw, 11rem);
+  max-width: 26ch;
+}
+.st-impacto::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(95deg, #000 26%, rgba(0,0,0,.6) 55%, transparent 84%);
+}
+
+/* --- Oferta: duas frentes com peso, não sumário --------------------------- */
+.st-frentes { display: grid; gap: clamp(2rem, 5vw, 4.5rem);
+              grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); }
+.st-frente h3 { margin: 0 0 var(--cmc-sp-4); font-size: var(--cmc-fs-h2);
+                font-weight: var(--cmc-w-light); letter-spacing: -0.025em; }
 .st-lista { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
-.st-lista li {
-  padding-block: var(--cmc-sp-3); border-bottom: var(--cmc-border);
-  font-size: var(--cmc-fs-small);
-}
-.st-lista li:last-child { border-bottom: 0; }
+.st-lista li { padding-block: var(--cmc-sp-3); border-top: 1px solid currentColor;
+               border-color: color-mix(in srgb, currentColor 16%, transparent);
+               font-size: var(--cmc-fs-small); }
 
-/* --- Chamada final -------------------------------------------------------- */
-.st-cta {
-  display: flex; flex-direction: column; gap: var(--cmc-sp-5);
-  align-items: flex-start; max-width: 40rem;
+/* --- Método: uma faixa que se lê da esquerda para a direita ---------------- */
+.st-trilha { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
+             gap: var(--cmc-sp-4); }
+@media (max-width: 68rem) { .st-trilha { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 38rem) { .st-trilha { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.st-etapa { display: flex; flex-direction: column; gap: var(--cmc-sp-3);
+            padding-top: var(--cmc-sp-4); border-top: 2px solid var(--cmc-black); }
+.st-etapa--fraca { border-top-color: var(--cmc-grey-20); }
+.st-etapa__n { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+               color: var(--cmc-text-muted); }
+.st-etapa h3 { margin: 0; font-size: var(--cmc-fs-lead); font-weight: var(--cmc-w-book);
+               letter-spacing: -0.015em; }
+.st-etapa p { margin: 0; font-size: var(--cmc-fs-small); color: var(--cmc-text-muted); }
+.st-etapa__marca {
+  position: relative; aspect-ratio: 3/2; background: var(--cmc-black);
+  color: var(--cmc-particle); border-radius: 4px; overflow: hidden;
 }
+.st-etapa__marca canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* --- Prova: o que sai do diagnóstico -------------------------------------- */
+.st-prova { display: grid; gap: var(--cmc-sp-4); }
+.st-nivel { display: grid; grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr) auto;
+            gap: var(--cmc-sp-4); align-items: center; }
+@media (max-width: 44rem) { .st-nivel { grid-template-columns: 1fr; gap: var(--cmc-sp-2); } }
+.st-nivel__barra { position: relative; height: 2rem; background: var(--cmc-black);
+                   border-radius: 3px; overflow: hidden; color: var(--cmc-white); }
+.st-nivel__barra canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.st-nivel__v { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+               color: var(--cmc-text-muted); font-variant-numeric: tabular-nums; }
+
+/* --- Recusa: o que não sou ------------------------------------------------ */
+.st-recusa { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-2); }
+.st-recusa span {
+  font-size: var(--cmc-fs-small); padding: 0.45em 0.9em;
+  border: var(--cmc-border); border-radius: var(--cmc-r-pill);
+  color: var(--cmc-text-muted); text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+/* --- Fecho ---------------------------------------------------------------- */
+.st-fecho { display: grid; gap: var(--cmc-sp-6); max-width: 24ch; }
+.st-fecho__hed { font-size: clamp(2.4rem, 6vw, 5rem); line-height: 0.98;
+                 letter-spacing: -0.035em; font-weight: var(--cmc-w-light); margin: 0; }
 .st-rodape { border-top: var(--cmc-border); padding-block: var(--cmc-sp-6); }
-.st-rodape__inner {
-  display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5);
-  justify-content: space-between; align-items: center;
-}
+.st-rodape__inner { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5);
+                    justify-content: space-between; align-items: center; }
 
 /* ==========================================================================
    Deck — slides navegáveis
