@@ -73,11 +73,50 @@
   </div>
 </section>
 
-<!-- ============================== 03 AS VOZES ============================== -->
+<!-- ============================= 03 A JANELA ============================= -->
+<section id="janela" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Janela — fotografia</h2><span class="cmc-slide__num">03</span>
+    </div>
+    <div class="formats formats--pair">
+      <div class="stack">
+        <p class="cmc-lead" style="margin:0">
+          Fotografia entra como <strong>prova</strong>, nunca como banco de imagem.
+        </p>
+        <p class="cmc-small cmc-muted" style="margin:0">
+          A regra que já existe no sistema proíbe foto <em>de banco</em>, não
+          fotografia: um KV se refaz de forma, rampa e semente, e material
+          emprestado seria a única peça que ninguém consegue reproduzir — e a
+          única que outra empresa pode estar usando na mesma semana. Foto de
+          coisa real e específica (você, um workshop que aconteceu, uma sala)
+          não tem esse problema: ela é justamente o que não se gera.
+        </p>
+        <p class="cmc-small" style="margin:0">
+          <strong>Cor:</strong> sim, enquanto a foto for foto. No instante em que
+          ela é amostrada pelo motor, ela vira campo — e campo é monocromático,
+          porque a marca tem um canal semântico só e ele é densidade. As três
+          versões ao lado existem para você julgar isso vendo, não acreditando.
+        </p>
+        <div class="cmc-controls">
+          <label class="cmc-btn" for="foto-entrada">Escolher uma foto</label>
+          <input id="foto-entrada" type="file" accept="image/*" hidden>
+          <button class="cmc-btn cmc-btn--ghost" id="foto-limpar" type="button" hidden>Remover</button>
+        </div>
+        <p class="cmc-micro" id="foto-estado">
+          Nada é enviado a lugar nenhum: a foto é lida no seu navegador e some ao fechar a aba.
+        </p>
+      </div>
+      <div class="stack" id="foto-palco"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 04 AS VOZES ============================== -->
 <section id="vozes" class="cmc-section">
   <div class="cmc-shell stack-7">
     <div class="cmc-section-head">
-      <h2 class="cmc-h1">O kit tipográfico</h2><span class="cmc-slide__num">03</span>
+      <h2 class="cmc-h1">O kit tipográfico</h2><span class="cmc-slide__num">04</span>
     </div>
     <p class="block__intro">
       As três vozes entram na peça como propriedade, não como classe nova:
@@ -88,11 +127,11 @@
   </div>
 </section>
 
-<!-- =============================== 04 REGRAS =============================== -->
+<!-- =============================== 05 REGRAS =============================== -->
 <section id="regras" class="cmc-section">
   <div class="cmc-shell stack-7">
     <div class="cmc-section-head">
-      <h2 class="cmc-h1">Regras</h2><span class="cmc-slide__num">04</span>
+      <h2 class="cmc-h1">Regras</h2><span class="cmc-slide__num">05</span>
     </div>
     <div class="grid grid--2">
       <ul class="rules rules--do stack">
@@ -142,10 +181,10 @@
 </footer>
 
 <script type="module">
-import { init } from './src/dither.js';
+import { init, render, registrarFonte } from './src/dither.js';
 import { applyBrand, brandFromUrl } from './src/brand.js';
 import { FORMATOS, CAMPOS } from './src/kv.js';
-import { REGISTROS, GRADE, VOZES, ajustarRegistro, configDoRegistro, celulaPara } from './src/direcao.js';
+import { REGISTROS, GRADE, VOZES, FIGURAS, ajustarRegistro, configDoRegistro, celulaPara } from './src/direcao.js';
 
 const marca = applyBrand(document, brandFromUrl());
 const fmt = (id) => FORMATOS.find((f) => f.id === id);
@@ -241,6 +280,21 @@ document.getElementById('galeria-registros').innerHTML = REGISTROS.map((reg) => 
       </div>
       ${peca(reg, fmt('16x9'), `reg-${reg.id}`)}
     </div>
+    ${reg.id === 'figura' ? `
+    <div class="stack" style="--tira-h:11rem">
+      <p class="cmc-small cmc-muted" style="margin:0">
+        O repertório. Cada figura é recrutada por um assunto — tema editorial,
+        o lado humano do trabalho, a capacidade que fica, um cliente. Nenhuma
+        delas serve para peça institucional: lá a marca fala por forma abstrata.
+      </p>
+      <div class="tira">
+        ${FIGURAS.map((f, i) => `
+          <figure class="format">
+            ${peca({ ...reg, ...f, seed: 31 + i * 13, voz: 'editorial' }, fmt('16x9'), `fig-${f.shape}`)}
+            <figcaption class="cmc-micro">${f.shape} · ${f.assunto}</figcaption>
+          </figure>`).join('')}
+      </div>
+    </div>` : ''}
   </div>`).join('');
 
 /* --- 02 A matriz: cada registro atravessando os seis formatos --- */
@@ -288,6 +342,88 @@ document.getElementById('grade-vozes').innerHTML = Object.entries(VOZES).map(([i
     <figcaption class="cmc-micro">${familia} · ${v.peso} · ${v.track}</figcaption>
   </figure>`;
 }).join('');
+
+/* --- 03 Janela: a foto entra pelo navegador de quem abre a página --------
+   O artifact é publicado e compartilhado, então uma zona de arrastar vazia
+   apareceria como caixa em branco para todo mundo que abrisse o link. Por
+   isso a placa marcada: ela diz o que a peça seria, sem fingir que é. */
+const palco = document.getElementById('foto-palco');
+const entrada = document.getElementById('foto-entrada');
+const limpar = document.getElementById('foto-limpar');
+const estado = document.getElementById('foto-estado');
+
+const TRATAMENTOS = [
+  ['Prova', 'A foto intacta, colorida, no quadro dela. O sistema não encosta.', 'crua'],
+  ['Campo', 'Amostrada pelo motor: virou grafismo, então virou monocromática.', 'mono'],
+  ['Cor por célula', 'A opção que existe e que eu não recomendo — a densidade deixa de comunicar nível.', 'tint'],
+];
+
+function placa() {
+  palco.innerHTML = `
+    <div class="cmc-kv" style="--kv-ar:16/9;--kv-bg:var(--cmc-steel);--kv-ink:#fff;--kv-base:5cqi">
+      <div class="cmc-kv__inner" style="place-content:center">
+        <p class="cmc-measure" style="text-align:center;color:#fff">
+          sem foto carregada<br>o registro precisa de uma imagem real para existir
+        </p>
+      </div>
+    </div>`;
+}
+
+function montar(url) {
+  palco.innerHTML = TRATAMENTOS.map(([nome, nota, modo]) => `
+    <figure class="format" style="width:100%">
+      ${modo === 'crua'
+        ? `<div class="format__frame format__frame--center" style="--ar:16/9">
+             <img alt="Foto carregada por quem abriu a página"
+                  style="width:100%;height:100%;object-fit:cover;display:block">
+           </div>`
+        : `<div class="cmc-kv" style="--kv-ar:16/9;--kv-bg:#000;--kv-ink:#fff;--kv-base:5cqi">
+             <div class="cmc-kv__inner">
+               <span></span>
+               <div class="cmc-kv__art">
+                 <canvas data-cmc-dither="foto" data-ramp="0.08,1" data-cell="4" data-seed="7"
+                         data-base-cell="4" ${modo === 'tint' ? 'data-tint="janela"' : ''}
+                         data-opts='{"src":"janela"}' aria-label="${nome}"></canvas>
+               </div>
+               <span></span>
+             </div>
+           </div>`}
+      <figcaption class="cmc-micro"><strong>${nome}</strong> · ${nota}</figcaption>
+    </figure>`).join('');
+  /* O endereço entra por DOM, não no template. Um atributo de origem literal
+     no fonte é exatamente o que o guard do build procura, e ele está certo em
+     procurar — quem tem que mudar é o template, não o guard. (Este comentário
+     já foi escrito uma vez com o atributo escrito por extenso, e o guard o
+     pegou também. Ele funciona.) */
+  const im = palco.querySelector('img');
+  if (im) im.src = url;
+  reescalarGrao(palco);
+  init(palco);
+}
+
+entrada.addEventListener('change', async () => {
+  const arq = entrada.files && entrada.files[0];
+  if (!arq) return;
+  const url = URL.createObjectURL(arq);
+  const img = new Image();
+  img.src = url;
+  /* Decodificar ANTES de registrar: o contrato do campo é síncrono, e uma
+     imagem ainda não decodificada entraria no motor com largura zero. */
+  await img.decode();
+  registrarFonte('janela', img);
+  montar(url);
+  limpar.hidden = false;
+  estado.textContent = `${arq.name} · lida no navegador, não enviada a lugar nenhum.`;
+});
+
+limpar.addEventListener('click', () => {
+  entrada.value = '';
+  limpar.hidden = true;
+  estado.textContent = 'Nada é enviado a lugar nenhum: a foto é lida no seu navegador e some ao fechar a aba.';
+  placa();
+});
+
+placa();
 
 reescalarGrao();
 init();

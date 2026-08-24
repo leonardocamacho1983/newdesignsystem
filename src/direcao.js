@@ -111,10 +111,36 @@ export const REGISTROS = [
     campo: 'escuro',
     shape: 'text', ramp: [0.14, 1], angle: 0, cell: 3, seed: 17,
     opts: { text: 'Clareza\né vantagem', fit: 0.96 },
+    /* Em retrato a mesma frase em duas linhas largas encolhe até virar
+       borrão — medido na matriz, em A4 e 4:5. O tipo dissolvido se ajusta à
+       CAIXA, então peça alta pede quebra alta. Não é preferência: é a mesma
+       frase, quebrada para o formato que a recebe. */
+    optsAlto: { text: 'Clareza\né\nvantagem', fit: 0.9 },
     manchete: null,
     apoio: null,   /* o pé já carrega o domínio; repetir daria a mesma linha duas vezes */
     formatos: GRADE,
   },
+];
+
+/**
+ * O repertório de figuras. Cada uma é recrutada por um ASSUNTO, não pela
+ * marca — é a regra do registro Figura desenhada em quatro casos. Peça
+ * institucional continua abstrata; estas existem porque a peça é sobre
+ * alguma coisa.
+ */
+export const FIGURAS = [
+  { shape: 'cidade', assunto: 'Editorial',
+    manchete: 'A cidade\ncomo sistema\nde decisão.',
+    apoio: 'Cidadania digital e a dinâmica dos centros urbanos.' },
+  { shape: 'pessoa', assunto: 'O fio humano',
+    manchete: 'Ninguém decide\nmelhor sozinho.',
+    apoio: 'Liderança, times e a parte da transformação que não é técnica.' },
+  { shape: 'arvore', assunto: 'Capacidade instalada',
+    manchete: 'O que fica\ndepois que eu saio.',
+    apoio: 'Capacidade que cresce sem depender de quem plantou.' },
+  { shape: 'banana', assunto: 'Cliente · Bananamilk',
+    manchete: 'A operação\ninteira, legível.',
+    apoio: 'Do dado disperso ao painel que a diretoria usa para decidir.' },
 ];
 
 /** Ajusta um registro ao formato. Mesma função que `ajustar` faz para os KVs. */
@@ -148,6 +174,7 @@ export function ajustarRegistro(reg, formato) {
     /* O cartão não carrega linha de apoio — a mesma conta de legibilidade que
        vale para os KVs (6 pt é o piso a 85 mm de largura). */
     apoio: formato.id === 'cartao' ? null : reg.apoio,
+    opts: alto && reg.optsAlto ? reg.optsAlto : reg.opts,
   };
 }
 

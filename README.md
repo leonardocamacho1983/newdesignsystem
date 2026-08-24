@@ -5,8 +5,8 @@ transformação com IA e desenvolvimento de lideranças. Não é um PDF de manua
 é código executável, e os guias são as próprias peças.
 
 **Guias vivos:** `index.html` (sistema), `posicionamento.html` (tese e oferta),
-`aplicacoes.html` (peças da prática), `extensoes.html` (motor gráfico e
-laboratório) e `studio.html` (estúdio de print). Todos saem também como arquivo
+`direcao.html` (direção de arte), `aplicacoes.html` (peças da prática),
+`extensoes.html` (motor gráfico e laboratório) e `studio.html` (estúdio de print). Todos saem também como arquivo
 único autocontido em `dist/`.
 
 ---
@@ -47,11 +47,12 @@ instalada.
 tokens/tokens.css        Fonte única de verdade (cor, tipo, espaço, forma, níveis, movimento)
 tokens/tokens.json       Gerado do CSS pelo build — nunca editar à mão
 tokens/build-tokens.mjs  Gera o JSON e trava o fechamento token/uso
-src/dither.js            Motor gráfico: 25 campos de forma, rampa, clareira, texturas, render e animação
+src/dither.js            Motor gráfico: 26 campos de forma, rampa, clareira, texturas, render e animação
 src/camacho.css          Componentes do sistema
 src/guide.css            Estilos só da documentação — fora do sistema, de propósito
 src/brand.js             O nome da marca, num lugar só
 src/kv.js                Os key visuals como dado: formatos, campos e calibração
+src/direcao.js           Os registros de direção de arte como dado
 src/site.css             Componentes das peças (site, deck, proposta, carrossel)
 tools/export-kv.mjs      Exporta os KVs em PNG e as animações em GIF/WebP
 tools/anim-frames.py     Monta as animações a partir dos quadros
@@ -84,7 +85,7 @@ render(canvas, { shape: 'gauge', ramp: [0.1, 1], cell: 4 });
 `fill` `noiseToSignal`. Estendidas: `funnel` `wave` `orbit` `staircase` `mesh`
 `spiral`. Da transformação: `weave` (a costura) `cohort` (incorporar)
 `gauge` (medir) `handoff` (transferir). Do léxico: `trama`. Figuras: `cidade`
-`pessoa` `arvore` `banana`. Ou passe sua própria função `f(u, v, ar) → cobertura 0..1`.
+`pessoa` `arvore` `banana`. Fotografia: `foto`. Ou passe sua própria função `f(u, v, ar) → cobertura 0..1`.
 
 **Figura não é ornamento.** As figuras existem para peça que é *sobre* alguma
 coisa — um tema editorial, um cliente. Peça institucional continua abstrata.
@@ -114,6 +115,40 @@ o alpha como cobertura — qualquer manchete vira grafismo da marca. A opção
 | `texture` | `grain` · `screen` · `halftone`. |
 | `seed` | Hash determinístico por célula — o mesmo grafismo sempre. |
 | `width`/`height` | Renderiza no tamanho pedido, ignorando o layout: é o caminho de exportação em alta resolução. |
+
+## Direção de arte
+
+Um **registro** é uma regra sobre onde o tipo pode sentar em relação à densidade
+e qual das três vozes fala — não é humor nem paleta. Cinco, em `src/direcao.js`,
+cada um atravessando seis formatos a partir de uma definição só.
+
+| | |
+|---|---|
+| **Corte** | Textura de um lado, tipo em terreno limpo do outro. A incumbente: resolve por geometria, e serve de controle para as outras. |
+| **Campo** | O grafismo sangra pela peça inteira e o tipo senta numa clareira de densidade. |
+| **Trama** | O campo É o léxico: as palavras da marca são as partículas. |
+| **Figura** | Uma figura que só existe onde o campo resolve. |
+| **Palavra** | O tipo é a imagem, denso o bastante para ler perfeitamente. |
+
+**Figura é recrutada pelo assunto, não pela marca.** Peça institucional continua
+abstrata; figura entra quando a peça é *sobre* alguma coisa — um tema editorial
+(`cidade`), o lado humano do trabalho (`pessoa`), a capacidade que fica
+(`arvore`), um cliente (`banana`). Figura sem assunto é ornamento, e é a coisa
+mais rápida de descolar a marca do argumento.
+
+**Fotografia entra como prova.** A regra antiga proíbe foto *de banco*, não
+fotografia — e foto de coisa real e específica (o Camacho, um workshop que
+aconteceu, uma sala) é justamente o que não se gera. Cor: sim, enquanto a foto
+for foto. No instante em que ela é amostrada pelo motor ela vira campo, e campo
+é monocromático, porque a marca tem um canal semântico só e ele é densidade.
+`tint` existe e faz cor por célula — está lá para ser julgado, não usado: com
+cor, deixa de ser possível distinguir "menos partícula" de "partícula mais
+escura". A página aceita uma foto pelo navegador de quem abre, para o teste ser
+com material real; nada é enviado a lugar nenhum.
+
+**Publique o buraco.** Um registro que não atravessa um formato é um achado.
+Medido: `palavra` em retrato precisa de outra quebra de linha — a mesma frase em
+duas linhas largas encolhe até virar borrão em A4 e 4:5.
 
 ## Key visuals
 

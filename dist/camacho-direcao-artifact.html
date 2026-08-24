@@ -954,11 +954,50 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
   </div>
 </section>
 
-<!-- ============================== 03 AS VOZES ============================== -->
+<!-- ============================= 03 A JANELA ============================= -->
+<section id="janela" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Janela — fotografia</h2><span class="cmc-slide__num">03</span>
+    </div>
+    <div class="formats formats--pair">
+      <div class="stack">
+        <p class="cmc-lead" style="margin:0">
+          Fotografia entra como <strong>prova</strong>, nunca como banco de imagem.
+        </p>
+        <p class="cmc-small cmc-muted" style="margin:0">
+          A regra que já existe no sistema proíbe foto <em>de banco</em>, não
+          fotografia: um KV se refaz de forma, rampa e semente, e material
+          emprestado seria a única peça que ninguém consegue reproduzir — e a
+          única que outra empresa pode estar usando na mesma semana. Foto de
+          coisa real e específica (você, um workshop que aconteceu, uma sala)
+          não tem esse problema: ela é justamente o que não se gera.
+        </p>
+        <p class="cmc-small" style="margin:0">
+          <strong>Cor:</strong> sim, enquanto a foto for foto. No instante em que
+          ela é amostrada pelo motor, ela vira campo — e campo é monocromático,
+          porque a marca tem um canal semântico só e ele é densidade. As três
+          versões ao lado existem para você julgar isso vendo, não acreditando.
+        </p>
+        <div class="cmc-controls">
+          <label class="cmc-btn" for="foto-entrada">Escolher uma foto</label>
+          <input id="foto-entrada" type="file" accept="image/*" hidden>
+          <button class="cmc-btn cmc-btn--ghost" id="foto-limpar" type="button" hidden>Remover</button>
+        </div>
+        <p class="cmc-micro" id="foto-estado">
+          Nada é enviado a lugar nenhum: a foto é lida no seu navegador e some ao fechar a aba.
+        </p>
+      </div>
+      <div class="stack" id="foto-palco"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 04 AS VOZES ============================== -->
 <section id="vozes" class="cmc-section">
   <div class="cmc-shell stack-7">
     <div class="cmc-section-head">
-      <h2 class="cmc-h1">O kit tipográfico</h2><span class="cmc-slide__num">03</span>
+      <h2 class="cmc-h1">O kit tipográfico</h2><span class="cmc-slide__num">04</span>
     </div>
     <p class="block__intro">
       As três vozes entram na peça como propriedade, não como classe nova:
@@ -969,11 +1008,11 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
   </div>
 </section>
 
-<!-- =============================== 04 REGRAS =============================== -->
+<!-- =============================== 05 REGRAS =============================== -->
 <section id="regras" class="cmc-section">
   <div class="cmc-shell stack-7">
     <div class="cmc-section-head">
-      <h2 class="cmc-h1">Regras</h2><span class="cmc-slide__num">04</span>
+      <h2 class="cmc-h1">Regras</h2><span class="cmc-slide__num">05</span>
     </div>
     <div class="grid grid--2">
       <ul class="rules rules--do stack">
@@ -1087,6 +1126,50 @@ const caixa = (du, dv, hw, hh) => {
    porque `render` re-invoca a fábrica a cada chamada — numa animação de
    1600 ms isso reconstrói o mesmo desenho a cada quadro. */
 const MASCARAS = new Map();
+
+/* Fontes de imagem já decodificadas. O contrato do campo é síncrono, então
+   quem carrega é quem chama, antes de renderizar. Só mesma origem ou data:
+   URL — imagem de outra origem contamina o canvas e `getImageData` lança. */
+const FONTES = new Map();
+let GERACAO = 0;
+
+/* Mapa de cor da fonte, para o modo `tint`. Separado da máscara de cobertura
+   porque quase nenhuma peça usa cor: pagar o custo em todas seria taxar o
+   sistema inteiro por uma exceção. */
+function corDaFonte(src, ar) {
+  return mascara(`cor|${src}|${ar}|${GERACAO}`, () => {
+    const img = FONTES.get(src);
+    const W = 256, H = Math.max(1, Math.round(W * ar));
+    const rgb = new Uint8Array(W * H * 3);
+    if (!img || !img.width) return { rgb, mw: W, mh: H };
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d', { willReadFrequently: true });
+    x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+    const e = Math.max(W / img.width, H / img.height);
+    x.drawImage(img, (W - img.width * e) / 2, (H - img.height * e) / 2,
+                img.width * e, img.height * e);
+    const d = x.getImageData(0, 0, W, H).data;
+    for (let k = 0; k < W * H; k++) {
+      rgb[k * 3] = d[k * 4]; rgb[k * 3 + 1] = d[k * 4 + 1]; rgb[k * 3 + 2] = d[k * 4 + 2];
+    }
+    return { rgb, mw: W, mh: H };
+  });
+}
+
+function registrarFonte(nome, img) {
+  FONTES.set(nome, img);
+  GERACAO++;
+  return img;
+}
+
+/** Carrega e decodifica antes de devolver, que é o que o motor exige. */
+async function carregarFonte(nome, url) {
+  const img = new Image();
+  img.src = url;
+  await img.decode();
+  return registrarFonte(nome, img);
+}
 
 function mascara(chave, construir) {
   let m = MASCARAS.get(chave);
@@ -1473,6 +1556,65 @@ const fields = {
     };
   },
 
+  /* --- Fotografia -------------------------------------------------------
+     A foto entra como PROVA, nunca como banco de imagem. E no instante em que
+     ela é amostrada pelo motor, ela deixa de ser fotografia e vira campo: sai
+     monocromática, porque a marca tem um canal semântico só e ele é densidade.
+     Foto colorida convive com o sistema — mas ao lado dele, num quadro seu, e
+     não dissolvida nele.
+
+     A imagem é PRÉ-CONDIÇÃO: o contrato do campo é síncrono, então a fonte
+     precisa estar decodificada antes do render. `registrarFonte` guarda; o
+     campo consulta pelo nome, o que também é o que permite passar a foto por
+     `data-opts` (JSON não carrega um HTMLImageElement).
+
+     A máscara é construída num canvas de 512 e o downscale do próprio
+     navegador faz a filtragem — é box filter testado, e evita reimplementar
+     tabela de soma acumulada para ganhar a mesma coisa. */
+  foto: ({ src = '', inverter = false, ganho = 1, piso = 0 } = {}) => {
+    const chave = `foto|${src}|${inverter}|${ganho}|${piso}`;
+
+    const build = (ar) => {
+      const img = FONTES.get(src);
+      const W = 512, H = Math.max(1, Math.round(W * ar));
+      const mask = new Uint8Array(W * H);
+      if (!img || !img.width) return { mask, mw: W, mh: H };
+
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const x = c.getContext('2d', { willReadFrequently: true });
+      x.imageSmoothingEnabled = true;
+      x.imageSmoothingQuality = 'high';
+      /* `cover`: a peça tem proporção própria e a foto se encaixa nela sem
+         barra preta. Recortar é decisão de enquadramento, não defeito. */
+      const e = Math.max(W / img.width, H / img.height);
+      const dw = img.width * e, dh = img.height * e;
+      x.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+
+      const d = x.getImageData(0, 0, W, H).data;
+      for (let k = 0; k < mask.length; k++) {
+        const i = k * 4;
+        const lum = (0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) / 255;
+        const v = inverter ? 1 - lum : lum;
+        mask[k] = clamp01(piso + (v - piso) * ganho) * 255;
+      }
+      return { mask, mw: W, mh: H };
+    };
+
+    let m = null, memoAr = -1, geracao = -1;
+    return (u, v, ar) => {
+      /* `GERACAO` sobe quando uma fonte é registrada: sem isso a máscara vazia
+         de antes do carregamento ficaria em cache para sempre. */
+      if (memoAr !== ar || geracao !== GERACAO) {
+        m = mascara(`${chave}|${ar}|${GERACAO}`, () => build(ar));
+        memoAr = ar; geracao = GERACAO;
+      }
+      const x = (u * m.mw) | 0, y = ((v / ar) * m.mh) | 0;
+      if (x < 0 || x >= m.mw || y < 0 || y >= m.mh) return 0;
+      return m.mask[y * m.mw + x] / 255;
+    };
+  },
+
   /* --- Figuras -----------------------------------------------------------
      Figura não é ornamento: ela só existe onde o campo resolve, que é o
      argumento da marca desenhado sobre um assunto. Peça institucional
@@ -1630,6 +1772,7 @@ const DEFAULTS = {
   mirror: false,     /* rampa espelhada: denso no centro, disperso nas pontas */
   radial: false,     /* rampa radial: denso no miolo, disperso nas bordas */
   clareira: null,    /* região onde a densidade desaba, para o tipo sentar */
+  tint: null,        /* nome de fonte: pinta cada célula com a cor da imagem */
   texture: 'grain',  /* grain (estocástica) | screen (Bayer) | halftone (ponto variável) */
   progress: 1,       /* 0..1 para animar a resolução */
   opts: null,        /* parâmetros do campo */
@@ -1669,6 +1812,7 @@ function render(canvas, config = {}) {
       : (fields[cfg.shape] || fields.disc)(cfg.opts || {});
 
   const ar = h / w;                       /* v vai de 0 a ar */
+  const cor = cfg.tint ? corDaFonte(cfg.tint, ar) : null;
   const cell = Math.max(2, cfg.cell);
   const cols = Math.ceil(w / cell);
   const rows = Math.ceil(h / cell);
@@ -1716,6 +1860,18 @@ function render(canvas, config = {}) {
         : hash(i, j, cfg.seed);
       if (threshold >= d) continue;
 
+      /* Cor por célula. Existe para ser JULGADA, não para ser usada: com cor,
+         deixa de ser possível distinguir "menos partícula" de "partícula mais
+         escura", e a marca tem um canal semântico só — densidade é nível.
+         Também custa uma troca de estado por célula, contra um fillStyle
+         atribuído uma vez para o desenho inteiro. */
+      if (cor) {
+        const mx = Math.min(cor.mw - 1, (u * cor.mw) | 0);
+        const my = Math.min(cor.mh - 1, ((v / ar) * cor.mh) | 0);
+        const k = (my * cor.mw + mx) * 3;
+        ctx.fillStyle = `rgb(${cor.rgb[k]},${cor.rgb[k + 1]},${cor.rgb[k + 2]})`;
+      }
+
       const size = cfg.scale
         ? Math.max(1, cell * (0.5 + 0.5 * clamp01(d)))
         : Math.max(1, cell * 0.8);
@@ -1760,6 +1916,7 @@ function configFromEl(el) {
     radial: d.radial === 'true',
     texture: d.texture || DEFAULTS.texture,
     clareira: d.clareira ? JSON.parse(d.clareira) : DEFAULTS.clareira,
+    tint: d.tint || DEFAULTS.tint,
     opts: d.opts ? JSON.parse(d.opts) : null,
   };
 }
@@ -2109,10 +2266,36 @@ const REGISTROS = [
     campo: 'escuro',
     shape: 'text', ramp: [0.14, 1], angle: 0, cell: 3, seed: 17,
     opts: { text: 'Clareza\né vantagem', fit: 0.96 },
+    /* Em retrato a mesma frase em duas linhas largas encolhe até virar
+       borrão — medido na matriz, em A4 e 4:5. O tipo dissolvido se ajusta à
+       CAIXA, então peça alta pede quebra alta. Não é preferência: é a mesma
+       frase, quebrada para o formato que a recebe. */
+    optsAlto: { text: 'Clareza\né\nvantagem', fit: 0.9 },
     manchete: null,
     apoio: null,   /* o pé já carrega o domínio; repetir daria a mesma linha duas vezes */
     formatos: GRADE,
   },
+];
+
+/**
+ * O repertório de figuras. Cada uma é recrutada por um ASSUNTO, não pela
+ * marca — é a regra do registro Figura desenhada em quatro casos. Peça
+ * institucional continua abstrata; estas existem porque a peça é sobre
+ * alguma coisa.
+ */
+const FIGURAS = [
+  { shape: 'cidade', assunto: 'Editorial',
+    manchete: 'A cidade\ncomo sistema\nde decisão.',
+    apoio: 'Cidadania digital e a dinâmica dos centros urbanos.' },
+  { shape: 'pessoa', assunto: 'O fio humano',
+    manchete: 'Ninguém decide\nmelhor sozinho.',
+    apoio: 'Liderança, times e a parte da transformação que não é técnica.' },
+  { shape: 'arvore', assunto: 'Capacidade instalada',
+    manchete: 'O que fica\ndepois que eu saio.',
+    apoio: 'Capacidade que cresce sem depender de quem plantou.' },
+  { shape: 'banana', assunto: 'Cliente · Bananamilk',
+    manchete: 'A operação\ninteira, legível.',
+    apoio: 'Do dado disperso ao painel que a diretoria usa para decidir.' },
 ];
 
 /** Ajusta um registro ao formato. Mesma função que `ajustar` faz para os KVs. */
@@ -2146,6 +2329,7 @@ function ajustarRegistro(reg, formato) {
     /* O cartão não carrega linha de apoio — a mesma conta de legibilidade que
        vale para os KVs (6 pt é o piso a 85 mm de largura). */
     apoio: formato.id === 'cartao' ? null : reg.apoio,
+    opts: alto && reg.optsAlto ? reg.optsAlto : reg.opts,
   };
 }
 
@@ -2268,6 +2452,21 @@ document.getElementById('galeria-registros').innerHTML = REGISTROS.map((reg) => 
       </div>
       ${peca(reg, fmt('16x9'), `reg-${reg.id}`)}
     </div>
+    ${reg.id === 'figura' ? `
+    <div class="stack" style="--tira-h:11rem">
+      <p class="cmc-small cmc-muted" style="margin:0">
+        O repertório. Cada figura é recrutada por um assunto — tema editorial,
+        o lado humano do trabalho, a capacidade que fica, um cliente. Nenhuma
+        delas serve para peça institucional: lá a marca fala por forma abstrata.
+      </p>
+      <div class="tira">
+        ${FIGURAS.map((f, i) => `
+          <figure class="format">
+            ${peca({ ...reg, ...f, seed: 31 + i * 13, voz: 'editorial' }, fmt('16x9'), `fig-${f.shape}`)}
+            <figcaption class="cmc-micro">${f.shape} · ${f.assunto}</figcaption>
+          </figure>`).join('')}
+      </div>
+    </div>` : ''}
   </div>`).join('');
 
 /* --- 02 A matriz: cada registro atravessando os seis formatos --- */
@@ -2315,6 +2514,88 @@ document.getElementById('grade-vozes').innerHTML = Object.entries(VOZES).map(([i
     <figcaption class="cmc-micro">${familia} · ${v.peso} · ${v.track}</figcaption>
   </figure>`;
 }).join('');
+
+/* --- 03 Janela: a foto entra pelo navegador de quem abre a página --------
+   O artifact é publicado e compartilhado, então uma zona de arrastar vazia
+   apareceria como caixa em branco para todo mundo que abrisse o link. Por
+   isso a placa marcada: ela diz o que a peça seria, sem fingir que é. */
+const palco = document.getElementById('foto-palco');
+const entrada = document.getElementById('foto-entrada');
+const limpar = document.getElementById('foto-limpar');
+const estado = document.getElementById('foto-estado');
+
+const TRATAMENTOS = [
+  ['Prova', 'A foto intacta, colorida, no quadro dela. O sistema não encosta.', 'crua'],
+  ['Campo', 'Amostrada pelo motor: virou grafismo, então virou monocromática.', 'mono'],
+  ['Cor por célula', 'A opção que existe e que eu não recomendo — a densidade deixa de comunicar nível.', 'tint'],
+];
+
+function placa() {
+  palco.innerHTML = `
+    <div class="cmc-kv" style="--kv-ar:16/9;--kv-bg:var(--cmc-steel);--kv-ink:#fff;--kv-base:5cqi">
+      <div class="cmc-kv__inner" style="place-content:center">
+        <p class="cmc-measure" style="text-align:center;color:#fff">
+          sem foto carregada<br>o registro precisa de uma imagem real para existir
+        </p>
+      </div>
+    </div>`;
+}
+
+function montar(url) {
+  palco.innerHTML = TRATAMENTOS.map(([nome, nota, modo]) => `
+    <figure class="format" style="width:100%">
+      ${modo === 'crua'
+        ? `<div class="format__frame format__frame--center" style="--ar:16/9">
+             <img alt="Foto carregada por quem abriu a página"
+                  style="width:100%;height:100%;object-fit:cover;display:block">
+           </div>`
+        : `<div class="cmc-kv" style="--kv-ar:16/9;--kv-bg:#000;--kv-ink:#fff;--kv-base:5cqi">
+             <div class="cmc-kv__inner">
+               <span></span>
+               <div class="cmc-kv__art">
+                 <canvas data-cmc-dither="foto" data-ramp="0.08,1" data-cell="4" data-seed="7"
+                         data-base-cell="4" ${modo === 'tint' ? 'data-tint="janela"' : ''}
+                         data-opts='{"src":"janela"}' aria-label="${nome}"></canvas>
+               </div>
+               <span></span>
+             </div>
+           </div>`}
+      <figcaption class="cmc-micro"><strong>${nome}</strong> · ${nota}</figcaption>
+    </figure>`).join('');
+  /* O endereço entra por DOM, não no template. Um atributo de origem literal
+     no fonte é exatamente o que o guard do build procura, e ele está certo em
+     procurar — quem tem que mudar é o template, não o guard. (Este comentário
+     já foi escrito uma vez com o atributo escrito por extenso, e o guard o
+     pegou também. Ele funciona.) */
+  const im = palco.querySelector('img');
+  if (im) im.src = url;
+  reescalarGrao(palco);
+  init(palco);
+}
+
+entrada.addEventListener('change', async () => {
+  const arq = entrada.files && entrada.files[0];
+  if (!arq) return;
+  const url = URL.createObjectURL(arq);
+  const img = new Image();
+  img.src = url;
+  /* Decodificar ANTES de registrar: o contrato do campo é síncrono, e uma
+     imagem ainda não decodificada entraria no motor com largura zero. */
+  await img.decode();
+  registrarFonte('janela', img);
+  montar(url);
+  limpar.hidden = false;
+  estado.textContent = `${arq.name} · lida no navegador, não enviada a lugar nenhum.`;
+});
+
+limpar.addEventListener('click', () => {
+  entrada.value = '';
+  limpar.hidden = true;
+  estado.textContent = 'Nada é enviado a lugar nenhum: a foto é lida no seu navegador e some ao fechar a aba.';
+  placa();
+});
+
+placa();
 
 reescalarGrao();
 init();

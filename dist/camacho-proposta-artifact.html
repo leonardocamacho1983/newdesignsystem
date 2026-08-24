@@ -1741,6 +1741,50 @@ const caixa = (du, dv, hw, hh) => {
    1600 ms isso reconstrói o mesmo desenho a cada quadro. */
 const MASCARAS = new Map();
 
+/* Fontes de imagem já decodificadas. O contrato do campo é síncrono, então
+   quem carrega é quem chama, antes de renderizar. Só mesma origem ou data:
+   URL — imagem de outra origem contamina o canvas e `getImageData` lança. */
+const FONTES = new Map();
+let GERACAO = 0;
+
+/* Mapa de cor da fonte, para o modo `tint`. Separado da máscara de cobertura
+   porque quase nenhuma peça usa cor: pagar o custo em todas seria taxar o
+   sistema inteiro por uma exceção. */
+function corDaFonte(src, ar) {
+  return mascara(`cor|${src}|${ar}|${GERACAO}`, () => {
+    const img = FONTES.get(src);
+    const W = 256, H = Math.max(1, Math.round(W * ar));
+    const rgb = new Uint8Array(W * H * 3);
+    if (!img || !img.width) return { rgb, mw: W, mh: H };
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d', { willReadFrequently: true });
+    x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+    const e = Math.max(W / img.width, H / img.height);
+    x.drawImage(img, (W - img.width * e) / 2, (H - img.height * e) / 2,
+                img.width * e, img.height * e);
+    const d = x.getImageData(0, 0, W, H).data;
+    for (let k = 0; k < W * H; k++) {
+      rgb[k * 3] = d[k * 4]; rgb[k * 3 + 1] = d[k * 4 + 1]; rgb[k * 3 + 2] = d[k * 4 + 2];
+    }
+    return { rgb, mw: W, mh: H };
+  });
+}
+
+function registrarFonte(nome, img) {
+  FONTES.set(nome, img);
+  GERACAO++;
+  return img;
+}
+
+/** Carrega e decodifica antes de devolver, que é o que o motor exige. */
+async function carregarFonte(nome, url) {
+  const img = new Image();
+  img.src = url;
+  await img.decode();
+  return registrarFonte(nome, img);
+}
+
 function mascara(chave, construir) {
   let m = MASCARAS.get(chave);
   if (!m) {
@@ -2126,6 +2170,65 @@ const fields = {
     };
   },
 
+  /* --- Fotografia -------------------------------------------------------
+     A foto entra como PROVA, nunca como banco de imagem. E no instante em que
+     ela é amostrada pelo motor, ela deixa de ser fotografia e vira campo: sai
+     monocromática, porque a marca tem um canal semântico só e ele é densidade.
+     Foto colorida convive com o sistema — mas ao lado dele, num quadro seu, e
+     não dissolvida nele.
+
+     A imagem é PRÉ-CONDIÇÃO: o contrato do campo é síncrono, então a fonte
+     precisa estar decodificada antes do render. `registrarFonte` guarda; o
+     campo consulta pelo nome, o que também é o que permite passar a foto por
+     `data-opts` (JSON não carrega um HTMLImageElement).
+
+     A máscara é construída num canvas de 512 e o downscale do próprio
+     navegador faz a filtragem — é box filter testado, e evita reimplementar
+     tabela de soma acumulada para ganhar a mesma coisa. */
+  foto: ({ src = '', inverter = false, ganho = 1, piso = 0 } = {}) => {
+    const chave = `foto|${src}|${inverter}|${ganho}|${piso}`;
+
+    const build = (ar) => {
+      const img = FONTES.get(src);
+      const W = 512, H = Math.max(1, Math.round(W * ar));
+      const mask = new Uint8Array(W * H);
+      if (!img || !img.width) return { mask, mw: W, mh: H };
+
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const x = c.getContext('2d', { willReadFrequently: true });
+      x.imageSmoothingEnabled = true;
+      x.imageSmoothingQuality = 'high';
+      /* `cover`: a peça tem proporção própria e a foto se encaixa nela sem
+         barra preta. Recortar é decisão de enquadramento, não defeito. */
+      const e = Math.max(W / img.width, H / img.height);
+      const dw = img.width * e, dh = img.height * e;
+      x.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+
+      const d = x.getImageData(0, 0, W, H).data;
+      for (let k = 0; k < mask.length; k++) {
+        const i = k * 4;
+        const lum = (0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) / 255;
+        const v = inverter ? 1 - lum : lum;
+        mask[k] = clamp01(piso + (v - piso) * ganho) * 255;
+      }
+      return { mask, mw: W, mh: H };
+    };
+
+    let m = null, memoAr = -1, geracao = -1;
+    return (u, v, ar) => {
+      /* `GERACAO` sobe quando uma fonte é registrada: sem isso a máscara vazia
+         de antes do carregamento ficaria em cache para sempre. */
+      if (memoAr !== ar || geracao !== GERACAO) {
+        m = mascara(`${chave}|${ar}|${GERACAO}`, () => build(ar));
+        memoAr = ar; geracao = GERACAO;
+      }
+      const x = (u * m.mw) | 0, y = ((v / ar) * m.mh) | 0;
+      if (x < 0 || x >= m.mw || y < 0 || y >= m.mh) return 0;
+      return m.mask[y * m.mw + x] / 255;
+    };
+  },
+
   /* --- Figuras -----------------------------------------------------------
      Figura não é ornamento: ela só existe onde o campo resolve, que é o
      argumento da marca desenhado sobre um assunto. Peça institucional
@@ -2283,6 +2386,7 @@ const DEFAULTS = {
   mirror: false,     /* rampa espelhada: denso no centro, disperso nas pontas */
   radial: false,     /* rampa radial: denso no miolo, disperso nas bordas */
   clareira: null,    /* região onde a densidade desaba, para o tipo sentar */
+  tint: null,        /* nome de fonte: pinta cada célula com a cor da imagem */
   texture: 'grain',  /* grain (estocástica) | screen (Bayer) | halftone (ponto variável) */
   progress: 1,       /* 0..1 para animar a resolução */
   opts: null,        /* parâmetros do campo */
@@ -2322,6 +2426,7 @@ function render(canvas, config = {}) {
       : (fields[cfg.shape] || fields.disc)(cfg.opts || {});
 
   const ar = h / w;                       /* v vai de 0 a ar */
+  const cor = cfg.tint ? corDaFonte(cfg.tint, ar) : null;
   const cell = Math.max(2, cfg.cell);
   const cols = Math.ceil(w / cell);
   const rows = Math.ceil(h / cell);
@@ -2369,6 +2474,18 @@ function render(canvas, config = {}) {
         : hash(i, j, cfg.seed);
       if (threshold >= d) continue;
 
+      /* Cor por célula. Existe para ser JULGADA, não para ser usada: com cor,
+         deixa de ser possível distinguir "menos partícula" de "partícula mais
+         escura", e a marca tem um canal semântico só — densidade é nível.
+         Também custa uma troca de estado por célula, contra um fillStyle
+         atribuído uma vez para o desenho inteiro. */
+      if (cor) {
+        const mx = Math.min(cor.mw - 1, (u * cor.mw) | 0);
+        const my = Math.min(cor.mh - 1, ((v / ar) * cor.mh) | 0);
+        const k = (my * cor.mw + mx) * 3;
+        ctx.fillStyle = `rgb(${cor.rgb[k]},${cor.rgb[k + 1]},${cor.rgb[k + 2]})`;
+      }
+
       const size = cfg.scale
         ? Math.max(1, cell * (0.5 + 0.5 * clamp01(d)))
         : Math.max(1, cell * 0.8);
@@ -2413,6 +2530,7 @@ function configFromEl(el) {
     radial: d.radial === 'true',
     texture: d.texture || DEFAULTS.texture,
     clareira: d.clareira ? JSON.parse(d.clareira) : DEFAULTS.clareira,
+    tint: d.tint || DEFAULTS.tint,
     opts: d.opts ? JSON.parse(d.opts) : null,
   };
 }
