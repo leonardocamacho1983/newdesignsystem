@@ -9,3 +9,7 @@ _slide.html
 dist/kv/
 dist/pecas/
 _perf.mjs
+_distcheck.mjs
+_solo.mjs
+_elem.mjs
+_medir.mjs

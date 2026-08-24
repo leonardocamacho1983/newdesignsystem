@@ -439,12 +439,16 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
 .cmc-kv__art { position: relative; min-height: 0; min-width: 0; }
 .cmc-kv__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 
+/* A manchete é o ponto onde o registro de direção de arte fala: família, peso
+   e tracking entram como propriedade da peça, pelo mesmo mecanismo de
+   --kv-base. Nenhuma classe nova — trocar a voz é trocar três valores. */
 .cmc-kv__hed {
   margin: 0;
-  font-size: var(--kv-base);
+  font-family: var(--kv-voz, var(--cmc-font));
+  font-size: calc(var(--kv-base) * var(--kv-hed, 1));
   line-height: 0.96;
-  letter-spacing: -0.035em;
-  font-weight: var(--cmc-w-light);
+  letter-spacing: var(--kv-track, -0.035em);
+  font-weight: var(--kv-peso, var(--cmc-w-light));
   text-wrap: balance;
 }
 /* O bloco de texto precisa de gap proporcional como o resto da peça: um
@@ -468,6 +472,21 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
   font-size: calc(var(--kv-base) * 0.25); flex: none;
 }
 .cmc-kv__lockup { --lockup-size: calc(var(--kv-base) * 0.58); }
+
+/* Campo sangrado: o grafismo ocupa TODAS as faixas e a tipografia senta por
+   cima. Isso é o oposto da regra que gerou este componente — e só é legítimo
+   porque a `clareira` do motor faz a densidade desabar onde o texto vai. Não
+   há partícula sob o tipo para cruzar. Sem clareira, isto é exatamente o
+   remendo de z-index que falhou na primeira versão da galeria de formatos.
+
+   A ordem de pintura segue a ordem do DOM, e a arte é o segundo filho — então
+   ela cobriria o lockup. O z-index nos irmãos é o que devolve a ordem. */
+.cmc-kv--sangria .cmc-kv__art { grid-area: 1 / 1 / -1 / -1; }
+.cmc-kv--sangria .cmc-kv__inner > :not(.cmc-kv__art) { position: relative; z-index: 1; }
+
+/* Peça muda: o grafismo é a manchete, então não existe faixa de manchete e a
+   arte fica com a altura toda entre assinatura e pé. */
+.cmc-kv--muda .cmc-kv__copy { display: contents; }
 
 </style>
 <style>

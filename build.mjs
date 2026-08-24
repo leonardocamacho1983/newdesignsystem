@@ -41,12 +41,36 @@ for (const p of PAGES) {
   if (!p.url) console.warn(`aviso: ${p.out} ainda não tem url publicada — links para ela ficarão locais no -artifact.html`);
 }
 
+/* O bootstrap automático do motor sai: na página embutida quem chama `init`
+   é o script da própria página. O corte ancora em `document.readyState`, que
+   só existe nesse bloco — a versão anterior ancorava em `if (typeof document`
+   e, quando o motor ganhou uma segunda guarda dessas no topo do arquivo, comeu
+   90% do código sem reclamar. */
 const engine = read('src/dither.js')
   .replace(/^export /gm, '')
-  .replace(/\n?if \(typeof document[\s\S]*$/, '\n');
+  .replace(/\n?if \(typeof document !== 'undefined'\) \{\s*\n\s*document\.readyState[\s\S]*$/, '\n');
 
 const brand = read('src/brand.js').replace(/^export /gm, '');
 const kv = read('src/kv.js').replace(/^export /gm, '');
+const direcao = read('src/direcao.js').replace(/^export /gm, '');
+
+/* Trava: um módulo embutido pela metade não emite erro nenhum — a página sai,
+   o guard de referência local passa, e só um olho no resultado perceberia que
+   o motor sumiu. Conferir que o que sobreviveu ao corte ainda declara o que
+   promete é o que transforma isso em falha de build. */
+const INTEIRO = [
+  ['src/dither.js', engine, ['const fields', 'function render', 'function resolve', 'function init']],
+  ['src/brand.js', brand, ['const BRAND', 'function applyBrand']],
+  ['src/kv.js', kv, ['const FORMATOS', 'const KVS', 'function ajustar']],
+  ['src/direcao.js', direcao, ['const REGISTROS', 'function ajustarRegistro']],
+];
+for (const [nome, texto, marcas] of INTEIRO) {
+  const faltando = marcas.filter((m) => !texto.includes(m));
+  if (faltando.length) {
+    console.error(`${nome}: o módulo embutido perdeu ${faltando.join(', ')} — o corte do build comeu código.`);
+    process.exit(1);
+  }
+}
 
 const favicon = Buffer.from(read('assets/favicon.svg')).toString('base64');
 
@@ -65,6 +89,7 @@ for (const page of PAGES) {
     .replace(/import \{[^}]+\} from '\.\/src\/dither\.js';\n?/, engine)
     .replace(/import \{[^}]+\} from '\.\/src\/brand\.js';\n?/, brand)
     .replace(/import \{[^}]+\} from '\.\/src\/kv\.js';\n?/, kv)
+    .replace(/import \{[^}]+\} from '\.\/src\/direcao\.js';\n?/, direcao)
     .replace('<link rel="icon" href="assets/favicon.svg">',
       `<link rel="icon" href="data:image/svg+xml;base64,${favicon}">`);
 
@@ -85,6 +110,17 @@ for (const page of PAGES) {
   const dangling = [...html.matchAll(/(?:href|src)="((?!https?:|data:|mailto:|tel:|#)[^"]+)"/g)]
     .map((m) => m[1])
     .filter((ref) => !allowed.has(ref.split('?')[0]));
+  /* Um `import ... from './src/x.js'` não tem href nem src, então passa reto
+     pelo guard acima e só quebra em runtime, no dist. */
+  /* Exige `./src/` e ponto-e-vírgula: é a forma de um import de página de
+     verdade, e não casa com os exemplos de uso que vivem em comentário. */
+  const imports = [...html.matchAll(/^\s*import\s+\{[^}]*\}\s+from\s+'(\.\/src\/[^']+)';/gm)]
+    .map((m) => m[1]);
+  if (imports.length) {
+    console.error(`${page.src}: import relativo sobreviveu ao embutimento:\n  ${imports.join('\n  ')}`);
+    process.exit(1);
+  }
+
   if (dangling.length) {
     console.error(`${page.src}: referências locais não embutidas:\n  ${dangling.join('\n  ')}`);
     process.exit(1);
