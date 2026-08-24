@@ -422,8 +422,33 @@ function rampPos(u, v, ar, { angle, mirror, radial }) {
   return mirror ? 1 - Math.abs(t * 2 - 1) : t;
 }
 
+/* Clareira: uma região onde a densidade DESABA até `piso`, para a manchete
+   sentar em terreno limpo sem cortina de gradiente por cima.
+
+   É o que torna possível o campo sangrado. A regra da casa é que grafismo
+   nunca cruza com tipografia, e o remendo que já falhou aqui foi jogar o
+   canvas atrás de tudo com z-index. A clareira resolve pelo outro lado: não
+   existe partícula onde o texto vai — não há o que cruzar.
+
+   x/w são fração da LARGURA e y/h fração da ALTURA, que é como a peça é
+   pensada; o motor mede v em unidades de largura, então y entra multiplicado
+   por ar. `soft` é a largura da transição, e ela precisa ser generosa: borda
+   dura devolve um recorte a canivete, que é o defeito que se quer evitar. */
+const CLAREIRA = { x: 0, y: 0, w: 0.5, h: 1, soft: 0.14, piso: 0.06 };
+
+function clareiraAt(u, v, ar, c) {
+  const dx = Math.max(c.x - u, u - (c.x + c.w));
+  const dy = Math.max(c.y * ar - v, v - (c.y + c.h) * ar);
+  /* Distância assinada ao retângulo: negativa dentro, positiva fora. Fora
+     pelos dois eixos, a distância é ao canto — senão o canto fica quadrado. */
+  const d = dx > 0 && dy > 0 ? Math.hypot(dx, dy) : Math.max(dx, dy);
+  const dentro = edge(d, c.soft);
+  return 1 - dentro * (1 - c.piso);
+}
+
 function rampAt(u, v, ar, cfg) {
-  return cfg.from + (cfg.to - cfg.from) * Math.pow(rampPos(u, v, ar, cfg), cfg.curve);
+  const d = cfg.from + (cfg.to - cfg.from) * Math.pow(rampPos(u, v, ar, cfg), cfg.curve);
+  return cfg.clareira ? d * clareiraAt(u, v, ar, cfg.clareira) : d;
 }
 
 const DEFAULTS = {
@@ -441,6 +466,7 @@ const DEFAULTS = {
   scale: true,       /* partícula cresce com a densidade local */
   mirror: false,     /* rampa espelhada: denso no centro, disperso nas pontas */
   radial: false,     /* rampa radial: denso no miolo, disperso nas bordas */
+  clareira: null,    /* região onde a densidade desaba, para o tipo sentar */
   texture: 'grain',  /* grain (estocástica) | screen (Bayer) | halftone (ponto variável) */
   progress: 1,       /* 0..1 para animar a resolução */
   opts: null,        /* parâmetros do campo */
@@ -488,6 +514,7 @@ export function render(canvas, config = {}) {
   const rampCfg = {
     from, to, angle: cfg.angle, curve: cfg.curve,
     mirror: cfg.mirror, radial: cfg.radial,
+    clareira: cfg.clareira ? { ...CLAREIRA, ...cfg.clareira } : null,
   };
 
   for (let j = 0; j < rows; j++) {
@@ -567,6 +594,7 @@ function configFromEl(el) {
     mirror: d.mirror === 'true',
     radial: d.radial === 'true',
     texture: d.texture || DEFAULTS.texture,
+    clareira: d.clareira ? JSON.parse(d.clareira) : DEFAULTS.clareira,
     opts: d.opts ? JSON.parse(d.opts) : null,
   };
 }
