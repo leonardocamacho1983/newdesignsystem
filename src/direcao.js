@@ -63,8 +63,8 @@ export const REGISTROS = [
     layout: 'sangria',
     voz: 'sistema',
     campo: 'escuro',
-    shape: 'fill', ramp: [0.06, 0.92], angle: 180, cell: 4, seed: 23,
-    clareira: { x: 0, y: 0.44, w: 1, h: 0.56, soft: 0.14 },
+    shape: 'fill', ramp: [0.05, 0.62], angle: 0, cell: 4, seed: 23,
+    copiaY: 0.46,
     manchete: 'Complexidade\nvira clareza.',
     apoio: 'Do diagnóstico à capacidade instalada.',
     formatos: GRADE,
@@ -80,7 +80,7 @@ export const REGISTROS = [
     campo: 'escuro',
     shape: 'trama', ramp: [0.05, 1], angle: 0, cell: 3, seed: 11,
     opts: { corpo: 0.052 },
-    clareira: { x: 0, y: 0.46, w: 1, h: 0.54, soft: 0.16 },
+    copiaY: 0.48,
     manchete: 'Seis etapas.\nUma delas todo\nprojeto pula.',
     apoio: 'Diagnosticar · Priorizar · Estruturar · Implementar · Incorporar · Medir',
     formatos: GRADE,
@@ -95,7 +95,7 @@ export const REGISTROS = [
     voz: 'editorial',
     campo: 'escuro',
     shape: 'cidade', ramp: [0.06, 1], angle: 0, cell: 4, seed: 31,
-    clareira: { x: 0, y: 0.5, w: 1, h: 0.5, soft: 0.16 },
+    copiaY: 0.52,
     manchete: 'A cidade\ncomo sistema\nde decisão.',
     apoio: 'Cidadania digital e a dinâmica dos centros urbanos.',
     formatos: GRADE,
@@ -112,7 +112,7 @@ export const REGISTROS = [
     shape: 'text', ramp: [0.14, 1], angle: 0, cell: 3, seed: 17,
     opts: { text: 'Clareza\né vantagem', fit: 0.96 },
     manchete: null,
-    apoio: 'camacho.ai',
+    apoio: null,   /* o pé já carrega o domínio; repetir daria a mesma linha duas vezes */
     formatos: GRADE,
   },
 ];
@@ -129,9 +129,22 @@ export function ajustarRegistro(reg, formato) {
     /* A clareira mora na parte de baixo, que é onde a cópia senta. Em peça
        alta ela precisa de menos altura relativa: o mesmo texto ocupa uma
        fração menor da peça. */
-    clareira: reg.clareira && alto
-      ? { ...reg.clareira, y: reg.clareira.y + 0.12, h: reg.clareira.h - 0.12 }
-      : reg.clareira,
+    /* Duas clareiras. A de cima não é escolha do registro: toda peça tem a
+       assinatura no alto à esquerda, então a faixa que a protege é propriedade
+       do componente. `piso` baixo porque texto pequeno não sobrevive nem a 6%
+       de partícula — medido, com grão cruzando o lockup.
+
+       As duas TRANSBORDAM a peça. Clareira que termina exatamente na borda
+       tem a transição suave mordendo para dentro: a proteção afrouxa
+       justamente no rodapé, e a partícula volta para cima da linha de apoio.
+       Foi o que a primeira rodada mostrou no canto inferior direito. */
+    clareira: reg.copiaY
+      ? [
+          { x: -0.2, y: -0.3, w: 0.85, h: 0.3 + (alto ? 0.13 : 0.2), soft: 0.1, piso: 0.02 },
+          { x: -0.2, y: reg.copiaY + (alto ? 0.1 : 0), w: 1.4,
+            h: 1.3 - reg.copiaY - (alto ? 0.1 : 0), soft: 0.14, piso: 0.02 },
+        ]
+      : null,
     /* O cartão não carrega linha de apoio — a mesma conta de legibilidade que
        vale para os KVs (6 pt é o piso a 85 mm de largura). */
     apoio: formato.id === 'cartao' ? null : reg.apoio,

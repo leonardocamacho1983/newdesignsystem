@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Camacho — Direção de arte</title>
+<meta name="description" content="Cinco registros de direção de arte da marca Camacho, cada um atravessando seis formatos a partir de uma definição só.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/guide.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="cmc-shell">
+    <span class="cmc-lockup cmc-lockup--lg">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="currentColor"/>
+        <path fill="var(--cmc-bg)" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </span>
+    <h1 class="cmc-display">Direção<br>de arte.</h1>
+    <p class="cmc-lead" style="max-width:52ch">
+      Cinco registros. Um registro não é um humor nem uma paleta — é uma regra
+      sobre onde o tipo pode sentar em relação à densidade, e qual das três
+      vozes fala.
+    </p>
+    <nav class="hero__nav">
+      <a class="cmc-tag" href="index.html"><span>Sistema</span></a>
+      <a class="cmc-tag" href="posicionamento.html"><span>Posicionamento</span></a>
+      <a class="cmc-tag" href="kv.html"><span>Key visuals</span></a>
+      <a class="cmc-tag" href="extensoes.html"><span>Motor gráfico</span></a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============================ 01 OS REGISTROS ============================ -->
+<section id="registros" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Os registros</h2><span class="cmc-slide__num">01</span>
+    </div>
+    <p class="block__intro">
+      Cada um resolve o mesmo problema de um jeito diferente: onde a tipografia
+      pode existir sem cruzar com o grafismo. O <strong>Corte</strong> resolve por
+      geometria — a textura ocupa um lado. Os outros resolvem por
+      <strong>densidade</strong>: o motor faz a partícula desabar onde o texto vai,
+      então não há o que cruzar.
+    </p>
+    <div id="galeria-registros" class="stack-7"></div>
+  </div>
+</section>
+
+<!-- ============================== 02 A MATRIZ ============================== -->
+<section id="matriz" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">A matriz</h2><span class="cmc-slide__num">02</span>
+    </div>
+    <p class="block__intro">
+      Cada registro atravessando os seis formatos, a partir de uma definição só:
+      slide 16:9, capa de relatório A4, hero banner 21:9, cartão 85 × 55 mm e os
+      dois de social. A célula do grão é reescalada pela largura de cada peça —
+      sem isso, a mesma arte teria pesos de grão diferentes numa miniatura e num
+      export, e é na miniatura que a direção de arte é julgada.
+    </p>
+    <div id="grade-matriz" class="stack-7"></div>
+  </div>
+</section>
+
+<!-- ============================== 03 AS VOZES ============================== -->
+<section id="vozes" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">O kit tipográfico</h2><span class="cmc-slide__num">03</span>
+    </div>
+    <p class="block__intro">
+      As três vozes entram na peça como propriedade, não como classe nova:
+      família, peso e tracking. Trocar de voz é trocar três valores — e a regra
+      que impede virar mingau continua valendo, elas nunca competem no mesmo bloco.
+    </p>
+    <div id="grade-vozes" class="formats formats--social"></div>
+  </div>
+</section>
+
+<!-- =============================== 04 REGRAS =============================== -->
+<section id="regras" class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="cmc-section-head">
+      <h2 class="cmc-h1">Regras</h2><span class="cmc-slide__num">04</span>
+    </div>
+    <div class="grid grid--2">
+      <ul class="rules rules--do stack">
+        <li><span class="rules__flag">Faça</span>
+          <p class="cmc-small">Deixe o tipo sentar onde a densidade cai. A clareira é o
+             que torna o campo sangrado legítimo; sem ela é o remendo de z-index que já
+             falhou uma vez aqui.</p></li>
+        <li><span class="rules__flag">Faça</span>
+          <p class="cmc-small">Use figura só quando a peça for <em>sobre</em> alguma coisa —
+             um tema editorial, um cliente. Institucional continua abstrato.</p></li>
+        <li><span class="rules__flag">Faça</span>
+          <p class="cmc-small">Reescale a célula com a largura da peça. Grão é medido em px
+             lógicos, então a mesma arte muda de peso entre a miniatura e o impresso.</p></li>
+        <li><span class="rules__flag">Faça</span>
+          <p class="cmc-small">Publique o buraco. Um registro que não atravessa um formato
+             é um achado, e vale mais que uma célula preenchida à força.</p></li>
+      </ul>
+      <ul class="rules rules--dont stack">
+        <li><span class="rules__flag">Não faça</span>
+          <p class="cmc-small">Cortina de gradiente por cima do grafismo para salvar a
+             manchete. Isso trata o sintoma; a clareira remove a causa.</p></li>
+        <li><span class="rules__flag">Não faça</span>
+          <p class="cmc-small">Figura como enfeite. Silhueta bonita sem assunto é a coisa
+             mais fácil de fazer e a que mais rápido descola a marca do argumento.</p></li>
+        <li><span class="rules__flag">Não faça</span>
+          <p class="cmc-small">Duas vozes disputando o mesmo bloco. Rótulo e número não vão
+             em serifada; texto longo não vai em mono.</p></li>
+        <li><span class="rules__flag">Não faça</span>
+          <p class="cmc-small">Manchete junto de Palavra. Se o tipo já é a imagem, uma
+             segunda linha grande cria duas manchetes e nenhuma.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="guide-foot">
+  <div class="cmc-shell">
+    <span class="cmc-lockup">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="currentColor"/>
+        <path fill="var(--cmc-bg)" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </span>
+    <p class="cmc-micro">Clareza é vantagem</p>
+  </div>
+</footer>
+
+<script type="module">
+import { init } from './src/dither.js';
+import { applyBrand, brandFromUrl } from './src/brand.js';
+import { FORMATOS, CAMPOS } from './src/kv.js';
+import { REGISTROS, GRADE, VOZES, ajustarRegistro, configDoRegistro, celulaPara } from './src/direcao.js';
+
+const marca = applyBrand(document, brandFromUrl());
+const fmt = (id) => FORMATOS.find((f) => f.id === id);
+
+const MARCA_SVG = `
+  <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+    <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+  </svg>`;
+
+/**
+ * Uma peça. Mesma função para a galeria, para a matriz e para o modo solo —
+ * a peça publicada e a peça exportada saem da MESMA composição, e não de dois
+ * códigos que divergem no primeiro ajuste.
+ */
+function peca(reg, formato, id) {
+  const campo = CAMPOS[reg.campo];
+  const a = ajustarRegistro(reg, formato);
+  const cfg = configDoRegistro(a, campo);
+  const voz = VOZES[reg.voz];
+  const mod = a.layout === 'faixa' ? '' : ` cmc-kv--${a.layout}`;
+  return `
+  <div class="cmc-kv${mod}" id="${id}" data-registro="${reg.id}" data-formato="${formato.id}"
+       style="--kv-ar:${formato.ar};--kv-bg:${campo.bg};--kv-ink:${campo.ink};--kv-base:${formato.base}cqi;--kv-voz:${voz.fonte};--kv-peso:${voz.peso};--kv-track:${voz.track}">
+    <div class="cmc-kv__inner">
+      <span class="cmc-lockup cmc-kv__lockup">${MARCA_SVG}<span class="cmc-lockup__word">${marca.name}</span></span>
+      <div class="cmc-kv__art">
+        <canvas data-cmc-dither="${cfg.shape}" data-ramp="${cfg.ramp.join(',')}"
+                data-angle="${cfg.angle}" data-cell="${cfg.cell}" data-seed="${cfg.seed}"
+                data-base-cell="${cfg.cell}"
+                ${cfg.opts ? `data-opts='${JSON.stringify(cfg.opts)}'` : ''}
+                ${cfg.clareira ? `data-clareira='${JSON.stringify(cfg.clareira)}'` : ''}
+                aria-label="${reg.nome}: ${reg.regra}"></canvas>
+      </div>
+      <div class="cmc-kv__copy">
+        ${a.manchete ? `<h3 class="cmc-kv__hed">${a.manchete.replace(/\n/g, '<br>')}</h3>` : ''}
+        <div class="cmc-kv__pe">
+          ${a.apoio ? `<p class="cmc-kv__apoio">${a.apoio}</p>` : '<span></span>'}
+          <span class="cmc-kv__url">${marca.domain}</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/**
+ * A célula é medida em px lógicos, então a mesma peça a 280 px e a 2560 px
+ * teria pesos de grão completamente diferentes. Reescalar pela largura real,
+ * depois do layout, é o que mantém o grão com o mesmo peso visual — e é na
+ * miniatura que a direção de arte é julgada, não no export.
+ */
+function reescalarGrao(raiz = document) {
+  for (const c of raiz.querySelectorAll('canvas[data-base-cell]')) {
+    const larg = c.getBoundingClientRect().width;
+    if (larg) c.dataset.cell = celulaPara(Number(c.dataset.baseCell), larg);
+  }
+}
+
+const q = new URLSearchParams(location.search);
+const solo = q.get('solo');
+
+if (solo) {
+  /* Modo solo: ?solo=<registro>&fmt=<formato>&cell=<px> desenha uma peça só,
+     ocupando a janela. É o alvo de exportação e o de medição em tamanho real. */
+  const reg = REGISTROS.find((r) => r.id === solo) || REGISTROS[0];
+  const formato = fmt(q.get('fmt')) || fmt('16x9');
+  document.body.innerHTML = peca(reg, formato, 'solo');
+  document.body.style.cssText = 'margin:0;overflow:hidden';
+  const el = document.getElementById('solo');
+  el.style.width = '100vw';
+  el.style.aspectRatio = formato.ar;
+  const forcada = Number(q.get('cell'));
+  if (forcada) el.querySelector('canvas').dataset.cell = forcada;
+  else reescalarGrao(el);
+  init();
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.documentElement.dataset.kvPronto = '1';
+  }));
+} else {
+
+/* --- 01 Os registros, cada um na sua peça grande --- */
+document.getElementById('galeria-registros').innerHTML = REGISTROS.map((reg) => `
+  <div class="block">
+    <div class="cmc-section-head" style="margin:0;border:0;padding:0">
+      <p class="cmc-h2">${reg.nome}</p>
+      <span class="cmc-micro">${reg.shape} · ${reg.voz} · semente ${reg.seed}</span>
+    </div>
+    <div class="formats formats--pair">
+      <div class="stack">
+        <p class="cmc-lead" style="margin:0">${reg.regra}</p>
+        <p class="cmc-small cmc-muted" style="margin:0">${reg.quando}</p>
+        ${reg.formatos.length < GRADE.length
+          ? `<p class="cmc-small" style="margin:0"><strong>Não atravessa:</strong> ${reg.nota}</p>` : ''}
+      </div>
+      ${peca(reg, fmt('16x9'), `reg-${reg.id}`)}
+    </div>
+  </div>`).join('');
+
+/* --- 02 A matriz: cada registro atravessando os seis formatos --- */
+document.getElementById('grade-matriz').innerHTML = REGISTROS.map((reg) => `
+  <div class="block">
+    <div class="cmc-section-head" style="margin:0;border:0;padding:0">
+      <p class="cmc-h2">${reg.nome}</p>
+      <span class="cmc-micro">${reg.formatos.length} de ${GRADE.length} formatos</span>
+    </div>
+    <div class="tira">
+      ${GRADE.map((id) => {
+        const f = fmt(id);
+        if (!reg.formatos.includes(id)) return `
+          <figure class="format">
+            <div class="format__frame format__frame--white format__frame--center"
+                 style="--ar:${f.ar};display:grid;place-items:center;padding:6cqi">
+              <p class="cmc-micro" style="text-align:center">não atravessa</p>
+            </div>
+            <figcaption class="cmc-micro">${f.nome} · ${f.ar.replace('/', ':')}</figcaption>
+          </figure>`;
+        return `
+          <figure class="format">
+            ${peca(reg, f, `m-${reg.id}-${id}`)}
+            <figcaption class="cmc-micro">${f.nome} · ${f.ar.replace('/', ':')}</figcaption>
+          </figure>`;
+      }).join('')}
+    </div>
+  </div>`).join('');
+
+/* --- 03 As vozes, com acentuação, que é onde fonte substituta se entrega --- */
+const AMOSTRA = {
+  sistema: ['Voz de sistema', 'Inter Tight', 'Clareza é vantagem', 'Títulos, interface, rótulo, marca.'],
+  editorial: ['Voz editorial', 'Source Serif 4', 'Ação, coração, país', 'Diagnóstico, artigo, material de formação.'],
+  medida: ['Voz de medição', 'IBM Plex Mono', '0123456789 · 3/5', 'Indicador, nível, rótulo de dado.'],
+};
+document.getElementById('grade-vozes').innerHTML = Object.entries(VOZES).map(([id, v]) => {
+  const [rot, familia, amostra, papel] = AMOSTRA[id];
+  return `
+  <figure class="format">
+    <div class="format__frame format__frame--paper" style="--ar:4/3;place-content:center">
+      <p class="cmc-micro">${rot}</p>
+      <p style="margin:0;font-family:${v.fonte};font-weight:${v.peso};letter-spacing:${v.track};font-size:7cqi;line-height:1.05">${amostra}</p>
+      <p class="format__note format__note--muted" style="--note:3.4cqi">${papel}</p>
+    </div>
+    <figcaption class="cmc-micro">${familia} · ${v.peso} · ${v.track}</figcaption>
+  </figure>`;
+}).join('');
+
+reescalarGrao();
+init();
+
+let raf;
+addEventListener('resize', () => {
+  cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(() => reescalarGrao());
+});
+
+}
+</script>
+</body>
+</html>

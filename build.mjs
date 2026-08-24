@@ -25,6 +25,7 @@ const PAGES = [
   { src: 'carrossel.html',  out: 'camacho-carrossel',  url: 'https://claude.ai/code/artifact/2f6e7c1e-5e81-4fab-a4df-4c29fc946288' },
   { src: 'kv.html',         out: 'camacho-kv',         url: 'https://claude.ai/code/artifact/448e707f-5e22-4fcf-a574-aaacd463b0fa' },
   { src: 'aplicacoes.html', out: 'camacho-aplicacoes', url: 'https://claude.ai/code/artifact/40b9d44b-fb1e-4c86-b6ba-bde9c92e27a0' },
+  { src: 'direcao.html',    out: 'camacho-direcao',    url: '' },
 ];
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

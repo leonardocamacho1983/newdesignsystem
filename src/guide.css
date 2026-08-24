@@ -218,6 +218,21 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
 /* O lockup escala com a peça, mas com teto: em peça larga, cqi cresce demais. */
 .format__lockup { --lockup-size: clamp(0.7rem, 7cqi, 1.4rem); }
 
+/* Tira de comparação: peças de proporções diferentes lado a lado, alinhadas
+   pela ALTURA. Numa grade automática de largura fixa, um 4:5 e um 21:9 na
+   mesma linha deixam buracos — é o que a nota da galeria de formatos acima já
+   avisava sobre misturar famílias. Alinhar por altura faz a comparação ser
+   sobre a composição, e não sobre o tamanho. */
+.tira { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5); align-items: flex-start; }
+/* `min-content` porque quem manda na largura é a PEÇA, não a legenda: sem
+   isso, uma legenda longa ("Capa de relatório A4 · 210:297") fica mais larga
+   que um formato estreito e a peça estica para acompanhar — o A4 saía a 0,977
+   de proporção em vez de 0,707, medido. Com min-content a legenda quebra. */
+.tira > .format { flex: none; width: min-content; }
+.tira > .format > figcaption { text-wrap: balance; }
+.tira .cmc-kv,
+.tira .format__frame { height: var(--tira-h, 11rem); width: auto; }
+
 /* --- Laboratório ---------------------------------------------------------- */
 .lab { display: grid; gap: var(--cmc-sp-6); grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr); }
 @media (max-width: 52rem) { .lab { grid-template-columns: 1fr; } }

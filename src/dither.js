@@ -579,7 +579,14 @@ function clareiraAt(u, v, ar, c) {
 
 function rampAt(u, v, ar, cfg) {
   const d = cfg.from + (cfg.to - cfg.from) * Math.pow(rampPos(u, v, ar, cfg), cfg.curve);
-  return cfg.clareira ? d * clareiraAt(u, v, ar, cfg.clareira) : d;
+  if (!cfg.clareira) return d;
+  /* Mais de uma clareira porque a peça tem mais de uma zona de texto: a
+     assinatura no alto e a manchete embaixo. Vale a MAIS protetora, não o
+     produto — duas clareiras sobrepostas multiplicadas escavariam um buraco
+     mais fundo do que qualquer uma das duas pede. */
+  let m = 1;
+  for (const c of cfg.clareira) m = Math.min(m, clareiraAt(u, v, ar, c));
+  return d * m;
 }
 
 const DEFAULTS = {
@@ -645,7 +652,9 @@ export function render(canvas, config = {}) {
   const rampCfg = {
     from, to, angle: cfg.angle, curve: cfg.curve,
     mirror: cfg.mirror, radial: cfg.radial,
-    clareira: cfg.clareira ? { ...CLAREIRA, ...cfg.clareira } : null,
+    clareira: cfg.clareira
+      ? [].concat(cfg.clareira).map((c) => ({ ...CLAREIRA, ...c }))
+      : null,
   };
 
   for (let j = 0; j < rows; j++) {

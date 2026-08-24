@@ -479,6 +479,12 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
    A ordem de pintura segue a ordem do DOM, e a arte é o segundo filho — então
    ela cobriria o lockup. O z-index nos irmãos é o que devolve a ordem. */
 .cmc-kv--sangria .cmc-kv__art { grid-area: 1 / 1 / -1 / -1; }
+/* Os irmãos precisam de posição EXPLÍCITA. Sem isso o auto-placement do grid
+   não os encaixa em células já ocupadas pela arte: ele cria linhas novas
+   embaixo, e a peça vira arte em cima com assinatura e manchete penduradas
+   fora dela. */
+.cmc-kv--sangria .cmc-kv__lockup { grid-area: 1 / 1; }
+.cmc-kv--sangria .cmc-kv__copy   { grid-area: 3 / 1; }
 .cmc-kv--sangria .cmc-kv__inner > :not(.cmc-kv__art) { position: relative; z-index: 1; }
 
 /* Peça muda: o grafismo é a manchete, então não existe faixa de manchete e a
@@ -706,6 +712,21 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
 .format__copy { display: flex; flex-direction: column; gap: 2cqi; }
 /* O lockup escala com a peça, mas com teto: em peça larga, cqi cresce demais. */
 .format__lockup { --lockup-size: clamp(0.7rem, 7cqi, 1.4rem); }
+
+/* Tira de comparação: peças de proporções diferentes lado a lado, alinhadas
+   pela ALTURA. Numa grade automática de largura fixa, um 4:5 e um 21:9 na
+   mesma linha deixam buracos — é o que a nota da galeria de formatos acima já
+   avisava sobre misturar famílias. Alinhar por altura faz a comparação ser
+   sobre a composição, e não sobre o tamanho. */
+.tira { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5); align-items: flex-start; }
+/* `min-content` porque quem manda na largura é a PEÇA, não a legenda: sem
+   isso, uma legenda longa ("Capa de relatório A4 · 210:297") fica mais larga
+   que um formato estreito e a peça estica para acompanhar — o A4 saía a 0,977
+   de proporção em vez de 0,707, medido. Com min-content a legenda quebra. */
+.tira > .format { flex: none; width: min-content; }
+.tira > .format > figcaption { text-wrap: balance; }
+.tira .cmc-kv,
+.tira .format__frame { height: var(--tira-h, 11rem); width: auto; }
 
 /* --- Laboratório ---------------------------------------------------------- */
 .lab { display: grid; gap: var(--cmc-sp-6); grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr); }

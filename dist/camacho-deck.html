@@ -482,6 +482,12 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
    A ordem de pintura segue a ordem do DOM, e a arte é o segundo filho — então
    ela cobriria o lockup. O z-index nos irmãos é o que devolve a ordem. */
 .cmc-kv--sangria .cmc-kv__art { grid-area: 1 / 1 / -1 / -1; }
+/* Os irmãos precisam de posição EXPLÍCITA. Sem isso o auto-placement do grid
+   não os encaixa em células já ocupadas pela arte: ele cria linhas novas
+   embaixo, e a peça vira arte em cima com assinatura e manchete penduradas
+   fora dela. */
+.cmc-kv--sangria .cmc-kv__lockup { grid-area: 1 / 1; }
+.cmc-kv--sangria .cmc-kv__copy   { grid-area: 3 / 1; }
 .cmc-kv--sangria .cmc-kv__inner > :not(.cmc-kv__art) { position: relative; z-index: 1; }
 
 /* Peça muda: o grafismo é a manchete, então não existe faixa de manchete e a
@@ -1383,7 +1389,14 @@ function clareiraAt(u, v, ar, c) {
 
 function rampAt(u, v, ar, cfg) {
   const d = cfg.from + (cfg.to - cfg.from) * Math.pow(rampPos(u, v, ar, cfg), cfg.curve);
-  return cfg.clareira ? d * clareiraAt(u, v, ar, cfg.clareira) : d;
+  if (!cfg.clareira) return d;
+  /* Mais de uma clareira porque a peça tem mais de uma zona de texto: a
+     assinatura no alto e a manchete embaixo. Vale a MAIS protetora, não o
+     produto — duas clareiras sobrepostas multiplicadas escavariam um buraco
+     mais fundo do que qualquer uma das duas pede. */
+  let m = 1;
+  for (const c of cfg.clareira) m = Math.min(m, clareiraAt(u, v, ar, c));
+  return d * m;
 }
 
 const DEFAULTS = {
@@ -1449,7 +1462,9 @@ function render(canvas, config = {}) {
   const rampCfg = {
     from, to, angle: cfg.angle, curve: cfg.curve,
     mirror: cfg.mirror, radial: cfg.radial,
-    clareira: cfg.clareira ? { ...CLAREIRA, ...cfg.clareira } : null,
+    clareira: cfg.clareira
+      ? [].concat(cfg.clareira).map((c) => ({ ...CLAREIRA, ...c }))
+      : null,
   };
 
   for (let j = 0; j < rows; j++) {
