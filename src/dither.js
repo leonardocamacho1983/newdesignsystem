@@ -398,6 +398,56 @@ export const fields = {
     },
 
   /* Grafismo-âncora: anel de ruído + disco de sinal, lado a lado. */
+  /* Trama: o campo É o léxico da marca. Não é textura genérica com palavra
+     por cima — as palavras SÃO as partículas, e a rampa decide onde elas
+     ficam legíveis e onde viram grão.
+
+     A máscara cobre o quadro inteiro em vez de ladrilhar: ladrilho barato
+     mostra a emenda, e emenda num campo sangrado é a primeira coisa que o
+     olho acha. O deslocamento por linha sai do hash, não do acaso: a trama
+     precisa ser a MESMA em toda renderização da mesma peça. */
+  trama: ({
+    palavras = ['Diagnosticar', 'Priorizar', 'Estruturar', 'Implementar',
+                'Incorporar', 'Medir', 'Clareza é vantagem'],
+    corpo = 0.052, entrelinha = 1.2, weight = 400, tracking = '-0.02em',
+    sep = '  ·  ', font = '"Inter Tight", "Inter", sans-serif',
+  } = {}) => {
+    const chave = `trama|${palavras.join('|')}|${corpo}|${entrelinha}|${weight}|${tracking}|${sep}|${font}`;
+
+    const build = (ar) => {
+      const W = 1400, H = Math.max(1, Math.round(W * ar));
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const x = c.getContext('2d', { willReadFrequently: true });
+      const px = W * corpo;
+      x.font = `${weight} ${px}px ${font}`;
+      if ('letterSpacing' in x) x.letterSpacing = `${px * parseFloat(tracking)}px`;
+      x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillStyle = '#fff';
+
+      const lh = px * entrelinha;
+      for (let i = 0; i < Math.ceil(H / lh) + 1; i++) {
+        let linha = '', j = i;
+        /* Duas larguras de texto para que o deslocamento nunca deixe buraco
+           na ponta direita. */
+        while (x.measureText(linha).width < W * 2) linha += palavras[j++ % palavras.length] + sep;
+        x.fillText(linha, -hash(i, 0, 3) * W, lh * (i + 0.5));
+      }
+
+      const data = x.getImageData(0, 0, W, H).data;
+      const mask = new Uint8Array(W * H);
+      for (let k = 0; k < mask.length; k++) mask[k] = data[k * 4 + 3];
+      return { mask, mw: W, mh: H };
+    };
+
+    let m = null, memoAr = -1;
+    return (u, v, ar) => {
+      if (memoAr !== ar) { m = mascara(`${chave}|${ar}`, () => build(ar)); memoAr = ar; }
+      const x = (u * m.mw) | 0, y = ((v / ar) * m.mh) | 0;
+      if (x < 0 || x >= m.mw || y < 0 || y >= m.mh) return 0;
+      return m.mask[y * m.mw + x] / 255;
+    };
+  },
+
   /* --- Figuras -----------------------------------------------------------
      Figura não é ornamento: ela só existe onde o campo resolve, que é o
      argumento da marca desenhado sobre um assunto. Peça institucional

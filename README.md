@@ -47,7 +47,7 @@ instalada.
 tokens/tokens.css        Fonte única de verdade (cor, tipo, espaço, forma, níveis, movimento)
 tokens/tokens.json       Gerado do CSS pelo build — nunca editar à mão
 tokens/build-tokens.mjs  Gera o JSON e trava o fechamento token/uso
-src/dither.js            Motor gráfico: 24 campos de forma, rampa, clareira, texturas, render e animação
+src/dither.js            Motor gráfico: 25 campos de forma, rampa, clareira, texturas, render e animação
 src/camacho.css          Componentes do sistema
 src/guide.css            Estilos só da documentação — fora do sistema, de propósito
 src/brand.js             O nome da marca, num lugar só
@@ -83,8 +83,8 @@ render(canvas, { shape: 'gauge', ramp: [0.1, 1], cell: 4 });
 **Formas.** Base: `disc` `ring` `chevrons` `bars` `loop` `layers` `mark` `text`
 `fill` `noiseToSignal`. Estendidas: `funnel` `wave` `orbit` `staircase` `mesh`
 `spiral`. Da transformação: `weave` (a costura) `cohort` (incorporar)
-`gauge` (medir) `handoff` (transferir). Figuras: `cidade` `pessoa` `arvore`
-`banana`. Ou passe sua própria função `f(u, v, ar) → cobertura 0..1`.
+`gauge` (medir) `handoff` (transferir). Do léxico: `trama`. Figuras: `cidade`
+`pessoa` `arvore` `banana`. Ou passe sua própria função `f(u, v, ar) → cobertura 0..1`.
 
 **Figura não é ornamento.** As figuras existem para peça que é *sobre* alguma
 coisa — um tema editorial, um cliente. Peça institucional continua abstrata.
