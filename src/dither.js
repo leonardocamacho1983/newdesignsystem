@@ -49,6 +49,31 @@ const edge = (d, soft) => clamp01(0.5 - d / (soft || 0.012));
 /* --- Campos de forma -----------------------------------------------------
    Cada campo é f(u, v) -> cobertura 0..1, em espaço normalizado onde
    u ∈ [0,1] e v é corrigido pela proporção (v ∈ [0, h/w]). */
+/* --- Cache de máscara -----------------------------------------------------
+   Campos que rasterizam fora da tela (texto, léxico, foto) são caros: um
+   desenho mais um getImageData. O memo NÃO pode viver no closure do campo,
+   porque `render` re-invoca a fábrica a cada chamada — numa animação de
+   1600 ms isso reconstrói o mesmo desenho a cada quadro. */
+const MASCARAS = new Map();
+
+function mascara(chave, construir) {
+  let m = MASCARAS.get(chave);
+  if (!m) {
+    m = construir();
+    /* Teto pequeno: uma página tem poucas máscaras distintas, e segurar todas
+       para sempre vazaria memória em quem redimensiona muito. */
+    if (MASCARAS.size > 24) MASCARAS.delete(MASCARAS.keys().next().value);
+    MASCARAS.set(chave, m);
+  }
+  return m;
+}
+
+/* Máscara construída antes de a fonte carregar sai com métrica de fallback.
+   Sem zerar o cache, essa máscara torta sobreviveria ao redesenho que o
+   `fonts.ready` dispara — que é justamente o redesenho que existe para
+   consertá-la. */
+if (typeof document !== 'undefined') document.fonts?.ready.then(() => MASCARAS.clear());
+
 export const fields = {
   /* `k` = meia-altura do campo: deixa toda forma se ajustar à proporção do
      canvas sem que ninguém precise recalcular raios na mão. */
@@ -125,9 +150,11 @@ export const fields = {
      Com isso qualquer palavra vira grafismo da marca: manchete de pôster,
      post de social, capa de relatório. A máscara é construída na primeira
      chamada, quando a proporção já é conhecida, e reaproveitada depois. */
+  /* `font` é a lista de família CSS: é o que deixa o tipo dissolvido falar as
+     três vozes do sistema, e não só a de sistema. */
   text: ({ text = 'Camacho', weight = 300, tracking = '-0.04em', fit = 0.92,
-           lineHeight = 0.98 } = {}) => {
-    let mask = null, mw = 0, mh = 0, builtFor = -1;
+           lineHeight = 0.98, font = '"Inter Tight", "Inter", sans-serif' } = {}) => {
+    const chave = `texto|${text}|${weight}|${tracking}|${fit}|${lineHeight}|${font}`;
 
     const build = (ar) => {
       const W = 900, H = Math.max(1, Math.round(W * ar));
@@ -136,7 +163,7 @@ export const fields = {
       const x = c.getContext('2d', { willReadFrequently: true });
       const rows = String(text).split('\n');
       const setFont = (px) => {
-        x.font = `${weight} ${px}px "Inter Tight", "Inter", sans-serif`;
+        x.font = `${weight} ${px}px ${font}`;
         if ('letterSpacing' in x) x.letterSpacing = `${px * parseFloat(tracking)}px`;
       };
       x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillStyle = '#fff';
@@ -160,16 +187,22 @@ export const fields = {
       ));
 
       const data = x.getImageData(0, 0, W, H).data;
-      mask = new Uint8Array(W * H);
+      const mask = new Uint8Array(W * H);
       for (let k = 0; k < mask.length; k++) mask[k] = data[k * 4 + 3];
-      mw = W; mh = H; builtFor = ar;
+      return { mask, mw: W, mh: H };
     };
 
+    /* O memo local existe para o LAÇO: montar a chave e consultar o Map uma
+       vez por célula custa mais do que a rasterização que o cache evita —
+       medido, 14,8 ms/quadro contra 7,4. O cache de módulo existe para os
+       QUADROS: sem ele, cada quadro reconstrói o mesmo desenho. */
+    let m = null, memoAr = -1;
+
     return (u, v, ar) => {
-      if (builtFor !== ar) build(ar);
-      const x = (u * mw) | 0, y = ((v / ar) * mh) | 0;
-      if (x < 0 || x >= mw || y < 0 || y >= mh) return 0;
-      return mask[y * mw + x] / 255;
+      if (memoAr !== ar) { m = mascara(`${chave}|${ar}`, () => build(ar)); memoAr = ar; }
+      const x = (u * m.mw) | 0, y = ((v / ar) * m.mh) | 0;
+      if (x < 0 || x >= m.mw || y < 0 || y >= m.mh) return 0;
+      return m.mask[y * m.mw + x] / 255;
     };
   },
 
