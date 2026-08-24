@@ -31,6 +31,12 @@ export const FORMATOS = [
   { id: '9x16',  nome: 'Story',                ar: '9/16',  w: 1080, h: 1920, base: 14 },
   /* Capa de LinkedIn: a proporção e os pixels são os que a plataforma usa. */
   { id: 'capa',  nome: 'Capa de LinkedIn',      ar: '1584/396', w: 1584, h: 396, base: 3.4 },
+  /* Impressos. Aqui o pixel segue o PAPEL, não a plataforma: A4 a 300 dpi e
+     cartão 85x55 mm, o formato brasileiro. Slide de PPT não entra na lista —
+     PPT É 16:9, e uma segunda entrada na mesma proporção só criaria duas
+     calibragens para a mesma peça. */
+  { id: 'a4',     nome: 'Capa de relatório A4',  ar: '210/297',  w: 2480, h: 3508, base: 11 },
+  { id: 'cartao', nome: 'Cartão 85 × 55 mm',     ar: '85/55',    w: 1004, h: 650,  base: 10 },
 ];
 
 /**
@@ -99,13 +105,18 @@ export const KVS = [
  * verticais, a direção da rampa, para que ela corra no eixo longo da peça.
  */
 export function ajustar(kv, formato) {
-  const vertical = formato.id === '9x16' || formato.id === '4x5';
+  const vertical = formato.id === '9x16' || formato.id === '4x5' || formato.id === 'a4';
   return {
     ...kv,
     cell: formato.id === '9x16' ? 3 : kv.cell,
     /* Rampa no eixo longo: em peça vertical, adensar de baixo para cima diz a
        mesma coisa que da esquerda para a direita em peça horizontal. */
     angle: vertical && kv.shape !== 'text' ? 90 : kv.angle,
+    /* O cartão não carrega linha de apoio, e isso é conta, não gosto: a 85 mm
+       de largura, o `base` que deixa a menor linha em 6 pt (o piso prático de
+       impressão) é 10 — e a 10 a tipografia come a peça, deixando o grafismo
+       numa tira. Ou o cartão perde o apoio, ou sai com texto de 4,3 pt. */
+    apoio: formato.id === 'cartao' ? null : kv.apoio,
   };
 }
 

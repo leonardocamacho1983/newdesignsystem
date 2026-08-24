@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Key Visuals Camacho</title>
-<meta name="description" content="Quatro key visuals da marca Camacho, adaptados a cinco formatos e animados pelo próprio motor gráfico.">
+<meta name="description" content="Quatro key visuals da marca Camacho, adaptados a oito formatos e animados pelo próprio motor gráfico.">
 <link rel="icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +28,7 @@
     <div class="stack">
       <h1 class="cmc-display">Key<br>visuals</h1>
       <p class="cmc-lead cmc-muted">
-        Quatro imagens, uma ideia cada, adaptadas a cinco formatos e animadas
+        Quatro imagens, uma ideia cada, adaptadas a oito formatos e animadas
         pelo próprio motor. Nenhuma imagem externa — o que a marca mostra é o
         material que ela mesma gera.
       </p>
@@ -194,7 +194,7 @@ function pecaKV(kv, formato, id) {
       <div class="cmc-kv__copy">
         ${kv.manchete ? `<h3 class="cmc-kv__hed">${kv.manchete.replace(/\n/g, '<br>')}</h3>` : ''}
         <div class="cmc-kv__pe">
-          <p class="cmc-kv__apoio">${kv.apoio}</p>
+          ${a.apoio ? `<p class="cmc-kv__apoio">${a.apoio}</p>` : '<span></span>'}
           <span class="cmc-kv__url">${marca.domain}</span>
         </div>
       </div>

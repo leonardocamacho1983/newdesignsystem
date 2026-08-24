@@ -118,7 +118,7 @@ o alpha como cobertura — qualquer manchete vira grafismo da marca. A opção
 ## Key visuals
 
 Quatro KVs — a costura, complexidade vira clareza, a lacuna que se mede e o que
-fica — cada um com uma ideia só, em cinco formatos de 21:9 a 9:16. Vivem em
+fica — cada um com uma ideia só, em oito formatos de 21:9 a A4. Vivem em
 `kv.html`, definidos como dado em `src/kv.js`.
 
 ```bash
@@ -130,6 +130,12 @@ O alvo de renderização é a própria `kv.html` em modo solo (`?solo=&fmt=`), e
 não uma segunda composição escrita no exportador: dois códigos para a mesma
 peça divergiriam no primeiro ajuste. A célula escala com a largura de saída,
 para o grão manter o mesmo peso visual em qualquer resolução.
+
+**Screenshot de página inteira não é oráculo exato quando a altura muda.** O
+`fullPage` do Playwright costura tiles, e a emenda muda de lugar quando a página
+cresce — o que aparece como uma linha de ~27 px diferente dentro de um grafismo
+que não foi tocado. Para comparação pixel a pixel depois de mudar a altura,
+capturar o ELEMENTO (`locator.screenshot()`), que não passa por costura.
 
 **Sem fotografia, e não por purismo.** Um KV se reproduz exatamente com forma,
 rampa e semente, em qualquer resolução, sem arquivo de origem. Uma foto de banco
