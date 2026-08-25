@@ -1711,22 +1711,35 @@ const fields = {
     return cov;
   },
 
-  /* Banana: um disco menos outro, deslocado. Os bicos saem de graça, no ponto
-     em que os dois círculos se cruzam. */
-  banana: ({ giro = -38, esc = 0.70, soft = 0.014 } = {}) => (u, v, ar) => {
+  /* Banana: uma fatia de anel que afina para as pontas, mais um cabo.
+
+     A versão anterior era um disco menos outro disco deslocado, e o comentário
+     dizia que a barriga tinha sido engordada para não ler como lua. Renderizada
+     e olhada, ainda lia como lua: o arco varria uns 250°, e nenhuma banana
+     faz isso. O cabo estava escrito no código e simplesmente não aparecia.
+
+     Aqui a abertura é explícita (±72°), a espessura afina com o quadrado da
+     distância à ponta, e o cabo sai colado no bico de cima — descolar o cabo
+     foi a primeira tentativa e vira uma partícula solta no ar. */
+  banana: ({ giro = -28, esc = 0.86, abertura = 72, gordura = 0.26, soft = 0.014 } = {}) => (u, v, ar) => {
     const k = Math.min(0.5, ar / 2), s = k * esc;
     const rad = (giro * Math.PI) / 180, cos = Math.cos(rad), sin = Math.sin(rad);
     const du = u - 0.5, dv = v - ar / 2;
     const x = (du * cos + dv * sin) / s;
-    const y = (-du * sin + dv * cos) / s + 0.25;   /* centra o crescente */
-    /* O deslocamento decide a barriga: 0,30/0,94 deu um crescente fino que
-       lia como lua. 0,46/0,78 engorda para 0,68 de espessura. */
-    const arco = Math.min(edge((Math.hypot(x, y) - 1) * s, soft),
-                          1 - edge((Math.hypot(x, y + 0.46) - 0.78) * s, soft));
-    /* O cabo é o que separa fruta de lua crescente. Sai do bico de cima, no
-       ponto em que os dois círculos se cruzam (x ≈ 0,76 · y ≈ -0,66). */
-    const cabo = edge(caixa(x - 0.80, y + 0.78, 0.085, 0.20) * s, soft);
-    return Math.max(arco, cabo);
+    const y = (-du * sin + dv * cos) / s + 0.42;   /* centro do arco fora da peça */
+
+    const A = (abertura * Math.PI) / 180;
+    const ang = Math.atan2(x, y);
+    const t = Math.min(1, Math.abs(ang) / A);
+    const w = gordura * (1 - 0.80 * t * t);        /* afina para as pontas */
+    const px = Math.sin(A), py = Math.cos(A);
+
+    const d = Math.abs(ang) <= A
+      ? Math.abs(Math.hypot(x, y) - 1) - w
+      : Math.hypot(x - px * Math.sign(ang), y - py) - gordura * 0.20;
+
+    return Math.max(edge(d * s, soft),
+                    edge((Math.hypot(x - px * 1.09, y - py * 1.09) - 0.095) * s, soft));
   },
 
   noiseToSignal: ({ soft = 0.02 } = {}) => (u, v, ar) => {
@@ -1960,6 +1973,95 @@ function resolve(canvas, config = {}, duration = 1600) {
   if (parado()) { parar(canvas); return render(canvas, { ...config, progress: 1 }); }
   laco(canvas, duration, (t) =>
     render(canvas, { ...config, progress: 1 - Math.pow(1 - t, 3) }));
+}
+
+/* --- Movimento -----------------------------------------------------------
+
+   A regra da casa é "uma vez, na entrada; nunca em laço permanente"
+   (kv.html). Ela continua valendo: o que segue não é laço, é transição — um
+   trecho com começo e fim, disparado por quem apresenta.
+
+   E não é movimento inventado por cima do grafismo. Todo parâmetro do motor é
+   numérico, então animar é deixar o próprio argumento andar: a rampa que vai
+   de 0,04 a 1 é a passagem de complexidade a clareza, e a clareira que abre é
+   a atenção pousando. `resolve` movia um parâmetro só (`progress`) porque era
+   o único com driver escrito. Este move qualquer um. */
+
+/* Interpola dois valores de configuração. Número com número vira média
+   ponderada; lista e objeto descem recursivamente (é assim que `ramp` e
+   `clareira.w` andam sem tratamento especial). Qualquer outra coisa — string,
+   função, booleano — é discreta: troca no fim, para não piscar no meio. */
+function interp(a, b, t) {
+  if (typeof a === 'number' && typeof b === 'number') return a + (b - a) * t;
+  if (Array.isArray(a) && Array.isArray(b)) return a.map((x, i) => interp(x, b[i], t));
+  if (a && b && typeof a === 'object' && typeof b === 'object' && !Array.isArray(a) && !Array.isArray(b)) {
+    const o = { ...a };
+    for (const k of Object.keys(b)) o[k] = k in a ? interp(a[k], b[k], t) : b[k];
+    return o;
+  }
+  return t < 1 ? a : b;
+}
+
+/**
+ * Interpola duas coberturas. É o que permite uma forma virar outra sem
+ * máscara, sem arquivo e sem resolução fixa: as duas continuam sendo funções
+ * de (u, v, ar), e a mistura também é.
+ *
+ * Com `eixo` (em graus), a troca não acontece igual em toda a peça: ela corre
+ * como frente de onda ao longo do eixo, como `progress` já faz na revelação.
+ * Medido e olhado: a mistura uniforme lê como dissolve cruzado de duas coisas
+ * — no meio do caminho as duas formas estão lá, meio apagadas. Com a frente,
+ * lê como uma coisa virando outra, porque em cada ponto só existe uma.
+ */
+function mistura(a, b, t, eixo = null, banda = 0.42) {
+  if (eixo == null) return (u, v, ar) => a(u, v, ar) * (1 - t) + b(u, v, ar) * t;
+  return (u, v, ar) => {
+    const pos = axis(u, v, ar, eixo);
+    const w = clamp01((t * (1 + banda) - pos) / banda);
+    return a(u, v, ar) * (1 - w) + b(u, v, ar) * w;
+  };
+}
+
+/* Resolve a forma de uma config, com suporte a `morf: {de, para, optsDe,
+   optsPara}` — que existe para o morf continuar sendo DADO (serializável em
+   JSON, declarável num data-attribute) em vez de exigir uma função escrita à
+   mão em cada peça. */
+function campoDe(cfg, t) {
+  if (cfg.morf) {
+    const { de, para, optsDe, optsPara, eixo = null, banda } = cfg.morf;
+    return mistura(
+      (fields[de] || fields.disc)(optsDe || cfg.opts || {}),
+      (fields[para] || fields.disc)(optsPara || cfg.opts || {}),
+      t, eixo, banda);
+  }
+  return null;
+}
+
+/**
+ * Anima de uma configuração a outra.
+ *
+ * @param {HTMLCanvasElement} canvas
+ * @param {object} de       config inicial
+ * @param {object} para     config final (só as chaves que mudam)
+ * @param {number} duration ms
+ * @param {(t:number)=>number} easing
+ *
+ * Sob `prefers-reduced-motion` desenha o estado final e não anima — mesma
+ * decisão de `resolve`, e pelo mesmo motivo.
+ */
+function anima(canvas, de, para, duration = 900, easing = (t) => 1 - Math.pow(1 - t, 3)) {
+  const fim = { ...de, ...para };
+  if (parado()) {
+    parar(canvas);
+    const f = campoDe(fim, 1);
+    return render(canvas, f ? { ...fim, shape: f } : fim);
+  }
+  laco(canvas, duration, (t) => {
+    const e = easing(t);
+    const cfg = interp(de, fim, e);
+    const f = campoDe(fim, e);
+    render(canvas, f ? { ...cfg, shape: f } : cfg);
+  });
 }
 
 /* --- Bootstrap declarativo ----------------------------------------------- */
