@@ -7,7 +7,7 @@ const p = await b.newPage({ viewport: { width: 1600, height: 1000 }, deviceScale
 const css = readFileSync('_fontes/fonts-abs.css', 'utf8');
 await p.route('https://fonts.googleapis.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/css', body: css }));
 const errs = []; p.on('pageerror', (e) => errs.push(e.message));
-await p.goto('http://localhost:8899/bananamilk.html', { waitUntil: 'load' });
+await p.goto('http://localhost:8899/bananamilk.html?parada=1', { waitUntil: 'load' });
 await p.evaluate(() => document.fonts.ready);
 await p.waitForFunction(() => document.documentElement.dataset.apPronto === '1');
 const r = await p.evaluate(() => {
@@ -34,7 +34,7 @@ let mau = 0;
 for (const x of r) {
   const flag = x.sobra > 2 ? `TRANSBORDA +${x.sobra}px` : 'cabe';
   if (x.sobra > 2) mau++;
-  console.log(`cena ${String(x.n).padStart(2, '0')} · ${x.modo.padEnd(8)} · ${x.np} painéis · cp ${x.cp.toFixed(2)} · ${flag}`);
+  console.log(`parada ${String(x.n).padStart(2, '0')} · ${x.modo.padEnd(8)} · ${x.np} painéis · cp ${x.cp.toFixed(2)} · ${flag}`);
 }
 console.log(`\n${mau} de ${r.length} transbordam`, errs.length ? '· ERROS: ' + errs.join(' ') : '');
 await b.close();

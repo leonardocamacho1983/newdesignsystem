@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plano de Gestão e IA da Banana Milk — documento</title>
+<meta name="description" content="O texto integral do assessment: diagnóstico, Modelo de Gestão, programas prioritários, 90 dias e instrumentos.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/site.css">
+</head>
+<body style="background:var(--cmc-white)">
+
+<div class="cmc-shell">
+  <div class="cmc-controls naoimprime" style="padding-block:var(--cmc-sp-5);justify-content:flex-end">
+    <a class="cmc-btn cmc-btn--ghost" href="bananamilk.html">← Apresentação</a>
+    <button class="cmc-btn" type="button" onclick="print()">Imprimir ou salvar em PDF</button>
+  </div>
+
+  <article class="pr" id="doc"></article>
+</div>
+
+<script type="module">
+import { init } from './src/dither.js';
+import { applyBrand, brandFromUrl } from './src/brand.js';
+import { SECOES, PROGRAMAS, PROGRAMAS_SEGUINTES } from './src/apresentacao.js';
+
+const marca = applyBrand(document, brandFromUrl());
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+/* O documento e a apresentação saem do MESMO `SECOES`/`PARADAS`. A
+   apresentação lê a afirmação de cada parada; o documento lê o texto inteiro.
+   Duas listas soltas para a mesma peça é a divergência que este repositório já
+   cometeu — e é a que aparece só quando o cliente compara os dois arquivos. */
+
+const olho = (t) => t ? `<p class="pr__olho">${esc(t)}</p>` : '';
+const lista = (itens, o) => !itens ? '' : olho(o) +
+  `<ul class="pr__lista">${itens.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
+
+function secaoHTML(s) {
+  const partes = [];
+
+  if (s.p) partes.push(s.p.map((t) => `<p class="cmc-editorial">${esc(t)}</p>`).join(''));
+
+  if (s.blocos) partes.push(s.blocos.map(([h, t]) =>
+    `<div class="pr__bloco"><h3>${esc(h)}</h3><p>${esc(t)}</p></div>`).join(''));
+
+  if (s.tabela) partes.push(`<table class="pr__tabela"><thead><tr>` +
+    s.tabela.cols.map((c) => `<th>${esc(c)}</th>`).join('') + '</tr></thead><tbody>' +
+    s.tabela.linhas.map((l) => `<tr>${l.map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`).join('') +
+    '</tbody></table>');
+
+  if (s.passos) partes.push(olho(s.passosOlho) +
+    `<ol class="pr__passos">${s.passos.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>`);
+
+  partes.push(lista(s.lista, s.listaOlho));
+  partes.push(lista(s.lista2, s.lista2Olho));
+
+  if (s.programas) partes.push(
+    `<ol class="pr__passos pr__passos--prog">` +
+    PROGRAMAS.map((g) => `<li style="--prog:${g.cor}"><strong>${esc(g.nome)}</strong> — ${esc(g.o)}</li>`).join('') +
+    PROGRAMAS_SEGUINTES.map((g) => `<li><strong>${esc(g.nome)}</strong> — ${esc(g.o)}</li>`).join('') +
+    '</ol>');
+
+  if (s.p2) partes.push(s.p2.map((t) => `<p class="cmc-editorial">${esc(t)}</p>`).join(''));
+
+  if (s.legado) partes.push(`<p class="pr__legado"><strong>Legado.</strong> ${esc(s.legado)}</p>`);
+
+  /* Nota de apoio é do assessment para quem apresenta, não do cliente para o
+     cliente. No documento ela entra marcada como tal, para ninguém confundir
+     interpretação com achado. */
+  if (s.nota) partes.push(`<p class="pr__nota"><strong>Nota do assessment.</strong> ${esc(s.nota)}</p>`);
+
+  const prog = s.programa && PROGRAMAS.find((g) => g.id === s.programa);
+  return `<section class="pr__sec" id="s${s.id}"${prog ? ` style="--prog:${prog.cor}"` : ''}>
+    <p class="pr__rot"${prog ? ' data-prog' : ''}>${String(s.id).padStart(2, '0')} · ${esc(s.rot)}</p>
+    <h2 class="cmc-h2">${esc(s.hed)}</h2>
+    ${partes.filter(Boolean).join('')}
+  </section>`;
+}
+
+document.getElementById('doc').innerHTML = `
+  <header class="pr__capa">
+    <span class="cmc-lockup cmc-lockup--sm">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#000"/>
+        <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word">${marca.name}</span>
+    </span>
+    <h1 class="cmc-title">Plano de Gestão<br>e IA da Banana Milk</h1>
+    <div class="pr__art">
+      <canvas data-cmc-dither="intervalo" data-ramp="1,1" data-cell="3"
+              data-opts='{"vaos":[[0.08,0.94]],"marcas":[[0.08,0.25,0.42,0.60,0.78,0.94]],"alt":0.42}'
+              aria-hidden="true"></canvas>
+    </div>
+    <p class="cmc-measure">AI ASSESSMENT &amp; OPPORTUNITIES · DIAGNÓSTICO, PROJETOS PRIORITÁRIOS E INSTRUMENTOS</p>
+  </header>
+  ${SECOES.map(secaoHTML).join('')}`;
+
+init(document);
+document.documentElement.dataset.docPronto = '1';
+</script>
+</body>
+</html>

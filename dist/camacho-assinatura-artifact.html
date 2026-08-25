@@ -1131,10 +1131,59 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
 .dk__slide[data-arte="borda"] > :not(.dk__art) { max-width: 89%; }
 .dk__slide[data-arte="borda"] .dk__hed { font-size: 3.1cqi; }
 .dk__slide[data-arte="sangria"] .dk__art { inset: 0; }
+
+/* pé — a arte toma uma faixa inferior de largura inteira, como LINHA do grid e
+   não como camada absoluta. É o modo do campo `intervalo`, e não é gosto: o
+   campo é um eixo de tempo, e numa coluna de 34% ele sai cortado — as três
+   barras de "onde o vão é maior" perdiam justamente a comparação que são.
+
+   As linhas são explícitas nos quatro filhos. Deixar o grid posicionar sozinho
+   joga a arte para a linha 1 e cria linhas novas no fim — defeito que este
+   repositório já cometeu em .cmc-kv--sangria e corrigiu do mesmo jeito. */
+/* 15cqi: varrido contra o transbordo. Em 22 seis paradas estouravam, em 18
+   três, em 15 nenhuma. Abaixo disso a faixa só perde altura sem ganhar nada. */
+.dk__slide[data-arte="pe"] { grid-template-rows: auto minmax(0, 1fr) 15cqi auto; }
+.dk__slide[data-arte="pe"] .dk__art { position: relative; inset: auto; grid-row: 3; }
+/* Rótulo de cada linha do eixo, em mono, na margem esquerda. */
+.dk__eixo {
+  position: absolute; inset: 0; z-index: 1; display: grid;
+  grid-auto-rows: 1fr; align-items: center;
+  font-family: var(--cmc-font-mono); font-size: 1.7cqi;
+  color: color-mix(in srgb, currentColor 55%, transparent);
+  pointer-events: none;
+}
+/* Onde há rótulo, o eixo começa depois dele — senão a marca do primeiro evento
+   cai em cima do texto. */
+.dk__art:has(.dk__eixo) canvas { left: 9cqi; width: calc(100% - 9cqi); }
+.dk__slide[data-arte="pe"] > :nth-child(2) { grid-row: 1; }
+.dk__slide[data-arte="pe"] .dk__meio { grid-row: 2; }
+.dk__slide[data-arte="pe"] > :last-child { grid-row: 4; }
 /* --cl vem da clareira declarada pela cena: o tipo não passa da borda do
    terreno limpo, por construção e não por conferência visual. */
 .dk__slide[data-arte="sangria"] > :not(.dk__art) { max-width: calc(var(--cl, 1) * 100%); }
 .dk__slide > :not(.dk__art) { position: relative; z-index: 1; }
+
+/* A abertura: roda sozinha uma vez, antes da primeira parada, e para. */
+.dk__abertura {
+  position: absolute; inset: 0; z-index: 3; background: var(--cmc-black);
+  display: grid; place-items: center;
+}
+.dk__abertura[hidden] { display: none; }
+.dk__abertura canvas { position: absolute; inset: 0; width: 100%; height: 100%; color: #fff; }
+.dk__abertura__leg {
+  position: relative; margin: 0; align-self: end; margin-bottom: 9cqi;
+  font-family: var(--cmc-font-mono); font-size: 2cqi; letter-spacing: 0.04em;
+  text-transform: uppercase; color: #fff; opacity: 0;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__abertura__leg[data-visivel] { opacity: 1; }
+
+/* Os quatro programas carregam o acento do sabor correspondente. Barra à
+   esquerda, não fundo colorido: o acento identifica, não decora, e o campo
+   continua sendo o creme compartilhado pelas duas marcas. */
+.dk__bloco--prog { padding-left: calc(1.6cqi * var(--cp, 1));
+                   border-left: 3px solid var(--prog, currentColor); }
+.dk__bloco--prog h4 { color: var(--prog, currentColor); }
 
 /* Beats. Um elemento com data-beat só aparece quando o beat corrente o
    alcançou. `visibility` em vez de `display` para o layout não pular: a
@@ -1309,6 +1358,52 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
   font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
   color: var(--cmc-text-muted); margin: 0 0 var(--cmc-sp-4);
 }
+/* Peças do documento do assessment. Reusam .pr__sec/.pr__rot/.pr__tabela; o
+   que entra aqui é só o que o texto do assessment pede a mais. */
+.pr__olho {
+  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-micro);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--cmc-ink-3); margin: var(--cmc-sp-5) 0 var(--cmc-sp-3);
+}
+.pr__bloco { margin-block: var(--cmc-sp-5); }
+.pr__bloco h3 {
+  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-micro);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  font-weight: var(--cmc-w-medium); color: var(--cmc-ink-3);
+  margin: 0 0 var(--cmc-sp-2);
+}
+.pr__bloco p { margin: 0; line-height: 1.6; }
+.pr__lista, .pr__passos { margin: 0 0 var(--cmc-sp-4); padding: 0; list-style: none; }
+.pr__lista li, .pr__passos li { line-height: 1.55; margin-bottom: var(--cmc-sp-2); }
+.pr__lista li { padding-left: var(--cmc-sp-5); position: relative; }
+.pr__lista li::before {
+  content: ""; position: absolute; left: 0; top: 0.72em;
+  width: var(--cmc-sp-4); height: 1px; background: currentColor; opacity: 0.4;
+}
+.pr__passos { counter-reset: pr; }
+.pr__passos li { counter-increment: pr; padding-left: var(--cmc-sp-6); position: relative; }
+.pr__passos li::before {
+  content: counter(pr, decimal-leading-zero); position: absolute; left: 0;
+  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-micro);
+  font-variant-numeric: tabular-nums; color: var(--cmc-ink-3); top: 0.25em;
+}
+/* Barra do sabor: o acento identifica o programa, e não pinta o fundo. */
+.pr__passos--prog li[style*="--prog"] { border-left: 3px solid var(--prog); padding-left: var(--cmc-sp-5); }
+.pr__passos--prog li::before { content: none; }
+.pr__rot[data-prog] { color: var(--prog); }
+.pr__sec[style*="--prog"] { border-left: 3px solid var(--prog); padding-left: var(--cmc-sp-5); }
+
+.pr__legado {
+  margin: var(--cmc-sp-5) 0 0; padding-left: var(--cmc-sp-5);
+  border-left: 2px solid var(--cmc-ink-3); line-height: 1.55;
+}
+/* Nota do assessment: interpretação, não achado. Marcada para ninguém
+   confundir as duas — é uma exigência da regra editorial do documento. */
+.pr__nota {
+  margin: var(--cmc-sp-5) 0 0; padding: var(--cmc-sp-4);
+  background: var(--cmc-paper); font-size: var(--cmc-fs-small); line-height: 1.55;
+}
+
 .pr__tabela { width: 100%; border-collapse: collapse; font-size: var(--cmc-fs-small); }
 .pr__tabela th {
   text-align: left; font-weight: var(--cmc-w-medium); padding: var(--cmc-sp-3) 0;

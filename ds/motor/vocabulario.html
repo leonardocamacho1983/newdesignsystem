@@ -1,4 +1,4 @@
-<!-- @dsCard group="Motor gráfico" name="Vocabulário de formas" subtitle="As 28 formas do motor. Cada grafismo é a mesma operação: uma forma amostrada por uma grade de partículas quadradas, cuja probabilidade de existir varia ao longo de uma rampa de densidade. Nenhuma é ornamento — cada uma carrega uma ideia do negócio." width="1200" height="1617" -->
+<!-- @dsCard group="Motor gráfico" name="Vocabulário de formas" subtitle="As 29 formas do motor. Cada grafismo é a mesma operação: uma forma amostrada por uma grade de partículas quadradas, cuja probabilidade de existir varia ao longo de uma rampa de densidade. Nenhuma é ornamento — cada uma carrega uma ideia do negócio." width="1200" height="1617" -->
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -517,7 +517,7 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
 <main class="ds">
   <header class="ds__cab">
     <h1 class="cmc-h2" style="margin:0">Vocabulário de formas</h1>
-    <p class="ds__nota">As 28 formas do motor. Cada grafismo é a mesma operação: uma forma amostrada por uma grade de partículas quadradas, cuja probabilidade de existir varia ao longo de uma rampa de densidade. Nenhuma é ornamento — cada uma carrega uma ideia do negócio.</p>
+    <p class="ds__nota">As 29 formas do motor. Cada grafismo é a mesma operação: uma forma amostrada por uma grade de partículas quadradas, cuja probabilidade de existir varia ao longo de uma rampa de densidade. Nenhuma é ornamento — cada uma carrega uma ideia do negócio.</p>
   </header>
   <div class="ds__grade">
 
@@ -652,11 +652,16 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
   </figure>
 
   <figure class="ds__item">
-    <div class="ds__quadro" style="--ar:16/9"><canvas data-cmc-dither="noiseToSignal" data-ramp="0.06,1" data-cell="3" data-seed="137"  aria-hidden="true"></canvas></div>
+    <div class="ds__quadro" style="--ar:16/9"><canvas data-cmc-dither="intervalo" data-ramp="0.06,1" data-cell="3" data-seed="137"  aria-hidden="true"></canvas></div>
+    <figcaption class="ds__rot">intervalo</figcaption>
+  </figure>
+
+  <figure class="ds__item">
+    <div class="ds__quadro" style="--ar:16/9"><canvas data-cmc-dither="noiseToSignal" data-ramp="0.06,1" data-cell="3" data-seed="142"  aria-hidden="true"></canvas></div>
     <figcaption class="ds__rot">noiseToSignal</figcaption>
   </figure>
   </div>
-  <p class="ds__nota"><strong>foto</strong> é a 28ª e não aparece acima: é o único campo que não se resolve por conta própria — ele amostra a luminância de uma imagem já decodificada, então só existe quando há foto de verdade. Fotografia entra como prova, nunca como banco de imagem, e no instante em que o motor a amostra ela vira campo, e campo é monocromático.</p>
+  <p class="ds__nota"><strong>foto</strong> é a 29ª e não aparece acima: é o único campo que não se resolve por conta própria — ele amostra a luminância de uma imagem já decodificada, então só existe quando há foto de verdade. Fotografia entra como prova, nunca como banco de imagem, e no instante em que o motor a amostra ela vira campo, e campo é monocromático.</p>
 </main>
 <script type="module">
 /* ==========================================================================
@@ -1337,6 +1342,52 @@ const fields = {
 
     return Math.max(edge(d * s, soft),
                     edge((Math.hypot(x - px * 1.09, y - py * 1.09) - 0.095) * s, soft));
+  },
+
+  /* Intervalo: o vão entre um fato e a ação sobre ele.
+
+     O motor não tinha tempo no vocabulário. Todo campo é forma no espaço, e
+     `progress` anima uma revelação — nada representava duração, atraso ou
+     sequência. Sem este campo, uma peça sobre latência acaba pedindo emprestado
+     `spiral` para recompra e `funnel` para shelf life, que é ornamento com
+     nome de argumento.
+
+     Cada vão ganha uma LINHA própria, então três vãos viram três barras
+     comparáveis. Dentro do vão a densidade sobe de ruído a sinal — a operação
+     da própria marca, localizada.
+
+     A regra que decide tudo, e que a primeira versão errou: depois do fim do
+     vão a faixa fica CHEIA, não vazia. Vão curto tem que ler como "resolveu
+     antes", e portanto como MAIS tinta. Com a faixa terminando no fim do vão,
+     vão curto virava um borrão pequeno — lê como menos, que é o contrário da
+     mensagem. O eixo é sempre o quadro inteiro; o que muda é onde o sinal é
+     alcançado.
+
+     `curva` existe e é honesta, mas foi medida como ilegível: a olho, curva 3
+     não se distingue de curva 1,5. Não use para dizer nada. */
+  intervalo: ({ vaos = [[0.10, 0.90]], marcas = null, curva = 1.5,
+                alt = 0.62, piso = 0.04, soft = 0.012, tick = 0.0035 } = {}) => (u, v, ar) => {
+    const n = vaos.length, passo = ar / n;
+    const i = Math.min(n - 1, Math.max(0, Math.floor(v / passo)));
+    const [a, b] = vaos[i];
+    const cy = (i + 0.5) * passo, meia = (alt * passo) / 2;
+
+    /* A suavização vertical não pode ser maior que a própria linha. Numa faixa
+       de 15cqi com três vãos, cada linha tem meia-altura ~0,009 e o `soft`
+       padrão de 0,012 borrava as três uma na outra: o gradiente sumia e as
+       barras ficavam indistinguíveis. O campo degradava em silêncio, e só
+       apareceu ao pôr a faixa na altura real da peça. */
+    const sv = Math.min(soft, meia * 0.4);
+    const dentro = edge(Math.abs(v - cy) - meia, sv);
+    const pts = (marcas && marcas[i]) || [a, b];
+    let m = 0;
+    for (const x of pts) m = Math.max(m, edge(Math.abs(u - x) - tick, tick * 0.7));
+    const marca = m * edge(Math.abs(v - cy) - meia * 1.5, sv);
+
+    const cov = u < a ? 0
+      : u > b ? 1
+      : piso + (1 - piso) * Math.pow((u - a) / (b - a), curva);
+    return Math.max(cov * dentro, marca);
   },
 
   noiseToSignal: ({ soft = 0.02 } = {}) => (u, v, ar) => {

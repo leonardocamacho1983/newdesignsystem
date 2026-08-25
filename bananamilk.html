@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plano de Gestão e IA da Banana Milk</title>
-<meta name="description" content="Diagnóstico, projetos prioritários e instrumentos para a próxima etapa do negócio. AI Assessment & Opportunities.">
+<meta name="description" content="Doze paradas: o intervalo entre o fato e a ação, e o que o encurta. AI Assessment &amp; Opportunities.">
 <link rel="icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,19 +26,24 @@
     </a>
     <div class="dk__regua" id="regua" aria-hidden="true"></div>
     <div class="cmc-controls">
-      <span class="dk__conta" id="conta">01 / 23</span>
+      <span class="dk__conta" id="conta">01 / 12</span>
       <button class="cmc-btn cmc-btn--ghost" type="button" id="anterior" aria-label="Passo anterior">←</button>
       <button class="cmc-btn cmc-btn--ghost" type="button" id="proximo" aria-label="Próximo passo">→</button>
       <button class="cmc-btn cmc-btn--inverse" type="button" id="tela">Tela cheia</button>
     </div>
   </div>
 
-  <div class="dk__palco" id="palco" tabindex="0" aria-label="Apresentação. Use as setas para navegar."></div>
+  <div class="dk__palco" id="palco" tabindex="0" aria-label="Apresentação. Use as setas para navegar.">
+    <div class="dk__abertura" id="abertura" aria-hidden="true">
+      <canvas id="abre"></canvas>
+      <p class="dk__abertura__leg" id="abre-leg"></p>
+    </div>
+  </div>
 
   <p class="cmc-small" style="padding-block:var(--cmc-sp-4)">
-    Setas ou espaço avançam um passo · <kbd>↑</kbd><kbd>↓</kbd> pulam a cena inteira ·
+    Setas ou espaço avançam um passo · <kbd>↑</kbd><kbd>↓</kbd> pulam a parada ·
     <kbd>F</kbd> tela cheia · <a id="link-notas" style="color:inherit;text-decoration:underline;cursor:pointer">notas do apresentador</a> ·
-    imprima para PDF pelo navegador.
+    <a href="bananamilk-documento.html" style="color:inherit;text-decoration:underline">documento completo</a>
   </p>
 
   <div class="dk__notas" id="notas" hidden></div>
@@ -47,258 +52,212 @@
 <script type="module">
 import { init, render, anima, parar } from './src/dither.js';
 import { applyBrand, brandFromUrl } from './src/brand.js';
-import { CENAS, REGISTRO_EDITORIAL, ATIVOS, PENDENCIAS, campoDaCena, arteNoBeat } from './src/apresentacao.js';
+import { PARADAS, SECOES, REGISTRO_EDITORIAL, PROGRAMAS, ATIVOS, PENDENCIAS,
+         campoDaParada, arteNoBeat, secoesOrfas } from './src/apresentacao.js';
 
 const marca = applyBrand(document, brandFromUrl());
 const params = new URLSearchParams(location.search);
 
-/* O href sai por DOM, nunca escrito no markup: o guard de auto-contenção de
+/* Href por DOM, nunca escrito no markup: o guard de auto-contenção de
    src/inline.mjs derruba o build em qualquer href local sobrevivente, e um
-   "?notas=1" literal conta como local. Ele pegou este aqui na primeira vez. */
+   "?notas=1" literal conta como local. Ele já pegou este aqui uma vez. */
 document.getElementById('link-notas').href = '?notas=1';
 
 const CAMPOS = { escuro: ['#000000', '#FFFFFF'], papel: ['#F2F0EE', '#000000'] };
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const olhoP = (t) => t ? `<p class="dk__olho" style="margin-bottom:1.4cqi">${esc(t)}</p>` : '';
 
 /* --- Montagem ------------------------------------------------------------
-   Cada pedaço de conteúdo recebe o número do beat em que aparece, e o contador
-   `b` é incrementado só quando a cena declarou um beat para aquele pedaço.
-   Assim a ordem de revelação sai da ordem do conteúdo, sem tabela paralela. */
+   Cada beat troca o PAINEL — o conteúdo passa pelo quadro em vez de se
+   acumular nele. Medido na versão anterior: com painéis empilhados, 22 das 23
+   cenas transbordavam o 16:9, algumas por 700px num espaço de 419. Com doze
+   paradas há muito menos texto, mas a mecânica continua sendo a certa: uma
+   parada é um plano, não uma página. */
+function paineisDe(p) {
+  const out = [];
 
-function placa(chave) {
-  const a = ATIVOS[chave];
-  return `<div class="dk__placa"><b>Falta ${esc(a.o)}</b><span>${esc(a.arquivo)}</span></div>`;
-}
+  if (p.apoio) out.push(`<p class="dk__fecho">${esc(p.apoio)}</p>`);
 
-/* Tabela, opcionalmente partida em blocos de `quebra` linhas — cada bloco vira
-   um painel e repete o cabeçalho. É o que salva a grade de 90 dias, que não
-   cabe inteira nem no piso de compressão: partir por frente preserva o sentido,
-   encolher até 1,3cqi não preserva a leitura. */
-function tabelaHTML(t, linhas = t.linhas) {
-  const th = t.cols.map((c, i) => `<th${i ? ` data-col="${i}"` : ''}>${esc(c)}</th>`).join('');
-  const tr = linhas.map((l) =>
-    `<tr>${l.map((c, i) => `<td${i ? ` data-col="${i}"` : ''}>${esc(c)}</td>`).join('')}</tr>`).join('');
-  return `<table class="dk__tab"><thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table>`;
-}
+  if (p.trio) out.push(`<div class="dk__blocos" style="--cols:3">` +
+    p.trio.map(([h, t], i) => `<div class="dk__bloco"><h4>${String(i + 1).padStart(2, '0')} · ${esc(h)}</h4><p>${esc(t)}</p></div>`).join('') + '</div>');
 
-/* Cada beat é um PAINEL, não um acréscimo.
+  if (p.grade) out.push(`<div class="dk__grade" style="--cols:4">` +
+    p.grade.map(([h, t]) => `<div class="dk__item"><h4>${esc(h)}</h4><p>${esc(t)}</p></div>`).join('') + '</div>');
 
-   Medido com _cabe.mjs: com os painéis empilhados, 22 das 23 cenas
-   transbordavam a faixa do meio, algumas por 700px num espaço de 419. Não é
-   questão de afinar corpo de texto — este conteúdo é documento, não slide, e
-   cada slide de origem traz de três a seis blocos de prosa.
+  if (p.passos) out.push(olhoP(p.passosOlho) +
+    `<ol class="dk__passos" style="--cols:${p.passos.length > 5 ? 2 : 1}">` +
+    p.passos.map((x) => `<li>${esc(x)}</li>`).join('') + '</ol>');
 
-   Então o conteúdo passa PELO quadro em vez de se acumular nele: a manchete e
-   o olho ficam, o painel troca. É o que um filme faz, é o que "só passo a
-   passo" pede, e resolve a impressão de graça — o PDF emite uma página por
-   beat em vez de uma por cena. */
-function corpoHTML(c) {
-  const paineis = [];
-  const push = (html) => paineis.push(html);
-  const olho = (t) => t ? `<p class="dk__olho" style="margin-bottom:1.4cqi">${esc(t)}</p>` : '';
+  /* Os quatro programas carregam o acento do sabor correspondente. É a única
+     cor da apresentação, e ela identifica — não decora. */
+  if (p.programas) out.push(`<div class="dk__blocos" style="--cols:2">` +
+    PROGRAMAS.map((g, i) => `<div class="dk__bloco dk__bloco--prog" style="--prog:${g.cor}">
+      <h4>${String(i + 1).padStart(2, '0')} · ${esc(g.nome)}</h4><p>${esc(g.o)}</p></div>`).join('') + '</div>');
 
-  if (c.corpo) push(`<p class="dk__fecho">${c.corpo}</p>`);
-
-  if (c.blocos) push(`<div class="dk__blocos" style="--cols:${Math.min(c.blocos.length, 2)}">` +
-    c.blocos.map(([h, t]) => `<div class="dk__bloco"><h4>${esc(h)}</h4><p>${esc(t)}</p></div>`).join('') + '</div>');
-
-  if (c.tabela) {
-    const q = c.tabela.quebra;
-    if (q) for (let i = 0; i < c.tabela.linhas.length; i += q)
-      push(tabelaHTML(c.tabela, c.tabela.linhas.slice(i, i + q)));
-    else push(tabelaHTML(c.tabela));
+  if (p.ativo) {
+    const a = ATIVOS[p.ativo];
+    out.push(`<div class="dk__placa"><b>Falta ${esc(a.o)}</b><span>${esc(a.arquivo)}</span></div>`);
   }
 
-  if (c.grade) push(`<div class="dk__grade" style="--cols:${c.cols || 3}">` +
-    c.grade.map((g) => `<div class="dk__item"><h4>${esc(g.h)}</h4><p>${esc(g.p)}</p></div>`).join('') + '</div>');
-
-  if (c.passos) push(olho(c.passosOlho) +
-    `<ol class="dk__passos" style="--cols:${c.passos.length > 5 ? 2 : 1}">` +
-    c.passos.map((x) => `<li>${esc(x)}</li>`).join('') + '</ol>');
-
-  if (c.lista) push(olho(c.listaOlho) +
-    `<ul class="dk__lista" style="--cols:${c.lista.length > 4 ? 2 : 1}">` +
-    c.lista.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>');
-
-  /* Duas listas = dois painéis, não duas colunas. Lado a lado elas competem
-     pela mesma altura e a mais longa manda no fator de compressão das duas;
-     em sequência cada uma respira, e a segunda vira um passo do argumento. */
-  if (c.duasListas) {
-    const d = c.duasListas;
-    for (const [o, itens] of [[d.aOlho, d.a], [d.bOlho, d.b]])
-      push(olho(o) + `<ul class="dk__lista" style="--cols:${itens.length > 5 ? 2 : 1}">` +
-        itens.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>');
-  }
-
-  if (c.ativo) push(placa(c.ativo));
-  if (c.fecho) push(`<p class="dk__fecho">${esc(c.fecho)}</p>`);
-  if (c.legado) push(`<p class="dk__legado"><b>Legado.</b> ${esc(c.legado)}</p>`);
-
-  /* Os painéis são absolutos DENTRO do próprio palco, não do meio inteiro:
-     sem este invólucro eles cobrem também a linha da manchete, e o primeiro
-     painel sai por cima do título. */
   return '<div class="dk__paineis">' +
-    paineis.map((h, i) => `<div class="dk__painel" data-painel="${i}">${h}</div>`).join('') + '</div>';
+    out.map((h, i) => `<div class="dk__painel" data-painel="${i}">${h}</div>`).join('') + '</div>';
+}
+
+/* Rótulos das linhas do eixo. Sem eles as três barras empilhadas não se
+   amarram às três colunas de texto lidas da esquerda para a direita, e a
+   comparação — que é o argumento — fica por conta do público. */
+function rotulosEixo(p) {
+  if (p.rotBeat) return '<div class="dk__eixo" data-beat-rot><span></span></div>';
+  if (!p.eixoRots) return '';
+  return '<div class="dk__eixo">' +
+    p.eixoRots.map((r) => `<span>${esc(r)}</span>`).join('') + '</div>';
 }
 
 const palco = document.getElementById('palco');
+const abertura = document.getElementById('abertura');
 
-palco.innerHTML = CENAS.map((c, i) => {
-  const campo = campoDaCena(c);
+palco.insertAdjacentHTML('beforeend', PARADAS.map((p, i) => {
+  const campo = campoDaParada(p);
   const [bg, ink] = CAMPOS[campo] || CAMPOS.papel;
-  const reg = c.registro ? REGISTRO_EDITORIAL[c.registro] : null;
-  const estilo = () => `--slide-bg:${bg};--slide-ink:${ink}` + (c.acento ? `;--slide-acento:${c.acento}` : '') + larg;
+  const reg = p.registro ? REGISTRO_EDITORIAL[p.registro] : null;
 
-  const olho = c.capa ? '' :
-    `<p class="dk__olho">${reg ? `<strong>${esc(reg.rotulo)}</strong>` : ''}${reg && c.olho ? ' · ' : ''}${c.olho ? esc(c.olho) : ''}</p>`;
-
-  const hedClasse = c.capa ? 'dk__hed'
-    : (c.hed.length > 58 ? 'dk__hed dk__hed--peq' : 'dk__hed dk__hed--med');
-
-  const topo = c.capa
-    ? `<span class="cmc-lockup dk__lockup"><svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/></svg><span class="cmc-lockup__word">${marca.name}</span></span>`
-    : olho;
-
-  /* Quanta largura o conteúdo pede decide quanta sobra para o grafismo.
-     Tabela grande e grade grande são as que estouram o 16:9 primeiro. */
-  const denso = !!c.tabela || !!c.grade || !!c.duasListas
-    || (c.passos && c.passos.length > 6);
-  const modo = c.modo || (c.sangria ? 'sangria' : denso ? 'borda' : 'faixa');
-  /* Em sangria, a largura do tipo SAI da clareira declarada. Ajustar os dois
-     à mão é como o grafismo volta a cruzar a tipografia: alguém mexe na
-     clareira, esquece do texto, e o defeito reaparece três cenas depois.
-     A clareira considerada é a MAIS ABERTA de todos os beats, não a do
-     estado inicial: na cena 10 ela nasce fechada e abre, e medir pela
-     fechada espremia o texto numa coluna de 31%. */
+  /* Em sangria, a largura do tipo SAI da clareira mais aberta de todos os
+     beats. Acertar os dois à mão é como o grafismo volta a cruzar a
+     tipografia: alguém mexe na clareira, esquece do texto, e o defeito
+     reaparece três paradas depois. */
   let larg = '';
-  if (c.sangria && c.arte) {
+  if (p.sangria && p.arte) {
     let melhor = 0;
-    for (let k = 0; k < (c.beats || [{}]).length; k++) {
-      const cfg = arteNoBeat(c, k), cl = cfg && cfg.clareira && cfg.clareira[0];
+    for (let k = 0; k < p.beats.length; k++) {
+      const cfg = arteNoBeat(p, k), cl = cfg && cfg.clareira && cfg.clareira[0];
       if (cl) melhor = Math.max(melhor, (cl.x + cl.w) - cl.soft * 0.5);
     }
     if (melhor) larg = `;--cl:${Math.max(0.3, melhor)}`;
   }
-  const arte = c.arte ? '<div class="dk__art"><canvas aria-hidden="true"></canvas></div>' : '';
+
+  /* A faixa fica em 15cqi mesmo com três vãos: varrido, qualquer coisa acima
+     de ~18cqi rouba do painel e a parada estoura. O que faltava não era altura,
+     era CÉLULA — em 15cqi com três linhas a cell 4 dá ~5 células por linha, e
+     um gradiente de densidade não se expressa em cinco. As paradas de três vãos
+     baixam para cell 3 e sobem `alt`, e aí a progressão lê. */
+
+  const estilo = `--slide-bg:${bg};--slide-ink:${ink}`
+    + (p.acento ? `;--slide-acento:${p.acento}` : '') + larg;
+
+  const topo = p.capa
+    ? `<span class="cmc-lockup dk__lockup"><svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/></svg><span class="cmc-lockup__word">${marca.name}</span></span>`
+    : `<p class="dk__olho">${reg ? `<strong>${esc(reg.rotulo)}</strong>` : ''}${reg && p.olho ? ' · ' : ''}${p.olho ? esc(p.olho) : ''}</p>`;
+
+  const hedClasse = p.capa ? 'dk__hed' : (p.hed.length > 52 ? 'dk__hed dk__hed--peq' : 'dk__hed dk__hed--med');
+  /* O modo sai do campo, não do gosto: `intervalo` é eixo e pede largura. */
+  const eixo = p.arte && p.arte.shape === 'intervalo';
+  const modo = p.modo || (p.sangria ? 'sangria' : eixo ? 'pe' : 'faixa');
 
   return `<section class="dk__slide" data-i="${i}" data-campo="${campo}" data-arte="${modo}"
-      ${c.registro ? `data-registro="${c.registro}"` : ''} style="${estilo()}">
-    ${arte}
+      ${p.registro ? `data-registro="${p.registro}"` : ''} style="${estilo}">
+    ${p.arte ? `<div class="dk__art">${rotulosEixo(p)}<canvas aria-hidden="true"></canvas></div>` : ''}
     <div>${topo}</div>
     <div class="dk__meio">
-      <h2 class="${hedClasse}">${c.hed}</h2>
-      ${corpoHTML(c)}
+      <h2 class="${hedClasse}">${p.hed}</h2>
+      ${paineisDe(p)}
     </div>
     <div>
       <div class="dk__pe" style="margin-top:2cqi">
-        <span>${esc(c.rodape || 'Plano de Gestão e IA da Banana Milk')}</span>
-        <span>${String(c.n).padStart(2, '0')} / ${String(CENAS.length).padStart(2, '0')}</span>
+        <span>${esc(p.rodape || 'Plano de Gestão e IA da Banana Milk')}</span>
+        <span>${String(p.n).padStart(2, '0')} / ${String(PARADAS.length).padStart(2, '0')}</span>
       </div>
     </div>
   </section>`;
-}).join('');
+}).join(''));
 
-/* --- Ajuste medido ------------------------------------------------------
-
-   Baixa --cp de cada painel até ele caber, com piso: abaixo de PISO o tipo
-   deixa de ser legível projetado, e aí o problema é excesso de conteúdo, não
-   de tamanho. Um painel que bate no piso e ainda transborda é registrado em
-   `apEstouro` — o relatório de _cabe.mjs lê dali. Melhor um número do que uma
-   barra de rolagem que ninguém vê no meio da apresentação. */
+/* --- Ajuste medido -------------------------------------------------------
+   Baixa --cp de cada painel até ele caber, com piso: abaixo dele o tipo deixa
+   de ser legível projetado, e aí o problema é excesso de conteúdo, não de
+   tamanho. Painel que bate no piso e ainda transborda vai para window.apEstouro
+   — melhor um número no relatório do que uma barra de rolagem que ninguém vê
+   no meio da apresentação. */
 const PISO = 0.68;
 const estouros = [];
 
-function ajustarPainel(el) {
-  el.style.setProperty('--cp', '1');
-  if (el.scrollHeight <= el.clientHeight + 1) return;
-  let cp = 1;
-  while (cp > PISO) {
-    cp = Math.round((cp - 0.04) * 100) / 100;
-    el.style.setProperty('--cp', String(cp));
-    if (el.scrollHeight <= el.clientHeight + 1) return;
-  }
-  estouros.push({ cena: el.closest('.dk__slide').dataset.i, sobra: el.scrollHeight - el.clientHeight });
-}
-
-/* Só mede painel visível: um painel escondido tem clientHeight zero. */
-function ajustarCena(secao) {
+function ajustarParada(secao) {
   secao.querySelectorAll('.dk__painel').forEach((el) => {
     const tinha = el.hasAttribute('data-visivel');
     el.setAttribute('data-visivel', '');
-    ajustarPainel(el);
+    el.style.setProperty('--cp', '1');
+    let cp = 1;
+    while (el.scrollHeight > el.clientHeight + 1 && cp > PISO) {
+      cp = Math.round((cp - 0.04) * 100) / 100;
+      el.style.setProperty('--cp', String(cp));
+    }
+    if (el.scrollHeight > el.clientHeight + 1)
+      estouros.push({ parada: secao.dataset.i, sobra: el.scrollHeight - el.clientHeight });
     if (!tinha) el.removeAttribute('data-visivel');
   });
 }
 
-/* --- Navegação por beats -------------------------------------------------
-   Uma seta avança um passo dentro da cena; no último passo, passa de cena.
-   Voltar assenta no estado FINAL do passo anterior — nunca reproduz a
-   animação de trás para frente, que é o que faz um deck parecer quebrado. */
-
-/* Quantos passos a cena tem sai do DOM, não da declaração: o número de painéis
-   é decidido na montagem (uma tabela com `quebra` vira vários, duasListas vira
-   dois), e uma lista de beats escrita à mão ficaria defasada em silêncio —
-   com painel inalcançável e ninguém percebendo até a apresentação. */
+/* --- Navegação -----------------------------------------------------------
+   Quantos passos cada parada tem sai do DOM, não de lista escrita à mão: o
+   número de painéis é decidido na montagem, e uma lista paralela ficaria
+   defasada em silêncio, com painel inalcançável. O número de beats declarados
+   entra junto, porque uma parada pode mover o grafismo sem trocar painel. */
 palco.querySelectorAll('.dk__slide').forEach((s, i) => {
-  s.dataset.beats = String(1 + s.querySelectorAll('.dk__painel').length);
+  s.dataset.beats = String(Math.max(PARADAS[i].beats.length,
+                                    1 + s.querySelectorAll('.dk__painel').length));
 });
 const passosDa = (i) => Number(palco.querySelector(`.dk__slide[data-i="${i}"]`).dataset.beats);
 
 const regua = document.getElementById('regua');
-regua.innerHTML = CENAS.map(() => '<i></i>').join('');
+regua.innerHTML = PARADAS.map(() => '<i></i>').join('');
 const conta = document.getElementById('conta');
 
-let cena = 0, beat = 0, anterior = -1;
+let parada = 0, beat = 0, anterior = -1;
 
 function aplicar(animar) {
-  const c = CENAS[cena];
-  const secao = palco.querySelector(`.dk__slide[data-i="${cena}"]`);
+  const p = PARADAS[parada];
+  const secao = palco.querySelector(`.dk__slide[data-i="${parada}"]`);
 
-  palco.querySelectorAll('.dk__slide').forEach((s, k) => s.toggleAttribute('data-ativo', k === cena));
+  palco.querySelectorAll('.dk__slide').forEach((s, k) => s.toggleAttribute('data-ativo', k === parada));
   regua.querySelectorAll('i').forEach((el, k) => {
-    el.toggleAttribute('data-feito', k < cena);
-    el.toggleAttribute('data-agora', k === cena);
+    el.toggleAttribute('data-feito', k < parada);
+    el.toggleAttribute('data-agora', k === parada);
   });
-  conta.textContent = `${String(c.n).padStart(2, '0')} / ${String(CENAS.length).padStart(2, '0')}`;
+  conta.textContent = `${String(p.n).padStart(2, '0')} / ${String(PARADAS.length).padStart(2, '0')}`;
 
-  /* Um painel por vez: o beat 0 é o quadro só com a manchete, e a partir daí
-     cada passo troca o painel. Cena sem painel nenhum fica na manchete. */
+  /* O painel visível é `beat-1` LIMITADO ao último — não igual a ele. Uma
+     parada pode ter mais beats que painéis, porque um beat pode só mover o
+     grafismo; com igualdade estrita o texto sumia da tela quando o vão
+     encolhia, que é justamente quando alguém está lendo. */
   const paineis = secao.querySelectorAll('.dk__painel');
-  paineis.forEach((el, k) => el.toggleAttribute('data-visivel', k === beat - 1));
-  if (!secao.dataset.ajustado) { ajustarCena(secao); secao.dataset.ajustado = '1'; }
-  secao.querySelectorAll('[data-beat]').forEach((el) => {
-    el.toggleAttribute('data-visivel', Number(el.dataset.beat) <= beat);
-  });
+  const vis = Math.min(beat - 1, paineis.length - 1);
+  paineis.forEach((el, k) => el.toggleAttribute('data-visivel', k === vis && beat > 0));
 
-  /* Tabela revelada coluna a coluna (slide 20). */
-  const cols = c.beats.slice(0, beat + 1).reduce((m, b) => Math.max(m, b.colunas || 0), 0);
-  secao.querySelectorAll('.dk__tab [data-col]').forEach((el) => {
-    el.toggleAttribute('data-visivel', c.beats.some((b) => b.colunas) ? Number(el.dataset.col) <= cols : true);
-  });
+  /* Rótulo do eixo que muda com o passo: na parada dos 90 dias é ele que diz
+     em que etapa o vão está, já que a barra é uma só. */
+  const rot = secao.querySelector('.dk__eixo[data-beat-rot] span');
+  if (rot) rot.textContent = (p.rotBeat && p.rotBeat[beat]) || '';
 
-  /* Grafismo. */
   const cv = secao.querySelector('canvas');
-  if (!cv) return;
-  const alvo = arteNoBeat(c, beat);
-  const passo = c.beats[beat];
-  const mudou = animar && passo && passo.arte && cena === anterior;
-  if (mudou) anima(cv, arteNoBeat(c, beat - 1), alvo, passo.ms || 1200);
-  else { parar(cv); render(cv, alvo); }
-  anterior = cena;
+  if (cv) {
+    const alvo = arteNoBeat(p, beat);
+    const passo = p.beats[beat];
+    if (animar && passo && passo.arte && parada === anterior)
+      anima(cv, arteNoBeat(p, beat - 1), alvo, passo.ms || 1200);
+    else { parar(cv); render(cv, alvo); }
+  }
+  anterior = parada;
 }
 
-function ir(dc, db) {
-  const c = CENAS[cena];
+function ir(dp, db) {
+  if (abertura.dataset.rodando) return cortarAbertura();
   if (db) {
     const n = beat + db;
-    if (n >= 0 && n < passosDa(cena)) { beat = n; return aplicar(db > 0); }
-    dc = db > 0 ? 1 : -1;
+    if (n >= 0 && n < passosDa(parada)) { beat = n; return aplicar(db > 0); }
+    dp = db > 0 ? 1 : -1;
   }
-  const nc = cena + dc;
-  if (nc < 0 || nc >= CENAS.length) return;
-  cena = nc;
-  /* Entrando de trás para frente, cai no último passo da cena. */
-  beat = db < 0 ? passosDa(cena) - 1 : 0;
+  const np = parada + dp;
+  if (np < 0 || np >= PARADAS.length) return;
+  parada = np;
+  beat = db < 0 ? passosDa(parada) - 1 : 0;
   aplicar(false);
 }
 
@@ -307,57 +266,118 @@ document.getElementById('anterior').addEventListener('click', () => ir(0, -1));
 document.getElementById('tela').addEventListener('click', () => {
   (document.fullscreenElement ? document.exitFullscreen() : palco.requestFullscreen()).catch(() => {});
 });
+palco.addEventListener('click', () => { if (abertura.dataset.rodando) cortarAbertura(); });
 addEventListener('keydown', (e) => {
   if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); ir(0, 1); }
   else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); ir(0, -1); }
   else if (e.key === 'ArrowDown') { e.preventDefault(); ir(1, 0); }
   else if (e.key === 'ArrowUp') { e.preventDefault(); ir(-1, 0); }
-  else if (e.key === 'Home') { cena = 0; beat = 0; aplicar(false); }
-  else if (e.key === 'End') { cena = CENAS.length - 1; beat = passosDa(cena) - 1; aplicar(false); }
+  else if (e.key === 'Home') { parada = 0; beat = 0; aplicar(false); }
+  else if (e.key === 'End') { parada = PARADAS.length - 1; beat = passosDa(parada) - 1; aplicar(false); }
   else if (e.key.toLowerCase() === 'f') document.getElementById('tela').click();
 });
 addEventListener('resize', () => aplicar(false));
 
-/* Impressão: achata para o último beat de cada cena e desenha TODOS os
-   grafismos, porque um slide escondido tem tamanho zero e sairia em branco. */
+/* Impressão: achata para o último beat de cada parada e desenha TODOS os
+   grafismos — um slide escondido tem tamanho zero e sairia em branco. */
 function achatar() {
   palco.querySelectorAll('.dk__slide').forEach((s, k) => {
-    s.querySelectorAll('[data-beat]').forEach((el) => el.setAttribute('data-visivel', ''));
-    s.querySelectorAll('.dk__tab [data-col]').forEach((el) => el.setAttribute('data-visivel', ''));
+    s.querySelectorAll('.dk__painel').forEach((el) => el.setAttribute('data-visivel', ''));
     const cv = s.querySelector('canvas');
-    if (cv) { parar(cv); render(cv, arteNoBeat(CENAS[k], passosDa(k) - 1)); }
+    if (cv) { parar(cv); render(cv, arteNoBeat(PARADAS[k], passosDa(k) - 1)); }
   });
 }
 addEventListener('beforeprint', achatar);
 if (matchMedia('print').matches) achatar();
 
-/* Visão de apresentador: notas de apoio e pendências. Não vão para a tela do
-   cliente — são material de quem apresenta. */
+/* --- A abertura ----------------------------------------------------------
+   O único lugar em que rodar sozinho não briga com quem apresenta: antes da
+   primeira parada, sobre um palco que ainda não é de ninguém. A costura
+   resolve, vira o intervalo, as seis marcas assentam e o vão abre — que é o
+   argumento inteiro em doze segundos.
+
+   Qualquer tecla, clique ou seta corta. Ninguém deve esperar doze segundos
+   duas vezes, e sob prefers-reduced-motion ela nem começa. */
+const ABRE = [
+  { ate: 2400, leg: '', cfg: { shape: 'weave', ramp: [0.03, 1], cell: 4, seed: 7 } },
+  { ate: 5200, leg: 'um fato acontece', cfg: { morf: { de: 'weave', para: 'intervalo', eixo: 0 },
+      shape: 'weave', ramp: [0.03, 1], cell: 4, seed: 7,
+      opts: { vaos: [[0.08, 0.94]], marcas: [[0.08]], alt: 0.42 } } },
+  { ate: 8600, leg: 'e alguém precisa agir sobre ele', cfg: { shape: 'intervalo', ramp: [1, 1], cell: 4, seed: 7,
+      opts: { vaos: [[0.08, 0.94]], marcas: [[0.08, 0.25, 0.42, 0.60, 0.78, 0.94]], alt: 0.42 } } },
+  { ate: 11800, leg: 'o que fica caro é o intervalo', cfg: { shape: 'intervalo', ramp: [1, 1], cell: 4, seed: 7,
+      opts: { vaos: [[0.08, 0.94]], marcas: [[0.08, 0.25, 0.42, 0.60, 0.78, 0.94]], alt: 0.42 } } },
+];
+
+const cvAbre = document.getElementById('abre');
+const legAbre = document.getElementById('abre-leg');
+let abreRaf = 0;
+
+function cortarAbertura() {
+  if (!abertura.dataset.rodando) return;
+  delete abertura.dataset.rodando;
+  cancelAnimationFrame(abreRaf);
+  parar(cvAbre);
+  abertura.hidden = true;
+  palco.focus();
+  aplicar(false);
+}
+
+function rodarAbertura() {
+  abertura.dataset.rodando = '1';
+  const t0 = performance.now();
+  let atual = -1;
+  const passo = (agora) => {
+    const t = agora - t0;
+    if (t > ABRE[ABRE.length - 1].ate) return cortarAbertura();
+    const i = ABRE.findIndex((x) => t < x.ate);
+    if (i !== atual) {
+      atual = i;
+      legAbre.textContent = ABRE[i].leg;
+      legAbre.toggleAttribute('data-visivel', !!ABRE[i].leg);
+      const ms = ABRE[i].ate - (i ? ABRE[i - 1].ate : 0);
+      if (i === 0) render(cvAbre, { ...ABRE[0].cfg, ramp: [0.03, 0.06] });
+      anima(cvAbre, i ? ABRE[i - 1].cfg : { ...ABRE[0].cfg, ramp: [0.03, 0.06] },
+            ABRE[i].cfg, ms * 0.8);
+    }
+    abreRaf = requestAnimationFrame(passo);
+  };
+  abreRaf = requestAnimationFrame(passo);
+}
+
+/* --- Visão de apresentador ----------------------------------------------- */
 if (params.get('notas')) {
   const el = document.getElementById('notas');
   el.hidden = false;
+  const orfas = secoesOrfas();
   el.innerHTML = '<h3>Notas de apoio</h3><ul class="cmc-small">' +
-    CENAS.filter((c) => c.nota).map((c) =>
-      `<li><strong>${String(c.n).padStart(2, '0')}</strong> · ${esc(c.nota)}</li>`).join('') +
+    PARADAS.filter((p) => p.nota).map((p) =>
+      `<li><strong>${String(p.n).padStart(2, '0')}</strong> · ${esc(p.nota)}</li>`).join('') +
+    '</ul><h3 style="margin-top:2rem">De onde vem cada parada</h3><ul class="cmc-small">' +
+    PARADAS.map((p) => `<li><strong>${String(p.n).padStart(2, '0')}</strong> · seções ` +
+      `${p.secoes.join(', ')} do documento</li>`).join('') +
+    (orfas.length ? `<li><strong>Órfãs</strong> · seções ${orfas.join(', ')} não aparecem em parada nenhuma</li>` : '') +
     '</ul><h3 style="margin-top:2rem">Pendências antes da versão final</h3><ul class="cmc-small">' +
-    PENDENCIAS.map((p) => `<li>${esc(p)}</li>`).join('') + '</ul>';
+    PENDENCIAS.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>';
 }
 
-/* Modo captura: ?cena=N&beat=K abre direto num estado, para o exportador. */
-if (params.get('cena')) {
-  cena = Math.max(0, Math.min(CENAS.length - 1, Number(params.get('cena')) - 1));
-  beat = Math.max(0, Math.min(passosDa(cena) - 1, Number(params.get('beat') || 0)));
-}
-/* Mede tudo na entrada: a navegação não pode gastar quadro medindo layout, e
-   o relatório precisa das 23 cenas, não só da que está na tela. */
+/* --- Partida -------------------------------------------------------------- */
 palco.querySelectorAll('.dk__slide').forEach((s) => {
-  s.setAttribute('data-ativo', ''); ajustarCena(s); s.dataset.ajustado = '1';
-  s.removeAttribute('data-ativo');
+  s.setAttribute('data-ativo', ''); ajustarParada(s); s.removeAttribute('data-ativo');
 });
 window.apEstouro = estouros;
 
+if (params.get('parada')) {
+  parada = Math.max(0, Math.min(PARADAS.length - 1, Number(params.get('parada')) - 1));
+  beat = Math.max(0, Math.min(passosDa(parada) - 1, Number(params.get('beat') || 0)));
+}
 aplicar(false);
 init(palco);
+
+const semAbertura = params.has('parada') || params.has('notas')
+  || matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (semAbertura) abertura.hidden = true; else rodarAbertura();
+
 palco.focus();
 document.documentElement.dataset.apPronto = '1';
 </script>

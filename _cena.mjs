@@ -8,11 +8,11 @@ await p.route('https://fonts.googleapis.com/**', (r) => r.fulfill({ status: 200,
 const errs = []; p.on('pageerror', (e) => errs.push(e.message));
 for (const arg of process.argv.slice(2)) {
   const [n, k = 0] = arg.split(':');
-  await p.goto(`http://localhost:8899/bananamilk.html?cena=${n}&beat=${k}`, { waitUntil: 'load' });
+  await p.goto(`http://localhost:8899/bananamilk.html?parada=${n}&beat=${k}`, { waitUntil: 'load' });
   await p.evaluate(() => document.fonts.ready);
   await p.waitForFunction(() => document.documentElement.dataset.apPronto === '1');
   await p.waitForTimeout(900);
-  await p.locator('#palco').screenshot({ path: `/tmp/cena-${n}-${k}.png` });
+  await p.locator('#palco').screenshot({ path: `/tmp/p-${n}-${k}.png` });
 }
 console.log(errs.length ? 'ERROS:\n' + errs.join('\n') : 'sem erros de página');
 await b.close();

@@ -46,7 +46,7 @@ export function modulos() {
     ['src/brand.js', m.brand, ['const BRAND', 'function applyBrand']],
     ['src/kv.js', m.kv, ['const FORMATOS', 'const KVS', 'function ajustar']],
     ['src/direcao.js', m.direcao, ['const REGISTROS', 'function ajustarRegistro']],
-    ['src/apresentacao.js', m.apresentacao, ['const CENAS', 'const REGISTRO_EDITORIAL', 'function arteNoBeat']],
+    ['src/apresentacao.js', m.apresentacao, ['const PARADAS', 'const SECOES', 'function arteNoBeat']],
   ];
   for (const [nome, texto, marcas] of INTEIRO) {
     const faltando = marcas.filter((x) => !texto.includes(x));

@@ -1905,11 +1905,17 @@ const fields = {
     const [a, b] = vaos[i];
     const cy = (i + 0.5) * passo, meia = (alt * passo) / 2;
 
-    const dentro = edge(Math.abs(v - cy) - meia, soft);
+    /* A suavização vertical não pode ser maior que a própria linha. Numa faixa
+       de 15cqi com três vãos, cada linha tem meia-altura ~0,009 e o `soft`
+       padrão de 0,012 borrava as três uma na outra: o gradiente sumia e as
+       barras ficavam indistinguíveis. O campo degradava em silêncio, e só
+       apareceu ao pôr a faixa na altura real da peça. */
+    const sv = Math.min(soft, meia * 0.4);
+    const dentro = edge(Math.abs(v - cy) - meia, sv);
     const pts = (marcas && marcas[i]) || [a, b];
     let m = 0;
     for (const x of pts) m = Math.max(m, edge(Math.abs(u - x) - tick, tick * 0.7));
-    const marca = m * edge(Math.abs(v - cy) - meia * 1.5, soft);
+    const marca = m * edge(Math.abs(v - cy) - meia * 1.5, sv);
 
     const cov = u < a ? 0
       : u > b ? 1
