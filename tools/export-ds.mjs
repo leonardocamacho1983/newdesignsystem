@@ -472,14 +472,54 @@ ${['1x1', '4x5'].flatMap((id) => ['trama', 'figura'].map((rid) => {
   </div>`,
 }));
 
+/* Alturas MEDIDAS, não estimadas — `node _alturas.mjs` abre cada card e mede
+   `main.ds`. O chute errou por mais de 2× nos dois sentidos: marca-medida
+   tinha 640 declarado contra 1362 reais (a peça sairia cortada na miniatura),
+   e key-visuals tinha 1100 contra 472 (metade do card era área morta).
+   Card novo sem entrada aqui recebe aviso no build. */
+const ALTURAS = {
+  'componentes/controles.html': 432,
+  'componentes/superficies.html': 441,
+  'direcao/campo.html': 884,
+  'direcao/corte.html': 884,
+  'direcao/costura.html': 904,
+  'direcao/escala.html': 884,
+  'direcao/figura.html': 884,
+  'direcao/figuras.html': 423,
+  'direcao/formatos.html': 1092,
+  'direcao/impressao.html': 904,
+  'direcao/instrumento.html': 923,
+  'direcao/interferencia.html': 904,
+  'direcao/palavra.html': 865,
+  'direcao/trama.html': 884,
+  'fundacao/cor.html': 993,
+  'fundacao/escala.html': 942,
+  'fundacao/espaco.html': 458,
+  'fundacao/niveis.html': 445,
+  'fundacao/tipografia.html': 602,
+  'marca/lockup.html': 307,
+  'marca/marca-medida.html': 1362,
+  'motor/clareira.html': 659,
+  'motor/parametros.html': 762,
+  'motor/rampas.html': 590,
+  'motor/texturas.html': 441,
+  'motor/vocabulario.html': 1617,
+  'pecas/impressos.html': 1064,
+  'pecas/key-visuals.html': 472,
+  'pecas/social.html': 945,
+};
+
 /* ============================ ESCREVE ============================ */
 
 if (existsSync(DESTINO)) rmSync(DESTINO, { recursive: true });
 const LIMITE = 256 * 1024;
 let maior = 0, total = 0;
 
-for (const [caminho, html] of CARDS) {
+for (const [caminho, bruto] of CARDS) {
   const alvo = `${DESTINO}/${caminho}`;
+  if (!ALTURAS[caminho]) console.warn(`aviso: ${caminho} sem altura medida — rode _alturas.mjs e atualize a tabela.`);
+  /* O marcador é a primeira linha, então trocar a primeira ocorrência basta. */
+  const html = ALTURAS[caminho] ? bruto.replace(/height="\d+"/, `height="${ALTURAS[caminho]}"`) : bruto;
   mkdirSync(dirname(alvo), { recursive: true });
 
   /* As mesmas travas do build: um card com referência local sobrevivente
