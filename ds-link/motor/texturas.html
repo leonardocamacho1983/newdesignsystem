@@ -1,0 +1,39 @@
+<!-- @dsCard group="Motor gráfico" name="Texturas" subtitle="A mesma forma, três lógicas de marca. `grain` é limiar aleatório — textura de tela. `screen` é Bayer 8×8, trama de impressão. `halftone` varia o tamanho do ponto. Trocar a textura muda a temperatura da marca sem trocar uma forma." width="1200" height="441" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Texturas · Camacho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_base.css">
+</head>
+<body>
+<main class="ds">
+  <header class="ds__cab">
+    <h1 class="cmc-h2" style="margin:0">Texturas</h1>
+    <p class="ds__nota">A mesma forma, três lógicas de marca. `grain` é limiar aleatório — textura de tela. `screen` é Bayer 8×8, trama de impressão. `halftone` varia o tamanho do ponto. Trocar a textura muda a temperatura da marca sem trocar uma forma.</p>
+  </header>
+  <div class="ds__grade">
+
+  <figure class="ds__item">
+    <div class="ds__quadro" style="--ar:16/9"><canvas data-cmc-dither="weave" data-ramp="0.1,1" data-cell="5" data-seed="7"  aria-hidden="true"></canvas></div>
+    <figcaption class="ds__rot">grain · estocástica — o padrão</figcaption>
+  </figure>
+
+  <figure class="ds__item">
+    <div class="ds__quadro" style="--ar:16/9"><canvas data-cmc-dither="weave" data-ramp="0.1,1" data-cell="5" data-seed="7" data-texture="screen"  aria-hidden="true"></canvas></div>
+    <figcaption class="ds__rot">screen · Bayer 8×8, sem jitter</figcaption>
+  </figure>
+
+  <figure class="ds__item">
+    <div class="ds__quadro" style="--ar:16/9"><canvas data-cmc-dither="weave" data-ramp="0.1,1" data-cell="5" data-seed="7" data-texture="halftone"  aria-hidden="true"></canvas></div>
+    <figcaption class="ds__rot">halftone · ponto de tamanho variável</figcaption>
+  </figure>
+  </div>
+</main>
+<script type="module" src="../_motor.js"></script>
+</body>
+</html>

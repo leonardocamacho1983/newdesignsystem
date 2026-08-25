@@ -1,0 +1,38 @@
+<!-- @dsCard group="Motor gráfico" name="Parâmetros" subtitle="A superfície declarativa completa. Um canvas com estes atributos é tudo que uma peça precisa — o motor desenha ao entrar na tela e redesenha ao redimensionar." width="1200" height="762" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parâmetros · Camacho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_base.css">
+</head>
+<body>
+<main class="ds">
+  <header class="ds__cab">
+    <h1 class="cmc-h2" style="margin:0">Parâmetros</h1>
+    <p class="ds__nota">A superfície declarativa completa. Um canvas com estes atributos é tudo que uma peça precisa — o motor desenha ao entrar na tela e redesenha ao redimensionar.</p>
+  </header>
+  <table class="ds__tabela"><thead><tr><th>atributo</th><th>o que é</th><th>valores</th></tr></thead><tbody>
+    <tr><td><code>data-cmc-dither</code></td><td>forma</td><td style="color:var(--cmc-text-muted)">uma das 28</td></tr>
+    <tr><td><code>data-cell</code></td><td>aresta da célula em px lógicos</td><td style="color:var(--cmc-text-muted)">4 padrão · 6–8 em peça grande · 12+ vira objeto</td></tr>
+    <tr><td><code>data-ramp</code></td><td>densidade [ruído, sinal]</td><td style="color:var(--cmc-text-muted)">0.03,1</td></tr>
+    <tr><td><code>data-angle</code></td><td>eixo da rampa</td><td style="color:var(--cmc-text-muted)">0 adensa à direita · 180 à esquerda · 90 embaixo</td></tr>
+    <tr><td><code>data-curve</code></td><td>expoente da rampa</td><td style="color:var(--cmc-text-muted)">>1 mantém a dispersão por mais tempo</td></tr>
+    <tr><td><code>data-seed</code></td><td>hash determinístico por célula</td><td style="color:var(--cmc-text-muted)">o mesmo grafismo sempre</td></tr>
+    <tr><td><code>data-jitter</code></td><td>deslocamento dentro da célula</td><td style="color:var(--cmc-text-muted)">0.3</td></tr>
+    <tr><td><code>data-mirror</code></td><td>rampa espelhada</td><td style="color:var(--cmc-text-muted)">denso no centro</td></tr>
+    <tr><td><code>data-radial</code></td><td>rampa radial</td><td style="color:var(--cmc-text-muted)">denso no miolo, ignora angle</td></tr>
+    <tr><td><code>data-texture</code></td><td>lógica da marca</td><td style="color:var(--cmc-text-muted)">grain · screen · halftone</td></tr>
+    <tr><td><code>data-clareira</code></td><td>onde a densidade desaba</td><td style="color:var(--cmc-text-muted)">JSON, um retângulo ou uma lista</td></tr>
+    <tr><td><code>data-tint</code></td><td>cor por célula a partir de uma fonte</td><td style="color:var(--cmc-text-muted)">existe para ser julgado, não usado</td></tr>
+    <tr><td><code>data-opts</code></td><td>parâmetros do campo</td><td style="color:var(--cmc-text-muted)">JSON</td></tr>
+  </tbody></table>
+  <p class="ds__nota">Exemplo mínimo: <code>&lt;canvas data-cmc-dither="weave" data-ramp="0.04,1"&gt;&lt;/canvas&gt;</code></p>
+</main>
+
+</body>
+</html>

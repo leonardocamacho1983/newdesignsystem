@@ -1,0 +1,33 @@
+<!-- @dsCard group="Componentes" name="Botões e tags" subtitle="Altura única (`--cmc-control-h`) para que botão e tag alinhem lado a lado. `--ghost` herda a cor do campo por `color-mix` em vez de fixar preto — é o que o faz sobreviver em campo escuro." width="1200" height="432" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Botões e tags · Camacho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_base.css">
+</head>
+<body>
+<main class="ds">
+  <header class="ds__cab">
+    <h1 class="cmc-h2" style="margin:0">Botões e tags</h1>
+    <p class="ds__nota">Altura única (`--cmc-control-h`) para que botão e tag alinhem lado a lado. `--ghost` herda a cor do campo por `color-mix` em vez de fixar preto — é o que o faz sobreviver em campo escuro.</p>
+  </header>
+  <div class="ds__item" style="gap:24px">
+    <div class="ds__item"><span class="ds__rot">campo claro</span><div class="cmc-controls">
+      <a class="cmc-btn" href="#">Converse comigo</a>
+      <a class="cmc-btn cmc-btn--ghost" href="#">Conheça a atuação</a>
+      <a class="cmc-tag" href="#"><span>Key visuals</span></a></div></div>
+    <div class="ds__item" style="background:var(--cmc-black);color:var(--cmc-white);padding:24px">
+      <span class="ds__rot" style="color:var(--cmc-grey-55)">campo escuro</span><div class="cmc-controls">
+      <a class="cmc-btn cmc-btn--inverse" href="#">Converse comigo</a>
+      <a class="cmc-btn cmc-btn--ghost" href="#">Conheça a atuação</a>
+      <a class="cmc-tag" href="#"><span>Key visuals</span></a></div></div>
+  </div>
+</main>
+
+</body>
+</html>

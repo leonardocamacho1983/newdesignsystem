@@ -30,7 +30,13 @@ import { FORMATOS, CAMPOS, KVS, ajustar, configDoKV } from '../src/kv.js';
 import { REGISTROS, GRADE, VOZES, FIGURAS, ajustarRegistro, configDoRegistro } from '../src/direcao.js';
 import { BRAND } from '../src/brand.js';
 
-const DESTINO = process.argv[2] || 'ds';
+/* Dois modos. AUTOCONTIDO (padrão) é o pacote que o /design-sync lê do
+   GitHub: cada card carrega tudo. VINCULADO extrai o motor e o CSS para dois
+   arquivos na raiz do projeto e deixa os cards finos — é o modo do envio por
+   MCP, onde o conteúdo passa pelo contexto do agente e 1,97 MB não cabe.
+   `render_preview` confirma que subrecurso relativo resolve. */
+const VINCULADO = process.argv.includes('--vinculado');
+const DESTINO = process.argv.find((a, i) => i >= 2 && !a.startsWith('--')) || (VINCULADO ? 'ds-link' : 'ds');
 const M = modulos();
 
 /* Só o que o card usa. Um card de cor não precisa carregar 43 KB de motor
@@ -75,12 +81,17 @@ const FOLHA = `
  * Monta um card. `precisa` decide o que é embutido — um card sem grafismo não
  * carrega o motor.
  */
-function card({ grupo, nome, subtitulo, largura = 1200, altura = 760, corpo, precisa = [], script = '' }) {
-  const css = [TOKENS, COMPONENTES, precisa.includes('pecas') ? PECAS : '', FOLHA].filter(Boolean).join('\n');
+function card({ grupo, nome, subtitulo, largura = 1200, altura = 760, corpo, precisa = [] }) {
+  /* `dados` não entra: kv.js e direcao.js são consumidos na GERAÇÃO, em Node.
+     O card recebe markup pronto com data-attributes — em runtime só o motor
+     precisa existir. Estavam sendo embutidos sem serem usados. */
   const motor = precisa.includes('motor');
-  const js = motor
-    ? `<script type="module">\n${M.dither}\n${precisa.includes('dados') ? `${M.kv}\n${M.direcao}\n` : ''}${script}\ninit();\n</script>`
-    : script ? `<script type="module">\n${script}\n</script>` : '';
+  const cabeca = VINCULADO
+    ? `<link rel="stylesheet" href="../_base.css">`
+    : `<style>\n${[TOKENS, COMPONENTES, FOLHA].join('\n')}\n</style>`;
+  const js = !motor ? ''
+    : VINCULADO ? `<script type="module" src="../_motor.js"></script>`
+    : `<script type="module">\n${M.dither}\ninit();\n</script>`;
 
   return `<!-- @dsCard group="${grupo}" name="${nome}" subtitle="${subtitulo}" width="${largura}" height="${altura}" -->
 <!doctype html>
@@ -92,7 +103,7 @@ function card({ grupo, nome, subtitulo, largura = 1200, altura = 760, corpo, pre
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="${FONTES}" rel="stylesheet">
-<style>\n${css}\n</style>
+${cabeca}
 </head>
 <body>
 <main class="ds">
@@ -512,6 +523,19 @@ const ALTURAS = {
 /* ============================ ESCREVE ============================ */
 
 if (existsSync(DESTINO)) rmSync(DESTINO, { recursive: true });
+mkdirSync(DESTINO, { recursive: true });
+
+/* No modo vinculado, os dois arquivos compartilhados vão para a raiz do
+   projeto. O motor vai INTEIRO, com os exports e o bootstrap automático — é
+   módulo de verdade aqui, não texto colado, então nada precisa ser recortado
+   e a trava de integridade do embutimento não se aplica. */
+const COMPARTILHADOS = ['_base.css', '_motor.js'];
+if (VINCULADO) {
+  writeFileSync(`${DESTINO}/_base.css`, [TOKENS, COMPONENTES, FOLHA].join('\n'));
+  writeFileSync(`${DESTINO}/_motor.js`, read('src/dither.js'));
+  for (const f of COMPARTILHADOS) console.log(`  ${f.padEnd(38)} ${(statSync(`${DESTINO}/${f}`).size / 1024).toFixed(0)} KB`);
+}
+
 const LIMITE = 256 * 1024;
 let maior = 0, total = 0;
 
@@ -524,7 +548,9 @@ for (const [caminho, bruto] of CARDS) {
 
   /* As mesmas travas do build: um card com referência local sobrevivente
      chegaria ao painel do Claude Design como caixa quebrada. */
-  const { soltas, imports } = pendencias(html);
+  /* No modo vinculado as duas referências relativas são legítimas: os arquivos
+     existem na raiz do projeto e o preview resolve subrecurso relativo. */
+  const { soltas, imports } = pendencias(html, new Set(VINCULADO ? COMPARTILHADOS.map((f) => `../${f}`) : []));
   if (soltas.length || imports.length) {
     console.error(`${caminho}: referência não embutida:\n  ${[...soltas, ...imports].join('\n  ')}`);
     process.exit(1);
