@@ -2065,19 +2065,42 @@ function render(canvas, config = {}) {
   }
 }
 
-/** Anima a resolução de ruído → forma uma única vez. */
-function resolve(canvas, config = {}, duration = 1600) {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    return render(canvas, { ...config, progress: 1 });
-  }
+/* Um laço por canvas, nunca dois.
+
+   Sem isso, cada chamada abre um rAF próprio e eles se somam: dois laços
+   desenham o mesmo canvas duas vezes por quadro, com `progress` diferente, e
+   quem ganha é o último a rodar. Medido em `_laco.mjs`: doze `resolve()` no
+   mesmo canvas deixavam 13 laços vivos por quadro. Num deck dirigido por seta
+   isso não é hipótese — é segurar a tecla por dois segundos. */
+const LACOS = new Map();
+
+/** Interrompe a animação em curso num canvas, se houver. */
+function parar(canvas) {
+  const id = LACOS.get(canvas);
+  if (id != null) { cancelAnimationFrame(id); LACOS.delete(canvas); }
+}
+
+/* O laço comum a `resolve` e `anima`: chama `desenhar(t)` a cada quadro com t
+   de 0 a 1, e some sozinho no fim. */
+function laco(canvas, duration, desenhar) {
+  parar(canvas);
   const t0 = performance.now();
   const step = (now) => {
     const t = clamp01((now - t0) / duration);
-    const eased = 1 - Math.pow(1 - t, 3);
-    render(canvas, { ...config, progress: eased });
-    if (t < 1) requestAnimationFrame(step);
+    desenhar(t);
+    if (t < 1) LACOS.set(canvas, requestAnimationFrame(step));
+    else LACOS.delete(canvas);
   };
-  requestAnimationFrame(step);
+  LACOS.set(canvas, requestAnimationFrame(step));
+}
+
+const parado = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Anima a resolução de ruído → forma uma única vez. */
+function resolve(canvas, config = {}, duration = 1600) {
+  if (parado()) { parar(canvas); return render(canvas, { ...config, progress: 1 }); }
+  laco(canvas, duration, (t) =>
+    render(canvas, { ...config, progress: 1 - Math.pow(1 - t, 3) }));
 }
 
 /* --- Bootstrap declarativo ----------------------------------------------- */

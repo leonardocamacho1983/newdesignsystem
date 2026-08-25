@@ -160,7 +160,7 @@
 </footer>
 
 <script type="module">
-import { init, render, resolve } from './src/dither.js';
+import { init, render, resolve, parar } from './src/dither.js';
 import { applyBrand, brandFromUrl, BRAND } from './src/brand.js';
 import { KVS, FORMATOS, CAMPOS, ajustar, configDoKV } from './src/kv.js';
 
@@ -276,7 +276,7 @@ for (const kv of KVS.slice(0, 2)) {
 }   /* fim do modo galeria */
 
 /* Exposto para o exportador de vídeo desenhar quadro a quadro. */
-window.__kv = { render, KVS, FORMATOS, CAMPOS, ajustar, configDoKV };
+window.__kv = { render, resolve, parar, KVS, FORMATOS, CAMPOS, ajustar, configDoKV };
 </script>
 </body>
 </html>
