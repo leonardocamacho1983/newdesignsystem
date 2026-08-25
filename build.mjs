@@ -25,7 +25,7 @@ const PAGES = [
   { src: 'kv.html',         out: 'camacho-kv',         url: 'https://claude.ai/code/artifact/448e707f-5e22-4fcf-a574-aaacd463b0fa' },
   { src: 'aplicacoes.html', out: 'camacho-aplicacoes', url: 'https://claude.ai/code/artifact/40b9d44b-fb1e-4c86-b6ba-bde9c92e27a0' },
   { src: 'direcao.html',    out: 'camacho-direcao',    url: 'https://claude.ai/code/artifact/84f1b1bf-8106-47d9-b5be-91fbce49670f' },
-  { src: 'bananamilk.html', out: 'camacho-bananamilk', url: '' },
+  { src: 'bananamilk.html', out: 'camacho-bananamilk', url: 'https://claude.ai/code/artifact/55219b6b-71d5-4d69-9aad-a2d17a156e57' },
 ];
 
 /* Primeiro os tokens: o JSON é derivado do CSS, e a checagem de fechamento
