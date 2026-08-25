@@ -1,9 +1,8 @@
 /* Gera as versões autocontidas (dist/) das páginas do guia: um arquivo só,
    sem nenhuma referência local, pronto para mandar por e-mail ou publicar. */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { buildTokens } from './tokens/build-tokens.mjs';
-
-const read = (p) => readFileSync(p, 'utf8');
+import { read, escapeRe, modulos, embutirCss, embutirModulos, pendencias } from './src/inline.mjs';
 
 /* Tabela única do projeto. `out` é ENDEREÇO, `src` e conteúdo são ASSUNTO:
    o nome do arquivo em dist/ é o caminho de publicação a que o artifact está
@@ -28,8 +27,6 @@ const PAGES = [
   { src: 'direcao.html',    out: 'camacho-direcao',    url: 'https://claude.ai/code/artifact/84f1b1bf-8106-47d9-b5be-91fbce49670f' },
 ];
 
-const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
 /* Primeiro os tokens: o JSON é derivado do CSS, e a checagem de fechamento
    derruba o build se algum token referenciado não existir. */
 const tk = buildTokens({ paginas: PAGES.map((p) => p.src) });
@@ -42,36 +39,7 @@ for (const p of PAGES) {
   if (!p.url) console.warn(`aviso: ${p.out} ainda não tem url publicada — links para ela ficarão locais no -artifact.html`);
 }
 
-/* O bootstrap automático do motor sai: na página embutida quem chama `init`
-   é o script da própria página. O corte ancora em `document.readyState`, que
-   só existe nesse bloco — a versão anterior ancorava em `if (typeof document`
-   e, quando o motor ganhou uma segunda guarda dessas no topo do arquivo, comeu
-   90% do código sem reclamar. */
-const engine = read('src/dither.js')
-  .replace(/^export /gm, '')
-  .replace(/\n?if \(typeof document !== 'undefined'\) \{\s*\n\s*document\.readyState[\s\S]*$/, '\n');
-
-const brand = read('src/brand.js').replace(/^export /gm, '');
-const kv = read('src/kv.js').replace(/^export /gm, '');
-const direcao = read('src/direcao.js').replace(/^export /gm, '');
-
-/* Trava: um módulo embutido pela metade não emite erro nenhum — a página sai,
-   o guard de referência local passa, e só um olho no resultado perceberia que
-   o motor sumiu. Conferir que o que sobreviveu ao corte ainda declara o que
-   promete é o que transforma isso em falha de build. */
-const INTEIRO = [
-  ['src/dither.js', engine, ['const fields', 'function render', 'function resolve', 'function init']],
-  ['src/brand.js', brand, ['const BRAND', 'function applyBrand']],
-  ['src/kv.js', kv, ['const FORMATOS', 'const KVS', 'function ajustar']],
-  ['src/direcao.js', direcao, ['const REGISTROS', 'function ajustarRegistro']],
-];
-for (const [nome, texto, marcas] of INTEIRO) {
-  const faltando = marcas.filter((m) => !texto.includes(m));
-  if (faltando.length) {
-    console.error(`${nome}: o módulo embutido perdeu ${faltando.join(', ')} — o corte do build comeu código.`);
-    process.exit(1);
-  }
-}
+const M = modulos();
 
 const favicon = Buffer.from(read('assets/favicon.svg')).toString('base64');
 
@@ -80,17 +48,10 @@ mkdirSync('dist', { recursive: true });
 for (const page of PAGES) {
   let html = read(page.src);
 
-  for (const file of ['tokens/tokens.css', 'src/camacho.css', 'src/guide.css', 'src/site.css']) {
-    html = html.replace(`<link rel="stylesheet" href="${file}">`,
-      () => `<style>\n${read(file)}\n</style>`);
-  }
+  html = embutirCss(html);
 
   /* O módulo passa a ser inline: troca o import por um IIFE no mesmo escopo. */
-  html = html
-    .replace(/import \{[^}]+\} from '\.\/src\/dither\.js';\n?/, engine)
-    .replace(/import \{[^}]+\} from '\.\/src\/brand\.js';\n?/, brand)
-    .replace(/import \{[^}]+\} from '\.\/src\/kv\.js';\n?/, kv)
-    .replace(/import \{[^}]+\} from '\.\/src\/direcao\.js';\n?/, direcao)
+  html = embutirModulos(html, M)
     .replace('<link rel="icon" href="assets/favicon.svg">',
       `<link rel="icon" href="data:image/svg+xml;base64,${favicon}">`);
 
@@ -103,27 +64,16 @@ for (const page of PAGES) {
     );
   }
 
-  /* Trava: qualquer referência local sobrevivente quebraria a página
-     autocontida (e um artifact publicado, onde o host bloqueia origens
-     externas). Links entre as próprias páginas do dist são esperados. */
-  const allowed = new Set(PAGES.map((p) => `${p.out}.html`));
-  /* mailto: e tel: são esquemas legítimos, não referência a arquivo local. */
-  const dangling = [...html.matchAll(/(?:href|src)="((?!https?:|data:|mailto:|tel:|#)[^"]+)"/g)]
-    .map((m) => m[1])
-    .filter((ref) => !allowed.has(ref.split('?')[0]));
-  /* Um `import ... from './src/x.js'` não tem href nem src, então passa reto
-     pelo guard acima e só quebra em runtime, no dist. */
-  /* Exige `./src/` e ponto-e-vírgula: é a forma de um import de página de
-     verdade, e não casa com os exemplos de uso que vivem em comentário. */
-  const imports = [...html.matchAll(/^\s*import\s+\{[^}]*\}\s+from\s+'(\.\/src\/[^']+)';/gm)]
-    .map((m) => m[1]);
+  /* As duas travas de autocontenção vivem em src/inline.mjs, para o exportador
+     de cards do design system usar exatamente as mesmas. Links entre as
+     próprias páginas do dist são destinos legítimos. */
+  const { soltas, imports } = pendencias(html, new Set(PAGES.map((p) => `${p.out}.html`)));
   if (imports.length) {
     console.error(`${page.src}: import relativo sobreviveu ao embutimento:\n  ${imports.join('\n  ')}`);
     process.exit(1);
   }
-
-  if (dangling.length) {
-    console.error(`${page.src}: referências locais não embutidas:\n  ${dangling.join('\n  ')}`);
+  if (soltas.length) {
+    console.error(`${page.src}: referências locais não embutidas:\n  ${soltas.join('\n  ')}`);
     process.exit(1);
   }
 
