@@ -10,11 +10,14 @@
    Nada de composição escrita à mão aqui: dois códigos para a mesma peça
    divergiriam no primeiro ajuste, e é o erro que este repositório já cometeu.
 
-   INCERTEZA CONHECIDA: a documentação da ferramenta mostra o marcador só com
-   `group`, mas o registro legado (`register_assets`) recebe name, subtitle,
-   viewport {width,height} e group. Emitimos os cinco, achatando o viewport em
-   width/height. Se o painel ler só `group`, o resto vem por `register_assets`,
-   que continua existindo justamente para projetos sem marcador completo.
+   O MARCADOR SOZINHO NÃO BASTA — medido, não suposto. A documentação diz que o
+   painel monta o índice a partir do `@dsCard` da primeira linha, e trata
+   `register_assets` como legado. Na prática: os 29 arquivos subiram,
+   `list_files` confirmou todos, byte a byte iguais ao local — e o painel
+   continuou dizendo "This design system is empty". Quem cria os cards é o
+   `register_assets`. Continuamos emitindo o marcador (é de onde os metadados
+   saem, e o /design-sync lê por ele), mas depois de escrever os arquivos
+   chame `register_assets` com os 29, ou o projeto sobe vazio.
 
    As alturas declaradas saem de MEDIÇÃO, não de estimativa — `_alturas.mjs`
    abre cada card e mede `main.ds`. Chute aqui vira área morta ou corte na
