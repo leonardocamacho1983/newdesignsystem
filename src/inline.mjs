@@ -34,6 +34,7 @@ export function modulos() {
     brand: read('src/brand.js').replace(/^export /gm, ''),
     kv: read('src/kv.js').replace(/^export /gm, ''),
     direcao: read('src/direcao.js').replace(/^export /gm, ''),
+    apresentacao: read('src/apresentacao.js').replace(/^export /gm, ''),
   };
 
   /* Trava: um módulo embutido pela metade não emite erro nenhum — a página sai,
@@ -45,6 +46,7 @@ export function modulos() {
     ['src/brand.js', m.brand, ['const BRAND', 'function applyBrand']],
     ['src/kv.js', m.kv, ['const FORMATOS', 'const KVS', 'function ajustar']],
     ['src/direcao.js', m.direcao, ['const REGISTROS', 'function ajustarRegistro']],
+    ['src/apresentacao.js', m.apresentacao, ['const CENAS', 'const REGISTRO_EDITORIAL', 'function arteNoBeat']],
   ];
   for (const [nome, texto, marcas] of INTEIRO) {
     const faltando = marcas.filter((x) => !texto.includes(x));
@@ -69,7 +71,8 @@ export function embutirModulos(html, m = modulos()) {
     .replace(/import \{[^}]+\} from '\.\/src\/dither\.js';\n?/, m.dither)
     .replace(/import \{[^}]+\} from '\.\/src\/brand\.js';\n?/, m.brand)
     .replace(/import \{[^}]+\} from '\.\/src\/kv\.js';\n?/, m.kv)
-    .replace(/import \{[^}]+\} from '\.\/src\/direcao\.js';\n?/, m.direcao);
+    .replace(/import \{[^}]+\} from '\.\/src\/direcao\.js';\n?/, m.direcao)
+    .replace(/import \{[^}]+\} from '\.\/src\/apresentacao\.js';\n?/, m.apresentacao);
 }
 
 /**

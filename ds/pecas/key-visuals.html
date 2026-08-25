@@ -1336,10 +1336,16 @@ function render(canvas, config = {}) {
   ctx.fillStyle =
     cfg.color || getComputedStyle(canvas).getPropertyValue('color').trim() || '#fff';
 
+  /* `morf` é resolvido AQUI e não só no driver de animação. Quando só o driver
+     sabia dele, todo caminho que desenha sem animar — voltar um passo, End,
+     redimensionar, imprimir — desenhava a forma de origem e o morf sumia.
+     Com `mix` na config, o estado é dado e qualquer render o reproduz. */
   const field =
     typeof cfg.shape === 'function'
       ? cfg.shape
-      : (fields[cfg.shape] || fields.disc)(cfg.opts || {});
+      : cfg.morf
+        ? campoMorf(cfg, clamp01(cfg.mix == null ? 1 : cfg.mix))
+        : (fields[cfg.shape] || fields.disc)(cfg.opts || {});
 
   const ar = h / w;                       /* v vai de 0 a ar */
   const cor = cfg.tint ? corDaFonte(cfg.tint, ar) : null;
@@ -1490,6 +1496,17 @@ function interp(a, b, t) {
  * — no meio do caminho as duas formas estão lá, meio apagadas. Com a frente,
  * lê como uma coisa virando outra, porque em cada ponto só existe uma.
  */
+/* Resolve a forma de uma config com `morf: {de, para, eixo}` — que existe para
+   o morf continuar sendo DADO (serializável em JSON, declarável num
+   data-attribute) em vez de exigir função escrita à mão em cada peça. */
+function campoMorf(cfg, t) {
+  const { de, para, optsDe, optsPara, eixo = null, banda } = cfg.morf;
+  return mistura(
+    (fields[de] || fields.disc)(optsDe || cfg.opts || {}),
+    (fields[para] || fields.disc)(optsPara || cfg.opts || {}),
+    t, eixo, banda);
+}
+
 function mistura(a, b, t, eixo = null, banda = 0.42) {
   if (eixo == null) return (u, v, ar) => a(u, v, ar) * (1 - t) + b(u, v, ar) * t;
   return (u, v, ar) => {
@@ -1497,21 +1514,6 @@ function mistura(a, b, t, eixo = null, banda = 0.42) {
     const w = clamp01((t * (1 + banda) - pos) / banda);
     return a(u, v, ar) * (1 - w) + b(u, v, ar) * w;
   };
-}
-
-/* Resolve a forma de uma config, com suporte a `morf: {de, para, optsDe,
-   optsPara}` — que existe para o morf continuar sendo DADO (serializável em
-   JSON, declarável num data-attribute) em vez de exigir uma função escrita à
-   mão em cada peça. */
-function campoDe(cfg, t) {
-  if (cfg.morf) {
-    const { de, para, optsDe, optsPara, eixo = null, banda } = cfg.morf;
-    return mistura(
-      (fields[de] || fields.disc)(optsDe || cfg.opts || {}),
-      (fields[para] || fields.disc)(optsPara || cfg.opts || {}),
-      t, eixo, banda);
-  }
-  return null;
 }
 
 /**
@@ -1528,16 +1530,14 @@ function campoDe(cfg, t) {
  */
 function anima(canvas, de, para, duration = 900, easing = (t) => 1 - Math.pow(1 - t, 3)) {
   const fim = { ...de, ...para };
-  if (parado()) {
-    parar(canvas);
-    const f = campoDe(fim, 1);
-    return render(canvas, f ? { ...fim, shape: f } : fim);
-  }
+  /* Um morf é só mais um número andando: `mix` de 0 a 1. Com isso o driver não
+     precisa saber o que é forma — e o estado final continua desenhável por um
+     render comum, que é o que faz voltar e imprimir funcionarem. */
+  const partida = fim.morf && de.morf !== fim.morf ? { ...de, morf: fim.morf, mix: 0 } : de;
+  if (parado()) { parar(canvas); return render(canvas, { ...fim, mix: 1 }); }
   laco(canvas, duration, (t) => {
     const e = easing(t);
-    const cfg = interp(de, fim, e);
-    const f = campoDe(fim, e);
-    render(canvas, f ? { ...cfg, shape: f } : cfg);
+    render(canvas, { ...interp(partida, { ...fim, mix: 1 }, e) });
   });
 }
 

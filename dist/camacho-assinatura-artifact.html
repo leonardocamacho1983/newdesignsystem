@@ -1085,10 +1085,10 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
           gap: 3cqi; font-family: var(--cmc-font-mono); font-size: 1.8cqi;
           color: color-mix(in srgb, currentColor 60%, transparent); }
 .dk__lockup { --lockup-size: 4cqi; }
-.dk__grade { display: grid; gap: 3cqi; grid-template-columns: repeat(var(--cols, 3), 1fr); align-content: center; }
-.dk__item { display: flex; flex-direction: column; gap: 1cqi; }
-.dk__item h4 { margin: 0; font-size: 3.4cqi; font-weight: var(--cmc-w-light); letter-spacing: -0.02em; }
-.dk__item p { margin: 0; font-size: 2.1cqi; line-height: 1.45;
+.dk__grade { display: grid; gap: calc(3cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 3), 1fr); align-content: center; }
+.dk__item { display: flex; flex-direction: column; gap: calc(1cqi * var(--cp, 1)); }
+.dk__item h4 { margin: 0; font-size: calc(3.4cqi * var(--cp, 1)); font-weight: var(--cmc-w-light); letter-spacing: -0.02em; }
+.dk__item p { margin: 0; font-size: calc(2.1cqi * var(--cp, 1)); line-height: 1.45;
               color: color-mix(in srgb, currentColor 66%, transparent); }
 .dk__barra {
   display: flex; align-items: center; justify-content: space-between;
@@ -1096,6 +1096,202 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
 }
 .dk__conta { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
              font-variant-numeric: tabular-nums; }
+
+/* ==========================================================================
+   Apresentação — o deck de cliente, sobre a mesma máquina do .dk
+
+   Reusa .dk__palco, .dk__slide, .dk__hed e a navegação inteira. O que entra
+   aqui é só o que a peça de diagnóstico pede a mais: os beats, os quatro
+   registros, o campo do cliente e as placas de ativo que ainda não chegou.
+   ========================================================================== */
+
+/* Onde o grafismo mora.
+
+   A primeira versão desta página jogou a arte sangrada atrás de tudo com
+   opacity 0.5, e a manchete da capa ficou ilegível na ponta densa. É
+   exatamente o defeito que a clareira existe para impedir, e que a versão
+   anterior de .format__frame já tinha cometido com z-index. Opacidade não
+   resolve: ela só deixa os dois igualmente fracos.
+
+   Então há dois modos, e nenhum deles é "atrás de tudo":
+
+   sangria  — a arte ocupa a peça toda, e a cena DECLARA a clareira em que o
+              tipo senta. Só onde o grafismo É o argumento.
+   faixa    — a arte ocupa uma coluna à direita, o tipo tem a esquerda inteira.
+   borda    — uma tira estreita na margem. Para cena com tabela de sete linhas
+              ou grade de oito itens, em que qualquer coisa maior rouba a
+              largura de que o conteúdo precisa. O modo sai da densidade do
+              conteúdo, não do gosto: é medida, não decoração. */
+/* Nada de `position: relative` aqui: .dk__slide já é absolute/inset:0 acima, e
+   redeclarar tirava o slide do lugar e jogava a cena para fora do palco. */
+.dk__slide .dk__art { position: absolute; z-index: 0; }
+.dk__slide[data-arte="faixa"] .dk__art { inset: 0 0 0 auto; width: 34%; }
+.dk__slide[data-arte="faixa"] > :not(.dk__art) { max-width: 62%; }
+.dk__slide[data-arte="borda"] .dk__art { inset: 0 0 0 auto; width: 7%; }
+.dk__slide[data-arte="borda"] > :not(.dk__art) { max-width: 89%; }
+.dk__slide[data-arte="borda"] .dk__hed { font-size: 3.1cqi; }
+.dk__slide[data-arte="sangria"] .dk__art { inset: 0; }
+/* --cl vem da clareira declarada pela cena: o tipo não passa da borda do
+   terreno limpo, por construção e não por conferência visual. */
+.dk__slide[data-arte="sangria"] > :not(.dk__art) { max-width: calc(var(--cl, 1) * 100%); }
+.dk__slide > :not(.dk__art) { position: relative; z-index: 1; }
+
+/* Beats. Um elemento com data-beat só aparece quando o beat corrente o
+   alcançou. `visibility` em vez de `display` para o layout não pular: a
+   manchete tem que ficar no mesmo lugar do primeiro ao último passo. */
+/* --cp é o fator de compressão do painel: um escalar só, do qual todo tamanho
+   de tipo e todo respiro dentro do painel derivam — mesmo mecanismo de
+   --kv-base em .cmc-kv. A página mede o painel e baixa o fator até caber,
+   com piso declarado. Assim "não coube" é um número no relatório, não uma
+   barra de rolagem que ninguém vê durante a apresentação. */
+.dk__painel {
+  --cp: 1;
+  position: absolute; inset: 0; overflow: hidden;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__painel[data-visivel] { opacity: 1; visibility: visible; }
+.dk__paineis { position: relative; min-height: 0; }
+
+.dk__slide [data-beat] {
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__slide [data-beat][data-visivel] { opacity: 1; visibility: visible; }
+
+/* Campo do cliente: o mesmo creme do papel — as duas marcas já dividem o
+   terreno — mais um acento por sabor, que vive na peça e não na fundação. */
+.dk__slide[data-campo="cliente"] { --slide-bg: #F2F0EE; --slide-ink: #000; }
+.dk__slide[data-campo="cliente"] .dk__olho,
+.dk__slide[data-campo="cliente"] .dk__num { color: var(--slide-acento); }
+.dk__slide[data-campo="cliente"] .dk__item h4 { color: var(--slide-acento); }
+
+/* Olho: o rótulo do registro, sempre em mono, sempre no topo. É ele que diz
+   se o slide é diagnóstico, recomendação, implementação ou legado — e é a
+   única coisa da peça que não muda de lugar nunca. */
+.dk__olho {
+  font-family: var(--cmc-font-mono); font-size: 1.7cqi;
+  letter-spacing: 0.06em; text-transform: uppercase; margin: 0;
+  color: color-mix(in srgb, currentColor 55%, transparent);
+}
+.dk__olho strong { font-weight: var(--cmc-w-medium); color: currentColor; }
+
+/* Manchete de cena de conteúdo é menor do que a de deck comercial, e isso é
+   medido: com 5,2cqi em três linhas, o palco dos painéis perdia altura demais
+   e seis cenas batiam no piso de compressão. Aqui a manchete cede espaço para
+   o argumento, que é o que o cliente veio ler. */
+.dk__hed--med { font-size: 4cqi; }
+.dk__hed--peq { font-size: 3.3cqi; }
+.dk__slide[data-arte] { gap: 2.2cqi; padding: 5cqi 6cqi; }
+
+/* Corpo rolável: alguns slides têm mais conteúdo do que 16:9 comporta, e o
+   certo é a faixa do meio rolar em vez de a peça inteira estourar. */
+/* A faixa do meio é um palco de painéis: a manchete tem linha própria, e os
+   painéis se sobrepõem no espaço que sobra, um visível de cada vez. */
+.dk__meio { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 2.4cqi; }
+
+/* Blocos rotulados — situação / diagnóstico / implicação. */
+.dk__blocos { display: grid; gap: calc(2.2cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.dk__bloco { display: flex; flex-direction: column; gap: calc(0.8cqi * var(--cp, 1)); }
+.dk__bloco h4 { margin: 0; font-family: var(--cmc-font-mono); font-size: calc(1.6cqi * var(--cp, 1));
+                letter-spacing: 0.06em; text-transform: uppercase;
+                font-weight: var(--cmc-w-medium);
+                color: color-mix(in srgb, currentColor 55%, transparent); }
+.dk__bloco p { margin: 0; font-size: calc(2.1cqi * var(--cp, 1)); line-height: 1.45; }
+
+/* Tabela de duas ou quatro colunas. Regra fina, nada de zebra: o sistema
+   separa por espaço e linha, não por preenchimento. */
+.dk__tab { width: 100%; border-collapse: collapse; font-size: calc(1.95cqi * var(--cp, 1)); }
+.dk__tab th {
+  text-align: left; font-family: var(--cmc-font-mono); font-size: calc(1.55cqi * var(--cp, 1));
+  letter-spacing: 0.06em; text-transform: uppercase;
+  font-weight: var(--cmc-w-medium); padding: 0 1.6cqi calc(1.2cqi * var(--cp, 1)) 0;
+  color: color-mix(in srgb, currentColor 55%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+}
+.dk__tab td { padding: calc(1.15cqi * var(--cp, 1)) 1.6cqi calc(1.15cqi * var(--cp, 1)) 0; vertical-align: top; line-height: 1.35;
+              border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.dk__tab tr td:first-child { width: 26%; }
+.dk__tab td[data-col]:not([data-visivel]) { opacity: 0; }
+.dk__tab td[data-col] { transition: opacity var(--cmc-dur-base) var(--cmc-ease); }
+
+/* Passos numerados: a numeração é do sistema (mono, tabular), não do browser. */
+.dk__passos { list-style: none; margin: 0; padding: 0; counter-reset: p;
+              display: grid; gap: calc(1.1cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.dk__passos li { counter-increment: p; display: flex; gap: 1.2cqi;
+                 font-size: calc(2cqi * var(--cp, 1)); line-height: 1.35; }
+.dk__passos li::before {
+  content: counter(p, decimal-leading-zero); flex: none;
+  font-family: var(--cmc-font-mono); font-size: calc(1.6cqi * var(--cp, 1));
+  font-variant-numeric: tabular-nums; padding-top: 0.25cqi;
+  color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+/* Lista simples, marcada por regra e não por bolinha. */
+.dk__lista { list-style: none; margin: 0; padding: 0;
+             display: grid; gap: calc(0.9cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.dk__lista li { font-size: calc(2cqi * var(--cp, 1)); line-height: 1.35; padding-left: 2.2cqi; position: relative; }
+.dk__lista li::before {
+  content: ""; position: absolute; left: 0; top: 1.1cqi;
+  width: 1.2cqi; height: 1px; background: currentColor; opacity: 0.45;
+}
+
+/* Fecho: a frase que o slide deixa. Serifada no diagnóstico, sistema no resto
+   — quem decide é o registro, e é isso que impede a peça de virar um bloco só. */
+.dk__fecho { margin: 0; font-size: calc(2.4cqi * var(--cp, 1)); line-height: 1.4; max-width: 62ch; }
+.dk__slide[data-registro="diagnostico"] .dk__fecho {
+  font-family: var(--cmc-font-serif); font-size: calc(2.7cqi * var(--cp, 1));
+}
+.dk__legado {
+  margin: 0; font-size: calc(2cqi * var(--cp, 1)); line-height: 1.4; padding-left: 2.4cqi;
+  border-left: 2px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+
+/* Placa de ativo que ainda não chegou. Um retângulo vazio passa despercebido
+   até a peça estar na frente do cliente; uma placa que diz qual arquivo falta,
+   não. */
+.dk__placa {
+  display: inline-flex; flex-direction: column; gap: 0.5cqi;
+  padding: calc(1.8cqi * var(--cp, 1)); min-height: 0; align-self: start;
+  border: 1px dashed color-mix(in srgb, currentColor 40%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  font-family: var(--cmc-font-mono); font-size: 1.6cqi;
+}
+.dk__placa b { font-weight: var(--cmc-w-medium); }
+.dk__placa span { color: color-mix(in srgb, currentColor 60%, transparent); }
+
+/* Barra de progresso da apresentação: uma régua, não um enfeite. */
+.dk__regua { display: flex; gap: 0.3cqi; flex: 1; align-items: center; }
+.dk__regua i { flex: 1; height: 2px; background: currentColor; opacity: 0.18; }
+.dk__regua i[data-feito] { opacity: 0.55; }
+.dk__regua i[data-agora] { opacity: 1; height: 4px; }
+
+/* Visão de apresentador: notas de apoio e pendências, fora da tela do cliente. */
+.dk__notas { max-width: 46rem; margin-inline: auto; padding-block: var(--cmc-sp-6); }
+.dk__notas h3 { font-size: var(--cmc-fs-h3); margin: 0 0 var(--cmc-sp-3); }
+.dk__notas li { margin-bottom: var(--cmc-sp-3); line-height: 1.5; }
+
+@media print {
+  /* Impressão achata os beats: sem isso metade de cada página sai em branco. */
+  /* --cp é o fator de compressão do painel: um escalar só, do qual todo tamanho
+   de tipo e todo respiro dentro do painel derivam — mesmo mecanismo de
+   --kv-base em .cmc-kv. A página mede o painel e baixa o fator até caber,
+   com piso declarado. Assim "não coube" é um número no relatório, não uma
+   barra de rolagem que ninguém vê durante a apresentação. */
+.dk__painel {
+  --cp: 1;
+  position: absolute; inset: 0; overflow: hidden;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__painel[data-visivel] { opacity: 1; visibility: visible; }
+.dk__paineis { position: relative; min-height: 0; }
+
+.dk__slide [data-beat] { opacity: 1 !important; visibility: visible !important; }
+  .dk__tab td[data-col] { opacity: 1 !important; }
+  .dk__meio { overflow: visible; }
+  .dk__notas, .dk__regua { display: none; }
+}
 
 /* ==========================================================================
    Proposta — documento para ler e imprimir

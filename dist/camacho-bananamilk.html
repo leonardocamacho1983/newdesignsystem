@@ -1,7 +1,10 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sistema Visual Camacho</title>
-<meta name="description" content="Sistema de identidade do Camacho: tokens, motor gráfico de dithering, três vozes tipográficas e componentes.">
+<title>Plano de Gestão e IA da Banana Milk</title>
+<meta name="description" content="Diagnóstico, projetos prioritários e instrumentos para a próxima etapa do negócio. AI Assessment & Opportunities.">
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwMDAiLz48cGF0aCBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zMiAxMmEyMCAyMCAwIDEgMCAwIDQwIDIwIDIwIDAgMCAwIDE5LjYtMTZINDEuMkExMC41IDEwLjUgMCAxIDEgNDEuMiAyOGgxMC40QTIwIDIwIDAgMCAwIDMyIDEyWiIvPjwvc3ZnPg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -494,878 +497,516 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
 </style>
 <style>
 /* ==========================================================================
-   Camacho — Estilos do GUIA
-   Só a documentação usa este arquivo. O sistema em si vive em camacho.css.
-   Manter separado é o que impede o guia de virar parte da marca por acidente.
+   Camacho — Superfícies de produto
+   --------------------------------------------------------------------------
+   Componentes das PEÇAS (site, deck, proposta), não do guia. A separação
+   importa: guide.css é andaime de documentação e pode ser jogado fora; isto
+   aqui vai para o ar.
    ========================================================================== */
 
-/* --- Ritmo vertical -------------------------------------------------------
-   Um empilhamento com uma medida só. Nada de margin-top avulso. */
-.stack   { display: flex; flex-direction: column; gap: var(--cmc-sp-4); }
-.stack-5 { display: flex; flex-direction: column; gap: var(--cmc-sp-5); }
-.stack-7 { display: flex; flex-direction: column; gap: var(--cmc-sp-7); }
-
-/* Bloco de documentação: rótulo, intro e conteúdo com respiro previsível. */
-.block { display: flex; flex-direction: column; gap: var(--cmc-sp-5); }
-.block__intro { max-width: 58ch; color: var(--cmc-text-muted); margin: 0; }
-
-/* --- Hero ----------------------------------------------------------------- */
-.hero { background: var(--cmc-black); color: var(--cmc-white); }
-.hero > .cmc-shell {
-  display: flex; flex-direction: column; gap: var(--cmc-sp-7);
-  padding-block: clamp(2.5rem, 7vw, 6rem);
-}
-.hero__nav { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-2); }
-
-/* --- Cartões de especificação --------------------------------------------
-   Área de amostra que cresce, legenda ancorada embaixo: é isso que faz
-   cartões vizinhos alinharem a legenda mesmo com amostras de alturas
-   diferentes. Sem isso o grid estica e sobra buraco branco. */
-.spec {
-  display: flex; flex-direction: column; gap: var(--cmc-sp-4);
-  background: var(--cmc-surface); border-radius: var(--cmc-r-card);
-  padding: var(--cmc-sp-5);
-}
-.spec--dark    { background: var(--cmc-black); color: var(--cmc-white); }
-.spec--steel   { background: var(--cmc-steel); color: var(--cmc-white); }
-.spec--outline { background: transparent; border: var(--cmc-border); }
-.spec__body { flex: 1; display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
-.spec__demo { flex: 1; display: flex; align-items: center; min-height: 7rem; }
-.spec__demo--center { justify-content: center; }
-.spec__foot { margin-top: auto; }
-
-/* --- Listas de especificação ---------------------------------------------- */
-.specs { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
-.specs > li {
-  display: flex; justify-content: space-between; align-items: baseline;
-  gap: var(--cmc-sp-5); padding-block: var(--cmc-sp-3);
+/* --- Navegação do site ---------------------------------------------------- */
+.st-nav {
+  position: sticky; top: 0; z-index: var(--cmc-z-sticky);
+  background: color-mix(in srgb, var(--cmc-bg) 88%, transparent);
+  backdrop-filter: blur(12px);
   border-bottom: var(--cmc-border);
 }
-.specs > li:first-child { padding-top: 0; }
-.specs > li:last-child  { border-bottom: 0; padding-bottom: 0; }  /* sem régua solta */
-.specs__key { color: var(--cmc-text); }
-.specs__val { color: var(--cmc-text-muted); text-align: right; flex: none; }
-
-/* --- Cor ------------------------------------------------------------------ */
-.swatches {
-  display: grid; gap: var(--cmc-sp-4);
-  grid-template-columns: repeat(auto-fit, minmax(min(9.5rem, 45%), 1fr));
+.st-nav__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--cmc-sp-5); padding-block: var(--cmc-sp-4);
 }
-.swatch { display: flex; flex-direction: column; gap: var(--cmc-sp-2); }
-.swatch__chip {
-  aspect-ratio: 4 / 3; border-radius: var(--cmc-r-card);
-  background: var(--chip); border: var(--cmc-border);
+.st-nav__links { display: flex; gap: var(--cmc-sp-5); align-items: center; }
+.st-nav__links a {
+  color: var(--cmc-text-muted); text-decoration: none; font-size: var(--cmc-fs-small);
 }
-.swatch__meta {
-  display: flex; justify-content: space-between; align-items: baseline;
-  gap: var(--cmc-sp-2); font-size: var(--cmc-fs-small);
+.st-nav__links a:hover { color: var(--cmc-text); }
+@media (max-width: 52rem) { .st-nav__links a:not(.cmc-btn) { display: none; } }
+
+/* --- Hero -----------------------------------------------------------------
+   O grafismo sangra pela direita e a cortina protege a coluna do texto: a
+   regra do guia é manchete nunca sobre a região densa das partículas. */
+.st-hero { background: var(--cmc-black); color: var(--cmc-white); position: relative; overflow: hidden; }
+.st-hero__art { position: absolute; inset: 0 0 0 22%; }
+.st-hero__art canvas { width: 100%; height: 100%; display: block; }
+.st-hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(95deg, #000 30%, rgba(0,0,0,.55) 58%, transparent 82%);
 }
-.swatch__hex { color: var(--cmc-text-muted); font-family: var(--cmc-font-mono); }
-
-/* --- Área de proteção ----------------------------------------------------- */
-.clearspace { align-self: flex-start; padding: 1.5rem; outline: 1px dashed var(--cmc-grey-35); }
-.clearspace > svg { display: block; width: 5.5rem; height: 5.5rem; }
-
-/* --- Grade de amostras do motor gráfico ----------------------------------- */
-.specimens {
+.st-hero__inner {
+  position: relative; z-index: 1;
   display: grid; gap: var(--cmc-sp-6);
-  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  padding-block: clamp(4.5rem, 17vh, 10rem);
+  max-width: 34ch;
 }
-.specimen { display: flex; flex-direction: column; gap: var(--cmc-sp-3); margin: 0; }
-.specimen figcaption { display: flex; flex-direction: column; gap: var(--cmc-sp-1); }
-
-/* --- Grades ---------------------------------------------------------------
-   `align-items: start` é o detalhe que evita cartão esticado com buraco
-   branco embaixo quando o vizinho é mais alto. */
-.grid       { display: grid; gap: var(--cmc-sp-5); align-items: start; }
-.grid--2    { grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr)); }
-.grid--3    { grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr)); }
-.grid--even { align-items: stretch; }   /* quando a altura igual é intencional */
-
-/* --- Faça / Não faça ------------------------------------------------------
-   Os sinais "+" e "−" são desenhados com gradientes, não com glifos de
-   largura cheia — glifo fullwidth desalinha do texto ao lado. */
-.rules__flag {
-  display: flex; align-items: center; gap: var(--cmc-sp-3);
-  font-weight: var(--cmc-w-medium); font-size: var(--cmc-fs-lead);
-}
-.rules__flag::before {
-  content: ""; width: 0.75rem; height: 0.75rem; flex: none;
-  background: linear-gradient(currentColor, currentColor) center/100% 2px no-repeat;
-}
-.rules--do .rules__flag::before {
-  background:
-    linear-gradient(currentColor, currentColor) center/100% 2px no-repeat,
-    linear-gradient(currentColor, currentColor) center/2px 100% no-repeat;
-}
-.rules--dont .rules__flag { color: var(--cmc-grey-55); }
-
-/* --- Aplicações ----------------------------------------------------------- */
-.showcase {
-  display: grid; gap: var(--cmc-sp-6); align-items: start;
-  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
-}
-.showcase__col { display: flex; flex-direction: column; gap: var(--cmc-sp-6); }
-
-/* Outdoor */
-.ooh {
-  background: var(--cmc-white); border-radius: var(--cmc-r-card); overflow: hidden;
-}
-.ooh__inner {
-  display: grid; grid-template-columns: 1fr auto; gap: var(--cmc-sp-5);
-  align-items: center; padding: var(--cmc-sp-6);
-}
-.ooh__copy { display: flex; flex-direction: column; gap: var(--cmc-sp-4); max-width: 34ch; }
-.ooh__art { width: min(13rem, 32vw); }
-@media (max-width: 30rem) {
-  .ooh__inner { grid-template-columns: 1fr; }
-  .ooh__art { width: 9rem; }
+.st-hero__sub { color: #D6D6D6; margin: 0; }
+.st-hero__prova {
+  display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5);
+  padding-top: var(--cmc-sp-5); border-top: 1px solid #2A2A2A;
+  font-size: var(--cmc-fs-small); color: var(--cmc-grey-55);
 }
 
-/* Cartão de visita: marca d'água à direita, texto livre à esquerda */
-.bizcard {
-  position: relative; overflow: hidden;
-  aspect-ratio: 1.75 / 1; max-width: 32rem;
-  background: var(--cmc-black); color: var(--cmc-white);
-  border-radius: var(--cmc-r-card); padding: var(--cmc-sp-5);
-  display: flex; flex-direction: column; justify-content: space-between;
-}
-/* A marca d'água ocupa só a faixa superior direita: o rodapé de contato
-   precisa de fundo limpo. Grafismo bonito que cobre texto é defeito. */
-.bizcard__art {
-  position: absolute; top: -6%; bottom: 30%; right: -4%; width: 46%;
-  color: var(--cmc-white); pointer-events: none;
-}
-.bizcard__art canvas { width: 100%; height: 100%; display: block; }
-.bizcard > *:not(.bizcard__art) { position: relative; }
-.bizcard__foot { display: flex; flex-direction: column; gap: 0; }
+/* --- Seções ---------------------------------------------------------------- */
+.st-sec { padding-block: clamp(4rem, 10vw, 8rem); }
+.st-sec--claro { background: var(--cmc-white); }
+.st-sec--escuro { background: var(--cmc-black); color: var(--cmc-white); }
+.st-sec--papel { background: var(--cmc-paper); }
 
-/* --- Rodapé --------------------------------------------------------------- */
-.guide-foot {
-  background: var(--cmc-black); color: var(--cmc-white);
-  padding-block: var(--cmc-sp-7);
+/* Par assimétrico: a afirmação ocupa o peso, o detalhe acompanha. É o que
+   tira o texto da coluna estreita à esquerda e usa a largura da tela. */
+.st-par {
+  display: grid; gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  align-items: start;
 }
-.guide-foot > .cmc-shell {
-  display: flex; flex-wrap: wrap; justify-content: space-between;
-  align-items: center; gap: var(--cmc-sp-4);
+@media (max-width: 60rem) { .st-par { grid-template-columns: 1fr; } }
+.st-par--inverso { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+
+.st-rot { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+          color: var(--cmc-text-muted); margin: 0 0 var(--cmc-sp-5); }
+.st-afirma {
+  font-size: clamp(2rem, 4.2vw, 3.4rem); line-height: 1.02;
+  letter-spacing: -0.03em; font-weight: var(--cmc-w-light);
+  margin: 0; text-wrap: balance;
 }
 
-figure { margin: 0; }
-code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
+/* --- Sintomas: lista numerada com régua, não cards flutuando --------------- */
+.st-sintomas { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.st-sintomas li {
+  display: grid; grid-template-columns: 3.5rem 1fr; gap: var(--cmc-sp-4);
+  padding-block: var(--cmc-sp-5); border-top: var(--cmc-border);
+}
+.st-sintomas li:last-child { border-bottom: var(--cmc-border); }
+.st-sintomas__n { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+                  color: var(--cmc-text-muted); padding-top: 0.35em; }
+.st-sintomas h3 { margin: 0 0 var(--cmc-sp-2); font-size: var(--cmc-fs-lead);
+                  font-weight: var(--cmc-w-book); letter-spacing: -0.015em; }
+.st-sintomas p { margin: 0; font-size: var(--cmc-fs-small); color: var(--cmc-text-muted);
+                 max-width: 52ch; }
 
-/* Espécime tipográfico: o alfabeto em peso de leitura, não em Light. */
-.type-specimen { font-weight: var(--cmc-w-book); }
+/* --- Momento de impacto: grafismo sangrando com frase por cima ------------- */
+.st-impacto { position: relative; background: var(--cmc-black); color: var(--cmc-white);
+              overflow: hidden; }
+.st-impacto__art { position: absolute; inset: 0; }
+.st-impacto__art canvas { width: 100%; height: 100%; display: block; }
+.st-impacto__inner {
+  position: relative; z-index: 1;
+  padding-block: clamp(5rem, 15vw, 11rem);
+  max-width: 26ch;
+}
+.st-impacto::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(95deg, #000 26%, rgba(0,0,0,.6) 55%, transparent 84%);
+}
+
+/* --- Oferta: duas frentes com peso, não sumário --------------------------- */
+.st-frentes { display: grid; gap: clamp(2rem, 5vw, 4.5rem);
+              grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); }
+.st-frente h3 { margin: 0 0 var(--cmc-sp-4); font-size: var(--cmc-fs-h2);
+                font-weight: var(--cmc-w-light); letter-spacing: -0.025em; }
+.st-lista { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.st-lista li { padding-block: var(--cmc-sp-3); border-top: 1px solid currentColor;
+               border-color: color-mix(in srgb, currentColor 16%, transparent);
+               font-size: var(--cmc-fs-small); }
+
+/* --- Método: uma faixa que se lê da esquerda para a direita ---------------- */
+.st-trilha { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
+             gap: var(--cmc-sp-4); }
+@media (max-width: 68rem) { .st-trilha { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 38rem) { .st-trilha { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.st-etapa { display: flex; flex-direction: column; gap: var(--cmc-sp-3);
+            padding-top: var(--cmc-sp-4); border-top: 2px solid var(--cmc-black); }
+.st-etapa--fraca { border-top-color: var(--cmc-grey-20); }
+.st-etapa__n { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+               color: var(--cmc-text-muted); }
+.st-etapa h3 { margin: 0; font-size: var(--cmc-fs-lead); font-weight: var(--cmc-w-book);
+               letter-spacing: -0.015em; }
+.st-etapa p { margin: 0; font-size: var(--cmc-fs-small); color: var(--cmc-text-muted); }
+.st-etapa__marca {
+  position: relative; aspect-ratio: 3/2; background: var(--cmc-black);
+  color: var(--cmc-particle); border-radius: 4px; overflow: hidden;
+}
+.st-etapa__marca canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* --- Prova: o que sai do diagnóstico -------------------------------------- */
+.st-prova { display: grid; gap: var(--cmc-sp-4); }
+.st-nivel { display: grid; grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr) auto;
+            gap: var(--cmc-sp-4); align-items: center; }
+@media (max-width: 44rem) { .st-nivel { grid-template-columns: 1fr; gap: var(--cmc-sp-2); } }
+.st-nivel__barra { position: relative; height: 2rem; background: var(--cmc-black);
+                   border-radius: 3px; overflow: hidden; color: var(--cmc-white); }
+.st-nivel__barra canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.st-nivel__v { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+               color: var(--cmc-text-muted); font-variant-numeric: tabular-nums; }
+
+/* --- Recusa: o que não sou ------------------------------------------------ */
+.st-recusa { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-2); }
+.st-recusa span {
+  font-size: var(--cmc-fs-small); padding: 0.45em 0.9em;
+  border: var(--cmc-border); border-radius: var(--cmc-r-pill);
+  color: var(--cmc-text-muted); text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+/* --- Fecho ---------------------------------------------------------------- */
+.st-fecho { display: grid; gap: var(--cmc-sp-6); max-width: 24ch; }
+.st-fecho__hed { font-size: clamp(2.4rem, 6vw, 5rem); line-height: 0.98;
+                 letter-spacing: -0.035em; font-weight: var(--cmc-w-light); margin: 0; }
+.st-rodape { border-top: var(--cmc-border); padding-block: var(--cmc-sp-6); }
+.st-rodape__inner { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5);
+                    justify-content: space-between; align-items: center; }
 
 /* ==========================================================================
-   Extensões — formatos de aplicação
+   Deck — slides navegáveis
    ========================================================================== */
-
-/* Galeria de formatos — agrupada por família, porque misturar 9:16 com 4:1
-   numa grade automática só produz buracos. Cada família tem seu ritmo. */
-.formats { display: grid; gap: var(--cmc-sp-6); align-items: start; }
-.formats--social { grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); }
-.formats--wide { grid-template-columns: 1fr; }
-.formats--pair {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+.dk { background: var(--cmc-black); color: var(--cmc-white); }
+.dk__palco {
+  position: relative; width: 100%; aspect-ratio: 16/9;
+  container-type: inline-size; overflow: hidden;
 }
-@media (max-width: 48rem) { .formats--pair { grid-template-columns: 1fr; } }
-
-.format { display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
-
-/* Cada peça é dividida em FAIXAS: cabeçalho, arte, pé. O canvas ocupa a
-   própria linha do grid em vez de ficar absoluto por trás de tudo — assim é
-   impossível o grafismo cruzar com a tipografia. Foi o remendo que falhou na
-   primeira versão desta seção. */
-.format__frame {
-  overflow: hidden;
-  border-radius: var(--cmc-r-card);
-  background: var(--cmc-black); color: var(--cmc-white);
-  aspect-ratio: var(--ar, 1);
-  container-type: inline-size;
+.dk__slide {
+  position: absolute; inset: 0;
   display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 4cqi; padding: 6cqi;
+  gap: 3cqi; padding: 6cqi;
+  background: var(--slide-bg, var(--cmc-black));
+  color: var(--slide-ink, var(--cmc-white));
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
 }
-.format__frame--paper { background: var(--cmc-paper); color: var(--cmc-black); }
-.format__frame--white { background: var(--cmc-white); color: var(--cmc-black); }
+.dk__slide[data-ativo] { opacity: 1; visibility: visible; }
+.dk__hed { font-size: 7cqi; line-height: 0.98; letter-spacing: -0.03em;
+           font-weight: var(--cmc-w-light); margin: 0; text-wrap: balance; }
+.dk__hed--grande { font-size: 11cqi; }
+.dk__corpo { font-size: 2.6cqi; line-height: 1.5; margin: 0; max-width: 46ch; }
+.dk__corpo--serif { font-family: var(--cmc-font-serif); font-size: 2.9cqi; }
+.dk__art { position: relative; min-height: 0; }
+.dk__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dk__pe { display: flex; justify-content: space-between; align-items: flex-end;
+          gap: 3cqi; font-family: var(--cmc-font-mono); font-size: 1.8cqi;
+          color: color-mix(in srgb, currentColor 60%, transparent); }
+.dk__lockup { --lockup-size: 4cqi; }
+.dk__grade { display: grid; gap: calc(3cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 3), 1fr); align-content: center; }
+.dk__item { display: flex; flex-direction: column; gap: calc(1cqi * var(--cp, 1)); }
+.dk__item h4 { margin: 0; font-size: calc(3.4cqi * var(--cp, 1)); font-weight: var(--cmc-w-light); letter-spacing: -0.02em; }
+.dk__item p { margin: 0; font-size: calc(2.1cqi * var(--cp, 1)); line-height: 1.45;
+              color: color-mix(in srgb, currentColor 66%, transparent); }
+.dk__barra {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--cmc-sp-4); padding-block: var(--cmc-sp-4);
+}
+.dk__conta { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+             font-variant-numeric: tabular-nums; }
 
-/* Peças largas: texto de um lado, arte do outro. A coluna da arte precisa
-   ESTICAR (o canvas é absoluto e não tem altura própria); só o texto se
-   centraliza. Centralizar a linha inteira zera a altura do canvas. */
-.format__frame--split {
-  grid-template-rows: minmax(0, 1fr);
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  align-items: stretch; gap: 6cqi;
-}
-.format__frame--split .format__copy { align-self: center; }
-/* Peça sem texto (ícone): a arte ocupa tudo. */
-.format__frame--center { grid-template-rows: 1fr; padding: 0; }
+/* ==========================================================================
+   Apresentação — o deck de cliente, sobre a mesma máquina do .dk
 
-.format__art { position: relative; min-height: 0; min-width: 0; }
-.format__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+   Reusa .dk__palco, .dk__slide, .dk__hed e a navegação inteira. O que entra
+   aqui é só o que a peça de diagnóstico pede a mais: os beats, os quatro
+   registros, o campo do cliente e as placas de ativo que ainda não chegou.
+   ========================================================================== */
 
-.format__hed {
-  font-size: var(--hed, 12cqi); line-height: 0.98; letter-spacing: -0.03em;
-  font-weight: var(--cmc-w-light); margin: 0; text-wrap: balance;
-}
-.format__note { font-size: var(--note, 4.5cqi); line-height: 1.4; margin: 0; }
-.format__note--muted { color: var(--cmc-text-muted); }
-.format__copy { display: flex; flex-direction: column; gap: 2cqi; }
-/* O lockup escala com a peça, mas com teto: em peça larga, cqi cresce demais. */
-.format__lockup { --lockup-size: clamp(0.7rem, 7cqi, 1.4rem); }
+/* Onde o grafismo mora.
 
-/* Tira de comparação: peças de proporções diferentes lado a lado, alinhadas
-   pela ALTURA. Numa grade automática de largura fixa, um 4:5 e um 21:9 na
-   mesma linha deixam buracos — é o que a nota da galeria de formatos acima já
-   avisava sobre misturar famílias. Alinhar por altura faz a comparação ser
-   sobre a composição, e não sobre o tamanho. */
-.tira { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5); align-items: flex-start; }
-/* `min-content` porque quem manda na largura é a PEÇA, não a legenda: sem
-   isso, uma legenda longa ("Capa de relatório A4 · 210:297") fica mais larga
-   que um formato estreito e a peça estica para acompanhar — o A4 saía a 0,977
-   de proporção em vez de 0,707, medido. Com min-content a legenda quebra. */
-.tira > .format { flex: none; width: min-content; }
-.tira > .format > figcaption { text-wrap: balance; }
-.tira .cmc-kv,
-.tira .format__frame { height: var(--tira-h, 11rem); width: auto; }
+   A primeira versão desta página jogou a arte sangrada atrás de tudo com
+   opacity 0.5, e a manchete da capa ficou ilegível na ponta densa. É
+   exatamente o defeito que a clareira existe para impedir, e que a versão
+   anterior de .format__frame já tinha cometido com z-index. Opacidade não
+   resolve: ela só deixa os dois igualmente fracos.
 
-/* --- Laboratório ---------------------------------------------------------- */
-.lab { display: grid; gap: var(--cmc-sp-6); grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr); }
-@media (max-width: 52rem) { .lab { grid-template-columns: 1fr; } }
-.lab__stage { position: sticky; top: var(--cmc-sp-4); }
-.lab__panel { display: flex; flex-direction: column; gap: var(--cmc-sp-4); }
-.field { display: flex; flex-direction: column; gap: var(--cmc-sp-2); }
-/* `display` de classe vence o estilo de agente do atributo hidden: sem isto,
-   um campo marcado hidden continua aparecendo. */
-.field[hidden] { display: none; }
-.field__row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cmc-sp-3); }
-.field__val { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
-              color: var(--cmc-text-muted); font-variant-numeric: tabular-nums; }
-.field select, .field input[type="text"], .field textarea {
-  font: inherit; font-size: var(--cmc-fs-small); color: var(--cmc-text);
-  background: var(--cmc-surface); border: var(--cmc-border);
-  border-radius: var(--cmc-r-pill); padding: 0 0.9em;
-  min-height: var(--cmc-control-h); width: 100%;
+   Então há dois modos, e nenhum deles é "atrás de tudo":
+
+   sangria  — a arte ocupa a peça toda, e a cena DECLARA a clareira em que o
+              tipo senta. Só onde o grafismo É o argumento.
+   faixa    — a arte ocupa uma coluna à direita, o tipo tem a esquerda inteira.
+   borda    — uma tira estreita na margem. Para cena com tabela de sete linhas
+              ou grade de oito itens, em que qualquer coisa maior rouba a
+              largura de que o conteúdo precisa. O modo sai da densidade do
+              conteúdo, não do gosto: é medida, não decoração. */
+/* Nada de `position: relative` aqui: .dk__slide já é absolute/inset:0 acima, e
+   redeclarar tirava o slide do lugar e jogava a cena para fora do palco. */
+.dk__slide .dk__art { position: absolute; z-index: 0; }
+.dk__slide[data-arte="faixa"] .dk__art { inset: 0 0 0 auto; width: 34%; }
+.dk__slide[data-arte="faixa"] > :not(.dk__art) { max-width: 62%; }
+.dk__slide[data-arte="borda"] .dk__art { inset: 0 0 0 auto; width: 7%; }
+.dk__slide[data-arte="borda"] > :not(.dk__art) { max-width: 89%; }
+.dk__slide[data-arte="borda"] .dk__hed { font-size: 3.1cqi; }
+.dk__slide[data-arte="sangria"] .dk__art { inset: 0; }
+/* --cl vem da clareira declarada pela cena: o tipo não passa da borda do
+   terreno limpo, por construção e não por conferência visual. */
+.dk__slide[data-arte="sangria"] > :not(.dk__art) { max-width: calc(var(--cl, 1) * 100%); }
+.dk__slide > :not(.dk__art) { position: relative; z-index: 1; }
+
+/* Beats. Um elemento com data-beat só aparece quando o beat corrente o
+   alcançou. `visibility` em vez de `display` para o layout não pular: a
+   manchete tem que ficar no mesmo lugar do primeiro ao último passo. */
+/* --cp é o fator de compressão do painel: um escalar só, do qual todo tamanho
+   de tipo e todo respiro dentro do painel derivam — mesmo mecanismo de
+   --kv-base em .cmc-kv. A página mede o painel e baixa o fator até caber,
+   com piso declarado. Assim "não coube" é um número no relatório, não uma
+   barra de rolagem que ninguém vê durante a apresentação. */
+.dk__painel {
+  --cp: 1;
+  position: absolute; inset: 0; overflow: hidden;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
 }
-.field input[type="range"] {
-  width: 100%; accent-color: var(--cmc-black);
-  margin: 0;   /* o UA aplica margem lateral no range, que estoura a coluna */
+.dk__painel[data-visivel] { opacity: 1; visibility: visible; }
+.dk__paineis { position: relative; min-height: 0; }
+
+.dk__slide [data-beat] {
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
 }
-.field textarea {
-  min-height: 4.5rem; padding: 0.6em 0.9em; border-radius: var(--cmc-r-card);
-  resize: vertical; line-height: 1.35;
+.dk__slide [data-beat][data-visivel] { opacity: 1; visibility: visible; }
+
+/* Campo do cliente: o mesmo creme do papel — as duas marcas já dividem o
+   terreno — mais um acento por sabor, que vive na peça e não na fundação. */
+.dk__slide[data-campo="cliente"] { --slide-bg: #F2F0EE; --slide-ink: #000; }
+.dk__slide[data-campo="cliente"] .dk__olho,
+.dk__slide[data-campo="cliente"] .dk__num { color: var(--slide-acento); }
+.dk__slide[data-campo="cliente"] .dk__item h4 { color: var(--slide-acento); }
+
+/* Olho: o rótulo do registro, sempre em mono, sempre no topo. É ele que diz
+   se o slide é diagnóstico, recomendação, implementação ou legado — e é a
+   única coisa da peça que não muda de lugar nunca. */
+.dk__olho {
+  font-family: var(--cmc-font-mono); font-size: 1.7cqi;
+  letter-spacing: 0.06em; text-transform: uppercase; margin: 0;
+  color: color-mix(in srgb, currentColor 55%, transparent);
 }
-.lab__code {
+.dk__olho strong { font-weight: var(--cmc-w-medium); color: currentColor; }
+
+/* Manchete de cena de conteúdo é menor do que a de deck comercial, e isso é
+   medido: com 5,2cqi em três linhas, o palco dos painéis perdia altura demais
+   e seis cenas batiam no piso de compressão. Aqui a manchete cede espaço para
+   o argumento, que é o que o cliente veio ler. */
+.dk__hed--med { font-size: 4cqi; }
+.dk__hed--peq { font-size: 3.3cqi; }
+.dk__slide[data-arte] { gap: 2.2cqi; padding: 5cqi 6cqi; }
+
+/* Corpo rolável: alguns slides têm mais conteúdo do que 16:9 comporta, e o
+   certo é a faixa do meio rolar em vez de a peça inteira estourar. */
+/* A faixa do meio é um palco de painéis: a manchete tem linha própria, e os
+   painéis se sobrepõem no espaço que sobra, um visível de cada vez. */
+.dk__meio { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 2.4cqi; }
+
+/* Blocos rotulados — situação / diagnóstico / implicação. */
+.dk__blocos { display: grid; gap: calc(2.2cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.dk__bloco { display: flex; flex-direction: column; gap: calc(0.8cqi * var(--cp, 1)); }
+.dk__bloco h4 { margin: 0; font-family: var(--cmc-font-mono); font-size: calc(1.6cqi * var(--cp, 1));
+                letter-spacing: 0.06em; text-transform: uppercase;
+                font-weight: var(--cmc-w-medium);
+                color: color-mix(in srgb, currentColor 55%, transparent); }
+.dk__bloco p { margin: 0; font-size: calc(2.1cqi * var(--cp, 1)); line-height: 1.45; }
+
+/* Tabela de duas ou quatro colunas. Regra fina, nada de zebra: o sistema
+   separa por espaço e linha, não por preenchimento. */
+.dk__tab { width: 100%; border-collapse: collapse; font-size: calc(1.95cqi * var(--cp, 1)); }
+.dk__tab th {
+  text-align: left; font-family: var(--cmc-font-mono); font-size: calc(1.55cqi * var(--cp, 1));
+  letter-spacing: 0.06em; text-transform: uppercase;
+  font-weight: var(--cmc-w-medium); padding: 0 1.6cqi calc(1.2cqi * var(--cp, 1)) 0;
+  color: color-mix(in srgb, currentColor 55%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+}
+.dk__tab td { padding: calc(1.15cqi * var(--cp, 1)) 1.6cqi calc(1.15cqi * var(--cp, 1)) 0; vertical-align: top; line-height: 1.35;
+              border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.dk__tab tr td:first-child { width: 26%; }
+.dk__tab td[data-col]:not([data-visivel]) { opacity: 0; }
+.dk__tab td[data-col] { transition: opacity var(--cmc-dur-base) var(--cmc-ease); }
+
+/* Passos numerados: a numeração é do sistema (mono, tabular), não do browser. */
+.dk__passos { list-style: none; margin: 0; padding: 0; counter-reset: p;
+              display: grid; gap: calc(1.1cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.dk__passos li { counter-increment: p; display: flex; gap: 1.2cqi;
+                 font-size: calc(2cqi * var(--cp, 1)); line-height: 1.35; }
+.dk__passos li::before {
+  content: counter(p, decimal-leading-zero); flex: none;
+  font-family: var(--cmc-font-mono); font-size: calc(1.6cqi * var(--cp, 1));
+  font-variant-numeric: tabular-nums; padding-top: 0.25cqi;
+  color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+/* Lista simples, marcada por regra e não por bolinha. */
+.dk__lista { list-style: none; margin: 0; padding: 0;
+             display: grid; gap: calc(0.9cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.dk__lista li { font-size: calc(2cqi * var(--cp, 1)); line-height: 1.35; padding-left: 2.2cqi; position: relative; }
+.dk__lista li::before {
+  content: ""; position: absolute; left: 0; top: 1.1cqi;
+  width: 1.2cqi; height: 1px; background: currentColor; opacity: 0.45;
+}
+
+/* Fecho: a frase que o slide deixa. Serifada no diagnóstico, sistema no resto
+   — quem decide é o registro, e é isso que impede a peça de virar um bloco só. */
+.dk__fecho { margin: 0; font-size: calc(2.4cqi * var(--cp, 1)); line-height: 1.4; max-width: 62ch; }
+.dk__slide[data-registro="diagnostico"] .dk__fecho {
+  font-family: var(--cmc-font-serif); font-size: calc(2.7cqi * var(--cp, 1));
+}
+.dk__legado {
+  margin: 0; font-size: calc(2cqi * var(--cp, 1)); line-height: 1.4; padding-left: 2.4cqi;
+  border-left: 2px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+
+/* Placa de ativo que ainda não chegou. Um retângulo vazio passa despercebido
+   até a peça estar na frente do cliente; uma placa que diz qual arquivo falta,
+   não. */
+.dk__placa {
+  display: inline-flex; flex-direction: column; gap: 0.5cqi;
+  padding: calc(1.8cqi * var(--cp, 1)); min-height: 0; align-self: start;
+  border: 1px dashed color-mix(in srgb, currentColor 40%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  font-family: var(--cmc-font-mono); font-size: 1.6cqi;
+}
+.dk__placa b { font-weight: var(--cmc-w-medium); }
+.dk__placa span { color: color-mix(in srgb, currentColor 60%, transparent); }
+
+/* Barra de progresso da apresentação: uma régua, não um enfeite. */
+.dk__regua { display: flex; gap: 0.3cqi; flex: 1; align-items: center; }
+.dk__regua i { flex: 1; height: 2px; background: currentColor; opacity: 0.18; }
+.dk__regua i[data-feito] { opacity: 0.55; }
+.dk__regua i[data-agora] { opacity: 1; height: 4px; }
+
+/* Visão de apresentador: notas de apoio e pendências, fora da tela do cliente. */
+.dk__notas { max-width: 46rem; margin-inline: auto; padding-block: var(--cmc-sp-6); }
+.dk__notas h3 { font-size: var(--cmc-fs-h3); margin: 0 0 var(--cmc-sp-3); }
+.dk__notas li { margin-bottom: var(--cmc-sp-3); line-height: 1.5; }
+
+@media print {
+  /* Impressão achata os beats: sem isso metade de cada página sai em branco. */
+  /* --cp é o fator de compressão do painel: um escalar só, do qual todo tamanho
+   de tipo e todo respiro dentro do painel derivam — mesmo mecanismo de
+   --kv-base em .cmc-kv. A página mede o painel e baixa o fator até caber,
+   com piso declarado. Assim "não coube" é um número no relatório, não uma
+   barra de rolagem que ninguém vê durante a apresentação. */
+.dk__painel {
+  --cp: 1;
+  position: absolute; inset: 0; overflow: hidden;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__painel[data-visivel] { opacity: 1; visibility: visible; }
+.dk__paineis { position: relative; min-height: 0; }
+
+.dk__slide [data-beat] { opacity: 1 !important; visibility: visible !important; }
+  .dk__tab td[data-col] { opacity: 1 !important; }
+  .dk__meio { overflow: visible; }
+  .dk__notas, .dk__regua { display: none; }
+}
+
+/* ==========================================================================
+   Proposta — documento para ler e imprimir
+   ========================================================================== */
+.pr { max-width: 46rem; margin-inline: auto; }
+.pr__capa {
+  display: flex; flex-direction: column; gap: var(--cmc-sp-5);
+  padding-block: var(--cmc-sp-8);
+  border-bottom: 2px solid var(--cmc-black);
+}
+.pr__art { position: relative; aspect-ratio: 16/5; }
+.pr__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pr__sec { padding-block: var(--cmc-sp-7); border-bottom: var(--cmc-border); }
+.pr__rot {
   font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
-  background: var(--cmc-black); color: var(--cmc-white);
-  border-radius: var(--cmc-r-card); padding: var(--cmc-sp-4);
-  overflow-x: auto; margin: 0; white-space: pre; line-height: 1.5;
+  color: var(--cmc-text-muted); margin: 0 0 var(--cmc-sp-4);
+}
+.pr__tabela { width: 100%; border-collapse: collapse; font-size: var(--cmc-fs-small); }
+.pr__tabela th {
+  text-align: left; font-weight: var(--cmc-w-medium); padding: var(--cmc-sp-3) 0;
+  border-bottom: 1px solid var(--cmc-black);
+}
+.pr__tabela td { padding: var(--cmc-sp-3) 0; border-bottom: var(--cmc-border); vertical-align: top; }
+.pr__tabela td:last-child, .pr__tabela th:last-child {
+  text-align: right; font-family: var(--cmc-font-mono); font-variant-numeric: tabular-nums;
+}
+
+@media print {
+  @page { size: A4; margin: 18mm 16mm; }
+  body { background: #fff; }
+  .naoimprime { display: none !important; }
+  .pr { max-width: none; }
+  .pr__sec { break-inside: avoid; padding-block: 8mm; }
+  .pr__capa { break-after: page; }
 }
 
 /* ==========================================================================
-   Teste de nome — comparação lado a lado
+   Carrossel de LinkedIn — documento, não imagem
+   A plataforma publica carrossel como PDF, então a peça é um documento de
+   páginas 4:5 e o "export" é imprimir. Cada página é uma ideia.
    ========================================================================== */
-.versus { display: grid; gap: var(--cmc-sp-5); align-items: start;
-          grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); }
-.versus__col { display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
-.versus__label { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cmc-sp-3); }
-
-/* Régua de medição: mostra a largura relativa do wordmark de cada nome. */
-.gauge { display: flex; flex-direction: column; gap: var(--cmc-sp-2); }
-.gauge__bar { height: 0.5rem; border-radius: var(--cmc-r-pill); background: var(--cmc-black);
-              width: var(--w); }
-.gauge__bar--alt { background: var(--cmc-grey-55); }
-.gauge__track { background: var(--cmc-grey-20); border-radius: var(--cmc-r-pill); }
-
-.verdict { display: flex; flex-direction: column; gap: var(--cmc-sp-4);
-           border-left: 3px solid var(--cmc-black); padding-left: var(--cmc-sp-5); }
-
-/* ==========================================================================
-   Estúdio de print
-   ========================================================================== */
-.studio { display: grid; gap: var(--cmc-sp-6); grid-template-columns: minmax(0, 1fr) minmax(0, 20rem); }
-.studio > * { min-width: 0; }
-@media (max-width: 56rem) { .studio { grid-template-columns: 1fr; } }
-
-.studio__stage { display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
-.studio__frame {
-  position: relative; overflow: hidden;
-  border-radius: var(--cmc-r-panel);
-  aspect-ratio: var(--ar, 4/3);
-  background: var(--field, var(--cmc-black));
-  color: var(--ink, var(--cmc-white));
-  box-shadow: var(--cmc-shadow-1);
+.cr { max-width: 34rem; margin-inline: auto; display: flex; flex-direction: column; gap: var(--cmc-sp-5); }
+.cr__pag {
+  aspect-ratio: 4 / 5; container-type: inline-size; overflow: hidden;
+  border-radius: var(--cmc-r-card);
+  background: var(--pag-bg, var(--cmc-black)); color: var(--pag-ink, var(--cmc-white));
+  position: relative;
 }
-.studio__frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-
-.studio__panel { display: flex; flex-direction: column; gap: var(--cmc-sp-5); }
-.studio__group { display: flex; flex-direction: column; gap: var(--cmc-sp-4); }
-.studio__group > .cmc-micro { padding-bottom: var(--cmc-sp-2); border-bottom: var(--cmc-border); }
-
-/* Botões de preset: uma fila que quebra, com o ativo marcado. */
-.presets { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-2); }
-.preset {
-  font: inherit; font-size: var(--cmc-fs-micro); letter-spacing: var(--cmc-tr-micro);
-  text-transform: uppercase; font-weight: var(--cmc-w-medium);
-  min-height: var(--cmc-control-h); padding: 0 0.95em;
-  border-radius: var(--cmc-r-pill); cursor: pointer;
-  background: transparent; color: inherit;
-  border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
-  transition: background-color var(--cmc-dur-fast) var(--cmc-ease),
-              color var(--cmc-dur-fast) var(--cmc-ease);
+.cr__inner {
+  position: absolute; inset: 0; display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto; gap: 4cqi; padding: 7cqi;
 }
-.preset:hover { border-color: currentColor; }
-.preset[aria-pressed="true"] { background: var(--cmc-black); color: var(--cmc-white); border-color: var(--cmc-black); }
+.cr__hed { font-size: 9cqi; line-height: 0.98; letter-spacing: -0.03em;
+           font-weight: var(--cmc-w-light); margin: 0; text-wrap: balance; }
+.cr__corpo { font-size: 3.6cqi; line-height: 1.45; margin: 0;
+             color: color-mix(in srgb, currentColor 68%, transparent); }
+.cr__corpo--serif { font-family: var(--cmc-font-serif); font-size: 3.9cqi; }
+.cr__art { position: relative; min-height: 0; }
+.cr__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cr__pe { display: flex; justify-content: space-between; align-items: flex-end; gap: 4cqi;
+          font-family: var(--cmc-font-mono); font-size: 2.6cqi;
+          color: color-mix(in srgb, currentColor 60%, transparent); }
+.cr__lockup { --lockup-size: 5.5cqi; }
 
-/* Segmentado (campo, proporção): rádios que parecem um controle só. */
-.segmented { display: flex; gap: 0; border: var(--cmc-border); border-radius: var(--cmc-r-pill); overflow: hidden; }
-.segmented input { position: absolute; opacity: 0; pointer-events: none; }
-.segmented label {
-  flex: 1; text-align: center; cursor: pointer;
-  font-size: var(--cmc-fs-micro); letter-spacing: var(--cmc-tr-micro);
-  text-transform: uppercase; font-weight: var(--cmc-w-medium);
-  min-height: var(--cmc-control-h); display: flex; align-items: center; justify-content: center;
-  padding: 0 0.4em; white-space: nowrap; min-width: 0;
+@media print {
+  @page { size: 1080px 1350px; margin: 0; }
+  body { background: #fff; }
+  .cr { max-width: none; gap: 0; display: block; }
+  .cr__pag { width: 1080px; height: 1350px; aspect-ratio: auto;
+             border-radius: 0; break-after: page; }
+  .cr__pag:last-child { break-after: auto; }
 }
-.segmented input:checked + label { background: var(--cmc-black); color: var(--cmc-white); }
-.segmented input:focus-visible + label { outline: 2px solid currentColor; outline-offset: -2px; }
 
-.studio__status { min-height: 1.4em; }
-
-/* ==========================================================================
-   Aplicações da prática
-   ========================================================================== */
-
-/* Relatório de diagnóstico: capa editorial com escala de maturidade. */
-.laudo {
-  background: var(--cmc-white); color: var(--cmc-black);
-  border-radius: var(--cmc-r-card); overflow: hidden;
-  container-type: inline-size;
-  display: grid; grid-template-rows: auto auto 1fr auto; gap: 4cqi;
-  padding: 6cqi; aspect-ratio: var(--ar, 3/4);
-  /* A proporção fixa impõe a altura: se o conteúdo interno for medido em rem,
-     em coluna estreita ele excede essa altura e as linhas se sobrepõem. A
-     peça inteira escala com a própria largura — inclusive as listas. */
-  min-height: fit-content;
+/* Deck impresso: um slide por página, paisagem. É o caminho real de virar PDF. */
+@media print {
+  .dk__barra, .dk + p, body.dk > .cmc-shell > p { display: none; }
+  .dk__palco { aspect-ratio: auto; }
+  .dk__slide {
+    position: relative; inset: auto; opacity: 1; visibility: visible;
+    width: 1600px; height: 900px; break-after: page;
+  }
+  .dk__slide:last-child { break-after: auto; }
 }
-.laudo .specs { font-size: 3.2cqi; }
-.laudo .specs > li { padding-block: 1.4cqi; gap: 3cqi; }
-.laudo .cmc-micro { font-size: 2.6cqi; }
-.laudo__hed { font-size: 9cqi; line-height: 1; letter-spacing: -0.03em;
-              font-weight: var(--cmc-w-light); margin: 0; }
-.laudo__art { position: relative; min-height: 0; color: var(--cmc-black); }
-/* Área de arte que contém TEXTO não pode encolher: min-height 0 existe para o
-   canvas, que é absoluto e não tem altura própria. Aplicado ao texto, ele
-   deixa o conteúdo vazar por baixo do que vem depois. */
-.laudo__art--texto { min-height: auto; }
-/* Peça densa de texto não cabe numa proporção de impressão fixa sem cortar
-   conteúdo — e cortar conteúdo para manter a moldura é a troca errada num
-   guia. Estas crescem com o texto, e a legenda não promete proporção. */
-.laudo--fluida { aspect-ratio: auto; }
-/* Em coluna estreita a proporção fixa da peça deixa de caber: solta a
-   proporção e deixa a peça crescer, em vez de sobrepor linhas. */
-@media (max-width: 46rem) {
-  .laudo { aspect-ratio: auto; }
-  .laudo__art { min-height: auto; }
-}
-.laudo__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.laudo__meta { font-family: var(--cmc-font-mono); font-size: 2.6cqi;
-               display: flex; justify-content: space-between; gap: 3cqi; }
-
-/* Barra de nível: o nível é densidade, então a barra é a própria densidade. */
-.nivel { display: grid; grid-template-columns: auto 1fr auto; gap: var(--cmc-sp-4);
-         align-items: center; }
-.nivel__nome { font-size: var(--cmc-fs-small); }
-.nivel__barra { position: relative; height: 2.25rem; background: var(--cmc-black);
-                border-radius: 4px; overflow: hidden; color: var(--cmc-white); }
-.nivel__barra canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.nivel__val { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
-              font-variant-numeric: tabular-nums; color: var(--cmc-text-muted); }
-
-/* Slide de workshop: campo escuro, título grande, sem enfeite. */
-.workshop {
-  background: var(--cmc-black); color: var(--cmc-white);
-  border-radius: var(--cmc-r-card); overflow: hidden; container-type: inline-size;
-  display: grid; grid-template-rows: auto 1fr auto; gap: 4cqi;
-  padding: 6cqi; aspect-ratio: 16/9;
-}
-.workshop__hed { font-size: 8cqi; line-height: 1; letter-spacing: -0.03em;
-                 font-weight: var(--cmc-w-light); margin: 0; }
-.workshop__art { position: relative; min-height: 0; }
-.workshop__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.workshop__pe { font-family: var(--cmc-font-mono); font-size: 2.6cqi; margin: 0;
-                display: flex; justify-content: space-between; gap: 3cqi; }
 
 </style>
-<!-- ============================ HERO ============================ -->
-<header class="hero cmc-inverse">
-  <div class="cmc-shell">
-    <a class="cmc-lockup cmc-lockup--sm" href="#fundacao">
+</head>
+<body class="dk">
+
+<div class="cmc-shell">
+  <div class="dk__barra">
+    <a class="cmc-lockup cmc-lockup--sm" href="camacho-site.html" style="color:#fff">
       <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
         <rect width="64" height="64" rx="14" fill="#fff"/>
         <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
       <span class="cmc-lockup__word" data-brand="name">Camacho</span>
     </a>
-
-    <div class="stack">
-      <h1 class="cmc-display">Clareza<br>é vantagem.</h1>
-      <p class="cmc-lead cmc-muted">
-        Estratégia, transformação com IA e desenvolvimento de lideranças
-        para empresas em crescimento.
-      </p>
-    </div>
-
-    <div class="cmc-stage cmc-stage--flat" style="--stage-ar:16/5">
-      <canvas data-cmc-dither="weave" data-ramp="0.04,1" data-angle="0"
-              data-cell="4" data-duration="2200"
-              aria-label="Grafismo da marca: dois fios que se entrelaçam até virar um só"></canvas>
-    </div>
-
-    <nav class="hero__nav" aria-label="Seções do guia">
-      <a class="cmc-tag" href="#fundacao"><span>01 Fundação</span></a>
-      <a class="cmc-tag" href="#dither"><span>02 Motor gráfico</span></a>
-      <a class="cmc-tag" href="#processo"><span>03 Processo</span></a>
-      <a class="cmc-tag" href="#componentes"><span>04 Componentes</span></a>
-      <a class="cmc-tag" href="#aplicacoes"><span>05 Aplicações</span></a>
-      <a class="cmc-tag" href="#voz"><span>06 Voz e regras</span></a>
-      <a class="cmc-tag" href="https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60"><span>Posicionamento</span></a>
-      <a class="cmc-tag" href="https://claude.ai/code/artifact/448e707f-5e22-4fcf-a574-aaacd463b0fa"><span>Key visuals</span></a>
-      <a class="cmc-tag" href="https://claude.ai/code/artifact/84f1b1bf-8106-47d9-b5be-91fbce49670f"><span>Direção de arte</span></a>
-      <a class="cmc-tag" href="https://claude.ai/code/artifact/40b9d44b-fb1e-4c86-b6ba-bde9c92e27a0"><span>Aplicações</span></a>
-      <a class="cmc-tag" href="https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2"><span>Extensões</span></a>
-    </nav>
-  </div>
-</header>
-
-<main>
-
-<!-- ========================= 01 FUNDAÇÃO ========================= -->
-<section id="fundacao" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">Fundação</h2><span class="cmc-slide__num">01</span>
-    </div>
-
-    <!-- Marca -->
-    <div class="block">
-      <h3 class="cmc-h2">Marca</h3>
-      <p class="block__intro">
-        Um “C” geométrico de contraforma circular, alojado num squircle. O símbolo
-        funciona sozinho a partir de 16&nbsp;px. O lockup horizontal é o uso padrão;
-        a área de proteção equivale a metade da altura do símbolo.
-      </p>
-      <div class="grid grid--3 grid--even">
-        <div class="spec">
-          <div class="spec__demo">
-            <div class="clearspace">
-              <svg viewBox="0 0 64 64" role="img" aria-label="Símbolo Camacho">
-                <rect width="64" height="64" rx="14" fill="#000"/>
-                <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-              </svg>
-            </div>
-          </div>
-          <p class="cmc-micro spec__foot">Símbolo · positivo · área de proteção</p>
-        </div>
-
-        <div class="spec spec--dark">
-          <div class="spec__demo">
-            <span class="cmc-lockup">
-              <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-                <rect width="64" height="64" rx="14" fill="#fff"/>
-                <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-              </svg>
-              <span class="cmc-lockup__word" data-brand="name">Camacho</span>
-            </span>
-          </div>
-          <p class="cmc-micro spec__foot">Lockup · negativo</p>
-        </div>
-
-        <div class="spec spec--outline">
-          <div class="spec__demo">
-            <span class="cmc-lockup cmc-lockup--glyph">
-              <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-                <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-              </svg>
-              <span class="cmc-lockup__word" data-brand="name">Camacho</span>
-            </span>
-          </div>
-          <p class="cmc-micro spec__foot">Glifo em uma cor · herda currentColor</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Cor -->
-    <div class="block">
-      <h3 class="cmc-h2">Cor</h3>
-      <p class="block__intro">
-        Monocromática por convicção. Não existe cor de destaque — o destaque é o
-        contraste e a densidade das partículas. Preto e branco são puros; os cinzas
-        são neutros e servem a texto secundário, réguas e numerais.
-      </p>
-      <div class="swatches" id="swatches"></div>
-    </div>
-
-    <!-- Tipografia -->
-    <div class="block">
-      <h3 class="cmc-h2">Tipografia</h3>
-      <p class="block__intro">
-        Três vozes, um trabalho cada. Elas <strong>se sucedem</strong> — a Inter
-        Tight abre, a editorial desenvolve — mas nunca disputam o mesmo papel:
-        rótulo e número não vão em serifada, texto longo não vai em mono, e
-        título de marca é sempre Inter Tight. As duas vozes secundárias são os
-        dois lados do trabalho; a Inter Tight é o que os amarra.
-      </p>
-
-      <div class="grid grid--3 grid--even">
-        <div class="spec spec--steel">
-          <p class="cmc-micro">Sistema · Inter Tight</p>
-          <div class="spec__body">
-            <p class="cmc-h1">Clareza é vantagem</p>
-            <p class="cmc-small">Marca, títulos, interface, rótulos, navegação.</p>
-          </div>
-          <p class="cmc-micro spec__foot">Light 300 · tracking −0,035em</p>
-        </div>
-        <div class="spec">
-          <p class="cmc-micro">Editorial · Source Serif 4</p>
-          <div class="spec__body">
-            <p class="cmc-editorial cmc-editorial--lead">Diagnóstico de capacidade</p>
-            <p class="cmc-editorial">
-              Empresas não perdem capacidade por falta de tecnologia. Perdem quando
-              a complexidade cresce mais rápido do que sua forma de decidir.
-            </p>
-          </div>
-          <p class="cmc-micro spec__foot">Diagnóstico, artigo, material de formação</p>
-        </div>
-        <div class="spec">
-          <p class="cmc-micro">Medição · IBM Plex Mono</p>
-          <div class="spec__body">
-            <p class="cmc-measure--big cmc-measure">NÍVEL 3</p>
-            <p class="cmc-measure">tempo_de_ciclo · −34,2%<br>adoção 41% → 78%</p>
-          </div>
-          <p class="cmc-micro spec__foot">Indicador, nível, rótulo de dado</p>
-        </div>
-      </div>
-
-      <div class="grid grid--2">
-        <div class="spec spec--steel">
-          <div class="cmc-controls cmc-controls--split">
-            <span class="cmc-h1">Inter Tight</span>
-            <span class="cmc-tag">Google Fonts</span>
-          </div>
-          <p class="cmc-h2 spec__foot type-specimen">
-            Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn<br>
-            Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz<br>0 1 2 3 4 5 6 7 8 9
-          </p>
-        </div>
-        <div class="spec">
-          <ul class="specs cmc-small">
-            <li><span class="specs__key">Display · Light 300</span><code class="specs__val">−0.035em / 0.94</code></li>
-            <li><span class="specs__key">Título · Light 300</span><code class="specs__val">−0.035em / 0.94</code></li>
-            <li><span class="specs__key">H1–H2 · Light 300</span><code class="specs__val">−0.025em / 1.08</code></li>
-            <li><span class="specs__key">Lead · Regular 400</span><code class="specs__val">−0.01em / 1.3</code></li>
-            <li><span class="specs__key">Corpo · Regular 400</span><code class="specs__val">−0.01em / 1.45</code></li>
-            <li><span class="specs__key">Editorial · Source Serif 400</span><code class="specs__val">0 / 1.6</code></li>
-            <li><span class="specs__key">Medição · Plex Mono 400</span><code class="specs__val">tabular-nums</code></li>
-            <li><span class="specs__key">Micro · Medium 500</span><code class="specs__val">+0.02em / caixa alta</code></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- Níveis -->
-    <div class="block" id="niveis-sec">
-      <h3 class="cmc-h2">Níveis, sem cor</h3>
-      <p class="block__intro">
-        Não existe cor de destaque, e agora isso é funcional e não só estético:
-        num sistema que precisa comunicar nível — maturidade, prioridade, risco —
-        o nível é <strong>densidade de partícula</strong>, a mesma gramática do
-        motor. Uma cor de destaque criaria um segundo sistema concorrendo com ele.
-      </p>
-      <div class="cmc-stage" style="--stage-ar:16/5">
-        <canvas data-cmc-dither="gauge" data-ramp="0.1,1" data-cell="4"
-                aria-label="Escala de maturidade: o símbolo com a abertura fechando"></canvas>
-      </div>
-      <ul class="specs cmc-small" id="niveis"></ul>
+    <div class="dk__regua" id="regua" aria-hidden="true"></div>
+    <div class="cmc-controls">
+      <span class="dk__conta" id="conta">01 / 23</span>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="anterior" aria-label="Passo anterior">←</button>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="proximo" aria-label="Próximo passo">→</button>
+      <button class="cmc-btn cmc-btn--inverse" type="button" id="tela">Tela cheia</button>
     </div>
   </div>
-</section>
 
-<hr class="cmc-rule">
+  <div class="dk__palco" id="palco" tabindex="0" aria-label="Apresentação. Use as setas para navegar."></div>
 
-<!-- ======================= 02 MOTOR GRÁFICO ======================= -->
-<section id="dither" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">Motor gráfico</h2><span class="cmc-slide__num">02</span>
-    </div>
+  <p class="cmc-small" style="padding-block:var(--cmc-sp-4)">
+    Setas ou espaço avançam um passo · <kbd>↑</kbd><kbd>↓</kbd> pulam a cena inteira ·
+    <kbd>F</kbd> tela cheia · <a id="link-notas" style="color:inherit;text-decoration:underline;cursor:pointer">notas do apresentador</a> ·
+    imprima para PDF pelo navegador.
+  </p>
 
-    <p class="cmc-body">
-      Todo grafismo da marca é a mesma operação: uma <strong>forma</strong> amostrada por
-      uma <strong>grade de partículas quadradas</strong>, cuja probabilidade de existir varia
-      ao longo de uma <strong>rampa de densidade</strong>. Ruído de um lado, sinal do outro.
-      Nada é ilustrado à mão — tudo é gerado, então escala de um favicon a um outdoor
-      sem perder o grão.
-    </p>
-
-    <div class="specimens" id="specimens"></div>
-
-    <div class="spec spec--outline">
-      <h3 class="cmc-h2">Parâmetros</h3>
-      <ul class="specs cmc-small">
-        <li><code class="specs__key">shape</code><span class="specs__val" id="lista-formas">—</span></li>
-        <li><code class="specs__key">cell</code><span class="specs__val">aresta da célula em px — 4 padrão, 6 a 8 em peças grandes</span></li>
-        <li><code class="specs__key">ramp</code><span class="specs__val">[densidade mínima, máxima] — o eixo ruído→sinal</span></li>
-        <li><code class="specs__key">angle</code><span class="specs__val">0° adensa à direita · 180° à esquerda · 90° embaixo</span></li>
-        <li><code class="specs__key">mirror</code><span class="specs__val">rampa espelhada: denso no centro, disperso nas duas pontas</span></li>
-        <li><code class="specs__key">curve</code><span class="specs__val">acima de 1 prolonga a dispersão antes de resolver</span></li>
-        <li><code class="specs__key">seed</code><span class="specs__val">hash determinístico por célula — o mesmo grafismo sempre</span></li>
-      </ul>
-      <p class="cmc-small spec__foot">
-        <code>&lt;canvas data-cmc-dither="chevrons" data-ramp="0.12,1" data-angle="0"&gt;&lt;/canvas&gt;</code>
-      </p>
-    </div>
-  </div>
-</section>
-
-<hr class="cmc-rule">
-
-<!-- ========================= 03 PROCESSO ========================= -->
-<section id="processo" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">Processo</h2><span class="cmc-slide__num">03</span>
-    </div>
-    <p class="block__intro">
-      Seis etapas, seis grafismos. Cada slide segue a mesma gramática: título e
-      numeral, painel preto, linha de chamada com kicker à direita, corpo em cinza.
-      A numeração é informação — as etapas acontecem nesta ordem.
-    </p>
-    <div class="grid grid--2 grid--even" id="processo-grid"></div>
-  </div>
-</section>
-
-<hr class="cmc-rule">
-
-<!-- ======================== 04 COMPONENTES ======================== -->
-<section id="componentes" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">Componentes</h2><span class="cmc-slide__num">04</span>
-    </div>
-    <p class="block__intro">
-      Poucos componentes, e todos com a mesma altura de controle
-      (<code>--cmc-control-h</code>), para que botão e tag alinhem quando ficam
-      lado a lado.
-    </p>
-
-    <div class="grid grid--3 grid--even">
-      <div class="spec">
-        <p class="cmc-micro">Botão · campo claro</p>
-        <div class="spec__body">
-          <div class="cmc-controls">
-            <button class="cmc-btn" type="button">Falar com o Camacho</button>
-            <button class="cmc-btn cmc-btn--ghost" type="button">Ver casos</button>
-          </div>
-          <div class="cmc-controls">
-            <span class="cmc-tag">Signal</span>
-            <span class="cmc-tag">Transform</span>
-          </div>
-        </div>
-        <p class="cmc-small spec__foot">Sólido para a ação principal, contorno para a secundária.</p>
-      </div>
-
-      <div class="spec spec--dark">
-        <p class="cmc-micro">Botão · campo escuro</p>
-        <div class="spec__body">
-          <div class="cmc-controls">
-            <button class="cmc-btn cmc-btn--inverse" type="button">Começar</button>
-            <button class="cmc-btn cmc-btn--ghost" type="button">Ver casos</button>
-          </div>
-          <div class="cmc-controls">
-            <span class="cmc-tag">Deploy</span>
-            <span class="cmc-tag">Refine</span>
-          </div>
-        </div>
-        <p class="cmc-small spec__foot">Os mesmos papéis, invertidos. Nunca cinza sobre preto num botão.</p>
-      </div>
-
-      <div class="spec">
-        <p class="cmc-micro">Card</p>
-        <div class="spec__body">
-          <p class="cmc-lead">Estrutura antes de automação</p>
-          <p class="cmc-small">
-            Sem dado confiável e dono definido, todo sistema construído em cima
-            vira mais uma fonte de discordância.
-          </p>
-        </div>
-        <p class="cmc-small spec__foot"><code>.cmc-card</code> · raio 14&nbsp;px, sem sombra.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="cmc-rule">
-
-<!-- ========================= 05 APLICAÇÕES ========================= -->
-<section id="aplicacoes" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">Aplicações</h2><span class="cmc-slide__num">05</span>
-    </div>
-
-    <div class="showcase">
-      <!-- Pôster -->
-      <figure class="stack">
-        <article class="cmc-poster">
-          <div class="cmc-poster__head">
-            <span class="cmc-lockup cmc-lockup--sm">
-              <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-                <rect width="64" height="64" rx="14" fill="#000"/>
-                <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-              </svg>
-              <span class="cmc-lockup__word" data-brand="name">Camacho</span>
-            </span>
-            <h3 class="cmc-title cmc-poster__hed">Clareza<br>é vantagem</h3>
-          </div>
-          <div class="cmc-poster__art">
-            <canvas data-cmc-dither="chevrons" data-ramp="0.12,1" data-angle="0"
-                    data-cell="4" data-opts='{"n":2,"gap":0.06}'
-                    aria-label="Duas setas em dither adensando à direita"></canvas>
-          </div>
-          <div class="cmc-poster__foot">
-            <p class="cmc-lead">Transformo empresas e desenvolvo<br>as pessoas que as lideram</p>
-            <span class="cmc-small">Visit <span data-brand="domain">camacho.ai</span></span>
-          </div>
-        </article>
-        <figcaption class="cmc-micro">Pôster A2 · papel</figcaption>
-      </figure>
-
-      <div class="showcase__col">
-        <!-- Outdoor -->
-        <figure class="stack">
-          <article class="ooh">
-            <div class="ooh__inner">
-              <div class="ooh__copy">
-                <h3 class="cmc-h1">Complexidade<br>vira capacidade</h3>
-                <p class="cmc-small">
-                  Estratégia, transformação com IA e desenvolvimento de lideranças
-                  para empresas em crescimento. Do diagnóstico à implementação — e
-                  ao preparo de quem vai sustentar o que foi construído.
-                </p>
-                <span class="cmc-lockup cmc-lockup--sm">
-                  <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-                    <rect width="64" height="64" rx="14" fill="#000"/>
-                    <path fill="#fff" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-                  </svg>
-                  <span class="cmc-lockup__word" data-brand="name">Camacho</span>
-                </span>
-              </div>
-              <div class="cmc-stage cmc-stage--light cmc-stage--flat cmc-stage--bare ooh__art"
-                   style="--stage-ar:4/3">
-                <canvas data-cmc-dither="noiseToSignal" data-ramp="0.03,1" data-cell="3"
-                        aria-label="Grafismo de ruído a sinal em campo claro"></canvas>
-              </div>
-            </div>
-          </article>
-          <figcaption class="cmc-micro">Outdoor · campo claro</figcaption>
-        </figure>
-
-        <!-- Cartão de visita -->
-        <figure class="stack">
-          <article class="bizcard">
-            <div class="bizcard__art">
-              <canvas data-cmc-dither="mark" data-ramp="0.01,0.34" data-angle="180"
-                      data-cell="3" aria-hidden="true"></canvas>
-            </div>
-            <span class="cmc-lockup cmc-lockup--sm">
-              <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-                <rect width="64" height="64" rx="14" fill="#fff"/>
-                <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-              </svg>
-              <span class="cmc-lockup__word" data-brand="name">Camacho</span>
-            </span>
-            <div class="bizcard__foot">
-              <p class="cmc-lead" data-brand="person">Dan Preiss</p>
-              <p class="cmc-small"><span data-brand="role">CEO</span> · <span data-brand="email">dan@camacho.ai</span></p>
-              <p class="cmc-small" data-brand="phone">310 928 2123</p>
-            </div>
-          </article>
-          <figcaption class="cmc-micro">Cartão de visita · 85 × 55&nbsp;mm</figcaption>
-        </figure>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="cmc-rule">
-
-<!-- ========================= 06 VOZ E REGRAS ========================= -->
-<section id="voz" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">Voz e regras</h2><span class="cmc-slide__num">06</span>
-    </div>
-
-    <div class="grid grid--2">
-      <div class="spec">
-        <p class="cmc-micro">Como a marca fala</p>
-        <p class="cmc-lead">Primeira pessoa do singular. Frase curta. Promessa mensurável.</p>
-        <ul class="specs cmc-small">
-          <li><span class="specs__key">“Clareza é vantagem.”</span><span class="specs__val">assinatura</span></li>
-          <li><span class="specs__key">“Transformo empresas e desenvolvo as pessoas que as lideram.”</span><span class="specs__val">mensagem central</span></li>
-          <li><span class="specs__key">“Melhores decisões. Menor esforço operacional.”</span><span class="specs__val">promessa</span></li>
-          <li><span class="specs__key">“Não entrego apresentação e desapareço.”</span><span class="specs__val">postura</span></li>
-        </ul>
-      </div>
-
-      <div class="stack-5">
-        <div class="spec rules rules--do">
-          <span class="rules__flag">Faça</span>
-          <ul class="specs cmc-small">
-            <li><span class="specs__key">Deixe o preto ocupar área grande e contínua</span></li>
-            <li><span class="specs__key">Gere o dither — nunca reproduza como imagem esticada</span></li>
-            <li><span class="specs__key">Mantenha o título em Light com tracking negativo</span></li>
-            <li><span class="specs__key">Use uma direção de rampa por peça</span></li>
-            <li><span class="specs__key">Escreva em primeira pessoa do singular</span></li>
-            <li><span class="specs__key">Codifique nível por densidade, nunca por cor</span></li>
-          </ul>
-        </div>
-        <div class="spec rules rules--dont">
-          <span class="rules__flag">Não faça</span>
-          <ul class="specs cmc-small">
-            <li><span class="specs__key">Cor de destaque, gradiente ou sombra colorida</span></li>
-            <li><span class="specs__key">Bold ou Black nos títulos</span></li>
-            <li><span class="specs__key">Distorcer, rotacionar ou recolorir o símbolo</span></li>
-            <li><span class="specs__key">Partícula redonda — a célula é quadrada</span></li>
-            <li><span class="specs__key">Serifada em rótulo ou número; mono em texto longo</span></li>
-            <li><span class="specs__key">Jargão tecnológico e entusiasmo artificial</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-</main>
-
-<footer class="guide-foot cmc-inverse">
-  <div class="cmc-shell">
-    <span class="cmc-lockup cmc-lockup--sm">
-      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-        <rect width="64" height="64" rx="14" fill="#fff"/>
-        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-      </svg>
-      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
-    </span>
-    <span class="cmc-small">
-      Sistema visual v1.0 · tokens, motor de dither e componentes ·
-      <a href="https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2" style="color:inherit">extensões</a> ·
-      <a href="https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60" style="color:inherit">posicionamento</a> ·
-      <a href="https://claude.ai/code/artifact/84f1b1bf-8106-47d9-b5be-91fbce49670f" style="color:inherit">direção de arte</a> ·
-      <a href="https://claude.ai/code/artifact/40b9d44b-fb1e-4c86-b6ba-bde9c92e27a0" style="color:inherit">aplicações</a> ·
-      <a href="https://claude.ai/code/artifact/69880886-1e89-49c8-b91a-af90a47f35a5" style="color:inherit">estúdio de print</a>
-    </span>
-  </div>
-</footer>
+  <div class="dk__notas" id="notas" hidden></div>
+</div>
 
 <script type="module">
 /* ==========================================================================
@@ -2490,111 +2131,812 @@ function brandFromUrl(fallback = BRAND) {
   const param = new URLSearchParams(location.search).get('brand');
   return param ? deriveBrand(param.trim(), fallback) : fallback;
 }
+/* ==========================================================================
+   Apresentação · Plano de Gestão e IA da Banana Milk
 
-/* --- Cor: os swatches saem dos próprios tokens, nunca de hex digitado --- */
-const COLORS = [
-  ['Black',   '--cmc-black',   'Superfícies primárias, tinta'],
-  ['Steel',   '--cmc-steel',   'Painel escuro secundário'],
-  ['Grey 55', '--cmc-grey-55', 'Texto secundário, numerais'],
-  ['Grey 20', '--cmc-grey-20', 'Réguas e bordas'],
-  ['Canvas',  '--cmc-canvas',  'Fundo institucional'],
-  ['Paper',   '--cmc-paper',   'Papel de peças impressas'],
+   As 23 cenas como dado. O texto é do documento editorial do assessment e não
+   é reescrito aqui — este arquivo decide COMO cada argumento aparece, nunca
+   QUAL argumento aparece.
+
+   Uma lista só. Duas listas paralelas para a mesma peça é a divergência que
+   este repositório já cometeu, e o cabeçalho de src/kv.js foi escrito para
+   impedir que se repita.
+   ========================================================================== */
+
+/* --- Os quatro registros -------------------------------------------------
+
+   O documento editorial exige manter distintos diagnóstico, recomendação,
+   implementação futura e ferramenta entregue — e proíbe descrever a Banana
+   Milk como desorganizada ou sugerir que o BPO erra.
+
+   Uma regra dessas não sobrevive só na copy: em 23 slides ela colapsa na
+   terceira leitura, e aí o diagnóstico começa a soar como acusação. Então
+   cada registro ganha campo e voz próprios, e a distinção passa a ser visível
+   a um metro de distância, antes de qualquer palavra ser lida. */
+/* Nome comprido de propósito: `REGISTROS` já existe em src/direcao.js, com
+   outro significado (os registros de direção de arte). Os dois módulos são
+   embutidos no MESMO escopo pelo build, então uma página que importasse os
+   dois declararia a mesma const duas vezes e morreria com SyntaxError — sem
+   que guard nenhum pegasse, porque o arquivo sai inteiro. */
+const REGISTRO_EDITORIAL = {
+  diagnostico:   { rotulo: 'Diagnóstico',   campo: 'escuro' },
+  recomendacao:  { rotulo: 'Recomendação',  campo: 'papel' },
+  implementacao: { rotulo: 'Implementação', campo: 'papel' },
+  ferramenta:    { rotulo: 'O que fica',    campo: 'cliente' },
+};
+
+/* --- Os acentos da Banana Milk -------------------------------------------
+
+   O campo de papel do Camacho é #F2F0EE. A base da embalagem da Banana Milk é
+   o mesmo creme com tipo preto — as duas marcas já dividem o terreno, e a
+   conexão não precisa ser construída, precisa ser notada. O que visita é o
+   acento de cada sabor, e ele vive AQUI, na peça: nenhum token novo de cor
+   entra na fundação do sistema. É a diferença entre citar a cor do cliente e
+   adotá-la.
+
+   ATENÇÃO: estes valores foram lidos de uma captura da embalagem, não de um
+   arquivo da marca. Trocar pelos oficiais antes de apresentar. */
+const ACENTOS = {
+  coral:   '#D9503F',
+  amarelo: '#EFBE2E',
+  cacau:   '#7A4A2E',
+  azul:    '#8FB4C6',
+};
+
+/* Marcadores de ativo que ainda não chegou. A peça mostra uma placa com o
+   nome do arquivo que falta, em vez de um retângulo vazio fingindo que está
+   resolvido — que é como um slot esquecido chega na frente do cliente. */
+const ATIVOS = {
+  logo:  { arquivo: 'cliente/logo.svg',        o: 'logotipo em vetor' },
+  pack:  { arquivo: 'cliente/pack-*.png',      o: 'os quatro packshots' },
+  foto:  { arquivo: 'cliente/foto-1.jpg',      o: 'foto do litoral' },
+  filme: { arquivo: 'cliente/filme.mp4',       o: 'o filme' },
+};
+
+const G = (...itens) => itens.map(([h, p]) => ({ h, p }));
+
+/* --- As cenas ------------------------------------------------------------
+
+   `arte` é a config do motor no estado inicial. `beats` são os passos: cada
+   seta avança um beat, e um beat pode revelar conteúdo (`mostra`) e/ou mover
+   o grafismo (`arte`, interpolado a partir do estado anterior).
+
+   O primeiro beat é sempre o estado de entrada. */
+const CENAS = [
+
+  /* 01 ------------------------------------------------------------------ */
+  { n: 1, campo: 'escuro', capa: true,
+    sangria: true,
+    hed: 'Plano de Gestão<br>e IA da Banana Milk',
+    corpo: 'Diagnóstico, projetos prioritários e instrumentos para a próxima etapa do negócio.',
+    rodape: 'AI Assessment & Opportunities',
+    arte: { shape: 'weave', ramp: [0.04, 0.16], cell: 4, seed: 7,
+            clareira: [{ x: -0.05, y: -0.05, w: 0.80, h: 0.82, soft: 0.075, piso: 0.015 }] },
+    beats: [{}, { arte: { ramp: [0.04, 1] }, ms: 1800 }] },
+
+  /* 02 ------------------------------------------------------------------ */
+  { n: 2, registro: 'recomendacao', olho: 'Resumo executivo',
+    hed: 'O crescimento tornou as decisões mais interdependentes',
+    blocos: [
+      ['Situação', 'A Banana Milk cresceu. Com isso, aumentaram o número de clientes, produtos, parceiros, negociações e decisões que exigem combinar informações de áreas diferentes.'],
+      ['Diagnóstico', 'Os sistemas, os dados e os responsáveis existem. O principal custo oculto está no tempo e no esforço necessários para transformar registros operacionais em uma resposta gerencial e, depois, em ação.'],
+    ],
+    lista: ['Informações Gerenciais ao Alcance',
+            'DRE Gerencial, Margem e Precificação',
+            'Gestão de Shelf Life',
+            'Recompra e Acompanhamento Comercial'],
+    listaOlho: 'Recomendação — construir o Modelo de Gestão Banana Milk e iniciar quatro projetos prioritários',
+    fecho: 'Melhor decisão + menor esforço operacional + maior capacidade de escala.',
+    nota: 'O diagnóstico não é que a Banana Milk cresceu sem gestão. O crescimento trouxe decisões que atravessam várias funções e precisam de uma camada gerencial própria.',
+    arte: { shape: 'noiseToSignal', ramp: [0.03, 0.3], cell: 8, seed: 11 },
+    beats: [{}, { mostra: 1 }, { mostra: 2, arte: { ramp: [0.03, 1], cell: 4 }, ms: 1400 }, { mostra: 3 }] },
+
+  /* 03 ------------------------------------------------------------------ */
+  { n: 3, registro: 'diagnostico',
+    hed: 'O crescimento adicionou novas perguntas ao negócio',
+    tabela: {
+      cols: ['Perguntas operacionais', 'Novas perguntas gerenciais'],
+      linhas: [
+        ['Quanto vendemos?', 'Onde estamos crescendo com rentabilidade?'],
+        ['Temos estoque?', 'Quanto temos por SKU e lote, e onde há risco?'],
+        ['Quem comprou?', 'Quem deveria ter recomprado e ainda não comprou?'],
+        ['Qual é o preço?', 'Qual condição comercial conseguimos sustentar?'],
+        ['O produto foi entregue?', 'Quanto ainda está parado no mercado?'],
+        ['Qual foi o resultado?', 'O que explica o resultado e como podemos alterá-lo?'],
+      ] },
+    fecho: 'As perguntas antigas continuam importantes. O crescimento acrescentou perguntas que exigem combinar finanças, estoque, comercial, logística e informações do mercado.',
+    nota: 'O ponto central não é produzir mais relatórios. É responder perguntas mais complexas sem reconstruir manualmente toda a lógica do negócio.',
+    arte: { shape: 'interferencia', ramp: [0.1, 0.9], cell: 5, seed: 5, opts: { giro: 11, passo: 0.09 } },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  /* 04 ------------------------------------------------------------------ */
+  { n: 4, registro: 'diagnostico',
+    hed: 'A operação produz informação.<br>A síntese gerencial ainda exige esforço',
+    tabela: {
+      cols: ['Participante', 'Perspectiva principal'],
+      linhas: [
+        ['BPO e contabilidade', 'Conformidade, classificação e fechamento'],
+        ['Estoque e logística', 'Disponibilidade, movimentação e entrega'],
+        ['Comercial', 'Clientes, pedidos, redes e negociação'],
+        ['Promotores', 'Execução nas lojas e situação da gôndola'],
+        ['Atendimento', 'Dúvidas, problemas e percepção do consumidor'],
+        ['Sistemas', 'Registro e processamento das transações'],
+        ['Fundadores', 'Compreensão do negócio como um todo'],
+      ] },
+    fecho: 'As decisões dos fundadores surgem da combinação dessas perspectivas, não de uma delas isoladamente.',
+    nota: 'O BPO não está errado por olhar conformidade. A logística não está errada por priorizar entrega. A lacuna está no espaço entre as funções, onde as informações precisam ser combinadas para responder a uma decisão.',
+    /* Duas grades desalinhadas: o ruído não está em nenhuma das duas, está na
+       relação. É o comentário do próprio campo, e é a frase deste slide. */
+    arte: { shape: 'interferencia', ramp: [0.12, 1], cell: 5, seed: 13, opts: { giro: 14, passo: 0.09 } },
+    beats: [{}, { mostra: 1 }, { mostra: 2, arte: { opts: { giro: 0.4, passo: 0.09 } }, ms: 2000 }] },
+
+  /* 05 ------------------------------------------------------------------ */
+  { n: 5, registro: 'diagnostico', olho: 'Latência gerencial',
+    sangria: true,
+    hed: 'O principal custo oculto é o intervalo entre fato e ação',
+    passos: ['um fato acontecer', 'a informação ser registrada',
+             'os fundadores compreenderem seu significado', 'uma decisão ser tomada',
+             'alguém agir', 'o resultado ser acompanhado'],
+    lista: ['a mesma pergunta precisa ser reconstruída mais de uma vez',
+            'a resposta depende de quem sabe localizar e interpretar o relatório',
+            'riscos são percebidos quando a janela de ação já diminuiu',
+            'prioridades dependem de alguém lembrar, procurar ou perguntar'],
+    listaOlho: 'Sinais dessa latência',
+    nota: '"Latência gerencial" é uma formulação do assessment. Ela une problemas que antes apareciam como dificuldades separadas de relatório, shelf life, recompra e coordenação.',
+    arte: { shape: 'fill', ramp: [0.04, 1], cell: 4, seed: 3, curve: 1.9,
+            clareira: [{ x: -0.05, y: -0.05, w: 0.66, h: 1.1, soft: 0.075, piso: 0.015 }] },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  /* 06 ------------------------------------------------------------------ */
+  { n: 6, registro: 'diagnostico',
+    hed: 'A latência gerencial aparece em três pontos críticos',
+    grade: G(
+      ['1 · Resultado econômico', 'Os relatórios existem, mas decisões como uma nova proposta comercial exigem combinar preço, volume, bonificação, CMV, impostos, frete, comissão, promotoria e prazo.'],
+      ['2 · Produtos no mercado', 'Os dados internos existem, mas a visibilidade diminui depois que os produtos entram em distribuidores, redes e lojas.'],
+      ['3 · Acompanhamento comercial', 'Recompra, promotores, fotos, pendências e contatos ainda dependem de disciplina e memória individual.']),
+    cols: 3,
+    fecho: 'Quanto maior a operação, maior tende a ser o esforço para decidir e coordenar, caso o modelo de gestão não evolua.',
+    arte: { shape: 'bars', ramp: [0.14, 0.9], cell: 4, seed: 17, opts: { cols: 3, rows: 1, duty: 0.72 } },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  /* 07 ------------------------------------------------------------------ */
+  { n: 7, registro: 'diagnostico',
+    hed: 'A DRE registra o resultado, mas ainda não permite explorar todas as causas',
+    blocos: [
+      ['O que já existe', 'DRE e relatórios produzidos pelo BPO; CMV, CMC e demais categorias; informações de receitas, custos e despesas; acompanhamento por caixa e competência, conforme a necessidade do relatório.'],
+      ['Achado do assessment', 'Na análise realizada, contas de CMC visíveis e sem código de plano de contas não apareciam incorporadas aos subtotais e ao resultado apresentado.'],
+      ['Implicação', 'Um relatório pode estar correto conforme sua parametrização e, ainda assim, não responder integralmente à pergunta gerencial feita pelos fundadores.'],
+      ['Direção proposta', 'Criar um modelo econômico reconciliado, explicável e consultável, preservando a visão contábil e acrescentando a visão necessária para decisão.'],
+    ],
+    nota: 'O valor do achado não está apenas na conta específica. Ele mostra que exibição, classificação e participação no resultado são coisas diferentes. A versão final deve ser reconciliada com o BPO antes de qualquer afirmação numérica definitiva.',
+    arte: { shape: 'layers', ramp: [0.1, 0.92], cell: 4, seed: 23, opts: { n: 5 } },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }, { mostra: 3 }, { mostra: 4 }] },
+
+  /* 08 ------------------------------------------------------------------ */
+  { n: 8, registro: 'diagnostico',
+    hed: 'O controle de shelf life perde visibilidade fora da empresa',
+    blocos: [
+      ['Dentro da Banana Milk', 'O Omie registra estoque interno, lotes, validade, vendas e destino das mercadorias.'],
+    ],
+    lista: ['estoque disponível em cada rede ou loja', 'ritmo de venda',
+            'condição da gôndola', 'ruptura', 'produtos que ainda precisam de ação comercial'],
+    listaOlho: 'Depois da venda, a empresa não recebe automaticamente',
+    fecho: 'O produto pode ainda estar fisicamente válido, mas já ter perdido parte de sua janela comercial. Shelf life não é apenas controle de estoque: é um sistema de detecção, relacionamento, priorização e ação no mercado.',
+    /* A rampa cai da esquerda para a direita: denso dentro, disperso fora.
+       O grafismo é a própria perda de visibilidade, não uma ilustração dela. */
+    arte: { shape: 'fill', ramp: [1, 0.05], cell: 4, seed: 29, curve: 0.8 },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  /* 09 ------------------------------------------------------------------ */
+  { n: 9, registro: 'diagnostico',
+    hed: 'O acompanhamento comercial depende de sinais que ainda não estão sistematizados',
+    lista: ['identificar clientes sem novos pedidos', 'lembrar contatos', 'cobrar recompra',
+            'solicitar informações às redes', 'acompanhar promotores',
+            'pedir fotos e evidências', 'registrar pendências', 'decidir a próxima ação'],
+    listaOlho: 'Atividades relevantes',
+    fecho: 'Essas atividades são realizadas. O problema é que o gatilho para agir ainda depende muito de alguém lembrar, consultar ou perceber.',
+    arte: { shape: 'cohort', ramp: [0.08, 0.7], cell: 4, seed: 31 },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  /* 10 ------------------------------------------------------------------ */
+  { n: 10, registro: 'recomendacao',
+    sangria: true,
+    hed: 'A gestão precisa destacar exceções, não multiplicar relatórios',
+    corpo: 'O modelo futuro não deve apenas mostrar tudo o que aconteceu. Ele deve destacar o que exige atenção agora.',
+    lista: ['lote que entrou em uma faixa de risco',
+            'cliente que ultrapassou seu ciclo esperado de recompra',
+            'proposta comercial abaixo da margem definida',
+            'variação relevante na DRE sem explicação registrada',
+            'rede sem atualização recente de estoque',
+            'ação atribuída que não foi concluída no prazo'],
+    listaOlho: 'Exemplos de exceção',
+    passos: ['critério', 'fonte', 'responsável', 'prazo', 'plano de ação', 'acompanhamento do resultado'],
+    passosOlho: 'Cada exceção precisa ter',
+    nota: 'Essa é a passagem da gestão por consulta para a gestão por exceção. O objetivo não é substituir a leitura dos fundadores, mas direcionar sua atenção para o que pode mudar o resultado.',
+    /* A clareira abrindo é a atenção pousando: a densidade desaba numa região
+       e o resto continua lá. É a operação que o slide descreve. */
+    /* A clareira nasce fechada e abre: a atenção pousando numa região do
+       campo. O tipo mora dentro dela, então ela também é o que impede o
+       grafismo de cruzar a tipografia. */
+    arte: { shape: 'fill', ramp: [0.5, 1], cell: 4, seed: 37,
+            clareira: [{ x: -0.05, y: -0.05, w: 0.36, h: 1.1, soft: 0.075, piso: 0.015 }] },
+    beats: [{}, { arte: { clareira: [{ x: -0.05, y: -0.05, w: 0.72, h: 1.1, soft: 0.075, piso: 0.015 }] }, ms: 1400 },
+            { mostra: 1 }, { mostra: 2 }] },
+
+  /* 11 ------------------------------------------------------------------ */
+  { n: 11, registro: 'recomendacao',
+    hed: 'O Modelo de Gestão Banana Milk conecta informação, decisão e ação',
+    grade: G(
+      ['01 Perguntas gerenciais', 'o que os fundadores precisam saber'],
+      ['02 Vocabulário oficial', 'o que cada conceito significa'],
+      ['03 Fontes', 'onde a informação nasce e é registrada'],
+      ['04 Métricas', 'como cada indicador é calculado'],
+      ['05 Limites e exceções', 'quando algo exige atenção'],
+      ['06 Rotinas', 'quando as informações são analisadas'],
+      ['07 Responsabilidades', 'quem valida, decide e executa'],
+      ['08 Interfaces', 'como a informação chega às pessoas']),
+    cols: 4,
+    fecho: 'O conjunto de regras, informações e rotinas que permite compreender o negócio e transformar sinais em ações coordenadas.',
+    arte: { shape: 'mesh', ramp: [0.1, 0.5], cell: 4, seed: 41, opts: { cols: 4, rows: 2 } },
+    beats: [{}, { mostra: 1, arte: { ramp: [0.1, 1] }, ms: 1400 }, { mostra: 2 }] },
+
+  /* 12 ------------------------------------------------------------------ */
+  { n: 12, registro: 'implementacao',
+    hed: 'O modelo será construído sobre o que já existe',
+    passos: ['Investigar as fontes e os fluxos atuais', 'registrar o vocabulário oficial',
+             'reconciliar critérios e regras de cálculo', 'organizar o modelo gerencial de dados',
+             'definir perguntas, indicadores e exceções', 'criar consultas e alertas',
+             'ligar cada sinal a uma rotina e a um responsável',
+             'aprender com as decisões e ampliar o modelo'],
+    passosOlho: 'Sequência de construção',
+    fecho: 'A Banana Milk não precisa esperar toda a base ficar pronta para receber valor. As primeiras entregas podem operar sobre perguntas e dados previamente validados, enquanto o modelo continua evoluindo.',
+    arte: { shape: 'staircase', ramp: [0.08, 0.95], cell: 4, seed: 43, opts: { steps: 8 } },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  /* 13 ------------------------------------------------------------------ */
+  { n: 13, registro: 'recomendacao',
+    hed: 'O WhatsApp será a porta de entrada mais simples para o Modelo de Gestão',
+    corpo: 'O WhatsApp não será apenas um chatbot.',
+    lista: ['fazer perguntas em linguagem natural', 'receber respostas fáceis de entender',
+            'verificar fonte, período e atualização', 'comparar produtos, clientes e períodos',
+            'receber alertas sobre exceções',
+            'acessar o modelo sem precisar navegar por relatórios e filtros'],
+    listaOlho: 'Ele permitirá aos fundadores',
+    blocos: [
+      ['Primeira versão', 'Um conjunto limitado de perguntas validadas sobre faturamento, estoque, lotes, clientes, SKUs e comparação entre períodos.'],
+      ['Evolução', 'Ampliar gradualmente para explicações, cenários, recomendações e alertas proativos.'],
+    ],
+    arte: { shape: 'handoff', ramp: [0.12, 1], cell: 4, seed: 47 },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }, { mostra: 3 }] },
+
+  /* 14 ------------------------------------------------------------------ */
+  { n: 14, registro: 'recomendacao',
+    hed: 'Uma fundação e seis programas organizam a transformação',
+    blocos: [['Fundação · Modelo de Gestão Banana Milk',
+              'Vocabulário, métricas, fontes, regras, responsabilidades, rotinas e exceções.']],
+    grade: G(
+      ['01 Informações Gerenciais ao Alcance', 'acesso e compreensão'],
+      ['02 DRE Gerencial, Margem e Precificação', 'controle econômico'],
+      ['03 Gestão de Shelf Life', 'antecipação e redução de perdas'],
+      ['04 Recompra e Acompanhamento Comercial', 'disciplina comercial e crescimento'],
+      ['05 Automação do Atendimento B2C', 'eficiência e aprendizado — programa seguinte'],
+      ['06 Planejamento de Demanda e Produção', 'previsibilidade — programa seguinte']),
+    cols: 3,
+    nota: 'Os programas não são etapas rígidas. Eles compartilham a mesma fundação e podem avançar em paralelo, com entregas diferentes ao longo do tempo.',
+    arte: { shape: 'orbit', ramp: [0.1, 0.95], cell: 4, seed: 53, opts: { nodes: 6 } },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  /* 15–19 · os programas ------------------------------------------------ */
+  { n: 15, registro: 'implementacao', olho: 'Programa 01',
+    hed: 'Informações Gerenciais ao Alcance',
+    corpo: 'Disponibilizar informações confiáveis, compreensíveis e acessíveis no ritmo dos fundadores.',
+    duasListas: {
+      a: ['biblioteca de perguntas gerenciais', 'modelo gerencial para as informações prioritárias',
+          'respostas com fonte, período e atualização', 'consultas pelo WhatsApp',
+          'comparações entre períodos, clientes e produtos',
+          'registro das perguntas ainda não suportadas'],
+      aOlho: 'Primeiras entregas',
+      b: ['tempo para obter uma resposta', 'percentual de perguntas respondidas com segurança',
+          'uso pelos fundadores', 'redução de consultas manuais', 'facilidade de compreensão'],
+      bOlho: 'Indicadores de sucesso' },
+    legado: 'A Banana Milk passa a possuir uma biblioteca explícita das perguntas usadas para gerir o negócio e das informações necessárias para respondê-las.',
+    arte: { shape: 'gauge', ramp: [0.14, 1], cell: 4, seed: 59 },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  { n: 16, registro: 'implementacao', olho: 'Programa 02',
+    hed: 'DRE Gerencial, Margem e Precificação',
+    corpo: 'Transformar os dados econômicos em um modelo que permita explicar resultados e avaliar decisões comerciais.',
+    duasListas: {
+      a: ['modelo de dados econômico-gerencial', 'reconciliação das contas e critérios',
+          'estrutura de margem por SKU, cliente, canal e período',
+          'tratamento de venda, bonificação e demais condições',
+          'decomposição entre preço e margem de contribuição',
+          'biblioteca de perguntas econômicas', 'especificação do simulador de propostas'],
+      aOlho: 'Primeiras entregas',
+      b: ['preço de R$ 10,90 por unidade', 'volume', 'bonificação', 'CMV completo', 'impostos',
+          'frete', 'comissão', 'promotoria e degustação', 'prazo de pagamento', 'margem resultante'],
+      bOlho: 'Exemplo — uma proposta como a entrada no Oba deve permitir avaliar, conjuntamente' },
+    legado: 'Um modelo econômico que pode ser consultado, explicado e utilizado em futuras negociações, sem reconstruir a lógica a cada proposta.',
+    arte: { shape: 'layers', ramp: [0.06, 0.4], cell: 4, seed: 61, opts: { n: 6 } },
+    beats: [{}, { mostra: 1, arte: { ramp: [0.06, 1] }, ms: 1400 }, { mostra: 2 }] },
+
+  { n: 17, registro: 'implementacao', olho: 'Programa 03',
+    hed: 'Gestão de Shelf Life',
+    corpo: 'Identificar produtos em risco e coordenar ações antes da perda de valor comercial.',
+    passos: ['base de lotes e validade', 'rastreabilidade de destino', 'coleta de estoque externo',
+             'regras comerciais por rede', 'classificação de risco', 'responsáveis e prazos',
+             'planos de ação', 'monitoramento de resultados'],
+    passosOlho: 'Componentes',
+    blocos: [['Primeira entrega', 'Um piloto com SKUs e redes selecionados, informações atualizadas, faixas de risco e uma rotina semanal de decisão.']],
+    lista: ['percentual do estoque externo atualizado', 'unidades por faixa de risco',
+            'tempo entre identificação e ação', 'percentual de ações concluídas',
+            'perdas e promoções emergenciais evitadas'],
+    listaOlho: 'Indicadores sugeridos',
+    legado: 'Um guia operacional que define como a Banana Milk identifica risco, prioriza situações e coordena ações de shelf life.',
+    arte: { shape: 'funnel', ramp: [0.1, 1], cell: 4, seed: 67 },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }, { mostra: 3 }] },
+
+  { n: 18, registro: 'implementacao', olho: 'Programa 03 · apoio',
+    hed: 'Os promotores podem formar uma rede de inteligência no mercado',
+    corpo: 'O Programa de Relacionamento com Promotores não deve ser tratado apenas como coleta de formulários.',
+    duasListas: {
+      a: ['por que a informação é importante', 'o que precisam observar',
+          'como responder com pouco esforço', 'como sua participação será reconhecida',
+          'como a informação recebida produzirá ação'],
+      aOlho: 'Ele precisa estabelecer uma relação em que os promotores entendam',
+      b: ['estoque aproximado', 'validade', 'ruptura', 'posição na gôndola', 'fotos',
+          'concorrência', 'materiais de ponto de venda', 'execução de campanhas'],
+      bOlho: 'Informações possíveis' },
+    fecho: 'A mesma rede que apoia shelf life pode gerar inteligência para comercial, marca e execução no varejo.',
+    legado: 'O blueprint do programa, com proposta de valor, participantes, cadência, informações coletadas, critérios de qualidade e responsáveis.',
+    arte: { shape: 'mesh', ramp: [0.06, 0.45], cell: 4, seed: 71, opts: { cols: 6, rows: 4 } },
+    beats: [{}, { mostra: 1, arte: { ramp: [0.06, 1] }, ms: 1600 }, { mostra: 2 }] },
+
+  { n: 19, registro: 'implementacao', olho: 'Programa 04',
+    hed: 'Recompra e Acompanhamento Comercial',
+    corpo: 'Garantir que clientes relevantes recebam acompanhamento no momento correto.',
+    duasListas: {
+      a: ['cliente', 'última compra', 'ciclo esperado de recompra', 'dias sem novo pedido',
+          'SKUs comprados', 'responsável', 'próxima ação'],
+      aOlho: 'Primeira entrega — uma lista semanal contendo',
+      b: ['regras de prioridade', 'cadências de contato', 'tarefas automáticas',
+          'registro dos motivos de não recompra', 'acompanhamento da receita recuperada',
+          'recomendações de próxima ação'],
+      bOlho: 'Evolução' },
+    legado: 'Uma rotina comercial explícita, que não depende apenas de memória ou agenda individual.',
+    arte: { shape: 'spiral', ramp: [0.1, 1], cell: 4, seed: 73 },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  /* 20 ------------------------------------------------------------------ */
+  { n: 20, registro: 'implementacao',
+    hed: 'A implementação começa com frentes paralelas',
+    tabela: {
+      quebra: 3,
+      cols: ['Frente', 'Dias 1 a 30', 'Dias 31 a 60', 'Dias 61 a 90'],
+      linhas: [
+        ['Modelo de Gestão', 'Mapear conceitos, fontes, perguntas e responsáveis', 'Formalizar métricas, regras e exceções', 'Validar e incorporar aprendizados dos pilotos'],
+        ['Informações ao Alcance', 'Definir perguntas e dados prioritários', 'Testar consultas pelo WhatsApp', 'Ampliar perguntas e iniciar alertas'],
+        ['DRE e Margem', 'Reconciliar contas, critérios e dimensões', 'Construir o modelo econômico inicial', 'Validar com propostas e decisões reais'],
+        ['Shelf Life', 'Selecionar SKUs, redes e critérios de risco', 'Operar coleta e reunião semanal', 'Medir, ajustar e preparar automações'],
+        ['Promotores', 'Definir proposta de valor e participantes', 'Operar o primeiro grupo', 'Avaliar participação e expansão'],
+        ['Recompra', 'Definir ciclos e prioridades', 'Operar a lista semanal', 'Automatizar tarefas selecionadas'],
+      ] },
+    lista: ['primeira versão do Modelo de Gestão Banana Milk',
+            'consultas gerenciais controladas pelo WhatsApp', 'modelo econômico inicial',
+            'piloto de shelf life em operação', 'grupo piloto de promotores',
+            'rotina semanal de recompra'],
+    listaOlho: 'Resultado esperado ao final dos 90 dias',
+    arte: { shape: 'bars', ramp: [0.12, 0.95], cell: 4, seed: 79, opts: { cols: 3, rows: 6, duty: 0.8 } },
+    /* Revela coluna a coluna: 30, 60, 90. */
+    beats: [{}, { colunas: 1 }, { colunas: 2 }, { colunas: 3 }, { mostra: 1 }] },
+
+  /* 21 ------------------------------------------------------------------ */
+  { n: 21, registro: 'ferramenta', acento: ACENTOS.coral, modo: 'faixa',
+    olho: 'Dez instrumentos',
+    hed: 'A Banana Milk recebe instrumentos para continuar sozinha',
+    /* Dez nomes curtos não são uma grade de fichas: viram lista numerada. Em
+       grade de cinco colunas eles quebravam em três linhas cada e a cena
+       estourava mesmo no piso de compressão. */
+    passos: ['Vocabulário Oficial Banana Milk', 'Dicionário de Indicadores',
+             'Matriz de Decisões Gerenciais', 'Mapa de Fontes e Fluxos de Informação',
+             'Biblioteca de Perguntas do WhatsApp', 'Portfólio e Fichas dos Projetos',
+             'Guia Operacional de Shelf Life', 'Blueprint do Programa de Promotores',
+             'Plano de Ação de 90 dias', 'Matriz de Responsabilidades'],
+    passosOlho: 'Ferramentas de gestão',
+    fecho: 'Cada ferramenta será entregue em formato editável. A empresa poderá utilizar os materiais internamente ou contratar futuras implementações sem refazer o assessment.',
+    ativo: 'logo',
+    arte: { shape: 'trama', ramp: [0.14, 0.62], cell: 3, seed: 83,
+            opts: { palavras: ['banana milk'], corpo: 0.075, entrelinha: 1.5, weight: 500, sep: '   ' } },
+    beats: [{}, { mostra: 1 }, { mostra: 2 }] },
+
+  /* 22 ------------------------------------------------------------------ */
+  { n: 22, registro: 'ferramenta', acento: ACENTOS.amarelo,
+    olho: 'A capacidade instalada',
+    hed: 'O principal legado é uma nova capacidade de gestão',
+    lista: ['responder perguntas gerenciais com fonte e critérios conhecidos',
+            'identificar exceções antes que virem urgências',
+            'avaliar propostas com uma visão econômica mais completa',
+            'coordenar shelf life com informações internas e externas',
+            'transformar promotores em uma fonte confiável de inteligência',
+            'sistematizar recompra e acompanhamento comercial',
+            'contratar ou desenvolver soluções futuras a partir de especificações próprias'],
+    listaOlho: 'Ao final, a Banana Milk deverá ser capaz de',
+    fecho: 'O legado não é uma ferramenta específica. É a capacidade de compreender o negócio, direcionar a atenção e coordenar ações com menos dependência de conhecimento tácito.',
+    /* A costura do Camacho vira a figura do cliente, correndo como frente de
+       onda ao longo da rampa. Cai exatamente na frase em que a capacidade
+       passa a ser deles — é por isso que o morf está aqui e não na capa. */
+    arte: { shape: 'weave', ramp: [0.06, 1], cell: 4, seed: 89 },
+    beats: [{}, { mostra: 1 },
+            { mostra: 2, arte: { morf: { de: 'weave', para: 'banana', eixo: 0 } }, ms: 2600 }] },
+
+  /* 23 ------------------------------------------------------------------ */
+  { n: 23, registro: 'recomendacao', campo: 'escuro', olho: 'Para começar',
+    hed: 'Decisões necessárias para iniciar',
+    passos: ['quais programas começarão nos primeiros 90 dias',
+             'quem será responsável por cada programa',
+             'quais perguntas entrarão na primeira versão do WhatsApp',
+             'quais decisões a primeira versão do modelo econômico deverá apoiar',
+             'quais SKUs e redes participarão do piloto de shelf life',
+             'quais promotores participarão da primeira etapa',
+             'quais pessoas, dados e parceiros estarão disponíveis',
+             'qual capacidade de investimento e execução será destinada à implementação'],
+    passosOlho: 'Os fundadores precisam decidir',
+    fecho: 'O Modelo de Gestão Banana Milk começa quando cada pergunta relevante passa a ter uma fonte, uma regra, um responsável e uma ação possível.',
+    /* A marca-medida fechando: a lacuna entre a complexidade enfrentada e a
+       capacidade instalada é a coisa que o plano inteiro existe para reduzir. */
+    arte: { shape: 'mark', ramp: [0.1, 1], cell: 4, seed: 97, opts: { aperture: 0.9 } },
+    beats: [{}, { mostra: 1 }, { mostra: 2, arte: { opts: { aperture: 0.16 } }, ms: 1800 }] },
 ];
-const css = getComputedStyle(document.documentElement);
-document.getElementById('swatches').innerHTML = COLORS.map(([name, token, use]) => `
-  <div class="swatch">
-    <div class="swatch__chip" style="--chip:var(${token})"></div>
-    <div class="swatch__meta">
-      <span>${name}</span>
-      <span class="swatch__hex">${css.getPropertyValue(token).trim().toUpperCase()}</span>
-    </div>
-    <p class="cmc-micro">${use}</p>
-  </div>`).join('');
 
-/* --- Amostras do motor gráfico --- */
-const SPECIMENS = [
-  { shape: 'noiseToSignal', title: 'Ruído → sinal', ramp: '0.02,1', angle: 0,
-    desc: 'O grafismo-âncora. Anel disperso resolvendo em massa.' },
-  { shape: 'bars', title: 'Matriz de blocos', ramp: '0.06,1', angle: 0,
-    desc: 'Padrão bruto virando estrutura repetível.' },
-  { shape: 'chevrons', title: 'Cadência', ramp: '0.12,1', angle: 0,
-    desc: 'Velocidade como repetição.' },
-  { shape: 'loop', title: 'Laço', ramp: '0.03,1', angle: 0, mirror: true,
-    desc: 'Entra, circula, sai melhor. Denso no centro, disperso nas pontas.' },
-  { shape: 'layers', title: 'Camadas', ramp: '0.28,1', angle: 0,
-    desc: 'Infraestrutura empilhada.' },
-  { shape: 'mark', title: 'Marca dissolvida', ramp: '0.03,1', angle: 180,
-    desc: 'O próprio símbolo em partículas. Merch e capas.' },
+/* --- Pendências ----------------------------------------------------------
+   Do documento editorial. Não viram slide: são suas, não dos fundadores.
+   Aparecem só na visão de apresentador (?notas=1). */
+const PENDENCIAS = [
+  'reconciliação do achado da DRE com o BPO',
+  'nomenclatura oficial de CMV e CMC utilizada pela Banana Milk',
+  'lista final dos indicadores existentes',
+  'número exato de perguntas da primeira versão do WhatsApp',
+  'SKUs, redes e promotores do piloto de shelf life',
+  'responsáveis internos por cada programa',
+  'capacidade de investimento e execução',
+  'escopo exato dos materiais que serão entregues como legado',
 ];
-document.getElementById('specimens').innerHTML = SPECIMENS.map((s) => `
-  <figure class="specimen">
-    <div class="cmc-stage" style="--stage-ar:16/9">
-      <canvas data-cmc-dither="${s.shape}" data-ramp="${s.ramp}" data-angle="${s.angle}"
-              data-cell="4"${s.mirror ? ' data-mirror="true"' : ''}
-              aria-label="${s.title}"></canvas>
-    </div>
-    <figcaption>
-      <p class="cmc-lead">${s.title}</p>
-      <p class="cmc-small">${s.desc} · <code>${s.shape}</code></p>
-    </figcaption>
-  </figure>`).join('');
 
-/* --- Os seis slides de processo --- */
-const STEPS = [
-  { name: 'Diagnosticar', shape: 'noiseToSignal', ramp: '0.03,1', angle: 0,
-    lead: 'Entender antes de propor', kicker: 'O ponto de partida é o negócio, não a ferramenta.',
-    body: 'Leio o contexto, os dados, os processos, as capacidades instaladas e os desafios de liderança. Sem esse mapa, qualquer recomendação é chute bem-vestido.' },
-  { name: 'Priorizar', shape: 'funnel', ramp: '0.1,1', angle: 0,
-    lead: 'Separar urgência de importância', kicker: 'Poucas frentes, escolhidas por impacto.',
-    body: 'Muita coisa cabe no roadmap; pouca coisa muda o resultado. Concentro recursos nas oportunidades de maior impacto e digo com clareza o que fica de fora.' },
-  { name: 'Estruturar', shape: 'mesh', ramp: '0.28,1', angle: 0,
-    lead: 'Organizar o que sustenta a decisão', kicker: 'Dados, processos, responsabilidades, indicadores.',
-    body: 'Arquitetura gerencial antes de automação. Sem dado confiável e dono definido, todo sistema construído em cima vira mais uma fonte de discordância.' },
-  { name: 'Implementar', shape: 'chevrons', ramp: '0.12,1', angle: 0,
-    lead: 'Estratégia vira sistema rodando', kicker: 'Analytics, automação e agentes.',
-    body: 'Não entrego apresentação e desapareço: participo da construção até funcionar na operação real, com quem vai operar depois.' },
-  { name: 'Incorporar', shape: 'cohort', ramp: '0.14,1', angle: 0,
-    lead: 'Preparar quem vai sustentar', kicker: 'Líderes e times, ao mesmo tempo que a organização.',
-    body: 'A etapa que quase todo projeto pula. Mudar processo sem mudar como as pessoas decidem não instala capacidade — devolve a operação ao estado anterior em poucos meses.' },
-  { name: 'Medir', shape: 'gauge', ramp: '0.16,1', angle: 0,
-    lead: 'Se não move um número, não aconteceu', kicker: 'Resultado, não atividade.',
-    body: 'Cada frente entra com a métrica declarada antes da primeira linha de código. Avalio, corrijo a escolha e amplio o que gera valor — no painel do cliente, não no meu.' },
-];
-document.getElementById('processo-grid').innerHTML = STEPS.map((s, i) => `
-  <article class="cmc-slide">
-    <div class="cmc-slide__head">
-      <h3 class="cmc-title">${s.name}</h3>
-      <span class="cmc-slide__num">${String(i + 1).padStart(2, '0')}</span>
-    </div>
-    <div class="cmc-slide__stage">
-      <canvas data-cmc-dither="${s.shape}" data-ramp="${s.ramp}" data-angle="${s.angle}"
-              data-cell="4" data-seed="${3 + i * 7}"${s.mirror ? ' data-mirror="true"' : ''}
-              aria-label="${s.name}"></canvas>
-    </div>
-    <div class="cmc-slide__caption">
-      <p class="cmc-lead">${s.lead}</p>
-      <span class="cmc-small">${s.kicker}</span>
-    </div>
-    <p class="cmc-small cmc-slide__body">${s.body}</p>
-  </article>`).join('');
+/* O campo de cada cena: explícito quando declarado, senão o do registro. */
+function campoDaCena(cena) {
+  return cena.campo || (cena.registro && REGISTRO_EDITORIAL[cena.registro].campo) || 'escuro';
+}
 
-/* A lista de formas sai do próprio motor: escrita à mão, ela envelhecia em
-   silêncio toda vez que um campo novo entrasse. */
-document.getElementById('lista-formas').textContent = Object.keys(fields).join(' · ');
+/* Quantos beats a cena tem — usado pela navegação e pela impressão, que
+   precisa achatar tudo para o último. */
+function beatsDa(cena) {
+  return (cena.beats && cena.beats.length) || 1;
+}
 
-/* Os níveis saem dos tokens: densidade, não cor. */
-const cssRoot = getComputedStyle(document.documentElement);
-const NIVEIS = [
-  'Lacuna grande — pouca coisa instalada',
-  'Iniciativas isoladas, sem sustentação',
-  'Processo estruturado, adoção parcial',
-  'Operação apoiada em dado e rotina',
-  'Capacidade instalada e sustentada',
-];
-document.getElementById('niveis').innerHTML = NIVEIS.map((desc, i) => `
-  <li><span class="specs__key">Nível ${i + 1} · ${desc}</span>
-      <code class="specs__val">densidade ${cssRoot.getPropertyValue(`--cmc-level-${i + 1}`).trim()}</code></li>`).join('');
+/* A config do grafismo no beat k: parte do estado inicial e aplica, em ordem,
+   o `arte` de cada beat até k. Assim a navegação para trás assenta no estado
+   final do beat anterior em vez de reproduzir a animação de trás para frente. */
+function arteNoBeat(cena, k) {
+  if (!cena.arte) return null;
+  let cfg = { ...cena.arte };
+  for (let i = 1; i <= k && i < beatsDa(cena); i++) {
+    const b = cena.beats[i];
+    if (b && b.arte) cfg = { ...cfg, ...b.arte };
+  }
+  return cfg;
+}
 
-applyBrand(document, brandFromUrl());   /* preenche os encaixes de marca */
-init();   /* ativa os canvas injetados acima */
+const marca = applyBrand(document, brandFromUrl());
+const params = new URLSearchParams(location.search);
+
+/* O href sai por DOM, nunca escrito no markup: o guard de auto-contenção de
+   src/inline.mjs derruba o build em qualquer href local sobrevivente, e um
+   "?notas=1" literal conta como local. Ele pegou este aqui na primeira vez. */
+document.getElementById('link-notas').href = '?notas=1';
+
+const CAMPOS = { escuro: ['#000000', '#FFFFFF'], papel: ['#F2F0EE', '#000000'] };
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+/* --- Montagem ------------------------------------------------------------
+   Cada pedaço de conteúdo recebe o número do beat em que aparece, e o contador
+   `b` é incrementado só quando a cena declarou um beat para aquele pedaço.
+   Assim a ordem de revelação sai da ordem do conteúdo, sem tabela paralela. */
+
+function placa(chave) {
+  const a = ATIVOS[chave];
+  return `<div class="dk__placa"><b>Falta ${esc(a.o)}</b><span>${esc(a.arquivo)}</span></div>`;
+}
+
+/* Tabela, opcionalmente partida em blocos de `quebra` linhas — cada bloco vira
+   um painel e repete o cabeçalho. É o que salva a grade de 90 dias, que não
+   cabe inteira nem no piso de compressão: partir por frente preserva o sentido,
+   encolher até 1,3cqi não preserva a leitura. */
+function tabelaHTML(t, linhas = t.linhas) {
+  const th = t.cols.map((c, i) => `<th${i ? ` data-col="${i}"` : ''}>${esc(c)}</th>`).join('');
+  const tr = linhas.map((l) =>
+    `<tr>${l.map((c, i) => `<td${i ? ` data-col="${i}"` : ''}>${esc(c)}</td>`).join('')}</tr>`).join('');
+  return `<table class="dk__tab"><thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table>`;
+}
+
+/* Cada beat é um PAINEL, não um acréscimo.
+
+   Medido com _cabe.mjs: com os painéis empilhados, 22 das 23 cenas
+   transbordavam a faixa do meio, algumas por 700px num espaço de 419. Não é
+   questão de afinar corpo de texto — este conteúdo é documento, não slide, e
+   cada slide de origem traz de três a seis blocos de prosa.
+
+   Então o conteúdo passa PELO quadro em vez de se acumular nele: a manchete e
+   o olho ficam, o painel troca. É o que um filme faz, é o que "só passo a
+   passo" pede, e resolve a impressão de graça — o PDF emite uma página por
+   beat em vez de uma por cena. */
+function corpoHTML(c) {
+  const paineis = [];
+  const push = (html) => paineis.push(html);
+  const olho = (t) => t ? `<p class="dk__olho" style="margin-bottom:1.4cqi">${esc(t)}</p>` : '';
+
+  if (c.corpo) push(`<p class="dk__fecho">${c.corpo}</p>`);
+
+  if (c.blocos) push(`<div class="dk__blocos" style="--cols:${Math.min(c.blocos.length, 2)}">` +
+    c.blocos.map(([h, t]) => `<div class="dk__bloco"><h4>${esc(h)}</h4><p>${esc(t)}</p></div>`).join('') + '</div>');
+
+  if (c.tabela) {
+    const q = c.tabela.quebra;
+    if (q) for (let i = 0; i < c.tabela.linhas.length; i += q)
+      push(tabelaHTML(c.tabela, c.tabela.linhas.slice(i, i + q)));
+    else push(tabelaHTML(c.tabela));
+  }
+
+  if (c.grade) push(`<div class="dk__grade" style="--cols:${c.cols || 3}">` +
+    c.grade.map((g) => `<div class="dk__item"><h4>${esc(g.h)}</h4><p>${esc(g.p)}</p></div>`).join('') + '</div>');
+
+  if (c.passos) push(olho(c.passosOlho) +
+    `<ol class="dk__passos" style="--cols:${c.passos.length > 5 ? 2 : 1}">` +
+    c.passos.map((x) => `<li>${esc(x)}</li>`).join('') + '</ol>');
+
+  if (c.lista) push(olho(c.listaOlho) +
+    `<ul class="dk__lista" style="--cols:${c.lista.length > 4 ? 2 : 1}">` +
+    c.lista.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>');
+
+  /* Duas listas = dois painéis, não duas colunas. Lado a lado elas competem
+     pela mesma altura e a mais longa manda no fator de compressão das duas;
+     em sequência cada uma respira, e a segunda vira um passo do argumento. */
+  if (c.duasListas) {
+    const d = c.duasListas;
+    for (const [o, itens] of [[d.aOlho, d.a], [d.bOlho, d.b]])
+      push(olho(o) + `<ul class="dk__lista" style="--cols:${itens.length > 5 ? 2 : 1}">` +
+        itens.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>');
+  }
+
+  if (c.ativo) push(placa(c.ativo));
+  if (c.fecho) push(`<p class="dk__fecho">${esc(c.fecho)}</p>`);
+  if (c.legado) push(`<p class="dk__legado"><b>Legado.</b> ${esc(c.legado)}</p>`);
+
+  /* Os painéis são absolutos DENTRO do próprio palco, não do meio inteiro:
+     sem este invólucro eles cobrem também a linha da manchete, e o primeiro
+     painel sai por cima do título. */
+  return '<div class="dk__paineis">' +
+    paineis.map((h, i) => `<div class="dk__painel" data-painel="${i}">${h}</div>`).join('') + '</div>';
+}
+
+const palco = document.getElementById('palco');
+
+palco.innerHTML = CENAS.map((c, i) => {
+  const campo = campoDaCena(c);
+  const [bg, ink] = CAMPOS[campo] || CAMPOS.papel;
+  const reg = c.registro ? REGISTRO_EDITORIAL[c.registro] : null;
+  const estilo = () => `--slide-bg:${bg};--slide-ink:${ink}` + (c.acento ? `;--slide-acento:${c.acento}` : '') + larg;
+
+  const olho = c.capa ? '' :
+    `<p class="dk__olho">${reg ? `<strong>${esc(reg.rotulo)}</strong>` : ''}${reg && c.olho ? ' · ' : ''}${c.olho ? esc(c.olho) : ''}</p>`;
+
+  const hedClasse = c.capa ? 'dk__hed'
+    : (c.hed.length > 58 ? 'dk__hed dk__hed--peq' : 'dk__hed dk__hed--med');
+
+  const topo = c.capa
+    ? `<span class="cmc-lockup dk__lockup"><svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/></svg><span class="cmc-lockup__word">${marca.name}</span></span>`
+    : olho;
+
+  /* Quanta largura o conteúdo pede decide quanta sobra para o grafismo.
+     Tabela grande e grade grande são as que estouram o 16:9 primeiro. */
+  const denso = !!c.tabela || !!c.grade || !!c.duasListas
+    || (c.passos && c.passos.length > 6);
+  const modo = c.modo || (c.sangria ? 'sangria' : denso ? 'borda' : 'faixa');
+  /* Em sangria, a largura do tipo SAI da clareira declarada. Ajustar os dois
+     à mão é como o grafismo volta a cruzar a tipografia: alguém mexe na
+     clareira, esquece do texto, e o defeito reaparece três cenas depois.
+     A clareira considerada é a MAIS ABERTA de todos os beats, não a do
+     estado inicial: na cena 10 ela nasce fechada e abre, e medir pela
+     fechada espremia o texto numa coluna de 31%. */
+  let larg = '';
+  if (c.sangria && c.arte) {
+    let melhor = 0;
+    for (let k = 0; k < (c.beats || [{}]).length; k++) {
+      const cfg = arteNoBeat(c, k), cl = cfg && cfg.clareira && cfg.clareira[0];
+      if (cl) melhor = Math.max(melhor, (cl.x + cl.w) - cl.soft * 0.5);
+    }
+    if (melhor) larg = `;--cl:${Math.max(0.3, melhor)}`;
+  }
+  const arte = c.arte ? '<div class="dk__art"><canvas aria-hidden="true"></canvas></div>' : '';
+
+  return `<section class="dk__slide" data-i="${i}" data-campo="${campo}" data-arte="${modo}"
+      ${c.registro ? `data-registro="${c.registro}"` : ''} style="${estilo()}">
+    ${arte}
+    <div>${topo}</div>
+    <div class="dk__meio">
+      <h2 class="${hedClasse}">${c.hed}</h2>
+      ${corpoHTML(c)}
+    </div>
+    <div>
+      <div class="dk__pe" style="margin-top:2cqi">
+        <span>${esc(c.rodape || 'Plano de Gestão e IA da Banana Milk')}</span>
+        <span>${String(c.n).padStart(2, '0')} / ${String(CENAS.length).padStart(2, '0')}</span>
+      </div>
+    </div>
+  </section>`;
+}).join('');
+
+/* --- Ajuste medido ------------------------------------------------------
+
+   Baixa --cp de cada painel até ele caber, com piso: abaixo de PISO o tipo
+   deixa de ser legível projetado, e aí o problema é excesso de conteúdo, não
+   de tamanho. Um painel que bate no piso e ainda transborda é registrado em
+   `apEstouro` — o relatório de _cabe.mjs lê dali. Melhor um número do que uma
+   barra de rolagem que ninguém vê no meio da apresentação. */
+const PISO = 0.68;
+const estouros = [];
+
+function ajustarPainel(el) {
+  el.style.setProperty('--cp', '1');
+  if (el.scrollHeight <= el.clientHeight + 1) return;
+  let cp = 1;
+  while (cp > PISO) {
+    cp = Math.round((cp - 0.04) * 100) / 100;
+    el.style.setProperty('--cp', String(cp));
+    if (el.scrollHeight <= el.clientHeight + 1) return;
+  }
+  estouros.push({ cena: el.closest('.dk__slide').dataset.i, sobra: el.scrollHeight - el.clientHeight });
+}
+
+/* Só mede painel visível: um painel escondido tem clientHeight zero. */
+function ajustarCena(secao) {
+  secao.querySelectorAll('.dk__painel').forEach((el) => {
+    const tinha = el.hasAttribute('data-visivel');
+    el.setAttribute('data-visivel', '');
+    ajustarPainel(el);
+    if (!tinha) el.removeAttribute('data-visivel');
+  });
+}
+
+/* --- Navegação por beats -------------------------------------------------
+   Uma seta avança um passo dentro da cena; no último passo, passa de cena.
+   Voltar assenta no estado FINAL do passo anterior — nunca reproduz a
+   animação de trás para frente, que é o que faz um deck parecer quebrado. */
+
+/* Quantos passos a cena tem sai do DOM, não da declaração: o número de painéis
+   é decidido na montagem (uma tabela com `quebra` vira vários, duasListas vira
+   dois), e uma lista de beats escrita à mão ficaria defasada em silêncio —
+   com painel inalcançável e ninguém percebendo até a apresentação. */
+palco.querySelectorAll('.dk__slide').forEach((s, i) => {
+  s.dataset.beats = String(1 + s.querySelectorAll('.dk__painel').length);
+});
+const passosDa = (i) => Number(palco.querySelector(`.dk__slide[data-i="${i}"]`).dataset.beats);
+
+const regua = document.getElementById('regua');
+regua.innerHTML = CENAS.map(() => '<i></i>').join('');
+const conta = document.getElementById('conta');
+
+let cena = 0, beat = 0, anterior = -1;
+
+function aplicar(animar) {
+  const c = CENAS[cena];
+  const secao = palco.querySelector(`.dk__slide[data-i="${cena}"]`);
+
+  palco.querySelectorAll('.dk__slide').forEach((s, k) => s.toggleAttribute('data-ativo', k === cena));
+  regua.querySelectorAll('i').forEach((el, k) => {
+    el.toggleAttribute('data-feito', k < cena);
+    el.toggleAttribute('data-agora', k === cena);
+  });
+  conta.textContent = `${String(c.n).padStart(2, '0')} / ${String(CENAS.length).padStart(2, '0')}`;
+
+  /* Um painel por vez: o beat 0 é o quadro só com a manchete, e a partir daí
+     cada passo troca o painel. Cena sem painel nenhum fica na manchete. */
+  const paineis = secao.querySelectorAll('.dk__painel');
+  paineis.forEach((el, k) => el.toggleAttribute('data-visivel', k === beat - 1));
+  if (!secao.dataset.ajustado) { ajustarCena(secao); secao.dataset.ajustado = '1'; }
+  secao.querySelectorAll('[data-beat]').forEach((el) => {
+    el.toggleAttribute('data-visivel', Number(el.dataset.beat) <= beat);
+  });
+
+  /* Tabela revelada coluna a coluna (slide 20). */
+  const cols = c.beats.slice(0, beat + 1).reduce((m, b) => Math.max(m, b.colunas || 0), 0);
+  secao.querySelectorAll('.dk__tab [data-col]').forEach((el) => {
+    el.toggleAttribute('data-visivel', c.beats.some((b) => b.colunas) ? Number(el.dataset.col) <= cols : true);
+  });
+
+  /* Grafismo. */
+  const cv = secao.querySelector('canvas');
+  if (!cv) return;
+  const alvo = arteNoBeat(c, beat);
+  const passo = c.beats[beat];
+  const mudou = animar && passo && passo.arte && cena === anterior;
+  if (mudou) anima(cv, arteNoBeat(c, beat - 1), alvo, passo.ms || 1200);
+  else { parar(cv); render(cv, alvo); }
+  anterior = cena;
+}
+
+function ir(dc, db) {
+  const c = CENAS[cena];
+  if (db) {
+    const n = beat + db;
+    if (n >= 0 && n < passosDa(cena)) { beat = n; return aplicar(db > 0); }
+    dc = db > 0 ? 1 : -1;
+  }
+  const nc = cena + dc;
+  if (nc < 0 || nc >= CENAS.length) return;
+  cena = nc;
+  /* Entrando de trás para frente, cai no último passo da cena. */
+  beat = db < 0 ? passosDa(cena) - 1 : 0;
+  aplicar(false);
+}
+
+document.getElementById('proximo').addEventListener('click', () => ir(0, 1));
+document.getElementById('anterior').addEventListener('click', () => ir(0, -1));
+document.getElementById('tela').addEventListener('click', () => {
+  (document.fullscreenElement ? document.exitFullscreen() : palco.requestFullscreen()).catch(() => {});
+});
+addEventListener('keydown', (e) => {
+  if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); ir(0, 1); }
+  else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); ir(0, -1); }
+  else if (e.key === 'ArrowDown') { e.preventDefault(); ir(1, 0); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); ir(-1, 0); }
+  else if (e.key === 'Home') { cena = 0; beat = 0; aplicar(false); }
+  else if (e.key === 'End') { cena = CENAS.length - 1; beat = passosDa(cena) - 1; aplicar(false); }
+  else if (e.key.toLowerCase() === 'f') document.getElementById('tela').click();
+});
+addEventListener('resize', () => aplicar(false));
+
+/* Impressão: achata para o último beat de cada cena e desenha TODOS os
+   grafismos, porque um slide escondido tem tamanho zero e sairia em branco. */
+function achatar() {
+  palco.querySelectorAll('.dk__slide').forEach((s, k) => {
+    s.querySelectorAll('[data-beat]').forEach((el) => el.setAttribute('data-visivel', ''));
+    s.querySelectorAll('.dk__tab [data-col]').forEach((el) => el.setAttribute('data-visivel', ''));
+    const cv = s.querySelector('canvas');
+    if (cv) { parar(cv); render(cv, arteNoBeat(CENAS[k], passosDa(k) - 1)); }
+  });
+}
+addEventListener('beforeprint', achatar);
+if (matchMedia('print').matches) achatar();
+
+/* Visão de apresentador: notas de apoio e pendências. Não vão para a tela do
+   cliente — são material de quem apresenta. */
+if (params.get('notas')) {
+  const el = document.getElementById('notas');
+  el.hidden = false;
+  el.innerHTML = '<h3>Notas de apoio</h3><ul class="cmc-small">' +
+    CENAS.filter((c) => c.nota).map((c) =>
+      `<li><strong>${String(c.n).padStart(2, '0')}</strong> · ${esc(c.nota)}</li>`).join('') +
+    '</ul><h3 style="margin-top:2rem">Pendências antes da versão final</h3><ul class="cmc-small">' +
+    PENDENCIAS.map((p) => `<li>${esc(p)}</li>`).join('') + '</ul>';
+}
+
+/* Modo captura: ?cena=N&beat=K abre direto num estado, para o exportador. */
+if (params.get('cena')) {
+  cena = Math.max(0, Math.min(CENAS.length - 1, Number(params.get('cena')) - 1));
+  beat = Math.max(0, Math.min(passosDa(cena) - 1, Number(params.get('beat') || 0)));
+}
+/* Mede tudo na entrada: a navegação não pode gastar quadro medindo layout, e
+   o relatório precisa das 23 cenas, não só da que está na tela. */
+palco.querySelectorAll('.dk__slide').forEach((s) => {
+  s.setAttribute('data-ativo', ''); ajustarCena(s); s.dataset.ajustado = '1';
+  s.removeAttribute('data-ativo');
+});
+window.apEstouro = estouros;
+
+aplicar(false);
+init(palco);
+palco.focus();
+document.documentElement.dataset.apPronto = '1';
 </script>
+</body>
+</html>
