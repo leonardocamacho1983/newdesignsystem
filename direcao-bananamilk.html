@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direção de arte Banana Milk</title>
+<meta name="description" content="Doze registros visuais para a apresentação da Banana Milk: pôster de duas cores, chapado, natureza-morta, adesivo, traço com hachura, personagem, sabores, tipo, trama, geometria, partícula em cor e editorial sóbrio.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/guide.css">
+<style>
+/* ==========================================================================
+   Direção de arte da Banana Milk — doze registros
+
+   Esta página existe porque a rodada anterior falhou: recebeu creme com quatro
+   acentos, azul saturado, rosa, personagem, contorno com hachura e fotografia
+   colorida, e devolveu partícula cinza e a palavra "banana". A correção não é
+   mais regra — é faixa visual de verdade, lado a lado, para escolher olhando.
+
+   Regra de leitura: se duas peças se parecerem, uma delas não está fazendo
+   trabalho nenhum.
+
+   As cores vivem AQUI, na peça, e não em tokens/. A fundação do Camacho segue
+   monocromática; o que entra é a marca de outra pessoa, dentro da peça dela.
+   ========================================================================== */
+:root {
+  --bm-creme:   #F3EFE4;
+  --bm-preto:   #171717;
+  --bm-coral:   #D9503F;
+  --bm-amarelo: #EFBE2E;
+  --bm-cacau:   #7A4A2E;
+  --bm-azul:    #1B7FC4;
+  --bm-rosa:    #DFB5AB;
+  --bm-vermelho:#E23D35;
+}
+
+.pc { display: grid; gap: var(--cmc-sp-4); }
+.pc__quadro {
+  position: relative; overflow: hidden;
+  aspect-ratio: 16/10; container-type: inline-size;
+  border-radius: 2px;
+}
+.pc__quadro > svg, .pc__quadro > canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pc__cap { display: flex; gap: var(--cmc-sp-3); align-items: baseline; }
+.pc__n {
+  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-micro);
+  color: var(--cmc-text-muted); font-variant-numeric: tabular-nums; flex: none;
+}
+.pc__cap p { margin: 0; font-size: var(--cmc-fs-small); line-height: 1.45; }
+.pc__cap strong { display: block; }
+.pc__de { color: var(--cmc-text-muted); }
+
+/* Tipo dentro das peças. Condensado de verdade não temos — o logotipo da
+   Banana Milk é uma grotesca condensada pesadíssima e ela não está aqui. O que
+   se faz é aproximar com peso 700 e `scaleX`, e DIZER que é aproximação. */
+.bm-word {
+  font-family: 'Inter Tight', sans-serif; font-weight: 700;
+  letter-spacing: -0.055em; line-height: 0.82;
+  transform: scaleX(0.78); transform-origin: left center;
+}
+.pc__quadro .txt { position: absolute; margin: 0; }
+</style>
+</head>
+<body>
+
+<header class="hero cmc-inverse">
+  <div class="cmc-shell">
+    <a class="cmc-lockup cmc-lockup--sm" href="index.html">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </a>
+    <div class="stack">
+      <h1 class="cmc-display">Doze<br>registros</h1>
+      <p class="cmc-lead cmc-muted">
+        Faixa de direção de arte para a apresentação da Banana Milk. Cada peça
+        vem de uma referência sua e argumenta uma coisa diferente. O critério
+        para julgar não é gostar de uma: é conseguir ver que <strong>não saíram
+        todas da mesma máquina</strong>.
+      </p>
+      <p class="cmc-small cmc-muted">
+        O tipo condensado da marca não está no repositório — as peças que o usam
+        estão aproximando com peso 700 e compressão horizontal. Com o vetor
+        real, elas melhoram.
+      </p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="cmc-section">
+  <div class="cmc-shell">
+    <div class="grid grid--2" id="faixa"></div>
+  </div>
+</section>
+</main>
+
+<script type="module">
+import { render } from './src/dither.js';
+import { applyBrand, brandFromUrl } from './src/brand.js';
+applyBrand(document, brandFromUrl());
+
+/* --- A banana, uma vez -----------------------------------------------------
+   Um arco grosso com ponta arredondada dá uma banana limpa e confiável. Path
+   fechado desenhado à mão sairia torto e cada peça inventaria o seu — que é
+   como um sistema vira uma pilha de desenhos parecidos.
+
+   `d` varia o traçado; a cor, a espessura e o contorno ficam por conta de quem
+   chama. É o mesmo princípio do motor: uma forma, muitos usos. */
+const BANANA = (o = {}) => {
+  const { cor = '#EFBE2E', linha = 0, corLinha = '#171717', esp = 34,
+          cabo = true, corCabo = '#7A4A2E' } = o;
+  const d = 'M 34 46 A 92 92 0 0 0 172 96';
+  return `
+    ${linha ? `<path d="${d}" fill="none" stroke="${corLinha}"
+        stroke-width="${esp + linha * 2}" stroke-linecap="round"/>` : ''}
+    <path d="${d}" fill="none" stroke="${cor}" stroke-width="${esp}" stroke-linecap="round"/>
+    ${cabo ? `<path d="M 30 40 L 22 22" fill="none" stroke="${corCabo}"
+        stroke-width="${esp * 0.34}" stroke-linecap="round"/>` : ''}`;
+};
+
+/* Hachura em SVG: linhas paralelas dentro de um recorte. É a mesma ideia da
+   textura `hachura` que entrou no motor — densidade de marca binária faz tom —
+   só que aqui em vetor, porque esta peça é desenho de traço e não partícula. */
+const HACHURA = (id, ang = -38, passo = 6, esp = 1.6, cor = '#171717') => `
+  <pattern id="${id}" width="${passo}" height="${passo}" patternUnits="userSpaceOnUse"
+           patternTransform="rotate(${ang})">
+    <line x1="0" y1="0" x2="0" y2="${passo}" stroke="${cor}" stroke-width="${esp}"/>
+  </pattern>`;
+
+/* O personagem: corpo de banana, pernas, sapato. Quatro posturas, e o que muda
+   entre elas é SÓ o ângulo das pernas e a inclinação do corpo — se mudasse o
+   desenho, seriam quatro personagens e não um. */
+const PERSONAGEM = ({ giro = 0, perna = [8, -8], prancha = false } = {}) => `
+  <g transform="translate(100 46) rotate(${giro})">
+    <path d="M 4 0 C -16 26 -20 74 -6 108 L 40 108 C 46 70 36 26 22 0 Z"
+          fill="#EFBE2E"/>
+    <path d="M 4 0 L 12 -14" stroke="#171717" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="6"  cy="40" r="3.4" fill="#171717"/>
+    <circle cx="24" cy="38" r="3.4" fill="#171717"/>
+    <path d="M 6 52 Q 15 60 26 50" fill="none" stroke="#171717"
+          stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g stroke="#171717" stroke-width="17" stroke-linecap="round" fill="none">
+    <path d="M 104 150 L ${104 + perna[0]} 208"/>
+    <path d="M 118 150 L ${118 + perna[1]} 208"/>
+  </g>
+  <g fill="#FFFFFF" stroke="#171717" stroke-width="3">
+    <ellipse cx="${104 + perna[0] + 4}" cy="212" rx="15" ry="7"/>
+    <ellipse cx="${118 + perna[1] + 4}" cy="212" rx="15" ry="7"/>
+  </g>
+  ${prancha ? `
+    <path d="M 62 226 L 168 226" stroke="#171717" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="82"  cy="234" r="6" fill="#EFBE2E" stroke="#171717" stroke-width="3"/>
+    <circle cx="148" cy="234" r="6" fill="#EFBE2E" stroke="#171717" stroke-width="3"/>` : ''}`;
+
+const svg = (vb, corpo, fundo) =>
+  `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid slice" role="img">
+     ${fundo ? `<rect width="100%" height="100%" fill="${fundo}"/>` : ''}${corpo}</svg>`;
+
+/* ==========================================================================
+   OS DOZE
+   ========================================================================== */
+const PECAS = [
+
+/* 01 ------------------------------------------------------------------- */
+{ nome: 'Pôster de duas cores', de: 'Pôster "banana to a gunfight"',
+  arg: 'Duas cores chapadas, tipo enorme, humor. O registro mais barulhento da faixa — serve para abrir ato ou virar página, nunca para carregar argumento.',
+  html: `<div style="position:absolute;inset:0;background:var(--bm-amarelo)"></div>
+    <svg viewBox="0 0 200 125" style="position:absolute;inset:0" preserveAspectRatio="xMidYMid slice">
+      <g transform="translate(112 2) scale(0.44) rotate(18 100 60)">
+        ${BANANA({ cor: '#1B7FC4', cabo: true, corCabo: '#1B7FC4' })}</g>
+    </svg>
+    <p class="txt bm-word" style="left:7cqi;top:9cqi;font-size:10cqi;color:var(--bm-azul)">
+      TROUXE<br>UMA BANANA</p>
+    <p class="txt bm-word" style="left:7cqi;bottom:9cqi;font-size:10cqi;color:var(--bm-azul)">
+      PRA UMA<br>REUNIÃO</p>` },
+
+/* 02 ------------------------------------------------------------------- */
+{ nome: 'Chapado com sombra dura', de: 'Flat lay sobre azul',
+  arg: 'Objeto sobre cor saturada, sombra deslocada e sem desfoque. Gráfico, seco, repetível — o registro de produto quando não há fotografia.',
+  html: svg('0 0 400 250', `
+    ${[[40,40,-14],[190,25,22],[300,90,-8],[70,150,30],[220,140,-26],[330,190,12]]
+      .map(([x, y, r]) => `
+      <g transform="translate(${x} ${y}) rotate(${r}) scale(0.62)">
+        <g transform="translate(9 11)" opacity="0.35">${BANANA({ cor: '#0E5A8C', cabo: false })}</g>
+        ${BANANA({ cor: '#F5D34A', corCabo: '#0E5A8C' })}
+      </g>`).join('')}`, '#1B7FC4') },
+
+/* 03 ------------------------------------------------------------------- */
+{ nome: 'Natureza-morta calma', de: 'Banana sobre rosa empoeirado',
+  arg: 'Um objeto, muito ar, sombra longa e macia. É o oposto do 02 e existe para os momentos de respiro — abertura, passagem, fecho.',
+  html: `<div style="position:absolute;inset:0;background:
+      radial-gradient(120% 90% at 50% 18%, #E8CBC2 0%, var(--bm-rosa) 62%, #CFA096 100%)"></div>
+    <svg viewBox="0 0 400 250" style="position:absolute;inset:0" preserveAspectRatio="xMidYMid slice">
+      <ellipse cx="212" cy="186" rx="96" ry="13" fill="#B9887C" opacity="0.55"/>
+      <g transform="translate(112 74) scale(0.86) rotate(-6)">${BANANA({ cor: '#F0DFA8', corCabo: '#8C6B3F' })}</g>
+    </svg>
+    <p class="txt" style="left:6cqi;top:6cqi;font-family:var(--cmc-font-mono);
+       font-size:2.2cqi;letter-spacing:0.08em;color:#8A5F55">UM PRODUTO · UMA JANELA COMERCIAL</p>` },
+
+/* 04 ------------------------------------------------------------------- */
+{ nome: 'Folha de adesivo', de: '"I ❤️ banana milk"',
+  arg: 'O logotipo repetido em ângulo, tom sobre creme, com um acento vermelho. Cobre o quadro inteiro e é o registro mais afetivo — pertence ao cliente, não ao diagnóstico.',
+  html: `<div style="position:absolute;inset:0;background:var(--bm-creme)"></div>
+    ${Array.from({ length: 26 }, (_, i) => {
+      /* Posição pseudoaleatória mas DETERMINÍSTICA: a folha tem que sair igual
+         em toda captura, senão a peça não é comparável entre rodadas. */
+      const h = (i * 2654435761) % 1000 / 1000;
+      const h2 = (i * 40503 + 17) % 1000 / 1000;
+      const x = -8 + ((i % 5) * 24) + h * 12;
+      const y = -6 + (((i / 5) | 0) * 20) + h2 * 10;
+      const r = -16 + h * 32;
+      const heart = i % 5 === 2;
+      return `<div style="position:absolute;left:${x}cqi;top:${y}cqi;
+           transform:rotate(${r}deg);display:flex;align-items:center;gap:0.8cqi;
+           background:var(--bm-creme);padding:0.9cqi 1.2cqi;
+           box-shadow:0 0.3cqi 0.9cqi rgba(0,0,0,0.10)">
+        ${heart ? '<span style="color:var(--bm-vermelho);font-size:6.4cqi;line-height:1">&#10084;</span>' : ''}
+        <span class="bm-word" style="font-size:5.2cqi;color:var(--bm-preto);white-space:nowrap">banana<br>milk</span>
+      </div>`;
+    }).join('')}` },
+
+/* 05 ------------------------------------------------------------------- */
+{ nome: 'Traço pesado com hachura', de: 'Banana desenhada, contorno e hachura',
+  arg: 'Contorno preto, chapado e hachura para volume. Gravura à mão: a única peça da faixa que parece feita por uma pessoa e não gerada — e é isso que ela argumenta.',
+  html: svg('0 0 400 250', `
+    <defs>${HACHURA('h05', -40, 7, 1.9)}</defs>
+    <g transform="translate(70 40) scale(1.36)">
+      ${BANANA({ cor: '#F5D34A', linha: 5, esp: 40, corCabo: '#171717' })}
+      <path d="M 34 46 A 92 92 0 0 0 172 96" fill="none" stroke="url(#h05)"
+            stroke-width="26" stroke-linecap="round" opacity="0.9"/>
+    </g>`, '#F7C948') },
+
+/* 06 ------------------------------------------------------------------- */
+{ nome: 'O personagem, quatro posturas', de: 'Banana de skate',
+  arg: 'Um personagem só, mudando de postura conforme a capacidade: parado, olhando, andando, conduzindo. Ele diz "quem dirige" sem legenda — e some quando o assunto é problema.',
+  html: `<div style="position:absolute;inset:0;background:var(--bm-creme)"></div>
+    <div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr)">
+      ${[{ giro: 0, perna: [3, -3] },
+         { giro: -4, perna: [10, -6] },
+         { giro: -10, perna: [22, -14] },
+         { giro: -14, perna: [30, -20], prancha: true }].map((p, i) => `
+        <div style="position:relative">
+          <svg viewBox="20 10 180 245" style="position:absolute;inset:0;width:100%;height:100%">
+            ${PERSONAGEM(p)}
+          </svg>
+          <span style="position:absolute;left:50%;transform:translateX(-50%);bottom:4cqi;
+                font-family:var(--cmc-font-mono);font-size:1.7cqi;color:#8A8478">
+            0${i + 1}</span>
+        </div>`).join('')}
+    </div>` },
+
+/* 07 ------------------------------------------------------------------- */
+{ nome: 'Quatro sabores como sistema', de: 'Embalagem, um acento por sabor',
+  arg: 'Cada sabor tem a sua cor e cada cor identifica um programa prioritário. A cor deixa de decorar e passa a ser índice — é o gesto de marca mais útil da faixa.',
+  html: `<div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr)">
+      ${[['Original', 'var(--bm-amarelo)', '#171717'],
+         ['Baunilha', 'var(--bm-coral)', '#FFF'],
+         ['Cacau', 'var(--bm-cacau)', '#FFF'],
+         ['Barista', 'var(--bm-azul)', '#FFF']].map(([n, bg, ink], i) => `
+        <div style="background:${bg};position:relative;display:flex;
+             align-items:flex-end;padding:4cqi">
+          <svg viewBox="0 0 120 190" style="position:absolute;left:50%;top:11%;
+               transform:translateX(-50%);width:62%;height:auto">
+            <path d="M 18 26 L 102 26 L 102 176 L 18 176 Z" fill="var(--bm-creme)"/>
+            <path d="M 18 26 L 60 6 L 102 26 Z" fill="#E2DCCB"/>
+            <rect x="18" y="120" width="84" height="30" fill="${bg}"/>
+            <text x="60" y="72" text-anchor="middle" font-family="Inter Tight"
+                  font-weight="700" font-size="19" fill="#171717"
+                  transform="scale(0.8 1) translate(15 0)">banana</text>
+            <text x="60" y="92" text-anchor="middle" font-family="Inter Tight"
+                  font-weight="700" font-size="19" fill="#171717"
+                  transform="scale(0.8 1) translate(15 0)">milk</text>
+          </svg>
+          <span style="font-family:var(--cmc-font-mono);font-size:2cqi;
+                letter-spacing:0.06em;color:${ink}">0${i + 1} · ${n.toUpperCase()}</span>
+        </div>`).join('')}
+    </div>` },
+
+/* 08 ------------------------------------------------------------------- */
+{ nome: 'Tipo como imagem', de: 'Logotipo em escala de cartaz',
+  arg: 'O logotipo em corte fechadíssimo, transbordando os quatro lados. Sem grafismo, sem figura: a palavra é a imagem. Serve de capa e de passagem entre atos.',
+  html: `<div style="position:absolute;inset:0;background:var(--bm-preto)"></div>
+    <p class="txt bm-word" style="left:-4cqi;top:-6cqi;font-size:44cqi;
+       color:var(--bm-amarelo);white-space:nowrap">banana</p>
+    <p class="txt" style="right:5cqi;bottom:5cqi;font-family:var(--cmc-font-mono);
+       font-size:2cqi;color:#8A8478;letter-spacing:0.08em">AI ASSESSMENT &amp; OPPORTUNITIES</p>` },
+
+/* 09 ------------------------------------------------------------------- */
+{ nome: 'Trama densa, tom sobre tom', de: 'Banca de mercado cheia',
+  arg: 'Repetição que cobre tudo, duas cores próximas. Abundância — e é a imagem exata de "quanto ainda está parado no mercado", que é risco disfarçado de fartura.',
+  html: svg('0 0 420 260', Array.from({ length: 30 }, (_, i) => {
+      const col = i % 6, lin = (i / 6) | 0;
+      const x = col * 72 - 20 + (lin % 2) * 34, y = lin * 52 - 10;
+      const r = -22 + ((i * 47) % 44);
+      return `<g transform="translate(${x} ${y}) rotate(${r}) scale(0.42)">
+        ${BANANA({ cor: i % 3 ? '#F5D34A' : '#F7E08A', cabo: false, esp: 40 })}</g>`;
+    }).join(''), '#E8A33D') },
+
+/* 10 ------------------------------------------------------------------- */
+{ nome: 'Geometria da bandeira', de: 'Estrutura da embalagem',
+  arg: 'Losango, círculo e faixa — a estrutura que o estúdio deles tirou da bandeira. Abstrato o bastante para carregar dado sem virar enfeite, e é a ponte natural para diagrama.',
+  html: svg('0 0 400 250', `
+    <rect x="0" y="96" width="400" height="58" fill="#171717"/>
+    <path d="M 200 30 L 330 125 L 200 220 L 70 125 Z" fill="#EFBE2E"/>
+    <circle cx="200" cy="125" r="52" fill="#D9503F"/>
+    <path d="M 148 125 A 52 52 0 0 1 252 125" fill="#F3EFE4"/>`, '#F3EFE4') },
+
+/* 11 ------------------------------------------------------------------- */
+{ nome: 'Partícula, mas em cor', de: 'Correção do erro desta rodada',
+  arg: 'O motor do Camacho com o acento do cliente, sobre o creme compartilhado. A regra monocromática vale para a fundação do Camacho — não para a marca de outra pessoa dentro da peça dela.',
+  canvas: { shape: 'weave', ramp: [0.05, 1], cell: 4, seed: 7,
+            color: '#D9503F', background: '#F3EFE4' } },
+
+/* 12 ------------------------------------------------------------------- */
+{ nome: 'Editorial sóbrio', de: 'O sistema Camacho puro',
+  arg: 'O registro do consultor, sem nenhuma cor do cliente. Está aqui de propósito: com onze peças coloridas ao lado, dá para ver quanto de Camacho a apresentação aguenta antes de deixar de ser sobre a Banana Milk.',
+  canvas: { shape: 'intervalo', ramp: [1, 1], cell: 4, seed: 13, texture: 'hachura',
+            color: '#FFFFFF', background: '#000000',
+            opts: { vaos: [[0.08, 0.62]], marcas: [[0.08, 0.25, 0.42, 0.62]], alt: 0.34 } } },
+];
+
+const faixa = document.getElementById('faixa');
+faixa.innerHTML = PECAS.map((p, i) => `
+  <figure class="pc" style="margin:0">
+    <div class="pc__quadro" data-i="${i}">${p.html || '<canvas aria-hidden="true"></canvas>'}</div>
+    <figcaption class="pc__cap">
+      <span class="pc__n">${String(i + 1).padStart(2, '0')}</span>
+      <p><strong>${p.nome}</strong>${p.arg}
+        <span class="pc__de"><br>De: ${p.de}</span></p>
+    </figcaption>
+  </figure>`).join('');
+
+function desenhar() {
+  PECAS.forEach((p, i) => {
+    if (!p.canvas) return;
+    const cv = faixa.querySelector(`.pc__quadro[data-i="${i}"] canvas`);
+    if (cv) render(cv, p.canvas);
+  });
+}
+desenhar();
+addEventListener('resize', () => { clearTimeout(window.__r); window.__r = setTimeout(desenhar, 160); });
+document.fonts?.ready.then(desenhar);
+document.documentElement.dataset.faixaPronta = '1';
+</script>
+</body>
+</html>
