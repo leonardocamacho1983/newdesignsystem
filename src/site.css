@@ -571,3 +571,51 @@
   }
   .dk__slide:last-child { break-after: auto; }
 }
+
+/* ==========================================================================
+   Diagramas — o estado de beat, e nada além disso
+   --------------------------------------------------------------------------
+   O SVG de src/diagramas.js emite o desenho INTEIRO, com data-b em cada
+   elemento. Quem muda o estado é noBeat(), que só troca classe. Toda a
+   animação está aqui, e isso não é organização: é o que faz o estado final ser
+   alcançável direto — voltar um passo, End, redimensionar, imprimir e
+   prefers-reduced-motion caem no mesmo lugar sem passar por transição nenhuma.
+   ========================================================================== */
+.dg { display: block; width: 100%; height: auto; max-height: 100%;
+      font-family: var(--cmc-font-sans); }
+.dg .dg__rot { font-family: var(--cmc-font-mono); letter-spacing: 0.02em; }
+.dg .dg__txt { letter-spacing: -0.01em; }
+
+/* O estado. Elemento sem data-b é permanente: moldura, eixo, o que existe
+   sempre. Quem tem data-b nasce fora e entra. */
+.dg [data-b] { transition: opacity 420ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1); }
+.dg .dg--off { opacity: 0; }
+.dg .dg--on { opacity: 1; }
+
+/* Entradas por tipo de marca. Traço entra desenhando-se; texto entra subindo.
+   Deslocamento pequeno de propósito: 6px, não 24 — o desenho é o argumento, e
+   um texto que voa distrai de um número que é real. */
+.dg .dg__txt.dg--off, .dg .dg__rot.dg--off { transform: translateY(6px); }
+.dg .dg__deg.dg--off, .dg .dg__col.dg--off, .dg .dg__faixa.dg--off { stroke-dasharray: 0; }
+
+/* Exclusão: no beat 3 a linha que não entrou no subtotal dá um passo para
+   fora e para baixo, e o colchete alto some. O passo é o argumento inteiro. */
+.dg[data-dg="exc"][data-beat="3"] .dg__fora,
+.dg[data-dg="exc"][data-beat="4"] .dg__fora { transform: translate(28px, 34px); }
+.dg .dg__fora { transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Assentamento: o único gesto de ênfase do Ato 3. Opacidade e peso — nunca
+   cor, nunca brilho. A cena 20 não assenta ninguém; quem assenta é a 22. */
+/* Precisa vencer .dg .dg--on, que também é opacidade em duas classes. Depender
+   da ordem de declaração para isso funciona até alguém reordenar o arquivo. */
+.dg .dg__linha--recua.dg--on { opacity: 0.34; }
+.dg .dg__linha--assenta.dg--on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dg [data-b], .dg .dg__fora { transition: none; }
+}
+
+@media print {
+  .dg [data-b], .dg .dg__fora { transition: none; }
+  .dg .dg--off { opacity: 0; }
+}

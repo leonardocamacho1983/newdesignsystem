@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratório de diagramas · Banana Milk</title>
+<meta name="description" content="Os cinco diagramas do assessment, cada um em cada estado de beat, nos dois campos. Folha de contato — não é peça de entrega.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/site.css">
+<style>
+/* Esta folha vive AQUI e não em src/site.css de propósito: é bancada, some
+   quando as cenas estiverem de pé. Regra de laboratório não deve sobreviver
+   ao laboratório. */
+body { background: var(--cmc-paper); color: var(--cmc-black); }
+.lb { max-width: 1500px; margin: 0 auto; padding: 6vh 4vw 12vh; }
+.lb__cab { max-width: 62ch; margin-bottom: 8vh; }
+.lb__cab h1 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: var(--cmc-w-light);
+              letter-spacing: -0.03em; margin: 0 0 1rem; }
+.lb__cab p { font-size: 1.05rem; line-height: 1.6; color: var(--cmc-text-muted); margin: 0 0 0.8rem; }
+.lb__sec { margin-bottom: 9vh; }
+.lb__sec > h2 { font-size: 1.5rem; font-weight: var(--cmc-w-light); letter-spacing: -0.02em;
+                margin: 0 0 0.4rem; }
+.lb__sec > p { max-width: 68ch; font-size: 0.95rem; line-height: 1.6;
+               color: var(--cmc-text-muted); margin: 0 0 2rem; }
+.lb__prova { display: inline-block; font-family: var(--cmc-font-mono); font-size: 0.72rem;
+             letter-spacing: 0.06em; text-transform: uppercase; padding: 0.3em 0.7em;
+             border: 1px solid currentColor; border-radius: 3px; margin-bottom: 1.4rem; }
+.lb__tiras { display: grid; gap: 2px; background: color-mix(in srgb, currentColor 12%, transparent); }
+.lb__tira { display: grid; gap: 2px; grid-template-columns: repeat(var(--n, 4), 1fr); }
+.lb__cel { position: relative; padding: 22px 20px 34px; }
+.lb__cel--papel { background: var(--cmc-paper); color: var(--cmc-black); }
+.lb__cel--escuro { background: var(--cmc-black); color: var(--cmc-white); }
+.lb__b { position: absolute; left: 20px; bottom: 12px; font-family: var(--cmc-font-mono);
+         font-size: 0.7rem; opacity: 0.5; }
+/* O tamanho real da cena: a arte de um slide 16:9 ocupa no máximo esta caixa.
+   Se o diagrama não couber aqui, ele não cabe na cena — é a medida que importa. */
+.lb__cel .dg { max-height: 300px; }
+.lb__cel--real { padding: 0; }
+.lb__cel--real .dg { max-height: none; }
+.lb__real { display: grid; grid-template-columns: 1fr; gap: 2px; }
+.lb__quadro { aspect-ratio: 16/9; display: grid; place-items: center; padding: 3% 4%; }
+.lb__quadro .dg { width: auto; max-width: 100%; max-height: 100%; }
+</style>
+</head>
+<body>
+
+<main class="lb">
+  <header class="lb__cab">
+    <h1>Laboratório de diagramas</h1>
+    <p>Os cinco diagramas do assessment da Banana Milk, cada um em cada estado de
+       beat, nos dois campos, antes de existir cena nenhuma. Nove das vinte e três
+       cenas dependem deles.</p>
+    <p>Isto não é peça de entrega. É a bancada onde eu descubro que um desenho não
+       aguenta o argumento — e o lugar de descobrir isso é aqui, não na décima cena,
+       com nove cenas construídas em volta.</p>
+  </header>
+  <div id="lab"></div>
+</main>
+
+<script type="module">
+import { CENAS } from './src/deck23.js';
+import { exclusao, escada, nucleo, nucleoInvertido, quadrante, comparacao, noBeat, BEATS }
+  from './src/diagramas.js';
+
+const cena = (n) => CENAS.find((c) => c.n === n);
+const c5 = cena(5), c10 = cena(10), c11 = cena(11), c14 = cena(14),
+      c15 = cena(15), c19 = cena(19), c20 = cena(20);
+
+/* Cada verbete diz o que o desenho TEM DE PROVAR. É o critério de reprovação:
+   se olhar o desenho e a prova não estiver de pé, o diagrama volta. */
+const PECAS = [
+  { id: 'exclusao', cena: '5', campo: 'papel', beats: BEATS.exclusao,
+    titulo: 'Exclusão',
+    prova: 'pertencer, nunca somar',
+    nota: 'O texto da cena diz que −R$ 636,8 mil e R$ 222,9 mil não podem ser somados nem '
+        + 'subtraídos. Colchetes são notação de conjunto; não há eixo, escala nem sinal de '
+        + 'operação em lugar nenhum. Teste: isto sugere que 636,8 menos 222,9 dá alguma coisa?',
+    faz: () => exclusao(c5, 'exc') },
+
+  { id: 'escada', cena: '10', campo: 'papel', beats: BEATS.escada,
+    titulo: 'Escada',
+    prova: 'ordem sem cronograma',
+    nota: 'A fala diz que não é sequência rígida de projetos, e sim de capacidades. Por isso '
+        + 'não há data, trimestre nem eixo de tempo. As definições de cada degrau ficam na '
+        + 'coluna de HTML da cena: frase dentro de desenho vira ruído.',
+    faz: () => escada(c10.degraus, 'esc') },
+
+  { id: 'nucleo', cena: '11', campo: 'escuro', beats: BEATS.nucleo,
+    titulo: 'Núcleo',
+    prova: 'uma fundação, cinco usos',
+    nota: 'Metade do argumento comercial. A outra metade é o diagrama seguinte, e o bloco de '
+        + 'fundação tem de ser literalmente o mesmo retângulo nos dois.',
+    faz: () => nucleo(c11.tabela.linhas, 'nuc') },
+
+  { id: 'nucleo-invertido', cena: '19', campo: 'escuro', beats: BEATS.nucleoInvertido,
+    titulo: 'Núcleo invertido',
+    prova: 'seis fundações onde havia uma',
+    nota: 'O desperdício não é dito, é desenhado. Se o bloco de fundação daqui não for '
+        + 'idêntico ao da cena 11, a inversão não lê como inversão e o slide perde a razão de existir.',
+    faz: () => nucleoInvertido(c19.frentes, c19.valor, c19.valorRot, c19.nota, 'nvi') },
+
+  { id: 'quadrante', cena: '14', campo: 'escuro', beats: BEATS.quadrante,
+    titulo: 'Quadrante vazio',
+    prova: 'os dois eixos antes dos quatro nomes',
+    faz: () => quadrante(c14, 'qd') },
+
+  { id: 'quadrante-cheio', cena: '15', campo: 'escuro', beats: BEATS.quadranteCheio,
+    titulo: 'Quadrante povoado',
+    prova: 'um objeto em dois estados, não dois slides',
+    nota: 'É o mesmo quadrante da cena 14 recebendo as dezesseis oportunidades, um grupo por '
+        + 'beat. Se virar lista, a cena 14 não vale o tempo que custa. O risco de legibilidade '
+        + 'mora aqui, e é ele que dimensiona o modo matriz.',
+    /* c14, não c15: os eixos e os quatro nomes são os MESMOS objetos. A cena 15
+       não redeclara nenhum deles, e é exatamente essa a tese das duas cenas. */
+    faz: () => quadrante(c14, 'qdc', c15.portfolio) },
+
+  { id: 'comparacao', cena: '20', campo: 'papel', beats: BEATS.comparacao,
+    titulo: 'Comparação',
+    prova: 'a diferença, sem escala comum',
+    nota: 'Um total de projeto contra dois valores mensais: unidades diferentes. Barra ou eixo '
+        + 'compartilhado inventaria uma comparação que os números não sustentam.',
+    faz: () => comparacao(c20.caminhos, c20.fecho, 'cmp') },
+
+  { id: 'assentamento', cena: '22', campo: 'papel', beats: BEATS.comparacao,
+    titulo: 'Assentamento',
+    prova: 'o único gesto de ênfase do Ato 3',
+    nota: 'A mesma comparação com a linha do meio assentada. Opacidade e peso — nunca cor, '
+        + 'nunca brilho. A cena 21 não pode pré-destacar ninguém, ou a 22 fica sem função.',
+    /* 2, não 1: a recomendada é "Programa integrado", que é a TERCEIRA linha.
+       Na primeira rodada eu assentei a do meio por reflexo e a peça recomendou
+       montar equipe interna. "O do meio" é a coluna do meio da tabela de
+       níveis da cena 21 — outra cena, outro objeto. */
+    faz: () => comparacao(c20.caminhos, c20.fecho, 'ass', 2) },
+];
+
+const alvo = document.getElementById('lab');
+
+for (const p of PECAS) {
+  const sec = document.createElement('section');
+  sec.className = 'lb__sec';
+  sec.innerHTML = `<h2>${p.titulo} · cena ${p.cena}</h2>`
+    + `<span class="lb__prova">prova: ${p.prova}</span>`
+    + (p.nota ? `<p>${p.nota}</p>` : '');
+
+  /* A tira: um estado por beat, lado a lado, no campo em que a cena vive. */
+  const tiras = document.createElement('div');
+  tiras.className = 'lb__tiras';
+  const tira = document.createElement('div');
+  tira.className = 'lb__tira';
+  tira.style.setProperty('--n', p.beats);
+  for (let b = 1; b <= p.beats; b++) {
+    const cel = document.createElement('div');
+    cel.className = `lb__cel lb__cel--${p.campo}`;
+    cel.innerHTML = p.faz() + `<span class="lb__b">beat ${b}/${p.beats}</span>`;
+    noBeat(cel.querySelector('.dg'), b);
+    tira.appendChild(cel);
+  }
+  tiras.appendChild(tira);
+
+  /* A segunda tira é o MESMO desenho no campo oposto. O contraste dos rótulos
+     de serviço muda de comportamento entre papel e escuro, e a única forma de
+     saber é olhar os dois. */
+  const oposto = p.campo === 'papel' ? 'escuro' : 'papel';
+  const tira2 = document.createElement('div');
+  tira2.className = 'lb__tira';
+  tira2.style.setProperty('--n', p.beats);
+  for (let b = 1; b <= p.beats; b++) {
+    const cel = document.createElement('div');
+    cel.className = `lb__cel lb__cel--${oposto}`;
+    cel.innerHTML = p.faz() + `<span class="lb__b">${oposto} · ${b}</span>`;
+    noBeat(cel.querySelector('.dg'), b);
+    tira2.appendChild(cel);
+  }
+  tiras.appendChild(tira2);
+
+  /* E o estado final no quadro real, 16:9, com a folga que a cena vai dar. Se
+     não couber aqui, não cabe na cena — é a medida que importa, e é a que a
+     versão anterior desta apresentação não fez em 22 de 23 telas. */
+  const real = document.createElement('div');
+  real.className = 'lb__real';
+  const q = document.createElement('div');
+  q.className = `lb__quadro lb__cel--${p.campo}`;
+  q.innerHTML = p.faz();
+  noBeat(q.querySelector('.dg'), p.beats);
+  real.appendChild(q);
+  tiras.appendChild(real);
+
+  sec.appendChild(tiras);
+  alvo.appendChild(sec);
+}
+
+document.documentElement.dataset.pronto = '1';
+</script>
+
+</body>
+</html>

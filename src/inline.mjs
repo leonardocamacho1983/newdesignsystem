@@ -35,6 +35,8 @@ export function modulos() {
     kv: read('src/kv.js').replace(/^export /gm, ''),
     direcao: read('src/direcao.js').replace(/^export /gm, ''),
     apresentacao: read('src/apresentacao.js').replace(/^export /gm, ''),
+    deck23: read('src/deck23.js').replace(/^export /gm, ''),
+    diagramas: read('src/diagramas.js').replace(/^export /gm, ''),
   };
 
   /* Trava: um módulo embutido pela metade não emite erro nenhum — a página sai,
@@ -47,6 +49,9 @@ export function modulos() {
     ['src/kv.js', m.kv, ['const FORMATOS', 'const KVS', 'function ajustar']],
     ['src/direcao.js', m.direcao, ['const REGISTROS', 'function ajustarRegistro']],
     ['src/apresentacao.js', m.apresentacao, ['const PARADAS', 'const SECOES', 'function arteNoBeat']],
+    ['src/deck23.js', m.deck23, ['const ATOS', 'const CENAS', 'const PERSONAGEM_EM']],
+    ['src/diagramas.js', m.diagramas, ['function noBeat', 'function exclusao', 'function escada',
+                                       'function nucleo', 'function quadrante', 'function comparacao']],
   ];
   for (const [nome, texto, marcas] of INTEIRO) {
     const faltando = marcas.filter((x) => !texto.includes(x));
@@ -72,7 +77,12 @@ export function embutirModulos(html, m = modulos()) {
     .replace(/import \{[^}]+\} from '\.\/src\/brand\.js';\n?/, m.brand)
     .replace(/import \{[^}]+\} from '\.\/src\/kv\.js';\n?/, m.kv)
     .replace(/import \{[^}]+\} from '\.\/src\/direcao\.js';\n?/, m.direcao)
-    .replace(/import \{[^}]+\} from '\.\/src\/apresentacao\.js';\n?/, m.apresentacao);
+    .replace(/import \{[^}]+\} from '\.\/src\/apresentacao\.js';\n?/, m.apresentacao)
+    /* deck23 antes de diagramas: o import de diagramas pode ocupar duas linhas
+       e a regex de cada um só casa o seu próprio caminho, então a ordem aqui é
+       só legibilidade — o que NÃO pode faltar é a entrada, nos três pontos. */
+    .replace(/import \{[^}]+\} from '\.\/src\/deck23\.js';\n?/, m.deck23)
+    .replace(/import \{[\s\S]*?\}\s*\n?\s*from '\.\/src\/diagramas\.js';\n?/, m.diagramas);
 }
 
 /**

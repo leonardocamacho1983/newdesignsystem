@@ -29,6 +29,10 @@ const PAGES = [
   { src: 'bananamilk-documento.html', out: 'camacho-bananamilk-doc', url: 'https://claude.ai/code/artifact/af0c7887-e9d6-4d96-a324-f236e3379d43' },
   { src: 'foto-lab.html',   out: 'camacho-foto-lab',   url: 'https://claude.ai/code/artifact/ff539933-31cf-4694-8aca-44680536558e' },
   { src: 'direcao-bananamilk.html', out: 'camacho-direcao-bm', url: 'https://claude.ai/code/artifact/55c53b64-5b8a-47ba-8b29-7e1861a023bd' },
+  /* Bancada, não entrega: sai do repositório quando as 23 cenas estiverem de
+     pé. Entra em PAGES mesmo assim, porque é aqui que os dois guards de
+     autocontenção examinam src/diagramas.js e src/deck23.js pela primeira vez. */
+  { src: 'diagramas-lab.html', out: 'camacho-diagramas-lab', url: '' },
 ];
 
 /* Primeiro os tokens: o JSON é derivado do CSS, e a checagem de fechamento

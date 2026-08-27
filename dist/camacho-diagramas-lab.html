@@ -1,0 +1,2136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratório de diagramas · Banana Milk</title>
+<meta name="description" content="Os cinco diagramas do assessment, cada um em cada estado de beat, nos dois campos. Folha de contato — não é peça de entrega.">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwMDAiLz48cGF0aCBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zMiAxMmEyMCAyMCAwIDEgMCAwIDQwIDIwIDIwIDAgMCAwIDE5LjYtMTZINDEuMkExMC41IDEwLjUgMCAxIDEgNDEuMiAyOGgxMC40QTIwIDIwIDAgMCAwIDMyIDEyWiIvPjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   Camacho — Design Tokens
+   Extraídos da exploração de identidade visual (moodboard, deck, pôster).
+   Fonte única de verdade. Nada de valores soltos nos componentes.
+   ========================================================================== */
+
+:root {
+  /* --- Cor ---------------------------------------------------------------
+     A identidade é monocromática por convicção: preto puro, branco puro e
+     uma escada de cinzas neutros. Sem cor de destaque — o destaque é o
+     contraste e a densidade do dither. */
+  --cmc-black:        #000000;   /* superfícies primárias, tinta */
+  --cmc-ink:          #0A0A0A;   /* preto de tela, evita smear em OLED */
+  --cmc-steel:        #3F3F3F;   /* painel escuro secundário (specimen tipográfico) */
+  --cmc-grey-70:      #6E6E6E;
+  --cmc-grey-55:      #8C8C8C;   /* numerais de processo, kickers */
+  --cmc-grey-35:      #B5B5B5;
+  --cmc-grey-20:      #D6D6D6;   /* réguas, bordas */
+  --cmc-canvas:       #E4E4E4;   /* fundo de moodboard / plano de fundo institucional */
+  --cmc-paper:        #F2F0EE;   /* papel do pôster, levemente quente */
+  --cmc-white:        #FFFFFF;
+
+  /* Papéis semânticos — use estes nos componentes */
+  --cmc-bg:           var(--cmc-canvas);
+  --cmc-surface:      var(--cmc-white);
+  --cmc-surface-inv:  var(--cmc-black);
+  --cmc-text:         var(--cmc-black);
+  --cmc-text-muted:   var(--cmc-grey-55);
+  --cmc-text-inv:     var(--cmc-white);
+  --cmc-rule:         var(--cmc-grey-20);
+  --cmc-particle:     var(--cmc-white);   /* dither sobre preto */
+  --cmc-particle-inv: var(--cmc-black);   /* dither sobre claro */
+
+  /* --- Tipografia --------------------------------------------------------
+     Títulos em Light com tracking negativo: é o que dá o ar de engenharia
+     calma que a marca precisa.
+     Três vozes, um trabalho cada — e a regra que impede virar mingau:
+     nunca competem no mesmo bloco.
+       sistema   sustenta a marca e a interface, e amarra as outras duas
+       editorial diagnóstico, artigo, material de formação — o lado humano
+       medição   indicador, nível, rótulo de dado — o lado técnico */
+  --cmc-font: "Inter Tight", "Inter", ui-sans-serif, system-ui,
+              -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --cmc-font-serif: "Source Serif 4", ui-serif, Georgia, "Times New Roman", serif;
+  --cmc-font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --cmc-w-light:  300;
+  --cmc-w-book:   400;
+  --cmc-w-medium: 500;
+
+  /* Escala fluida (min → max entre 400px e 1600px) */
+  --cmc-fs-display: clamp(3.5rem, 1.5rem + 8vw, 8rem);
+  --cmc-fs-title:   clamp(2.25rem, 1.2rem + 4.2vw, 4.5rem);
+  --cmc-fs-h1:      clamp(1.75rem, 1.1rem + 2.6vw, 3rem);
+  --cmc-fs-h2:      clamp(1.375rem, 1rem + 1.5vw, 2rem);
+  --cmc-fs-lead:    clamp(1.0625rem, 0.95rem + 0.6vw, 1.375rem);
+  --cmc-fs-body:    1rem;
+  --cmc-fs-small:   0.8125rem;
+  --cmc-fs-micro:   0.6875rem;
+
+  --cmc-lh-tight:   0.94;   /* display */
+  --cmc-lh-snug:    1.08;   /* títulos */
+  --cmc-lh-normal:  1.45;   /* texto corrido */
+
+  --cmc-tr-display: -0.035em;
+  --cmc-tr-title:   -0.025em;
+  --cmc-tr-body:    -0.01em;
+  --cmc-tr-micro:   0.02em;
+
+  /* --- Espaçamento (base 4) --------------------------------------------- */
+  --cmc-sp-1:  0.25rem;  --cmc-sp-2:  0.5rem;   --cmc-sp-3: 0.75rem;
+  --cmc-sp-4:  1rem;     --cmc-sp-5:  1.5rem;   --cmc-sp-6: 2rem;
+  --cmc-sp-7:  3rem;     --cmc-sp-8:  4rem;     --cmc-sp-9: 6rem;
+  --cmc-sp-10: 8rem;
+
+  --cmc-gutter: clamp(1.25rem, 3vw, 3rem);
+  --cmc-measure: 62ch;          /* medida máxima de leitura */
+  --cmc-max: 1440px;
+
+  /* --- Forma -------------------------------------------------------------
+     Raio grande e generoso, herdado do squircle da marca. */
+  --cmc-r-mark:  22%;      /* proporcional ao lado — assinatura da marca */
+  --cmc-r-card:  14px;
+  --cmc-r-panel: 20px;
+  --cmc-r-pill:  999px;
+
+  --cmc-border: 1px solid var(--cmc-rule);
+
+  /* Altura única de controle: é o que faz botão e tag alinharem lado a lado. */
+  --cmc-control-h: 2.5rem;
+
+  /* --- Elevação ----------------------------------------------------------
+     Quase inexistente. A hierarquia vem de campo preto vs. campo claro. */
+  --cmc-shadow-0: none;
+  --cmc-shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+  --cmc-shadow-2: 0 2px 4px rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.14);
+
+  /* --- Níveis de maturidade ----------------------------------------------
+     A marca é monocromática por argumento, não só por estética: num sistema
+     que precisa comunicar NÍVEL (maturidade, prioridade, risco), o nível é
+     codificado por densidade de partícula, não por matiz. Uma cor de destaque
+     criaria um segundo sistema concorrendo com o motor gráfico.
+     Estes valores alimentam `ramp` do dither e a opacidade de componentes. */
+  --cmc-level-1: 0.10;   /* lacuna grande — quase nada instalado */
+  --cmc-level-2: 0.30;
+  --cmc-level-3: 0.52;
+  --cmc-level-4: 0.76;
+  --cmc-level-5: 1.00;   /* capacidade instalada e sustentada */
+
+  /* --- Dither (o motor gráfico) ------------------------------------------
+     Estes tokens governam o grafismo de partículas. */
+  --cmc-cell: 4px;              /* aresta da célula da grade de partículas */
+  --cmc-dither-min: 0.02;       /* densidade na ponta "ruído" */
+  --cmc-dither-max: 1;          /* densidade na ponta "sinal" */
+  --cmc-dither-jitter: 0.3;     /* deslocamento aleatório dentro da célula */
+
+  /* --- Movimento ---------------------------------------------------------
+     Uma curva só. Tudo resolve de ruído para forma. */
+  --cmc-ease: cubic-bezier(.2,.7,.2,1);
+  --cmc-dur-fast: 180ms;
+  --cmc-dur-base: 420ms;
+  --cmc-dur-slow: 900ms;
+  --cmc-dur-resolve: 1600ms;    /* revelação do dither */
+
+  --cmc-z-base: 0; --cmc-z-sticky: 100; --cmc-z-overlay: 500;
+}
+
+/* Campo escuro: inverte os papéis semânticos sem tocar na paleta. */
+.cmc-inverse,
+[data-cmc-field="dark"] {
+  --cmc-bg:         var(--cmc-black);
+  --cmc-surface:    var(--cmc-black);
+  --cmc-text:       var(--cmc-white);
+  --cmc-text-muted: var(--cmc-grey-55);
+  --cmc-rule:       #2A2A2A;
+  --cmc-particle:   var(--cmc-white);
+}
+
+</style>
+<style>
+/* ==========================================================================
+   Camacho — Camada de componentes
+   Depende de tokens/tokens.css. Nenhum valor mágico aqui.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cmc-bg);
+  color: var(--cmc-text);
+  font-family: var(--cmc-font);
+  font-size: var(--cmc-fs-body);
+  font-weight: var(--cmc-w-book);
+  line-height: var(--cmc-lh-normal);
+  letter-spacing: var(--cmc-tr-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Tipografia ---------------------------------------------------------- */
+.cmc-display, .cmc-title, .cmc-h1, .cmc-h2 {
+  font-weight: var(--cmc-w-light);
+  margin: 0;
+  text-wrap: balance;
+}
+.cmc-display { font-size: var(--cmc-fs-display); line-height: var(--cmc-lh-tight); letter-spacing: var(--cmc-tr-display); }
+.cmc-title   { font-size: var(--cmc-fs-title);   line-height: var(--cmc-lh-tight); letter-spacing: var(--cmc-tr-display); }
+.cmc-h1      { font-size: var(--cmc-fs-h1);      line-height: var(--cmc-lh-snug);  letter-spacing: var(--cmc-tr-title); }
+.cmc-h2      { font-size: var(--cmc-fs-h2);      line-height: var(--cmc-lh-snug);  letter-spacing: var(--cmc-tr-title); }
+.cmc-lead    { font-size: var(--cmc-fs-lead);    line-height: 1.3; font-weight: var(--cmc-w-book); margin: 0; }
+.cmc-body    { max-width: var(--cmc-measure); margin: 0; }
+.cmc-body--justified { text-align: justify; hyphens: auto; }
+/* Corpo do slide: empurrado para a base, para que slides vizinhos de alturas
+   diferentes alinhem o rodapé. Justificado só quando a coluna é larga o
+   bastante — abaixo disso o justificado abre rios e piora a leitura. */
+.cmc-slide__body { margin: 0; margin-top: auto; }
+@container (min-width: 26rem) {
+  .cmc-slide__body { text-align: justify; hyphens: auto; }
+}
+.cmc-small   { font-size: var(--cmc-fs-small); color: var(--cmc-text-muted); }
+.cmc-micro {
+  font-size: var(--cmc-fs-micro);
+  letter-spacing: var(--cmc-tr-micro);
+  text-transform: uppercase;
+  color: var(--cmc-text-muted);
+  font-weight: var(--cmc-w-medium);
+}
+.cmc-muted { color: var(--cmc-text-muted); }
+
+/* --- As três vozes -------------------------------------------------------
+   Cada uma com um trabalho declarado. Elas se sucedem dentro de um bloco (o
+   sistema abre, a editorial desenvolve), mas nunca disputam o mesmo papel:
+   rótulo e número não vão em serifada, texto longo não vai em mono, e título
+   de marca é sempre a voz de sistema. */
+.cmc-editorial {
+  font-family: var(--cmc-font-serif);
+  font-size: var(--cmc-fs-lead);
+  line-height: 1.6;
+  letter-spacing: 0;
+  max-width: var(--cmc-measure);
+  margin: 0;
+}
+.cmc-editorial--lead { font-size: var(--cmc-fs-h2); line-height: 1.35; }
+.cmc-measure {
+  font-family: var(--cmc-font-mono);
+  font-size: var(--cmc-fs-small);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.cmc-measure--big {
+  font-size: var(--cmc-fs-h1);
+  font-weight: var(--cmc-w-book);
+  line-height: 1;
+}
+
+/* --- Marca ---------------------------------------------------------------
+   O lockup é mark + wordmark com um espaço fixo proporcional à altura.
+   Área de proteção = metade da altura da marca em todos os lados. */
+.cmc-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34em;
+  font-size: var(--lockup-size, 2rem);
+  line-height: 1;
+  color: inherit;          /* herda o campo; nunca fixa preto sobre preto */
+  text-decoration: none;
+}
+.cmc-lockup__mark { width: 1em; height: 1em; flex: none; display: block; }
+/* O glifo sem o squircle ocupa menos da caixa, então compensa opticamente
+   para pesar igual ao símbolo completo ao lado do wordmark. */
+.cmc-lockup--glyph .cmc-lockup__mark { width: 1.14em; height: 1.14em; }
+.cmc-lockup__word {
+  font-size: 1em;
+  font-weight: var(--cmc-w-medium);
+  letter-spacing: -0.035em;
+}
+.cmc-lockup--sm { --lockup-size: 1.125rem; }
+.cmc-lockup--lg { --lockup-size: clamp(2.5rem, 6vw, 5rem); }
+
+/* --- Estrutura ----------------------------------------------------------- */
+.cmc-shell { max-width: var(--cmc-max); margin-inline: auto; padding-inline: var(--cmc-gutter); }
+.cmc-section { padding-block: var(--cmc-sp-9); }
+.cmc-rule { border: 0; border-top: var(--cmc-border); margin: 0; }
+.cmc-grid { display: grid; gap: var(--cmc-sp-5); }
+.cmc-grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); }
+.cmc-grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+
+/* Cabeçalho de seção: rótulo à esquerda, numeral à direita. */
+.cmc-section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--cmc-sp-4); padding-bottom: var(--cmc-sp-3);
+  border-bottom: var(--cmc-border); margin-bottom: var(--cmc-sp-6);
+}
+
+/* --- Slide de processo ---------------------------------------------------
+   O componente-assinatura do deck: título + numeral, painel preto com o
+   grafismo, linha de chamada, kicker à direita e corpo em cinza. */
+.cmc-slide {
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-r-card);
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  display: flex; flex-direction: column; gap: var(--cmc-sp-4);
+  container-type: inline-size;
+}
+.cmc-slide__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cmc-sp-4); }
+/* Título e numeral escalam com a LARGURA DO CARD, não da viewport: é o que
+   impede um título longo ("Transform") de encostar no numeral. */
+.cmc-slide .cmc-title,
+.cmc-slide .cmc-slide__num { font-size: clamp(1.5rem, 13cqi, 3.25rem); }
+.cmc-slide .cmc-title { min-width: 0; overflow-wrap: break-word; }
+.cmc-slide .cmc-slide__num { flex: none; }
+.cmc-slide__num {
+  font-size: var(--cmc-fs-title);
+  font-weight: var(--cmc-w-light);
+  letter-spacing: var(--cmc-tr-display);
+  color: var(--cmc-grey-35);
+  line-height: var(--cmc-lh-tight);
+  font-variant-numeric: tabular-nums;
+}
+.cmc-slide__stage {
+  background: var(--cmc-black);
+  aspect-ratio: 16 / 6;
+  width: 100%;
+  color: var(--cmc-particle);   /* o canvas herda daqui */
+  overflow: hidden;
+}
+.cmc-slide__stage canvas { display: block; width: 100%; height: 100%; }
+.cmc-slide__caption { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cmc-sp-4); }
+@container (max-width: 420px) {
+  .cmc-slide__caption { flex-direction: column; gap: var(--cmc-sp-1); }
+}
+
+/* --- Palco de grafismo genérico ------------------------------------------ */
+.cmc-stage {
+  position: relative;
+  background: var(--cmc-black);
+  color: var(--cmc-particle);
+  border-radius: var(--cmc-r-panel);
+  overflow: hidden;
+  aspect-ratio: var(--stage-ar, 16 / 9);
+}
+.cmc-stage--light { background: var(--cmc-paper); color: var(--cmc-particle-inv); }
+.cmc-stage--flat { border-radius: 0; }
+.cmc-stage--bare { background: transparent; }
+.cmc-stage canvas { display: block; width: 100%; height: 100%; }
+
+/* --- Card ---------------------------------------------------------------- */
+.cmc-card {
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-r-card);
+  padding: var(--cmc-sp-5);
+  display: flex; flex-direction: column; gap: var(--cmc-sp-3);
+}
+.cmc-card--outline { background: transparent; border: var(--cmc-border); }
+
+/* --- Botão ---------------------------------------------------------------
+   Pílula. Sólida em preto, ou contorno. Sem gradiente, nunca. */
+.cmc-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--cmc-sp-2);
+  min-height: var(--cmc-control-h); padding: 0 1.35em;
+  border-radius: var(--cmc-r-pill);
+  border: 1px solid transparent;
+  background: var(--cmc-black); color: var(--cmc-white);
+  font: inherit; font-weight: var(--cmc-w-medium); font-size: var(--cmc-fs-small);
+  letter-spacing: var(--cmc-tr-body);
+  cursor: pointer; text-decoration: none;
+  transition: transform var(--cmc-dur-fast) var(--cmc-ease),
+              background-color var(--cmc-dur-fast) var(--cmc-ease),
+              color var(--cmc-dur-fast) var(--cmc-ease);
+}
+.cmc-btn:hover { transform: translateY(-1px); }
+.cmc-btn:active { transform: translateY(0); }
+.cmc-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+/* O contorno herda a cor do campo em que está: assim o mesmo botão funciona
+   sobre branco e sobre preto sem variante extra. */
+.cmc-btn--ghost {
+  background: transparent; color: inherit;
+  border-color: color-mix(in srgb, currentColor 32%, transparent);
+}
+.cmc-btn--ghost:hover { border-color: currentColor; }
+.cmc-btn--inverse { background: var(--cmc-white); color: var(--cmc-black); }
+
+/* --- Tag / pílula informativa -------------------------------------------- */
+.cmc-tag {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--cmc-sp-2);
+  min-height: var(--cmc-control-h); padding: 0 0.95em;
+  border-radius: var(--cmc-r-pill);
+  border: 1px solid currentColor;
+  font-size: var(--cmc-fs-micro); letter-spacing: var(--cmc-tr-micro);
+  text-transform: uppercase; font-weight: var(--cmc-w-medium);
+  text-decoration: none; color: inherit;
+}
+a.cmc-tag:hover { background: currentColor; }
+a.cmc-tag:hover > * { color: var(--cmc-bg); }
+
+/* Fila de controles: botões e tags dividem a mesma altura e alinham. */
+.cmc-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cmc-sp-2); }
+.cmc-controls--split { justify-content: space-between; }
+
+/* --- Swatches ------------------------------------------------------------ */
+.cmc-swatch { display: flex; flex-direction: column; gap: var(--cmc-sp-2); }
+.cmc-swatch__chip {
+  aspect-ratio: 3 / 2; border-radius: var(--cmc-r-card);
+  border: var(--cmc-border); background: var(--chip);
+}
+.cmc-swatch__meta { display: flex; justify-content: space-between; gap: var(--cmc-sp-2); }
+
+/* --- Pôster / peça de campanha ------------------------------------------- */
+.cmc-poster {
+  background: var(--cmc-paper); color: var(--cmc-black);
+  aspect-ratio: 3 / 4; padding: clamp(1rem, 3cqi, 2.25rem);
+  display: grid; grid-template-rows: auto 1fr auto; gap: var(--cmc-sp-4);
+  container-type: inline-size; box-shadow: var(--cmc-shadow-2);
+}
+.cmc-poster__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cmc-sp-4); }
+.cmc-poster__hed { text-align: right; font-size: clamp(1.5rem, 9cqi, 4rem); }
+.cmc-poster__art { position: relative; color: var(--cmc-particle-inv); }
+.cmc-poster__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cmc-poster__foot { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--cmc-sp-4); }
+
+/* --- Do / Don't ---------------------------------------------------------- */
+.cmc-rule-card { display: flex; flex-direction: column; gap: var(--cmc-sp-3); }
+.cmc-rule-card__flag { font-weight: var(--cmc-w-medium); display: flex; align-items: center; gap: var(--cmc-sp-2); }
+.cmc-rule-card--do .cmc-rule-card__flag::before { content: "＋"; }
+.cmc-rule-card--dont .cmc-rule-card__flag::before { content: "−"; }
+.cmc-rule-card--dont { color: var(--cmc-text-muted); }
+
+/* --- Acessibilidade ------------------------------------------------------ */
+:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}
+
+/* --- Key visual ----------------------------------------------------------
+   Uma composição em três faixas — assinatura, grafismo, manchete — que vale
+   para qualquer proporção. O grafismo ocupa a faixa do meio e cresce com o
+   que sobra, e como todo campo do motor é ciente de proporção, a mesma peça
+   se recompõe de 21:9 a 9:16 sem layout alternativo.
+
+   Tudo escala a partir de UMA medida por formato (--kv-base), em cqi.
+
+   Duas armadilhas de unidade, ambas encontradas na renderização:
+   1. cqmin não serve — com container-type inline-size o eixo de bloco não é
+      consultável e a unidade degenera.
+   2. Um elemento NÃO pode usar as próprias unidades de container: em cqi
+      declarado e usado no mesmo .cmc-kv, a medida resolve contra um ancestral
+      (ou o viewport) e o padding estoura, esmagando a coluna. Por isso a
+      grade mora num filho: lá dentro, cqi resolve contra o KV. */
+.cmc-kv {
+  --kv-base: 8cqi;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--kv-ar, 16 / 9);
+  background: var(--kv-bg, var(--cmc-black));
+  color: var(--kv-ink, var(--cmc-white));
+  container-type: inline-size;
+}
+.cmc-kv__inner {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: calc(var(--kv-base) * 0.42);
+  padding: calc(var(--kv-base) * 0.62);
+}
+.cmc-kv__art { position: relative; min-height: 0; min-width: 0; }
+.cmc-kv__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* A manchete é o ponto onde o registro de direção de arte fala: família, peso
+   e tracking entram como propriedade da peça, pelo mesmo mecanismo de
+   --kv-base. Nenhuma classe nova — trocar a voz é trocar três valores. */
+.cmc-kv__hed {
+  margin: 0;
+  font-family: var(--kv-voz, var(--cmc-font));
+  font-size: calc(var(--kv-base) * var(--kv-hed, 1));
+  line-height: 0.96;
+  letter-spacing: var(--kv-track, -0.035em);
+  font-weight: var(--kv-peso, var(--cmc-w-light));
+  text-wrap: balance;
+}
+/* O bloco de texto precisa de gap proporcional como o resto da peça: um
+   `gap` em rem é absoluto e desaparece numa peça de 2560 px, ao mesmo tempo
+   que domina uma miniatura. */
+.cmc-kv__copy {
+  display: flex; flex-direction: column;
+  gap: calc(var(--kv-base) * 0.34);
+}
+.cmc-kv__pe {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: calc(var(--kv-base) * 0.5);
+}
+.cmc-kv__apoio {
+  margin: 0; max-width: 42ch;
+  font-size: calc(var(--kv-base) * 0.30); line-height: 1.35;
+  color: color-mix(in srgb, currentColor 62%, transparent);
+}
+.cmc-kv__url {
+  font-family: var(--cmc-font-mono);
+  font-size: calc(var(--kv-base) * 0.25); flex: none;
+}
+.cmc-kv__lockup { --lockup-size: calc(var(--kv-base) * 0.58); }
+
+/* Campo sangrado: o grafismo ocupa TODAS as faixas e a tipografia senta por
+   cima. Isso é o oposto da regra que gerou este componente — e só é legítimo
+   porque a `clareira` do motor faz a densidade desabar onde o texto vai. Não
+   há partícula sob o tipo para cruzar. Sem clareira, isto é exatamente o
+   remendo de z-index que falhou na primeira versão da galeria de formatos.
+
+   A ordem de pintura segue a ordem do DOM, e a arte é o segundo filho — então
+   ela cobriria o lockup. O z-index nos irmãos é o que devolve a ordem. */
+.cmc-kv--sangria .cmc-kv__art { grid-area: 1 / 1 / -1 / -1; }
+/* Os irmãos precisam de posição EXPLÍCITA. Sem isso o auto-placement do grid
+   não os encaixa em células já ocupadas pela arte: ele cria linhas novas
+   embaixo, e a peça vira arte em cima com assinatura e manchete penduradas
+   fora dela. */
+.cmc-kv--sangria .cmc-kv__lockup { grid-area: 1 / 1; }
+.cmc-kv--sangria .cmc-kv__copy   { grid-area: 3 / 1; }
+.cmc-kv--sangria .cmc-kv__inner > :not(.cmc-kv__art) { position: relative; z-index: 1; }
+
+/* Peça muda: o grafismo é a manchete, então não existe faixa de manchete e a
+   arte fica com a altura toda entre assinatura e pé. */
+.cmc-kv--muda .cmc-kv__copy { display: contents; }
+
+</style>
+<style>
+/* ==========================================================================
+   Camacho — Superfícies de produto
+   --------------------------------------------------------------------------
+   Componentes das PEÇAS (site, deck, proposta), não do guia. A separação
+   importa: guide.css é andaime de documentação e pode ser jogado fora; isto
+   aqui vai para o ar.
+   ========================================================================== */
+
+/* --- Navegação do site ---------------------------------------------------- */
+.st-nav {
+  position: sticky; top: 0; z-index: var(--cmc-z-sticky);
+  background: color-mix(in srgb, var(--cmc-bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: var(--cmc-border);
+}
+.st-nav__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--cmc-sp-5); padding-block: var(--cmc-sp-4);
+}
+.st-nav__links { display: flex; gap: var(--cmc-sp-5); align-items: center; }
+.st-nav__links a {
+  color: var(--cmc-text-muted); text-decoration: none; font-size: var(--cmc-fs-small);
+}
+.st-nav__links a:hover { color: var(--cmc-text); }
+@media (max-width: 52rem) { .st-nav__links a:not(.cmc-btn) { display: none; } }
+
+/* --- Hero -----------------------------------------------------------------
+   O grafismo sangra pela direita e a cortina protege a coluna do texto: a
+   regra do guia é manchete nunca sobre a região densa das partículas. */
+.st-hero { background: var(--cmc-black); color: var(--cmc-white); position: relative; overflow: hidden; }
+.st-hero__art { position: absolute; inset: 0 0 0 22%; }
+.st-hero__art canvas { width: 100%; height: 100%; display: block; }
+.st-hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(95deg, #000 30%, rgba(0,0,0,.55) 58%, transparent 82%);
+}
+.st-hero__inner {
+  position: relative; z-index: 1;
+  display: grid; gap: var(--cmc-sp-6);
+  padding-block: clamp(4.5rem, 17vh, 10rem);
+  max-width: 34ch;
+}
+.st-hero__sub { color: #D6D6D6; margin: 0; }
+.st-hero__prova {
+  display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5);
+  padding-top: var(--cmc-sp-5); border-top: 1px solid #2A2A2A;
+  font-size: var(--cmc-fs-small); color: var(--cmc-grey-55);
+}
+
+/* --- Seções ---------------------------------------------------------------- */
+.st-sec { padding-block: clamp(4rem, 10vw, 8rem); }
+.st-sec--claro { background: var(--cmc-white); }
+.st-sec--escuro { background: var(--cmc-black); color: var(--cmc-white); }
+.st-sec--papel { background: var(--cmc-paper); }
+
+/* Par assimétrico: a afirmação ocupa o peso, o detalhe acompanha. É o que
+   tira o texto da coluna estreita à esquerda e usa a largura da tela. */
+.st-par {
+  display: grid; gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  align-items: start;
+}
+@media (max-width: 60rem) { .st-par { grid-template-columns: 1fr; } }
+.st-par--inverso { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+
+.st-rot { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+          color: var(--cmc-text-muted); margin: 0 0 var(--cmc-sp-5); }
+.st-afirma {
+  font-size: clamp(2rem, 4.2vw, 3.4rem); line-height: 1.02;
+  letter-spacing: -0.03em; font-weight: var(--cmc-w-light);
+  margin: 0; text-wrap: balance;
+}
+
+/* --- Sintomas: lista numerada com régua, não cards flutuando --------------- */
+.st-sintomas { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.st-sintomas li {
+  display: grid; grid-template-columns: 3.5rem 1fr; gap: var(--cmc-sp-4);
+  padding-block: var(--cmc-sp-5); border-top: var(--cmc-border);
+}
+.st-sintomas li:last-child { border-bottom: var(--cmc-border); }
+.st-sintomas__n { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+                  color: var(--cmc-text-muted); padding-top: 0.35em; }
+.st-sintomas h3 { margin: 0 0 var(--cmc-sp-2); font-size: var(--cmc-fs-lead);
+                  font-weight: var(--cmc-w-book); letter-spacing: -0.015em; }
+.st-sintomas p { margin: 0; font-size: var(--cmc-fs-small); color: var(--cmc-text-muted);
+                 max-width: 52ch; }
+
+/* --- Momento de impacto: grafismo sangrando com frase por cima ------------- */
+.st-impacto { position: relative; background: var(--cmc-black); color: var(--cmc-white);
+              overflow: hidden; }
+.st-impacto__art { position: absolute; inset: 0; }
+.st-impacto__art canvas { width: 100%; height: 100%; display: block; }
+.st-impacto__inner {
+  position: relative; z-index: 1;
+  padding-block: clamp(5rem, 15vw, 11rem);
+  max-width: 26ch;
+}
+.st-impacto::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(95deg, #000 26%, rgba(0,0,0,.6) 55%, transparent 84%);
+}
+
+/* --- Oferta: duas frentes com peso, não sumário --------------------------- */
+.st-frentes { display: grid; gap: clamp(2rem, 5vw, 4.5rem);
+              grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); }
+.st-frente h3 { margin: 0 0 var(--cmc-sp-4); font-size: var(--cmc-fs-h2);
+                font-weight: var(--cmc-w-light); letter-spacing: -0.025em; }
+.st-lista { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.st-lista li { padding-block: var(--cmc-sp-3); border-top: 1px solid currentColor;
+               border-color: color-mix(in srgb, currentColor 16%, transparent);
+               font-size: var(--cmc-fs-small); }
+
+/* --- Método: uma faixa que se lê da esquerda para a direita ---------------- */
+.st-trilha { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
+             gap: var(--cmc-sp-4); }
+@media (max-width: 68rem) { .st-trilha { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 38rem) { .st-trilha { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.st-etapa { display: flex; flex-direction: column; gap: var(--cmc-sp-3);
+            padding-top: var(--cmc-sp-4); border-top: 2px solid var(--cmc-black); }
+.st-etapa--fraca { border-top-color: var(--cmc-grey-20); }
+.st-etapa__n { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+               color: var(--cmc-text-muted); }
+.st-etapa h3 { margin: 0; font-size: var(--cmc-fs-lead); font-weight: var(--cmc-w-book);
+               letter-spacing: -0.015em; }
+.st-etapa p { margin: 0; font-size: var(--cmc-fs-small); color: var(--cmc-text-muted); }
+.st-etapa__marca {
+  position: relative; aspect-ratio: 3/2; background: var(--cmc-black);
+  color: var(--cmc-particle); border-radius: 4px; overflow: hidden;
+}
+.st-etapa__marca canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* --- Prova: o que sai do diagnóstico -------------------------------------- */
+.st-prova { display: grid; gap: var(--cmc-sp-4); }
+.st-nivel { display: grid; grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr) auto;
+            gap: var(--cmc-sp-4); align-items: center; }
+@media (max-width: 44rem) { .st-nivel { grid-template-columns: 1fr; gap: var(--cmc-sp-2); } }
+.st-nivel__barra { position: relative; height: 2rem; background: var(--cmc-black);
+                   border-radius: 3px; overflow: hidden; color: var(--cmc-white); }
+.st-nivel__barra canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.st-nivel__v { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+               color: var(--cmc-text-muted); font-variant-numeric: tabular-nums; }
+
+/* --- Recusa: o que não sou ------------------------------------------------ */
+.st-recusa { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-2); }
+.st-recusa span {
+  font-size: var(--cmc-fs-small); padding: 0.45em 0.9em;
+  border: var(--cmc-border); border-radius: var(--cmc-r-pill);
+  color: var(--cmc-text-muted); text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+/* --- Fecho ---------------------------------------------------------------- */
+.st-fecho { display: grid; gap: var(--cmc-sp-6); max-width: 24ch; }
+.st-fecho__hed { font-size: clamp(2.4rem, 6vw, 5rem); line-height: 0.98;
+                 letter-spacing: -0.035em; font-weight: var(--cmc-w-light); margin: 0; }
+.st-rodape { border-top: var(--cmc-border); padding-block: var(--cmc-sp-6); }
+.st-rodape__inner { display: flex; flex-wrap: wrap; gap: var(--cmc-sp-5);
+                    justify-content: space-between; align-items: center; }
+
+/* ==========================================================================
+   Deck — slides navegáveis
+   ========================================================================== */
+.dk { background: var(--cmc-black); color: var(--cmc-white); }
+.dk__palco {
+  position: relative; width: 100%; aspect-ratio: 16/9;
+  container-type: inline-size; overflow: hidden;
+}
+.dk__slide {
+  position: absolute; inset: 0;
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 3cqi; padding: 6cqi;
+  background: var(--slide-bg, var(--cmc-black));
+  color: var(--slide-ink, var(--cmc-white));
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__slide[data-ativo] { opacity: 1; visibility: visible; }
+.dk__hed { font-size: 7cqi; line-height: 0.98; letter-spacing: -0.03em;
+           font-weight: var(--cmc-w-light); margin: 0; text-wrap: balance; }
+.dk__hed--grande { font-size: 11cqi; }
+.dk__corpo { font-size: 2.6cqi; line-height: 1.5; margin: 0; max-width: 46ch; }
+.dk__corpo--serif { font-family: var(--cmc-font-serif); font-size: 2.9cqi; }
+.dk__art { position: relative; min-height: 0; }
+.dk__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dk__pe { display: flex; justify-content: space-between; align-items: flex-end;
+          gap: 3cqi; font-family: var(--cmc-font-mono); font-size: 1.8cqi;
+          color: color-mix(in srgb, currentColor 60%, transparent); }
+.dk__lockup { --lockup-size: 4cqi; }
+.dk__grade { display: grid; gap: calc(3cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 3), 1fr); align-content: center; }
+.dk__item { display: flex; flex-direction: column; gap: calc(1cqi * var(--cp, 1)); }
+.dk__item h4 { margin: 0; font-size: calc(3.4cqi * var(--cp, 1)); font-weight: var(--cmc-w-light); letter-spacing: -0.02em; }
+.dk__item p { margin: 0; font-size: calc(2.1cqi * var(--cp, 1)); line-height: 1.45;
+              color: color-mix(in srgb, currentColor 66%, transparent); }
+.dk__barra {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--cmc-sp-4); padding-block: var(--cmc-sp-4);
+}
+.dk__conta { font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+             font-variant-numeric: tabular-nums; }
+
+/* ==========================================================================
+   Apresentação — o deck de cliente, sobre a mesma máquina do .dk
+
+   Reusa .dk__palco, .dk__slide, .dk__hed e a navegação inteira. O que entra
+   aqui é só o que a peça de diagnóstico pede a mais: os beats, os quatro
+   registros, o campo do cliente e as placas de ativo que ainda não chegou.
+   ========================================================================== */
+
+/* Onde o grafismo mora.
+
+   A primeira versão desta página jogou a arte sangrada atrás de tudo com
+   opacity 0.5, e a manchete da capa ficou ilegível na ponta densa. É
+   exatamente o defeito que a clareira existe para impedir, e que a versão
+   anterior de .format__frame já tinha cometido com z-index. Opacidade não
+   resolve: ela só deixa os dois igualmente fracos.
+
+   Então há dois modos, e nenhum deles é "atrás de tudo":
+
+   sangria  — a arte ocupa a peça toda, e a cena DECLARA a clareira em que o
+              tipo senta. Só onde o grafismo É o argumento.
+   faixa    — a arte ocupa uma coluna à direita, o tipo tem a esquerda inteira.
+   borda    — uma tira estreita na margem. Para cena com tabela de sete linhas
+              ou grade de oito itens, em que qualquer coisa maior rouba a
+              largura de que o conteúdo precisa. O modo sai da densidade do
+              conteúdo, não do gosto: é medida, não decoração. */
+/* Nada de `position: relative` aqui: .dk__slide já é absolute/inset:0 acima, e
+   redeclarar tirava o slide do lugar e jogava a cena para fora do palco. */
+.dk__slide .dk__art { position: absolute; z-index: 0; }
+.dk__slide[data-arte="faixa"] .dk__art { inset: 0 0 0 auto; width: 34%; }
+.dk__slide[data-arte="faixa"] > :not(.dk__art) { max-width: 62%; }
+.dk__slide[data-arte="borda"] .dk__art { inset: 0 0 0 auto; width: 7%; }
+.dk__slide[data-arte="borda"] > :not(.dk__art) { max-width: 89%; }
+.dk__slide[data-arte="borda"] .dk__hed { font-size: 3.1cqi; }
+.dk__slide[data-arte="sangria"] .dk__art { inset: 0; }
+
+/* pé — a arte toma uma faixa inferior de largura inteira, como LINHA do grid e
+   não como camada absoluta. É o modo do campo `intervalo`, e não é gosto: o
+   campo é um eixo de tempo, e numa coluna de 34% ele sai cortado — as três
+   barras de "onde o vão é maior" perdiam justamente a comparação que são.
+
+   As linhas são explícitas nos quatro filhos. Deixar o grid posicionar sozinho
+   joga a arte para a linha 1 e cria linhas novas no fim — defeito que este
+   repositório já cometeu em .cmc-kv--sangria e corrigiu do mesmo jeito. */
+/* 15cqi: varrido contra o transbordo. Em 22 seis paradas estouravam, em 18
+   três, em 15 nenhuma. Abaixo disso a faixa só perde altura sem ganhar nada. */
+.dk__slide[data-arte="pe"] { grid-template-rows: auto minmax(0, 1fr) 15cqi auto; }
+.dk__slide[data-arte="pe"] .dk__art { position: relative; inset: auto; grid-row: 3; }
+/* Rótulo de cada linha do eixo, em mono, na margem esquerda. */
+.dk__eixo {
+  position: absolute; inset: 0; z-index: 1; display: grid;
+  grid-auto-rows: 1fr; align-items: center;
+  font-family: var(--cmc-font-mono); font-size: 1.7cqi;
+  color: color-mix(in srgb, currentColor 55%, transparent);
+  pointer-events: none;
+}
+/* Onde há rótulo, o eixo começa depois dele — senão a marca do primeiro evento
+   cai em cima do texto. */
+.dk__art:has(.dk__eixo) canvas { left: 9cqi; width: calc(100% - 9cqi); }
+.dk__slide[data-arte="pe"] > :nth-child(2) { grid-row: 1; }
+.dk__slide[data-arte="pe"] .dk__meio { grid-row: 2; }
+.dk__slide[data-arte="pe"] > :last-child { grid-row: 4; }
+/* --cl vem da clareira declarada pela cena: o tipo não passa da borda do
+   terreno limpo, por construção e não por conferência visual. */
+.dk__slide[data-arte="sangria"] > :not(.dk__art) { max-width: calc(var(--cl, 1) * 100%); }
+.dk__slide > :not(.dk__art) { position: relative; z-index: 1; }
+
+/* A abertura: roda sozinha uma vez, antes da primeira parada, e para. */
+.dk__abertura {
+  position: absolute; inset: 0; z-index: 3; background: var(--cmc-black);
+  display: grid; place-items: center;
+}
+.dk__abertura[hidden] { display: none; }
+.dk__abertura canvas { position: absolute; inset: 0; width: 100%; height: 100%; color: #fff; }
+.dk__abertura__leg {
+  position: relative; margin: 0; align-self: end; margin-bottom: 9cqi;
+  font-family: var(--cmc-font-mono); font-size: 2cqi; letter-spacing: 0.04em;
+  text-transform: uppercase; color: #fff; opacity: 0;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__abertura__leg[data-visivel] { opacity: 1; }
+
+/* Os quatro programas carregam o acento do sabor correspondente. Barra à
+   esquerda, não fundo colorido: o acento identifica, não decora, e o campo
+   continua sendo o creme compartilhado pelas duas marcas. */
+.dk__bloco--prog { padding-left: calc(1.6cqi * var(--cp, 1));
+                   border-left: 3px solid var(--prog, currentColor); }
+.dk__bloco--prog h4 { color: var(--prog, currentColor); }
+
+/* Beats. Um elemento com data-beat só aparece quando o beat corrente o
+   alcançou. `visibility` em vez de `display` para o layout não pular: a
+   manchete tem que ficar no mesmo lugar do primeiro ao último passo. */
+/* --cp é o fator de compressão do painel: um escalar só, do qual todo tamanho
+   de tipo e todo respiro dentro do painel derivam — mesmo mecanismo de
+   --kv-base em .cmc-kv. A página mede o painel e baixa o fator até caber,
+   com piso declarado. Assim "não coube" é um número no relatório, não uma
+   barra de rolagem que ninguém vê durante a apresentação. */
+.dk__painel {
+  --cp: 1;
+  position: absolute; inset: 0; overflow: hidden;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__painel[data-visivel] { opacity: 1; visibility: visible; }
+.dk__paineis { position: relative; min-height: 0; }
+
+.dk__slide [data-beat] {
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__slide [data-beat][data-visivel] { opacity: 1; visibility: visible; }
+
+/* Campo do cliente: o mesmo creme do papel — as duas marcas já dividem o
+   terreno — mais um acento por sabor, que vive na peça e não na fundação. */
+.dk__slide[data-campo="cliente"] { --slide-bg: #F2F0EE; --slide-ink: #000; }
+.dk__slide[data-campo="cliente"] .dk__olho,
+.dk__slide[data-campo="cliente"] .dk__num { color: var(--slide-acento); }
+.dk__slide[data-campo="cliente"] .dk__item h4 { color: var(--slide-acento); }
+
+/* Olho: o rótulo do registro, sempre em mono, sempre no topo. É ele que diz
+   se o slide é diagnóstico, recomendação, implementação ou legado — e é a
+   única coisa da peça que não muda de lugar nunca. */
+.dk__olho {
+  font-family: var(--cmc-font-mono); font-size: 1.7cqi;
+  letter-spacing: 0.06em; text-transform: uppercase; margin: 0;
+  color: color-mix(in srgb, currentColor 55%, transparent);
+}
+.dk__olho strong { font-weight: var(--cmc-w-medium); color: currentColor; }
+
+/* Manchete de cena de conteúdo é menor do que a de deck comercial, e isso é
+   medido: com 5,2cqi em três linhas, o palco dos painéis perdia altura demais
+   e seis cenas batiam no piso de compressão. Aqui a manchete cede espaço para
+   o argumento, que é o que o cliente veio ler. */
+.dk__hed--med { font-size: 4cqi; }
+.dk__hed--peq { font-size: 3.3cqi; }
+.dk__slide[data-arte] { gap: 2.2cqi; padding: 5cqi 6cqi; }
+
+/* Corpo rolável: alguns slides têm mais conteúdo do que 16:9 comporta, e o
+   certo é a faixa do meio rolar em vez de a peça inteira estourar. */
+/* A faixa do meio é um palco de painéis: a manchete tem linha própria, e os
+   painéis se sobrepõem no espaço que sobra, um visível de cada vez. */
+.dk__meio { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 2.4cqi; }
+
+/* Blocos rotulados — situação / diagnóstico / implicação. */
+.dk__blocos { display: grid; gap: calc(2.2cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.dk__bloco { display: flex; flex-direction: column; gap: calc(0.8cqi * var(--cp, 1)); }
+.dk__bloco h4 { margin: 0; font-family: var(--cmc-font-mono); font-size: calc(1.6cqi * var(--cp, 1));
+                letter-spacing: 0.06em; text-transform: uppercase;
+                font-weight: var(--cmc-w-medium);
+                color: color-mix(in srgb, currentColor 55%, transparent); }
+.dk__bloco p { margin: 0; font-size: calc(2.1cqi * var(--cp, 1)); line-height: 1.45; }
+
+/* Tabela de duas ou quatro colunas. Regra fina, nada de zebra: o sistema
+   separa por espaço e linha, não por preenchimento. */
+.dk__tab { width: 100%; border-collapse: collapse; font-size: calc(1.95cqi * var(--cp, 1)); }
+.dk__tab th {
+  text-align: left; font-family: var(--cmc-font-mono); font-size: calc(1.55cqi * var(--cp, 1));
+  letter-spacing: 0.06em; text-transform: uppercase;
+  font-weight: var(--cmc-w-medium); padding: 0 1.6cqi calc(1.2cqi * var(--cp, 1)) 0;
+  color: color-mix(in srgb, currentColor 55%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+}
+.dk__tab td { padding: calc(1.15cqi * var(--cp, 1)) 1.6cqi calc(1.15cqi * var(--cp, 1)) 0; vertical-align: top; line-height: 1.35;
+              border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.dk__tab tr td:first-child { width: 26%; }
+.dk__tab td[data-col]:not([data-visivel]) { opacity: 0; }
+.dk__tab td[data-col] { transition: opacity var(--cmc-dur-base) var(--cmc-ease); }
+
+/* Passos numerados: a numeração é do sistema (mono, tabular), não do browser. */
+.dk__passos { list-style: none; margin: 0; padding: 0; counter-reset: p;
+              display: grid; gap: calc(1.1cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.dk__passos li { counter-increment: p; display: flex; gap: 1.2cqi;
+                 font-size: calc(2cqi * var(--cp, 1)); line-height: 1.35; }
+.dk__passos li::before {
+  content: counter(p, decimal-leading-zero); flex: none;
+  font-family: var(--cmc-font-mono); font-size: calc(1.6cqi * var(--cp, 1));
+  font-variant-numeric: tabular-nums; padding-top: 0.25cqi;
+  color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+/* Lista simples, marcada por regra e não por bolinha. */
+.dk__lista { list-style: none; margin: 0; padding: 0;
+             display: grid; gap: calc(0.9cqi * var(--cp, 1)); grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.dk__lista li { font-size: calc(2cqi * var(--cp, 1)); line-height: 1.35; padding-left: 2.2cqi; position: relative; }
+.dk__lista li::before {
+  content: ""; position: absolute; left: 0; top: 1.1cqi;
+  width: 1.2cqi; height: 1px; background: currentColor; opacity: 0.45;
+}
+
+/* Fecho: a frase que o slide deixa. Serifada no diagnóstico, sistema no resto
+   — quem decide é o registro, e é isso que impede a peça de virar um bloco só. */
+.dk__fecho { margin: 0; font-size: calc(2.4cqi * var(--cp, 1)); line-height: 1.4; max-width: 62ch; }
+.dk__slide[data-registro="diagnostico"] .dk__fecho {
+  font-family: var(--cmc-font-serif); font-size: calc(2.7cqi * var(--cp, 1));
+}
+.dk__legado {
+  margin: 0; font-size: calc(2cqi * var(--cp, 1)); line-height: 1.4; padding-left: 2.4cqi;
+  border-left: 2px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+
+/* Placa de ativo que ainda não chegou. Um retângulo vazio passa despercebido
+   até a peça estar na frente do cliente; uma placa que diz qual arquivo falta,
+   não. */
+.dk__placa {
+  display: inline-flex; flex-direction: column; gap: 0.5cqi;
+  padding: calc(1.8cqi * var(--cp, 1)); min-height: 0; align-self: start;
+  border: 1px dashed color-mix(in srgb, currentColor 40%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  font-family: var(--cmc-font-mono); font-size: 1.6cqi;
+}
+.dk__placa b { font-weight: var(--cmc-w-medium); }
+.dk__placa span { color: color-mix(in srgb, currentColor 60%, transparent); }
+
+/* Barra de progresso da apresentação: uma régua, não um enfeite. */
+.dk__regua { display: flex; gap: 0.3cqi; flex: 1; align-items: center; }
+.dk__regua i { flex: 1; height: 2px; background: currentColor; opacity: 0.18; }
+.dk__regua i[data-feito] { opacity: 0.55; }
+.dk__regua i[data-agora] { opacity: 1; height: 4px; }
+
+/* Visão de apresentador: notas de apoio e pendências, fora da tela do cliente. */
+.dk__notas { max-width: 46rem; margin-inline: auto; padding-block: var(--cmc-sp-6); }
+.dk__notas h3 { font-size: var(--cmc-fs-h3); margin: 0 0 var(--cmc-sp-3); }
+.dk__notas li { margin-bottom: var(--cmc-sp-3); line-height: 1.5; }
+
+@media print {
+  /* Impressão achata os beats: sem isso metade de cada página sai em branco. */
+  /* --cp é o fator de compressão do painel: um escalar só, do qual todo tamanho
+   de tipo e todo respiro dentro do painel derivam — mesmo mecanismo de
+   --kv-base em .cmc-kv. A página mede o painel e baixa o fator até caber,
+   com piso declarado. Assim "não coube" é um número no relatório, não uma
+   barra de rolagem que ninguém vê durante a apresentação. */
+.dk__painel {
+  --cp: 1;
+  position: absolute; inset: 0; overflow: hidden;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cmc-dur-base) var(--cmc-ease);
+}
+.dk__painel[data-visivel] { opacity: 1; visibility: visible; }
+.dk__paineis { position: relative; min-height: 0; }
+
+.dk__slide [data-beat] { opacity: 1 !important; visibility: visible !important; }
+  .dk__tab td[data-col] { opacity: 1 !important; }
+  .dk__meio { overflow: visible; }
+  .dk__notas, .dk__regua { display: none; }
+}
+
+/* ==========================================================================
+   Proposta — documento para ler e imprimir
+   ========================================================================== */
+.pr { max-width: 46rem; margin-inline: auto; }
+.pr__capa {
+  display: flex; flex-direction: column; gap: var(--cmc-sp-5);
+  padding-block: var(--cmc-sp-8);
+  border-bottom: 2px solid var(--cmc-black);
+}
+.pr__art { position: relative; aspect-ratio: 16/5; }
+.pr__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pr__sec { padding-block: var(--cmc-sp-7); border-bottom: var(--cmc-border); }
+.pr__rot {
+  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-small);
+  color: var(--cmc-text-muted); margin: 0 0 var(--cmc-sp-4);
+}
+/* Peças do documento do assessment. Reusam .pr__sec/.pr__rot/.pr__tabela; o
+   que entra aqui é só o que o texto do assessment pede a mais. */
+.pr__olho {
+  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-micro);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--cmc-ink-3); margin: var(--cmc-sp-5) 0 var(--cmc-sp-3);
+}
+.pr__bloco { margin-block: var(--cmc-sp-5); }
+.pr__bloco h3 {
+  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-micro);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  font-weight: var(--cmc-w-medium); color: var(--cmc-ink-3);
+  margin: 0 0 var(--cmc-sp-2);
+}
+.pr__bloco p { margin: 0; line-height: 1.6; }
+.pr__lista, .pr__passos { margin: 0 0 var(--cmc-sp-4); padding: 0; list-style: none; }
+.pr__lista li, .pr__passos li { line-height: 1.55; margin-bottom: var(--cmc-sp-2); }
+.pr__lista li { padding-left: var(--cmc-sp-5); position: relative; }
+.pr__lista li::before {
+  content: ""; position: absolute; left: 0; top: 0.72em;
+  width: var(--cmc-sp-4); height: 1px; background: currentColor; opacity: 0.4;
+}
+.pr__passos { counter-reset: pr; }
+.pr__passos li { counter-increment: pr; padding-left: var(--cmc-sp-6); position: relative; }
+.pr__passos li::before {
+  content: counter(pr, decimal-leading-zero); position: absolute; left: 0;
+  font-family: var(--cmc-font-mono); font-size: var(--cmc-fs-micro);
+  font-variant-numeric: tabular-nums; color: var(--cmc-ink-3); top: 0.25em;
+}
+/* Barra do sabor: o acento identifica o programa, e não pinta o fundo. */
+.pr__passos--prog li[style*="--prog"] { border-left: 3px solid var(--prog); padding-left: var(--cmc-sp-5); }
+.pr__passos--prog li::before { content: none; }
+.pr__rot[data-prog] { color: var(--prog); }
+.pr__sec[style*="--prog"] { border-left: 3px solid var(--prog); padding-left: var(--cmc-sp-5); }
+
+.pr__legado {
+  margin: var(--cmc-sp-5) 0 0; padding-left: var(--cmc-sp-5);
+  border-left: 2px solid var(--cmc-ink-3); line-height: 1.55;
+}
+/* Nota do assessment: interpretação, não achado. Marcada para ninguém
+   confundir as duas — é uma exigência da regra editorial do documento. */
+.pr__nota {
+  margin: var(--cmc-sp-5) 0 0; padding: var(--cmc-sp-4);
+  background: var(--cmc-paper); font-size: var(--cmc-fs-small); line-height: 1.55;
+}
+
+.pr__tabela { width: 100%; border-collapse: collapse; font-size: var(--cmc-fs-small); }
+.pr__tabela th {
+  text-align: left; font-weight: var(--cmc-w-medium); padding: var(--cmc-sp-3) 0;
+  border-bottom: 1px solid var(--cmc-black);
+}
+.pr__tabela td { padding: var(--cmc-sp-3) 0; border-bottom: var(--cmc-border); vertical-align: top; }
+.pr__tabela td:last-child, .pr__tabela th:last-child {
+  text-align: right; font-family: var(--cmc-font-mono); font-variant-numeric: tabular-nums;
+}
+
+@media print {
+  @page { size: A4; margin: 18mm 16mm; }
+  body { background: #fff; }
+  .naoimprime { display: none !important; }
+  .pr { max-width: none; }
+  .pr__sec { break-inside: avoid; padding-block: 8mm; }
+  .pr__capa { break-after: page; }
+}
+
+/* ==========================================================================
+   Carrossel de LinkedIn — documento, não imagem
+   A plataforma publica carrossel como PDF, então a peça é um documento de
+   páginas 4:5 e o "export" é imprimir. Cada página é uma ideia.
+   ========================================================================== */
+.cr { max-width: 34rem; margin-inline: auto; display: flex; flex-direction: column; gap: var(--cmc-sp-5); }
+.cr__pag {
+  aspect-ratio: 4 / 5; container-type: inline-size; overflow: hidden;
+  border-radius: var(--cmc-r-card);
+  background: var(--pag-bg, var(--cmc-black)); color: var(--pag-ink, var(--cmc-white));
+  position: relative;
+}
+.cr__inner {
+  position: absolute; inset: 0; display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto; gap: 4cqi; padding: 7cqi;
+}
+.cr__hed { font-size: 9cqi; line-height: 0.98; letter-spacing: -0.03em;
+           font-weight: var(--cmc-w-light); margin: 0; text-wrap: balance; }
+.cr__corpo { font-size: 3.6cqi; line-height: 1.45; margin: 0;
+             color: color-mix(in srgb, currentColor 68%, transparent); }
+.cr__corpo--serif { font-family: var(--cmc-font-serif); font-size: 3.9cqi; }
+.cr__art { position: relative; min-height: 0; }
+.cr__art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cr__pe { display: flex; justify-content: space-between; align-items: flex-end; gap: 4cqi;
+          font-family: var(--cmc-font-mono); font-size: 2.6cqi;
+          color: color-mix(in srgb, currentColor 60%, transparent); }
+.cr__lockup { --lockup-size: 5.5cqi; }
+
+@media print {
+  @page { size: 1080px 1350px; margin: 0; }
+  body { background: #fff; }
+  .cr { max-width: none; gap: 0; display: block; }
+  .cr__pag { width: 1080px; height: 1350px; aspect-ratio: auto;
+             border-radius: 0; break-after: page; }
+  .cr__pag:last-child { break-after: auto; }
+}
+
+/* Deck impresso: um slide por página, paisagem. É o caminho real de virar PDF. */
+@media print {
+  .dk__barra, .dk + p, body.dk > .cmc-shell > p { display: none; }
+  .dk__palco { aspect-ratio: auto; }
+  .dk__slide {
+    position: relative; inset: auto; opacity: 1; visibility: visible;
+    width: 1600px; height: 900px; break-after: page;
+  }
+  .dk__slide:last-child { break-after: auto; }
+}
+
+/* ==========================================================================
+   Diagramas — o estado de beat, e nada além disso
+   --------------------------------------------------------------------------
+   O SVG de src/diagramas.js emite o desenho INTEIRO, com data-b em cada
+   elemento. Quem muda o estado é noBeat(), que só troca classe. Toda a
+   animação está aqui, e isso não é organização: é o que faz o estado final ser
+   alcançável direto — voltar um passo, End, redimensionar, imprimir e
+   prefers-reduced-motion caem no mesmo lugar sem passar por transição nenhuma.
+   ========================================================================== */
+.dg { display: block; width: 100%; height: auto; max-height: 100%;
+      font-family: var(--cmc-font-sans); }
+.dg .dg__rot { font-family: var(--cmc-font-mono); letter-spacing: 0.02em; }
+.dg .dg__txt { letter-spacing: -0.01em; }
+
+/* O estado. Elemento sem data-b é permanente: moldura, eixo, o que existe
+   sempre. Quem tem data-b nasce fora e entra. */
+.dg [data-b] { transition: opacity 420ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1); }
+.dg .dg--off { opacity: 0; }
+.dg .dg--on { opacity: 1; }
+
+/* Entradas por tipo de marca. Traço entra desenhando-se; texto entra subindo.
+   Deslocamento pequeno de propósito: 6px, não 24 — o desenho é o argumento, e
+   um texto que voa distrai de um número que é real. */
+.dg .dg__txt.dg--off, .dg .dg__rot.dg--off { transform: translateY(6px); }
+.dg .dg__deg.dg--off, .dg .dg__col.dg--off, .dg .dg__faixa.dg--off { stroke-dasharray: 0; }
+
+/* Exclusão: no beat 3 a linha que não entrou no subtotal dá um passo para
+   fora e para baixo, e o colchete alto some. O passo é o argumento inteiro. */
+.dg[data-dg="exc"][data-beat="3"] .dg__fora,
+.dg[data-dg="exc"][data-beat="4"] .dg__fora { transform: translate(28px, 34px); }
+.dg .dg__fora { transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Assentamento: o único gesto de ênfase do Ato 3. Opacidade e peso — nunca
+   cor, nunca brilho. A cena 20 não assenta ninguém; quem assenta é a 22. */
+/* Precisa vencer .dg .dg--on, que também é opacidade em duas classes. Depender
+   da ordem de declaração para isso funciona até alguém reordenar o arquivo. */
+.dg .dg__linha--recua.dg--on { opacity: 0.34; }
+.dg .dg__linha--assenta.dg--on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dg [data-b], .dg .dg__fora { transition: none; }
+}
+
+@media print {
+  .dg [data-b], .dg .dg__fora { transition: none; }
+  .dg .dg--off { opacity: 0; }
+}
+
+</style>
+<style>
+/* Esta folha vive AQUI e não em src/site.css de propósito: é bancada, some
+   quando as cenas estiverem de pé. Regra de laboratório não deve sobreviver
+   ao laboratório. */
+body { background: var(--cmc-paper); color: var(--cmc-black); }
+.lb { max-width: 1500px; margin: 0 auto; padding: 6vh 4vw 12vh; }
+.lb__cab { max-width: 62ch; margin-bottom: 8vh; }
+.lb__cab h1 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: var(--cmc-w-light);
+              letter-spacing: -0.03em; margin: 0 0 1rem; }
+.lb__cab p { font-size: 1.05rem; line-height: 1.6; color: var(--cmc-text-muted); margin: 0 0 0.8rem; }
+.lb__sec { margin-bottom: 9vh; }
+.lb__sec > h2 { font-size: 1.5rem; font-weight: var(--cmc-w-light); letter-spacing: -0.02em;
+                margin: 0 0 0.4rem; }
+.lb__sec > p { max-width: 68ch; font-size: 0.95rem; line-height: 1.6;
+               color: var(--cmc-text-muted); margin: 0 0 2rem; }
+.lb__prova { display: inline-block; font-family: var(--cmc-font-mono); font-size: 0.72rem;
+             letter-spacing: 0.06em; text-transform: uppercase; padding: 0.3em 0.7em;
+             border: 1px solid currentColor; border-radius: 3px; margin-bottom: 1.4rem; }
+.lb__tiras { display: grid; gap: 2px; background: color-mix(in srgb, currentColor 12%, transparent); }
+.lb__tira { display: grid; gap: 2px; grid-template-columns: repeat(var(--n, 4), 1fr); }
+.lb__cel { position: relative; padding: 22px 20px 34px; }
+.lb__cel--papel { background: var(--cmc-paper); color: var(--cmc-black); }
+.lb__cel--escuro { background: var(--cmc-black); color: var(--cmc-white); }
+.lb__b { position: absolute; left: 20px; bottom: 12px; font-family: var(--cmc-font-mono);
+         font-size: 0.7rem; opacity: 0.5; }
+/* O tamanho real da cena: a arte de um slide 16:9 ocupa no máximo esta caixa.
+   Se o diagrama não couber aqui, ele não cabe na cena — é a medida que importa. */
+.lb__cel .dg { max-height: 300px; }
+.lb__cel--real { padding: 0; }
+.lb__cel--real .dg { max-height: none; }
+.lb__real { display: grid; grid-template-columns: 1fr; gap: 2px; }
+.lb__quadro { aspect-ratio: 16/9; display: grid; place-items: center; padding: 3% 4%; }
+.lb__quadro .dg { width: auto; max-width: 100%; max-height: 100%; }
+</style>
+</head>
+<body>
+
+<main class="lb">
+  <header class="lb__cab">
+    <h1>Laboratório de diagramas</h1>
+    <p>Os cinco diagramas do assessment da Banana Milk, cada um em cada estado de
+       beat, nos dois campos, antes de existir cena nenhuma. Nove das vinte e três
+       cenas dependem deles.</p>
+    <p>Isto não é peça de entrega. É a bancada onde eu descubro que um desenho não
+       aguenta o argumento — e o lugar de descobrir isso é aqui, não na décima cena,
+       com nove cenas construídas em volta.</p>
+  </header>
+  <div id="lab"></div>
+</main>
+
+<script type="module">
+/* ==========================================================================
+   IA Assessment & Opportunities · Banana Milk — as 23 cenas como dado
+
+   Conteúdo editorial do assessment: o que aparece na tela e o que se fala em
+   cada slide. Este arquivo decide COMO cada argumento aparece, nunca QUAL.
+
+   Alimenta dois artefatos, e é fonte única dos dois:
+   - `assessment.html`       — a apresentação, 16:9, navegada por beats
+   - `assessment-documento.html` — o texto integral, para ler e imprimir
+
+   Duas listas soltas para a mesma peça é a divergência que este repositório já
+   cometeu e documentou no cabeçalho de src/kv.js.
+
+   --- A regra que organiza tudo: dois registros ---------------------------
+
+   `registro: 'cliente'`  → o assunto é a Banana Milk: o negócio, os dados, a
+                            decisão deles. Cor permitida — os quatro acentos.
+   `registro: 'camacho'`  → tagline, proposta de valor, método, consultoria,
+                            preço. SEMPRE minimalista: preto e papel, mono,
+                            muito acabamento e nenhum enfeite.
+
+   Aplicada aos 23 slides ela produz um arco que não é o óbvio: o Ato 1 é quase
+   todo cliente e o 2 e o 3 são quase todos Camacho. Ou seja, a apresentação
+   começa em cor e termina em preto e branco. Está certo — ela termina numa
+   decisão, e decisão não precisa de atmosfera.
+   ========================================================================== */
+
+const ATOS = [
+  { n: 1, nome: 'Reenquadrar o problema', de: 1, ate: 7 },
+  { n: 2, nome: 'Mostrar a transformação', de: 8, ate: 17 },
+  { n: 3, nome: 'Transformar em decisão', de: 18, ate: 23 },
+];
+
+/* Os quatro acentos da embalagem. Vivem AQUI, na peça — a fundação do Camacho
+   segue monocromática em tokens/. Lidos de uma captura, não de arquivo da
+   marca: trocar pelos oficiais antes de apresentar. */
+const ACENTOS = {
+  coral: '#D9503F', amarelo: '#EFBE2E', cacau: '#7A4A2E', azul: '#1B7FC4',
+  creme: '#F3EFE4', vermelho: '#E23D35',
+};
+
+/* O personagem aparece por ASSUNTO, não por ato: só onde a capacidade do
+   cliente é o que está em jogo. Três momentos no deck inteiro. Fora daí ele
+   não existe, e a ausência significa que ainda não há quem dirija. */
+const PERSONAGEM_EM = [10, 17, 23];
+
+const CENAS = [
+
+/* ===== ATO 1 · Reenquadrar o problema ==================================== */
+
+{ n: 1, ato: 1, registro: 'camacho', campo: 'escuro', dispositivo: 'weave',
+  titulo: 'Capa',
+  hed: 'Clareza para decidir.<br>Inteligência para crescer.',
+  olho: 'IA Assessment &amp; Opportunities',
+  pe: 'Banana Milk · Agosto de 2026',
+  fala: 'Este trabalho começou com uma pergunta prática: como colocar os dados da Banana Milk ao alcance da liderança, inclusive pelo WhatsApp? Ao investigar essa pergunta, encontramos algo maior. A oportunidade não é apenas criar uma nova interface. É construir uma capacidade gerencial que permita à Banana Milk enxergar melhor, agir antes e crescer com menos dependência do esforço dos sócios.',
+  beats: 2 },
+
+{ n: 2, ato: 1, registro: 'cliente', campo: 'creme', dispositivo: 'recuo',
+  titulo: 'O WhatsApp é a porta. O controle é o destino.',
+  hed: 'O WhatsApp é a porta.<br>O controle é o destino.',
+  citacao: 'Quero perguntar pelo WhatsApp e receber a informação gerencial de que preciso.',
+  citacaoDe: 'O pedido',
+  listaOlho: 'A necessidade real',
+  lista: ['recuperar domínio sobre os números',
+          'reduzir a dependência de relatórios e terceiros',
+          'antecipar riscos',
+          'transformar informação em ação'],
+  fala: 'O pedido do Marcos é muito claro: conseguir conversar com os dados pelo WhatsApp. Mas o valor não está no WhatsApp. O valor está em recuperar o controle sobre o negócio. Se a informação continua ambígua, atrasada ou dependente de interpretação, colocar um agente na frente dela apenas acelera o acesso à dúvida. Portanto, o WhatsApp é a primeira experiência. O produto real é uma gestão mais confiável.',
+  beats: 3 },
+
+{ n: 3, ato: 1, registro: 'cliente', campo: 'creme', dispositivo: 'soltos',
+  titulo: 'Os dados existem. O sistema gerencial ainda não.',
+  hed: 'Os dados existem.<br>O sistema gerencial ainda não.',
+  numeros: [['6', 'ambientes relevantes de informação'],
+            ['4', 'modelos de canal com economias diferentes'],
+            ['6', 'ambiguidades que alteram os números']],
+  ambientes: ['Omie', 'BPO', 'Excel', 'Drive', 'Notion', 'WhatsApp'],
+  fecho: 'Diversas rotinas dependentes de memória e consultas manuais.',
+  fala: 'A Banana Milk não sofre por falta absoluta de dados ou por excesso de ferramentas. Os dados estão no Omie, no BPO, em planilhas, no Drive, no Notion e em conversas. O problema é que eles ainda não formam um sistema gerencial único. Cada nova pergunta exige localizar informações, combinar fontes e reconstruir a interpretação. Isso funciona enquanto o conhecimento está na cabeça de poucas pessoas. Não funciona bem quando o número de produtos, canais, redes, lotes e decisões aumenta.',
+  beats: 3 },
+
+{ n: 4, ato: 1, registro: 'cliente', campo: 'creme', dispositivo: 'desregistro',
+  titulo: 'Se o conceito muda, o número também muda.',
+  hed: 'Se o conceito muda,<br>o número também muda.',
+  /* A palavra que entra fora de registro e converge. Uma só, grande — seis
+     desregistros seriam seis piadas iguais. */
+  palavra: 'receita',
+  tabela: { cols: ['Conceito', 'Ambiguidade encontrada'], linhas: [
+    ['Volume', 'Unidade, pack ou caixa?'],
+    ['Receita', 'Venda ou bonificação?'],
+    ['Resultado', 'Caixa ou competência?'],
+    ['Cliente', 'Rede, distribuidor ou loja?'],
+    ['Produto', 'Família, SKU ou lote?'],
+    ['Estoque', 'Interno ou disponível no mercado?'] ] },
+  fecho: 'Sem definição comum, não existe indicador confiável.',
+  fala: 'Antes de integrar sistemas, precisamos integrar significados. Quando alguém pergunta quanto foi vendido, precisamos saber se está falando de unidades, packs ou caixas. Quando pergunta pelo desempenho de uma rede, precisamos separar venda, bonificação, distribuidor, rede e loja. Essas não são discussões acadêmicas. Cada definição altera faturamento, volume, margem, estoque e desempenho comercial. O primeiro trabalho, portanto, não é tecnológico. É fazer a Banana Milk falar uma língua gerencial comum.',
+  beats: 3 },
+
+{ n: 5, ato: 1, registro: 'cliente', campo: 'papel', dispositivo: 'exclusao',
+  titulo: 'Um relatório pode estar certo e ainda ser insuficiente.',
+  hed: 'Um relatório pode estar certo<br>e ainda ser insuficiente.',
+  olho: 'Exemplo observado na análise financeira',
+  /* ATENÇÃO, e é o único risco de CORREÇÃO do deck: o texto diz que estes dois
+     valores NÃO podem ser somados nem subtraídos. Qualquer cascata, barra ou
+     eixo compartilhado vai sugerir que somam, e aí o desenho contradiz a fala.
+     O dispositivo é `exclusao`: um colchete que fecha em volta do que entrou no
+     subtotal, e um valor visivelmente FORA dele. Sem eixo, sem escala, sem
+     operação — a pergunta que a imagem faz é "dentro ou fora?". */
+  valores: [
+    { rot: 'Resultado apresentado', v: '−R$ 636,8 mil', dentro: true },
+    { rot: 'CMC visível fora do cálculo', v: 'R$ 222,9 mil', dentro: false },
+  ],
+  razao: 'Razão indicada: ausência de classificação no plano de contas.',
+  fecho: 'A DRE atual não oferece segurança para análise e decisão estratégica.',
+  fala: 'Este exemplo resume o problema. O relatório apresenta um resultado negativo de 636,8 mil reais. Ao mesmo tempo, existem aproximadamente 222,9 mil reais de CMC visíveis que não entram nos subtotais, aparentemente por falta de classificação. Isso não significa que podemos simplesmente somar ou subtrair esses valores. Significa que o número não pode ser utilizado estrategicamente sem reconciliação. Uma visão pode cumprir sua finalidade contábil e continuar insuficiente para responder às perguntas dos gestores.',
+  beats: 4 },
+
+{ n: 6, ato: 1, registro: 'cliente', campo: 'creme', dispositivo: 'chave',
+  titulo: 'Margem não é preço menos custo.',
+  hed: 'Margem não é<br>preço menos custo.',
+  olho: 'A unidade econômica real',
+  /* As quatro dimensões travam num bloco: o objeto da análise não é o SKU, é o
+     SKU dentro de uma condição. Cada uma leva um acento. */
+  chave: ['SKU', 'canal', 'cliente', 'condições do pedido'],
+  cadeia: ['Preço de venda', 'impostos', 'bonificação', 'contrato', 'frete',
+           'comissão', 'promoção', 'custo completo do produto'],
+  resultado: 'margem real da decisão',
+  fala: 'A negociação com o Oba mostrou por que uma margem genérica por produto não é suficiente. O mesmo SKU pode ser um bom negócio em um canal e um mau negócio em outro. A resposta depende do preço, impostos, bonificação, frete, comissão, promoção, prazo e volume. O verdadeiro objeto da análise não é apenas o SKU. É o SKU dentro de uma condição comercial específica. Essa mesma regra precisa alimentar a precificação, a DRE, as simulações, o WhatsApp e futuras recomendações de IA.',
+  beats: 3 },
+
+{ n: 7, ato: 1, registro: 'cliente', campo: 'escuro', dispositivo: 'vao',
+  titulo: 'O prejuízo mais perigoso é o que aparece tarde.',
+  hed: 'O prejuízo mais perigoso<br>é o que aparece tarde.',
+  listaOlho: 'O custo invisível do modelo atual',
+  lista: ['produto perde a janela comercial',
+          'cliente deixa de recomprar',
+          'promoção começa tarde',
+          'preço é definido com informação incompleta',
+          'decisões aguardam extrações e consultas',
+          'conhecimento permanece concentrado em pessoas'],
+  fecho: 'O problema não é apenas produzir o relatório. É descobrir tarde o que deveria ter sido feito.',
+  fala: 'Nem todo custo aparece na DRE como uma linha chamada "falta de visibilidade". Ele aparece como produto que perdeu sua janela comercial, cliente que não recomprou, promoção iniciada tarde, decisão adiada ou tempo dos sócios gasto procurando informações. Shelf life é o melhor exemplo. A data de validade física não é o único prazo. Existe também a janela comercial para entregar, vender e promover o produto. Quando o relatório mostra o problema, parte do valor já pode ter sido perdida.',
+  beats: 3 },
+
+/* ===== ATO 2 · Mostrar a transformação ================================== */
+
+{ n: 8, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'estados',
+  titulo: 'A Banana Milk está pronta para usar IA. Ainda não para delegar a ela.',
+  hed: 'Pronta para usar IA.<br>Ainda não para delegar a ela.',
+  olho: 'Agent Readiness',
+  /* Estados QUALITATIVOS. Um medidor aqui prometeria uma medição que o
+     assessment não fez — e a regra de não parecer instrumento sem número
+     continua valendo em todo o Ato 2. */
+  tabela: { cols: ['Dimensão', 'Situação atual'], linhas: [
+    ['Conhecimento', 'Conceitos dispersos'],
+    ['Dados', 'Disponíveis, com lacunas'],
+    ['Conectividade', 'Sistemas pouco integrados'],
+    ['Ação', 'Rotinas majoritariamente manuais'],
+    ['Governança', 'Limites ainda não formalizados'] ] },
+  fecho: 'Bons casos de uso, fundação em construção.',
+  fala: 'Existe uma diferença entre AI Readiness e Agent Readiness. AI Readiness significa que a empresa consegue usar inteligência artificial. A Banana Milk já começou a fazer isso. Agent Readiness significa que a empresa está preparada para permitir que agentes consultem dados, interpretem conceitos e executem ações com segurança. A Banana Milk tem liderança interessada, problemas concretos e dados relevantes. O que ainda precisa ser construído é a fundação que torna os agentes confiáveis.',
+  beats: 3 },
+
+{ n: 9, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'termos',
+  titulo: 'Antes de ensinar a IA, a empresa precisa ensinar a si mesma.',
+  hed: 'Antes de ensinar a IA,<br>a empresa ensina a si mesma.',
+  termos: [['Ontologia', 'Como os elementos do negócio se relacionam.'],
+           ['Vocabulário oficial', 'O que cada conceito significa.'],
+           ['Inventário de dados', 'Onde a informação nasce e quem responde por ela.'],
+           ['OKF', 'Conhecimento portátil, legível por pessoas e agentes.']],
+  fala: 'Ontologia pode parecer uma palavra sofisticada, mas a ideia é prática. Precisamos definir como produto, SKU, pack, lote, cliente, rede, loja, pedido, venda, bonificação, receita, custo e margem se relacionam. Depois, registramos onde cada dado nasce, qual é sua regra e quem responde por ele. Isso reduz dependência das pessoas, evita que cada fornecedor invente sua própria interpretação e cria uma memória organizacional que pode ser utilizada por humanos, sistemas e agentes.',
+  beats: 5 },
+
+{ n: 10, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'escada',
+  titulo: 'A transformação acontece em cinco movimentos.',
+  hed: 'A transformação acontece<br>em cinco movimentos.',
+  degraus: [['Legível', 'O negócio possui conceitos e regras claros.'],
+            ['Conectável', 'Dados e capacidades são acessíveis.'],
+            ['Consultável', 'Pessoas conseguem obter respostas confiáveis.'],
+            ['Coordenável', 'Alertas geram ações e responsáveis.'],
+            ['Progressivamente autônomo', 'Agentes atuam dentro de limites.']],
+  faixa: 'Dependência → visibilidade → antecipação → coordenação → autonomia',
+  fala: 'Esta não é uma sequência rígida de projetos. É uma sequência de capacidades. Primeiro, tornamos o negócio legível. Depois, conectável. Então ele pode ser consultado com confiança. O próximo estágio é transformar respostas em alertas, tarefas e acompanhamento. Somente depois faz sentido permitir que agentes recomendem ou executem determinadas ações. Não precisamos terminar uma fase inteira antes de começar a seguinte. Podemos atravessar as cinco camadas com um caso de uso pequeno e ampliar progressivamente.',
+  beats: 6 },
+
+{ n: 11, ato: 2, registro: 'camacho', campo: 'escuro', dispositivo: 'nucleo',
+  titulo: 'Uma base. Muitas aplicações.',
+  hed: 'Uma base.<br>Muitas aplicações.',
+  tabela: { cols: ['Capacidade compartilhada', 'Onde será utilizada'], linhas: [
+    ['Regra de margem', 'DRE, preço, WhatsApp e simulação'],
+    ['Dados de lotes', 'Estoque, shelf life e promoções'],
+    ['Histórico de clientes', 'Recompra, alertas e cadências'],
+    ['Ontologia', 'Relatórios, agentes e treinamento'],
+    ['Permissões', 'WhatsApp, automações e agentes'] ] },
+  fecho: 'Construir uma vez. Reutilizar em cada nova aplicação.',
+  fala: 'A proposta é trabalhar com uma arquitetura API-first e um Backend for Agents. Na prática, isso significa que a regra de margem não fica presa a uma planilha ou a um chatbot. Ela se torna uma capacidade reutilizável. A mesma lógica pode alimentar a DRE, uma simulação comercial, um dashboard, o WhatsApp e futuros agentes. Esse reaproveitamento é a principal vantagem econômica de um programa integrado. Em projetos separados, cada fornecedor tende a reconstruir parte da fundação.',
+  beats: 3 },
+
+{ n: 12, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'passos',
+  titulo: 'Primeira entrega: conversar com o negócio.',
+  hed: 'Primeira entrega:<br>conversar com o negócio.',
+  olho: 'WhatsApp executivo · primeiro ciclo',
+  passos: ['selecionar 10 a 15 perguntas', 'definir os conceitos',
+           'reconciliar as fontes', 'construir respostas controladas',
+           'informar fonte, período e cálculo', 'validar', 'expandir'],
+  fecho: 'Valor rápido com confiança controlada.',
+  fala: 'Minha recomendação é começar pelo WhatsApp executivo porque existe uma urgência explícita do CEO e um valor percebido muito alto. Mas não começaremos tentando responder qualquer pergunta sobre qualquer dado. Começaremos com 10 a 15 perguntas prioritárias. Para cada uma, definiremos o conceito, a fonte, o cálculo e a forma de validação. Assim, entregamos uma experiência visível rapidamente e usamos cada pergunta para construir uma parte reutilizável da fundação.',
+  beats: 3 },
+
+{ n: 13, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'perguntas',
+  titulo: 'As primeiras perguntas definem a primeira fundação.',
+  hed: 'As primeiras perguntas<br>definem a primeira fundação.',
+  /* O slide é vitrine: só apresentar as perguntas. A última sobe de peso,
+     porque é a que separa um chatbot de uma capacidade gerencial. */
+  perguntas: ['Qual foi o faturamento líquido do mês?',
+              'Como estamos em relação ao mês anterior?',
+              'Quanto temos de cada SKU?',
+              'Quais lotes exigem atenção?',
+              'Quais clientes deixaram de recomprar?',
+              'Qual é a margem estimada deste pedido?',
+              'O que exige uma decisão nesta semana?'],
+  fecho: 'Cada resposta deve mostrar: fonte, período e regra.',
+  fala: 'O objetivo não é apenas responder quanto vendemos. É permitir que o gestor compreenda e confie na resposta. Quando o agente responder, ele deve indicar o período, a fonte e a regra utilizada. Também precisamos evoluir de perguntas descritivas, como "quanto temos em estoque?", para perguntas gerenciais, como "o que exige uma decisão nesta semana?". Essa mudança separa um chatbot de uma verdadeira capacidade gerencial.',
+  beats: 3 },
+
+{ n: 14, ato: 2, registro: 'camacho', campo: 'escuro', dispositivo: 'quadrante',
+  titulo: 'Quatro formas de gerar valor.',
+  hed: 'Quatro formas<br>de gerar valor.',
+  eixos: { x: ['Observar', 'Agir'], y: ['Antecipar', 'Reagir'] },
+  celulas: [['Inteligência', 'antecipar o que pode acontecer'],
+            ['Autonomia', 'permitir ação dentro de limites'],
+            ['Visibilidade', 'entender o que aconteceu'],
+            ['Orquestração', 'garantir que algo seja feito']],
+  fala: 'Organizamos as oportunidades em duas dimensões. A primeira é a evolução de observar para agir. A segunda é a evolução de reagir para antecipar. Isso produz quatro espaços de valor. Visibilidade, inteligência, orquestração e autonomia. O quadrante evita que toda ideia de IA pareça igualmente importante. Também mostra que não precisamos começar pela autonomia. Há muito valor a capturar em visibilidade e orquestração.',
+  beats: 4 },
+
+{ n: 15, ato: 2, registro: 'camacho', campo: 'escuro', dispositivo: 'quadrante-cheio',
+  titulo: 'O portfólio de oportunidades.',
+  hed: 'O portfólio<br>de oportunidades.',
+  /* O mesmo quadrante da cena 14, povoado. O portfólio não é uma lista de
+     dezesseis itens — é o quadrante preenchido, e é isso que mata o
+     slide-lista mais perigoso do deck. */
+  portfolio: {
+    Visibilidade: ['WhatsApp executivo', 'DRE contínua', 'margem', 'estoque e lotes'],
+    Inteligência: ['previsão de demanda', 'risco de validade', 'risco de não recompra', 'simulação comercial'],
+    Orquestração: ['alertas de shelf life', 'cadências comerciais', 'programa de promotores', 'tarefas e responsáveis'],
+    Autonomia: ['recomendação de ações', 'contato autorizado', 'execução de rotinas', 'decisões dentro de limites'],
+  },
+  fala: 'O assessment não encontrou um único projeto. Encontrou um portfólio. Algumas oportunidades melhoram decisões. Outras reduzem esforço operacional. Outras aumentam a capacidade de escala. O ponto importante é que elas compartilham dados, conceitos, regras e integrações. Por isso, não deveriam ser tratadas como quatro sistemas ou dez contratações independentes.',
+  beats: 5 },
+
+{ n: 16, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'criterios',
+  titulo: 'Nem tudo que gera valor deve começar agora.',
+  hed: 'Nem tudo que gera valor<br>deve começar agora.',
+  olho: 'Cinco critérios de priorização',
+  criterios: ['Valor econômico', 'Urgência', 'Prontidão dos dados',
+              'Reutilização da fundação', 'Esforço e risco'],
+  recomendacao: 'Recomendação inicial: WhatsApp executivo.',
+  fecho: 'Próximas prioridades: definidas com a liderança.',
+  fala: 'Eu não quero impor um roadmap anual fechado antes de discutirmos as prioridades. O assessment define os critérios e as dependências. A liderança escolhe, conosco, a sequência do portfólio. Minha recomendação inicial é o WhatsApp executivo. Depois dessa primeira entrega, podemos escolher entre aprofundar DRE e margem, atacar shelf life, organizar recompra ou avançar em outra oportunidade. O backlog pode mudar. A arquitetura e a lógica de priorização permanecem.',
+  beats: 3 },
+
+{ n: 17, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'travessia',
+  titulo: 'A tecnologia muda. A forma de operar muda mais.',
+  hed: 'A tecnologia muda.<br>A forma de operar muda mais.',
+  tabela: { cols: ['Hoje', 'Capacidade futura'], linhas: [
+    ['Procurar respostas', 'Consultar imediatamente'],
+    ['Interpretar relatórios', 'Usar conceitos oficiais'],
+    ['Descobrir problemas tarde', 'Receber alertas antecipados'],
+    ['Cobrar ações manualmente', 'Orquestrar responsáveis'],
+    ['Depender da memória', 'Registrar conhecimento'],
+    ['Analisar do zero', 'Reutilizar regras'] ] },
+  fecho: 'Melhor decisão. Menor esforço operacional. Maior capacidade de escala.',
+  fala: 'O resultado não deve ser medido pela quantidade de ferramentas implantadas. A mudança real acontece quando a empresa deixa de procurar respostas e passa a consultá-las. Quando deixa de descobrir problemas tarde e passa a receber alertas. Quando deixa de depender da memória e passa a operar com conhecimento registrado. Essa é a transformação que conecta gestão, dados, automação e IA.',
+  beats: 4 },
+
+/* ===== ATO 3 · Transformar em decisão =================================== */
+
+{ n: 18, ato: 3, registro: 'camacho', campo: 'papel', dispositivo: 'entregas',
+  titulo: 'O assessment termina. O ativo permanece.',
+  hed: 'O assessment termina.<br>O ativo permanece.',
+  olho: 'A Banana Milk recebe',
+  entregas: ['diagnóstico de Agent Readiness', 'tese de transformação',
+             'arquitetura conceitual', 'portfólio de oportunidades',
+             'critérios de priorização', 'desenho dos projetos',
+             'dependências e riscos', 'lógica orçamentária',
+             'condições para contratar o mercado'],
+  fecho: 'A Banana Milk pode seguir internamente, conosco ou com outros parceiros.',
+  fala: 'Este assessment não é um argumento para tornar a Banana Milk dependente de mim. A empresa recebe um diagnóstico, uma arquitetura, um portfólio, critérios de priorização e condições para solicitar propostas ao mercado. Vocês podem executar internamente, contratar projetos separados ou trabalhar comigo em um programa contínuo. Minha responsabilidade nesta entrega é dar condições para que vocês façam uma escolha informada.',
+  beats: 3 },
+
+{ n: 19, ato: 3, registro: 'camacho', campo: 'escuro', dispositivo: 'nucleo-invertido',
+  titulo: 'No mercado, as partes são vendidas separadamente.',
+  hed: 'No mercado, as partes<br>são vendidas separadamente.',
+  olho: 'Normalmente contratadas como frentes diferentes',
+  frentes: ['estratégia e governança', 'dados e integrações', 'BI e indicadores',
+            'automações', 'agentes de IA', 'adoção e desenvolvimento do time'],
+  valor: 'R$ 175 mil a R$ 350 mil',
+  valorRot: 'Portfólio contratado por projetos',
+  nota: 'Faixa de planejamento. Não representa cotação formal.',
+  fala: 'Esse tipo de transformação normalmente é comprado em partes. Uma empresa define a estratégia. Outra integra os dados. Outra constrói o BI. Outra desenvolve automações. Outra implementa o agente. Depois, alguém precisa coordenar tudo. Nossa estimativa preliminar para contratar separadamente um portfólio equivalente fica entre 175 mil e 350 mil reais. O principal problema não é apenas o preço. É a fragmentação. Cada nova contratação consome diagnóstico, alinhamento, coordenação e reconstrução de contexto.',
+  beats: 4 },
+
+{ n: 20, ato: 3, registro: 'camacho', campo: 'papel', dispositivo: 'comparacao',
+  titulo: 'Três maneiras de construir a mesma capacidade.',
+  hed: 'Três maneiras de construir<br>a mesma capacidade.',
+  caminhos: [
+    { nome: 'Projetos separados', inv: 'R$ 175 mil a R$ 350 mil', lim: 'Fragmentação' },
+    { nome: 'Equipe interna', inv: 'Acima de R$ 35 mil/mês', lim: 'Múltiplos perfis e contratação' },
+    { nome: 'Programa integrado', inv: 'R$ 12 mil a R$ 32 mil/mês', lim: 'Capacidade conforme dedicação' },
+  ],
+  fecho: 'O programa anual não economiza apenas dinheiro. Economiza recomeços.',
+  fala: 'A comparação correta não é entre o meu trabalho e um dashboard. A comparação é entre três formas de construir uma capacidade que envolve estratégia, dados, gestão, automação, IA e adoção. Uma equipe interna completa exigiria múltiplos perfis. Projetos separados geram fragmentação. O programa integrado preserva o contexto e reutiliza a mesma fundação, ajustando a dedicação e a velocidade conforme a opção escolhida.',
+  beats: 3 },
+
+{ n: 21, ato: 3, registro: 'camacho', campo: 'papel', dispositivo: 'niveis',
+  titulo: 'Três níveis de parceria.',
+  hed: 'Três níveis<br>de parceria.',
+  /* NÃO pré-destacar a coluna do meio. Se a recomendação já estiver marcada
+     aqui, a cena 22 não tem o que fazer — e o ato perde o único gesto de
+     ênfase que se permite. */
+  niveis: [
+    { nome: 'Transformação', mes: 'R$ 12 mil', ano: 'R$ 144 mil', ded: 'Ciclos', papel: 'Construir' },
+    { nome: 'AI Advisor', mes: 'R$ 20 mil', ano: 'R$ 240 mil', ded: 'Até 8h/semana', papel: 'Construir e orientar' },
+    { nome: 'Fractional CAIO', mes: 'R$ 32 mil', ano: 'R$ 384 mil', ded: 'Até 20h/semana', papel: 'Liderar a função' },
+  ],
+  fala: 'Existem três níveis possíveis de parceria. O primeiro é um programa de transformação com ciclos de implementação. O segundo adiciona acompanhamento semanal da liderança, gestão mais próxima do portfólio, desenvolvimento da ontologia, inventário de dados e participação pontual em decisões executivas. O terceiro é uma função executiva fracionada. Nesse modelo, eu assumo a liderança contínua da agenda de IA, participando da gestão, do desenvolvimento dos times, de conselhos e, quando necessário, de reuniões com investidores.',
+  beats: 4 },
+
+{ n: 22, ato: 3, registro: 'camacho', campo: 'papel', dispositivo: 'assentamento',
+  titulo: 'A opção recomendada: construir e orientar.',
+  hed: 'Programa de Transformação<br>+ AI Advisor',
+  valor: 'R$ 20 mil por mês',
+  inclui: ['acompanhamento semanal', 'até 8 horas de dedicação por semana',
+           'gestão do portfólio', 'implementação incremental', 'ontologia e OKF',
+           'inventário e governança dos dados', 'desenvolvimento do time',
+           'acompanhamento de fornecedores', 'participação executiva pontual'],
+  fala: 'Minha recomendação para a Banana Milk é o modelo intermediário. Ele oferece proximidade suficiente para construir a fundação, acompanhar semanalmente as prioridades e desenvolver a capacidade interna, sem criar o custo de uma função executiva parcial de 20 horas por semana. Não é apenas aconselhamento. Também não é desenvolvimento ilimitado. É uma capacidade contínua de transformação, com prioridades acordadas e uma frente principal de implementação por vez.',
+  beats: 3 },
+
+{ n: 23, ato: 3, registro: 'camacho', campo: 'escuro', dispositivo: 'fecho',
+  titulo: 'A decisão de hoje define o primeiro movimento.',
+  hed: 'A decisão de hoje define<br>o primeiro movimento.',
+  olho: 'Próximos passos',
+  passos: ['escolher o modelo de parceria',
+           'selecionar as 10 a 15 perguntas executivas',
+           'nomear os responsáveis pelos dados',
+           'iniciar o primeiro ciclo',
+           'validar a primeira entrega',
+           'priorizar o próximo caso de uso'],
+  fecho: 'A escolha não é se a Banana Milk usará IA. A escolha é se a IA será apenas mais uma ferramenta ou uma capacidade real do negócio.',
+  fala: 'O primeiro passo não exige decidir hoje a ordem de todos os projetos do ano. Precisamos decidir o modelo de parceria e escolher as primeiras perguntas que queremos responder com confiança. A partir delas, construiremos a primeira fundação, entregaremos valor e escolheremos o próximo movimento com base no que aprendermos. A escolha central não é simplesmente usar ou não usar inteligência artificial. É decidir se ela será apenas mais uma ferramenta ou se ajudará a construir uma capacidade real da Banana Milk.',
+  beats: 4 },
+];
+
+/* --- Conferências -------------------------------------------------------- */
+
+/** Total de passos da apresentação. Acima de ~60 a peça pede mais cliques do
+    que 30–40 minutos comportam — é medida, não estimativa. */
+function totalBeats() {
+  return CENAS.reduce((s, c) => s + c.beats, 0);
+}
+
+/** Cenas de um ato. */
+function cenasDoAto(n) {
+  return CENAS.filter((c) => c.ato === n);
+}
+
+/** Cor nunca deve aparecer em cena de registro `camacho`. Esta função existe
+    para a conferência final poder ser automática em vez de visual. */
+function cenasComCorIndevida() {
+  return CENAS.filter((c) => c.registro === 'camacho' && c.acento).map((c) => c.n);
+}
+/* ==========================================================================
+   IA Assessment · Banana Milk — os cinco diagramas
+
+   Cinco argumentos que o motor de partículas NÃO deve desenhar. Partícula é
+   campo contínuo; estes cinco são discretos — pertencer, ordenar, ramificar,
+   classificar, escolher. Passá-los pelo dither produziria de novo "o mesmo
+   tipo de gráfico", que é exatamente a crítica que originou este arquivo.
+
+   SVG escrito à mão: `viewBox`, `currentColor`, seta em `<defs><marker>`,
+   texto entre 11 e 13px na escala desenhada. Sem `<script>`, sem `<style>` e
+   sem `<foreignObject>` dentro do fragmento — os dois guards de autocontenção
+   do build reprovam, e o fragmento precisa sobreviver a `innerHTML`.
+
+   --- O beat é ATRIBUTO, não animação --------------------------------------
+
+   Cada função emite o desenho INTEIRO, com `data-b` (o beat em que o elemento
+   entra) e, quando some, `data-ate`. Quem muda o estado é `noBeat(raiz, b)`,
+   que só troca classe. Assim o estado final é alcançável direto — voltar um
+   passo, `End`, redimensionar, imprimir e `prefers-reduced-motion` passam
+   todos pelo mesmo caminho.
+
+   Isto é a correção do bug do `morf`, que só resolvia dentro de `anima()`: um
+   desenho que só sabe se desenhar animando desenha errado em quatro situações
+   que ninguém testa.
+   ========================================================================== */
+
+/* --- utilidades ---------------------------------------------------------- */
+
+const esc = (s) => String(s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/** `data-b`/`data-ate` como string de atributo. `b` 1 é "desde o começo". */
+const em = (b, ate) => `data-b="${b}"${ate ? ` data-ate="${ate}"` : ''}`;
+
+/* O piso de opacidade dos rótulos de serviço, e ele é MEDIDO, não escolhido.
+
+   Medindo o pixel composto: a mesma opacidade rende 6,27:1 no campo escuro e
+   4,61:1 no campo papel. Tinta preta sobre claro perde contraste bem mais
+   rápido do que tinta branca sobre preto, então o valor que parece discreto no
+   escuro já sumiu no papel. Abaixo de 0,55 o rótulo de 11px cai para 2,8:1 —
+   e ele carrega os números ordinais e os cabeçalhos de coluna.
+
+   Fica como trava e não como convenção porque a próxima opacidade baixa vai
+   ser escrita por hábito, num rótulo que ninguém vai medir de novo. */
+const PISO_ROT = 0.55;
+
+/** Rótulo mono, o tipo de serviço do desenho: eixo, legenda, nota. */
+const rot = (x, y, txt, o = {}) => {
+  const { anc = 'start', tam = 11, b = 1, ate = 0, gir = 0, cls = '' } = o;
+  const op = Math.max(o.op ?? PISO_ROT, PISO_ROT);
+  const g = gir ? ` transform="rotate(${gir} ${x} ${y})"` : '';
+  return `<text x="${x}" y="${y}" class="dg__rot ${cls}" text-anchor="${anc}" font-size="${tam}"`
+       + ` fill="currentColor" fill-opacity="${op}" ${em(b, ate)}${g}>${esc(txt)}</text>`;
+};
+
+/** Texto de conteúdo — nome de degrau, de célula, de caminho. */
+const txt = (x, y, s, o = {}) => {
+  const { anc = 'start', tam = 15, op = 1, b = 1, ate = 0, peso = 400, cls = '' } = o;
+  return `<text x="${x}" y="${y}" class="dg__txt ${cls}" text-anchor="${anc}" font-size="${tam}"`
+       + ` font-weight="${peso}" fill="currentColor" fill-opacity="${op}" ${em(b, ate)}>${esc(s)}</text>`;
+};
+
+/** Quebra em linhas de no máximo `max` caracteres. SVG não quebra texto
+    sozinho, e um rótulo de três palavras dentro de uma caixa de 168px sai
+    pela borda sem avisar — foi o que aconteceu com "adoção e desenvolvimento
+    do time" na primeira rodada. */
+const quebra = (s, max) => {
+  const out = []; let linha = '';
+  for (const w of String(s).split(' ')) {
+    if (linha && (linha + ' ' + w).length > max) { out.push(linha); linha = w; }
+    else linha = linha ? linha + ' ' + w : w;
+  }
+  if (linha) out.push(linha);
+  return out;
+};
+
+/** A seta. Um marker por instância, porque o id é global no documento. */
+const defsSeta = (id) => `<defs>`
+  + `<marker id="${id}-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6"`
+  + ` orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker>`
+  + `</defs>`;
+
+const svg = (id, w, h, rotulo, corpo) =>
+  `<svg class="dg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(rotulo)}"`
+  + ` preserveAspectRatio="xMidYMid meet" data-dg="${id}">${defsSeta(id)}${corpo}</svg>`;
+
+/**
+ * Aplica o beat. Só troca classe: quem anima é o CSS da página.
+ * Um elemento sem `data-b` é permanente — moldura, eixo, o que existe sempre.
+ */
+function noBeat(raiz, beat) {
+  if (!raiz) return;
+  raiz.dataset.beat = String(beat);
+  for (const el of raiz.querySelectorAll('[data-b]')) {
+    const b = +el.dataset.b;
+    const ate = +el.dataset.ate || Infinity;
+    const on = beat >= b && beat <= ate;
+    el.classList.toggle('dg--on', on);
+    el.classList.toggle('dg--off', !on);
+  }
+}
+
+/** Quantos beats cada diagrama tem. Confere contra `beats` em deck23.js. */
+const BEATS = {
+  exclusao: 4, escada: 6, nucleo: 3, nucleoInvertido: 4,
+  quadrante: 4, quadranteCheio: 5, comparacao: 3,
+};
+
+/* ==========================================================================
+   1 · EXCLUSÃO — cena 5
+   --------------------------------------------------------------------------
+   O único risco de CORREÇÃO do deck. O texto diz que −R$ 636,8 mil e
+   R$ 222,9 mil não podem ser somados nem subtraídos. Cascata, barra empilhada
+   ou qualquer par de retângulos em escala comum sugerem soma.
+
+   Por isso: colchetes (notação de conjunto), nenhum eixo, nenhuma escala,
+   nenhum sinal de operação em lugar nenhum. A pergunta que a imagem faz é
+   "dentro ou fora?".
+
+   As quatro barras anônimas dentro do colchete são as linhas que FORAM
+   classificadas. Não têm número e não têm rótulo individual, de propósito: o
+   assessment não me deu esses valores e desenhar cinco linhas com cifras seria
+   inventar dado. Elas existem só para o colchete ler como subtotal.
+   ========================================================================== */
+
+function exclusao(d, id = 'exc') {
+  const W = 720, H = 430;
+  const L = 60, R = 470;             // as duas hastes do colchete
+  const dentro = d.valores.find((v) => v.dentro);
+  const fora = d.valores.find((v) => !v.dentro);
+  const bracket = (y0, y1, b, ate) =>
+    `<path d="M ${L + 16} ${y0} H ${L} V ${y1} H ${L + 16}" class="dg__col" fill="none"`
+    + ` stroke="currentColor" stroke-width="2" ${em(b, ate)}/>`
+    + `<path d="M ${R - 16} ${y0} H ${R} V ${y1} H ${R - 16}" class="dg__col" fill="none"`
+    + ` stroke="currentColor" stroke-width="2" ${em(b, ate)}/>`;
+
+  /* As linhas que FORAM classificadas. Sem número e sem rótulo individual, de
+     propósito: o assessment não deu esses valores, e desenhar cifras seria
+     inventar dado. Régua de livro-caixa, não barra — na primeira rodada eram
+     retângulos arredondados e liam como esqueleto de carregamento. */
+  const anon = [300, 246, 322].map((w, i) =>
+    `<line x1="${L + 34}" y1="${100 + i * 24}" x2="${L + 34 + w}" y2="${100 + i * 24}"`
+    + ` stroke="currentColor" stroke-opacity="0.22" stroke-width="2" ${em(1)}/>`).join('');
+
+  return svg(id, W, H,
+    `${dentro.rot}: ${dentro.v}, dentro do subtotal. ${fora.rot}: ${fora.v}, fora do subtotal. `
+    + 'Os dois valores não se somam nem se subtraem.',
+    /* beat 2 — o colchete alto, ainda com as duas linhas dentro */
+    bracket(72, 322, 2, 2)
+    /* beat 3 — o colchete recua e deixa de fora a linha que não entrou */
+    + bracket(72, 258, 3)
+    + anon
+    + rot(L + 34, 86, 'linhas classificadas', { b: 1 })
+
+    /* a linha que entrou */
+    + rot(L + 34, 218, dentro.rot, { b: 1 })
+    + txt(L + 34, 248, dentro.v, { tam: 30, b: 1 })
+
+    /* A linha que não entrou. O rótulo viaja DENTRO do grupo: solto, ele ficava
+       parado enquanto o valor dava o passo, e os dois se atropelavam. */
+    + `<g class="dg__fora" ${em(1)}>`
+    + rot(L + 34, 286, fora.rot, { b: 1 })
+    + txt(L + 34, 316, fora.v, { tam: 30, b: 1 })
+    + rot(L + 34, 338, 'não entra em subtotal nenhum', { b: 3, op: 0.75 })
+    + `</g>`
+
+    /* a razão e o fecho */
+    + rot(L, 396, d.razao, { b: 4, tam: 12 })
+    + rot(L, 418, d.fecho, { b: 4, tam: 12, op: 0.85 }));
+}
+
+/* ==========================================================================
+   2 · ESCADA — cena 10
+   --------------------------------------------------------------------------
+   Cinco capacidades, não cinco projetos: a fala diz explicitamente que não é
+   sequência rígida. Por isso o desenho carrega ORDEM e não carrega cronograma
+   — nenhuma data, nenhum trimestre, nenhum eixo de tempo.
+
+   As definições de cada degrau não entram aqui. São frases, e frase em desenho
+   vira ruído: elas vivem na coluna de HTML da cena, reveladas pelo mesmo beat.
+   ========================================================================== */
+
+function escada(degraus, id = 'esc') {
+  const W = 720, H = 400;
+  const x0 = 52, base = 300, larg = 122, alt = 44;
+  let corpo = '';
+  degraus.forEach(([nome], i) => {
+    const x = x0 + i * larg, topo = base - (i + 1) * alt;
+    corpo += `<path d="M ${x} ${base} V ${topo} H ${x + larg}" class="dg__deg" fill="none"`
+           + ` stroke="currentColor" stroke-width="2" ${em(i + 1)}/>`;
+    corpo += `<rect x="${x}" y="${topo}" width="${larg}" height="${base - topo}"`
+           + ` fill="currentColor" fill-opacity="0.04" ${em(i + 1)}/>`;
+    /* o último degrau fecha o perfil descendo até a base: sem isso a escada
+       fica aberta à direita e o desenho parece cortado, não terminado */
+    if (i === degraus.length - 1) {
+      corpo += `<line x1="${x + larg}" y1="${topo}" x2="${x + larg}" y2="${base}"`
+             + ` stroke="currentColor" stroke-width="2" ${em(i + 1)}/>`;
+    }
+    /* O nome deita sobre a pisada do degrau. O último alinha à DIREITA: com
+       alinhamento à esquerda, "Progressivamente autônomo" saía pela borda do
+       quadro — e um rótulo cortado não é acabamento ruim, é informação perdida. */
+    const fim = i === degraus.length - 1;
+    corpo += txt(fim ? x + larg : x + 10, topo - 12, nome,
+      { tam: 13, b: i + 1, anc: fim ? 'end' : 'start' });
+    corpo += rot(fim ? x + larg : x + 10, topo - 28, String(i + 1).padStart(2, '0'),
+      { tam: 11, b: i + 1, anc: fim ? 'end' : 'start' });
+  });
+  /* Sem linha de base. Uma régua embaixo de cinco formas que sobem transforma
+     escada em gráfico de colunas, e coluna promete uma quantidade medida —
+     que é justamente o que a fala nega: são capacidades, não números. */
+
+  /* a faixa: dependência → autonomia. Um segmento por beat, seta só no fim. */
+  const fy = 348;
+  const passos = ['dependência', 'visibilidade', 'antecipação', 'coordenação', 'autonomia'];
+  passos.forEach((p, i) => {
+    const a = x0 + i * larg, b = a + larg;
+    corpo += `<line x1="${a}" y1="${fy}" x2="${b}" y2="${fy}" stroke="currentColor"`
+           + ` stroke-width="2" stroke-opacity="0.5" class="dg__faixa" ${em(i + 1)}`
+           + (i === 4 ? ` marker-end="url(#${id}-s)"` : '') + `/>`;
+    corpo += rot(a + larg / 2, fy + 20, p, { anc: 'middle', b: i + 1 });
+  });
+
+  /* âncora do personagem no último degrau. Ele entra como módulo, num passo
+     posterior; aqui fica só o lugar, e a cena 10 é uma das três de PERSONAGEM_EM. */
+  corpo += `<g class="dg__personagem" data-slot="personagem"`
+         + ` transform="translate(${x0 + 5 * larg - 58} ${base - 5 * alt - 96})" ${em(6)}></g>`;
+
+  return svg(id, W, H,
+    'Escada de cinco capacidades, de legível a progressivamente autônomo, '
+    + 'sobre uma faixa que vai de dependência a autonomia.', corpo);
+}
+
+/* ==========================================================================
+   3 · NÚCLEO e NÚCLEO INVERTIDO — cenas 11 e 19
+   --------------------------------------------------------------------------
+   Um desenho, duas leituras, e essa economia É o argumento comercial: na 11,
+   uma fundação e cinco braços; na 19, seis compras separadas, cada uma
+   refazendo A SUA fundação. O desperdício não é dito, é desenhado — seis
+   fundações onde havia uma.
+
+   O bloco de fundação é literalmente o mesmo retângulo nos dois, mesmo
+   tamanho e mesmo traço. Se ele mudar, a inversão deixa de ler como inversão.
+   ========================================================================== */
+
+/** A medida da fundação. Uma constante, e não dois números iguais em dois
+    lugares: dois números iguais divergem no primeiro ajuste. */
+const FUND_W = 168, FUND_H = 56;
+
+/** O bloco de fundação. Idêntico nas duas cenas — é a peça que se repete. */
+const fundacao = (x, y, w, h, atrs = '') =>
+  `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="currentColor"`
+  + ` fill-opacity="0.10" stroke="currentColor" stroke-width="2" ${atrs}/>`;
+
+function nucleo(dados, id = 'nuc') {
+  const W = 720, H = 420;
+  /* 168 x 56 é a medida da fundação, e ela é COMPARTILHADA com a cena 19.
+     Se as duas divergirem, a inversão do slide 19 deixa de ler como inversão
+     e o argumento comercial inteiro cai. */
+  const cx = 74, cy = 182, cw = FUND_W, ch = FUND_H;
+  const bx = 430, bw = 240, bh = 50, gap = 18;
+  const n = dados.length;
+  const y0 = (H - (n * bh + (n - 1) * gap)) / 2;
+
+  let corpo = fundacao(cx, cy, cw, ch, em(1));
+  corpo += txt(cx + 16, cy + 30, 'Fundação', { tam: 15, b: 1 });
+  corpo += rot(cx + 16, cy + 50, 'construída uma vez', { b: 1 });
+
+  dados.forEach(([cap], i) => {
+    const y = y0 + i * (bh + gap);
+    corpo += `<rect x="${bx}" y="${y}" width="${bw}" height="${bh}" rx="4" fill="none"`
+           + ` stroke="currentColor" stroke-width="1.5" stroke-opacity="0.55" ${em(2)}/>`;
+    corpo += txt(bx + 14, y + bh / 2 + 5, cap, { tam: 13, b: 2 });
+    corpo += `<path d="M ${cx + cw + 10} ${cy + ch / 2} C ${bx - 90} ${cy + ch / 2},`
+           + ` ${bx - 90} ${y + bh / 2}, ${bx - 10} ${y + bh / 2}" fill="none"`
+           + ` stroke="currentColor" stroke-width="1.5" stroke-opacity="0.45"`
+           + ` marker-end="url(#${id}-s)" ${em(2)}/>`;
+  });
+  /* Rotula UMA vez — a mesma codificação repetida cinco vezes é legenda, não
+     dado. Fica ACIMA do pescoço do leque: no meio dele, atravessava as cinco
+     curvas e virava ruído em cima do próprio rótulo. */
+  corpo += rot(cx + cw + 6, cy - 10, 'reutiliza', { b: 2, op: 0.7 });
+  corpo += rot(cx, H - 22, 'Construir uma vez. Reutilizar em cada nova aplicação.',
+    { tam: 12, b: 3, op: 0.85 });
+
+  return svg(id, W, H,
+    'Uma fundação única, à esquerda, reutilizada por cinco aplicações à direita.', corpo);
+}
+
+function nucleoInvertido(frentes, valor, valorRot, nota, id = 'nvi') {
+  const W = 900, H = 510;
+  const cols = 3, gap = 30, x0 = 52;
+  const passoX = FUND_W + gap;
+  const linhaY = [76, 252];          // duas fileiras de três; ver abaixo
+
+  /* Por que 3 x 2 e não seis colunas: a fundação tem de ser LITERALMENTE o
+     mesmo retângulo da cena 11. Em seis colunas ela caberia com 104px, e uma
+     fundação menor aqui do que lá diria exatamente o contrário do argumento —
+     que reconstruir sai barato. Com 168px ela é a mesma, e são seis. */
+  let corpo = rot(x0, 52, 'Normalmente contratadas como frentes diferentes', { b: 1 });
+
+  frentes.forEach((f, i) => {
+    const x = x0 + (i % cols) * passoX;
+    const topo = linhaY[Math.floor(i / cols)];
+    corpo += `<rect x="${x}" y="${topo}" width="${FUND_W}" height="46" rx="4" fill="none"`
+           + ` stroke="currentColor" stroke-width="1.5" stroke-opacity="0.55" ${em(1)}/>`;
+    const linhas = quebra(f, 24);
+    linhas.forEach((parte, k) => {
+      corpo += txt(x + FUND_W / 2, topo + 28 - (linhas.length - 1) * 7 + k * 14, parte,
+        { anc: 'middle', tam: 12, b: 1 });
+    });
+    corpo += `<line x1="${x + FUND_W / 2}" y1="${topo + 54}" x2="${x + FUND_W / 2}" y2="${topo + 84}"`
+           + ` stroke="currentColor" stroke-width="1.5" stroke-opacity="0.45"`
+           + ` marker-end="url(#${id}-s)" ${em(2)}/>`;
+    /* A MESMA fundação da cena 11, repetida uma vez por compra. É o desperdício. */
+    corpo += fundacao(x, topo + 92, FUND_W, FUND_H, em(2));
+    corpo += rot(x + FUND_W / 2, topo + 92 + FUND_H / 2 + 4, 'fundação',
+      { anc: 'middle', tam: 11.5, b: 2, op: 0.7 });
+  });
+
+  /* A legenda fica na coluna livre à direita, fora do caminho das setas. */
+  const lx = x0 + cols * passoX + 16;
+  corpo += rot(lx, 120, 'cada contratação', { b: 2 });
+  corpo += rot(lx, 138, 'reconstrói a fundação', { b: 2 });
+  corpo += txt(lx, 230, `${frentes.length} contratações`, { tam: 15, b: 2 });
+  corpo += txt(lx, 254, `${frentes.length} fundações`, { tam: 15, b: 2 });
+
+  corpo += rot(x0, 436, valorRot, { b: 3 });
+  corpo += txt(x0, 472, valor, { tam: 32, b: 3 });
+  corpo += rot(x0, 496, nota, { b: 4, tam: 11 });
+
+  return svg(id, W, H,
+    `${frentes.length} frentes contratadas separadamente, cada uma reconstruindo a mesma `
+    + `fundação. ${valorRot}: ${valor}.`, corpo);
+}
+
+/* ==========================================================================
+   4 · QUADRANTE — cenas 14 e 15
+   --------------------------------------------------------------------------
+   São UM objeto em dois estados, não dois slides. Os eixos desenham na 14, os
+   quatro nomes pousam, e na 15 o mesmo quadrante recebe as dezesseis
+   oportunidades. Se a 15 virar lista, a 14 não vale o tempo que custa.
+
+   A ordem de `celulas` em deck23.js é a de leitura da matriz, começando pelo
+   alto à esquerda: Inteligência, Autonomia, Visibilidade, Orquestração.
+   ========================================================================== */
+
+function quadrante(cena, id = 'qd', portfolio = null) {
+  const W = 760, H = 540;
+  /* O deslocamento de beats entre as duas cenas. Na 14 o quadrante SE CONSTRÓI
+     em quatro beats. Na 15 ele já está pronto no primeiro — o que entra são as
+     dezesseis oportunidades, um grupo por beat.
+
+     Na primeira rodada eu deixei os grupos começarem no beat 4 nas duas, e a
+     cena 15 terminava com dois quadrantes vazios: só quatro das dezesseis
+     oportunidades chegavam a aparecer. Não dava erro nenhum; só desenhava
+     metade do portfólio e ficava calado. */
+  const b = portfolio ? { eixoX: 1, eixoY: 1, nomes: 1, grupo0: 2 }
+                      : { eixoX: 1, eixoY: 2, nomes: 3, grupo0: 4 };
+  const x0 = 92, y0 = 44, x1 = 700, y1 = 452;
+  const mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+  const { eixos, celulas } = cena;
+
+  let corpo = '';
+  /* moldura recessiva: existe desde sempre, não é beat */
+  corpo += `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="none"`
+         + ` stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/>`;
+
+  /* beat 1 — o eixo horizontal: observar → agir */
+  corpo += `<line x1="${x0}" y1="${my}" x2="${x1}" y2="${my}" stroke="currentColor"`
+         + ` stroke-width="1.5" stroke-opacity="0.4" marker-end="url(#${id}-s)" ${em(b.eixoX)}/>`;
+  corpo += rot(x0, y1 + 26, eixos.x[0], { b: b.eixoX });
+  corpo += rot(x1, y1 + 26, eixos.x[1], { anc: 'end', b: b.eixoX });
+
+  /* beat 2 — o eixo vertical: reagir → antecipar, e ele aponta para CIMA */
+  corpo += `<line x1="${mx}" y1="${y1}" x2="${mx}" y2="${y0}" stroke="currentColor"`
+         + ` stroke-width="1.5" stroke-opacity="0.4" marker-end="url(#${id}-s)" ${em(b.eixoY)}/>`;
+  corpo += rot(x0 - 18, y0 + 8, eixos.y[0], { anc: 'middle', gir: -90, b: b.eixoY });
+  corpo += rot(x0 - 18, y1 - 8, eixos.y[1], { anc: 'middle', gir: -90, b: b.eixoY });
+
+  /* beat 3 — os quatro nomes pousam */
+  const cel = [[x0, y0], [mx, y0], [x0, my], [mx, my]];
+  celulas.forEach(([nome, gloss], i) => {
+    const [cx, cy] = cel[i];
+    const bx = cx + 20, by = cy + 34;
+    corpo += txt(bx, by, nome, { tam: 18, b: b.nomes });
+    corpo += rot(bx, by + 20, gloss, { tam: 11.5, b: b.nomes });
+    if (portfolio && portfolio[nome]) {
+      portfolio[nome].forEach((item, k) => {
+        corpo += `<circle cx="${bx + 4}" cy="${by + 52 + k * 26}" r="2.5" fill="currentColor"`
+               + ` fill-opacity="0.5" ${em(b.grupo0 + i)}/>`;
+        corpo += txt(bx + 16, by + 56 + k * 26, item, { tam: 13, b: b.grupo0 + i });
+      });
+    }
+  });
+
+  if (!portfolio) {
+    corpo += rot(x0, y1 + 60, 'Não é preciso começar pela autonomia.',
+      { b: b.grupo0, tam: 12, op: 0.85 });
+  }
+
+  return svg(id, W, H,
+    `Quadrante de ${eixos.x[0]} a ${eixos.x[1]} e de ${eixos.y[1]} a ${eixos.y[0]}, `
+    + `com quatro espaços de valor: ${celulas.map((c) => c[0]).join(', ')}.`
+    + (portfolio ? ' Cada espaço povoado por quatro oportunidades.' : ''), corpo);
+}
+
+/* ==========================================================================
+   5 · COMPARAÇÃO — cena 20, com o assentamento da 22
+   --------------------------------------------------------------------------
+   Três caminhos, três linhas iguais. NÃO leva barra, escala nem eixo comum: os
+   valores estão em unidades diferentes — um total de projeto contra dois
+   valores mensais. Eixo compartilhado entre unidades diferentes é o erro mais
+   comum de gráfico que existe, e aqui ele inventaria uma comparação que os
+   números não sustentam.
+
+   `assenta` é o índice da linha que ganha peso; as outras recuam. É o único
+   gesto de ênfase do Ato 3, e é opacidade e peso — não brilho, não cor.
+   A cena 20 chama com `assenta = -1`. Quem assenta é a 22.
+   ========================================================================== */
+
+function comparacao(caminhos, fecho, id = 'cmp', assenta = -1) {
+  /* 860 e não 720: em 720 "Capacidade conforme dedicação" e "Múltiplos perfis
+     e contratação" saíam pela borda direita, cortadas no meio da palavra. Não
+     é acabamento — é a coluna que diz o que cada caminho custa em capacidade,
+     e ela chegava truncada. */
+  const W = 860, H = 372;
+  const x0 = 52, xInv = 300, xLim = 566;
+  const y0 = 78, lh = 76;
+
+  let corpo = rot(x0, 52, 'caminho', { tam: 11 })
+            + rot(xInv, 52, 'investimento', { tam: 11 })
+            + rot(xLim, 52, 'o que limita', { tam: 11 })
+            + `<line x1="${x0}" y1="62" x2="${W - 52}" y2="62" stroke="currentColor"`
+            + ` stroke-opacity="0.25" stroke-width="1"/>`;
+
+  caminhos.forEach((c, i) => {
+    const y = y0 + i * lh;
+    const dest = assenta === i;
+    const recua = assenta >= 0 && !dest;
+    const cls = dest ? 'dg__linha dg__linha--assenta' : recua ? 'dg__linha dg__linha--recua' : 'dg__linha';
+    corpo += `<g class="${cls}" ${em(i + 1)}>`;
+    corpo += txt(x0, y + 22, c.nome, { tam: 17, peso: dest ? 500 : 400 });
+    corpo += txt(xInv, y + 22, c.inv, { tam: 15 });
+    quebra(c.lim, 26).forEach((linha, k) => {
+      corpo += rot(xLim, y + 22 + k * 16, linha, { tam: 12, op: 0.6 });
+    });
+    corpo += `<line x1="${x0}" y1="${y + 44}" x2="${W - 52}" y2="${y + 44}"`
+           + ` stroke="currentColor" stroke-opacity="0.14" stroke-width="1"/>`;
+    corpo += `</g>`;
+  });
+
+  corpo += rot(x0, H - 22, fecho, { b: 3, tam: 12, op: 0.85 });
+
+  return svg(id, W, H,
+    'Três caminhos para a mesma capacidade, com investimento e limite de cada um. '
+    + 'Sem escala comum: os valores estão em unidades diferentes.', corpo);
+}
+
+const cena = (n) => CENAS.find((c) => c.n === n);
+const c5 = cena(5), c10 = cena(10), c11 = cena(11), c14 = cena(14),
+      c15 = cena(15), c19 = cena(19), c20 = cena(20);
+
+/* Cada verbete diz o que o desenho TEM DE PROVAR. É o critério de reprovação:
+   se olhar o desenho e a prova não estiver de pé, o diagrama volta. */
+const PECAS = [
+  { id: 'exclusao', cena: '5', campo: 'papel', beats: BEATS.exclusao,
+    titulo: 'Exclusão',
+    prova: 'pertencer, nunca somar',
+    nota: 'O texto da cena diz que −R$ 636,8 mil e R$ 222,9 mil não podem ser somados nem '
+        + 'subtraídos. Colchetes são notação de conjunto; não há eixo, escala nem sinal de '
+        + 'operação em lugar nenhum. Teste: isto sugere que 636,8 menos 222,9 dá alguma coisa?',
+    faz: () => exclusao(c5, 'exc') },
+
+  { id: 'escada', cena: '10', campo: 'papel', beats: BEATS.escada,
+    titulo: 'Escada',
+    prova: 'ordem sem cronograma',
+    nota: 'A fala diz que não é sequência rígida de projetos, e sim de capacidades. Por isso '
+        + 'não há data, trimestre nem eixo de tempo. As definições de cada degrau ficam na '
+        + 'coluna de HTML da cena: frase dentro de desenho vira ruído.',
+    faz: () => escada(c10.degraus, 'esc') },
+
+  { id: 'nucleo', cena: '11', campo: 'escuro', beats: BEATS.nucleo,
+    titulo: 'Núcleo',
+    prova: 'uma fundação, cinco usos',
+    nota: 'Metade do argumento comercial. A outra metade é o diagrama seguinte, e o bloco de '
+        + 'fundação tem de ser literalmente o mesmo retângulo nos dois.',
+    faz: () => nucleo(c11.tabela.linhas, 'nuc') },
+
+  { id: 'nucleo-invertido', cena: '19', campo: 'escuro', beats: BEATS.nucleoInvertido,
+    titulo: 'Núcleo invertido',
+    prova: 'seis fundações onde havia uma',
+    nota: 'O desperdício não é dito, é desenhado. Se o bloco de fundação daqui não for '
+        + 'idêntico ao da cena 11, a inversão não lê como inversão e o slide perde a razão de existir.',
+    faz: () => nucleoInvertido(c19.frentes, c19.valor, c19.valorRot, c19.nota, 'nvi') },
+
+  { id: 'quadrante', cena: '14', campo: 'escuro', beats: BEATS.quadrante,
+    titulo: 'Quadrante vazio',
+    prova: 'os dois eixos antes dos quatro nomes',
+    faz: () => quadrante(c14, 'qd') },
+
+  { id: 'quadrante-cheio', cena: '15', campo: 'escuro', beats: BEATS.quadranteCheio,
+    titulo: 'Quadrante povoado',
+    prova: 'um objeto em dois estados, não dois slides',
+    nota: 'É o mesmo quadrante da cena 14 recebendo as dezesseis oportunidades, um grupo por '
+        + 'beat. Se virar lista, a cena 14 não vale o tempo que custa. O risco de legibilidade '
+        + 'mora aqui, e é ele que dimensiona o modo matriz.',
+    /* c14, não c15: os eixos e os quatro nomes são os MESMOS objetos. A cena 15
+       não redeclara nenhum deles, e é exatamente essa a tese das duas cenas. */
+    faz: () => quadrante(c14, 'qdc', c15.portfolio) },
+
+  { id: 'comparacao', cena: '20', campo: 'papel', beats: BEATS.comparacao,
+    titulo: 'Comparação',
+    prova: 'a diferença, sem escala comum',
+    nota: 'Um total de projeto contra dois valores mensais: unidades diferentes. Barra ou eixo '
+        + 'compartilhado inventaria uma comparação que os números não sustentam.',
+    faz: () => comparacao(c20.caminhos, c20.fecho, 'cmp') },
+
+  { id: 'assentamento', cena: '22', campo: 'papel', beats: BEATS.comparacao,
+    titulo: 'Assentamento',
+    prova: 'o único gesto de ênfase do Ato 3',
+    nota: 'A mesma comparação com a linha do meio assentada. Opacidade e peso — nunca cor, '
+        + 'nunca brilho. A cena 21 não pode pré-destacar ninguém, ou a 22 fica sem função.',
+    /* 2, não 1: a recomendada é "Programa integrado", que é a TERCEIRA linha.
+       Na primeira rodada eu assentei a do meio por reflexo e a peça recomendou
+       montar equipe interna. "O do meio" é a coluna do meio da tabela de
+       níveis da cena 21 — outra cena, outro objeto. */
+    faz: () => comparacao(c20.caminhos, c20.fecho, 'ass', 2) },
+];
+
+const alvo = document.getElementById('lab');
+
+for (const p of PECAS) {
+  const sec = document.createElement('section');
+  sec.className = 'lb__sec';
+  sec.innerHTML = `<h2>${p.titulo} · cena ${p.cena}</h2>`
+    + `<span class="lb__prova">prova: ${p.prova}</span>`
+    + (p.nota ? `<p>${p.nota}</p>` : '');
+
+  /* A tira: um estado por beat, lado a lado, no campo em que a cena vive. */
+  const tiras = document.createElement('div');
+  tiras.className = 'lb__tiras';
+  const tira = document.createElement('div');
+  tira.className = 'lb__tira';
+  tira.style.setProperty('--n', p.beats);
+  for (let b = 1; b <= p.beats; b++) {
+    const cel = document.createElement('div');
+    cel.className = `lb__cel lb__cel--${p.campo}`;
+    cel.innerHTML = p.faz() + `<span class="lb__b">beat ${b}/${p.beats}</span>`;
+    noBeat(cel.querySelector('.dg'), b);
+    tira.appendChild(cel);
+  }
+  tiras.appendChild(tira);
+
+  /* A segunda tira é o MESMO desenho no campo oposto. O contraste dos rótulos
+     de serviço muda de comportamento entre papel e escuro, e a única forma de
+     saber é olhar os dois. */
+  const oposto = p.campo === 'papel' ? 'escuro' : 'papel';
+  const tira2 = document.createElement('div');
+  tira2.className = 'lb__tira';
+  tira2.style.setProperty('--n', p.beats);
+  for (let b = 1; b <= p.beats; b++) {
+    const cel = document.createElement('div');
+    cel.className = `lb__cel lb__cel--${oposto}`;
+    cel.innerHTML = p.faz() + `<span class="lb__b">${oposto} · ${b}</span>`;
+    noBeat(cel.querySelector('.dg'), b);
+    tira2.appendChild(cel);
+  }
+  tiras.appendChild(tira2);
+
+  /* E o estado final no quadro real, 16:9, com a folga que a cena vai dar. Se
+     não couber aqui, não cabe na cena — é a medida que importa, e é a que a
+     versão anterior desta apresentação não fez em 22 de 23 telas. */
+  const real = document.createElement('div');
+  real.className = 'lb__real';
+  const q = document.createElement('div');
+  q.className = `lb__quadro lb__cel--${p.campo}`;
+  q.innerHTML = p.faz();
+  noBeat(q.querySelector('.dg'), p.beats);
+  real.appendChild(q);
+  tiras.appendChild(real);
+
+  sec.appendChild(tiras);
+  alvo.appendChild(sec);
+}
+
+document.documentElement.dataset.pronto = '1';
+</script>
+
+</body>
+</html>
