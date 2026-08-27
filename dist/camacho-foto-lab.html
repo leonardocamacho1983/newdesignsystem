@@ -1,7 +1,10 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Direção de Arte Camacho</title>
-<meta name="description" content="Dez registros de direção de arte da marca Camacho, em duas camadas — composição e material — cada um atravessando seis formatos.">
+<title>Laboratório de fotografia</title>
+<meta name="description" content="A mesma foto em dez tratamentos do sistema Camacho: crua, ditherizada, hachurada, tingida, duotone, através da palavra, fora de registro.">
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwMDAiLz48cGF0aCBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zMiAxMmEyMCAyMCAwIDEgMCAwIDQwIDIwIDIwIDAgMCAwIDE5LjYtMTZINDEuMkExMC41IDEwLjUgMCAxIDEgNDEuMiAyOGgxMC40QTIwIDIwIDAgMCAwIDMyIDEyWiIvPjwvc3ZnPg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -896,170 +899,44 @@ code { font-family: var(--cmc-font-mono); font-size: 0.85em; }
                 display: flex; justify-content: space-between; gap: 3cqi; }
 
 </style>
-<header class="hero">
+</head>
+<body>
+
+<header class="hero cmc-inverse">
   <div class="cmc-shell">
-    <span class="cmc-lockup cmc-lockup--lg">
+    <a class="cmc-lockup cmc-lockup--sm" href="cadrian-brand.html">
       <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-        <rect width="64" height="64" rx="14" fill="currentColor"/>
-        <path fill="var(--cmc-bg)" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
       </svg>
       <span class="cmc-lockup__word" data-brand="name">Camacho</span>
-    </span>
-    <h1 class="cmc-display">Direção<br>de arte.</h1>
-    <p class="cmc-lead" style="max-width:52ch">
-      Dez registros em duas camadas. A primeira é gramática — onde o tipo senta
-      em relação à densidade. A segunda é material — o que a partícula está
-      fazendo, que é onde o sistema tinha um mundo inteiro parado.
-    </p>
-    <nav class="hero__nav">
-      <a class="cmc-tag" href="https://claude.ai/code/artifact/dbceae6a-0ea9-4fcf-9845-bdc238b4baa4"><span>Sistema</span></a>
-      <a class="cmc-tag" href="https://claude.ai/code/artifact/6b3b6d9b-cfb8-4ed7-a6ef-7645e19f5f60"><span>Posicionamento</span></a>
-      <a class="cmc-tag" href="https://claude.ai/code/artifact/448e707f-5e22-4fcf-a574-aaacd463b0fa"><span>Key visuals</span></a>
-      <a class="cmc-tag" href="https://claude.ai/code/artifact/95583fc1-01c2-4af8-9633-e85ff9e88cf2"><span>Motor gráfico</span></a>
-    </nav>
+    </a>
+    <div class="stack">
+      <h1 class="cmc-display">Foto,<br>dez tratamentos</h1>
+      <p class="cmc-lead cmc-muted">
+        A mesma imagem passada por tudo que o sistema sabe fazer com fotografia.
+        Escolher tratamento por descrição é adivinhar; aqui se escolhe olhando.
+        <strong>Solte uma foto</strong> e os dez refazem na hora — nada é enviado
+        a lugar nenhum.
+      </p>
+    </div>
+    <div class="cmc-controls" style="gap:var(--cmc-sp-4);flex-wrap:wrap">
+      <label class="cmc-btn cmc-btn--inverse" style="cursor:pointer">
+        Soltar uma foto<input id="entrada" type="file" accept="image/*" hidden>
+      </label>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="limpar" hidden>Voltar à placa</button>
+      <span class="cmc-small" id="estado">Placa sintética — troque por foto real para julgar de verdade.</span>
+    </div>
   </div>
 </header>
 
-<!-- ============================ 01 OS REGISTROS ============================ -->
-<section id="registros" class="cmc-section">
+<main>
+<section class="cmc-section">
   <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">Os registros</h2><span class="cmc-slide__num">01</span>
-    </div>
-    <p class="block__intro">
-      Cada um resolve o mesmo problema de um jeito diferente: onde a tipografia
-      pode existir sem cruzar com o grafismo. O <strong>Corte</strong> resolve por
-      geometria — a textura ocupa um lado. Os outros resolvem por
-      <strong>densidade</strong>: o motor faz a partícula desabar onde o texto vai,
-      então não há o que cruzar.
-    </p>
-    <div id="galeria-registros" class="stack-7"></div>
+    <div class="grid grid--2" id="lab"></div>
   </div>
 </section>
-
-<!-- ============================== 02 A MATRIZ ============================== -->
-<section id="matriz" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">A matriz</h2><span class="cmc-slide__num">02</span>
-    </div>
-    <p class="block__intro">
-      Cada registro atravessando os seis formatos, a partir de uma definição só:
-      slide 16:9, capa de relatório A4, hero banner 21:9, cartão 85 × 55 mm e os
-      dois de social. A célula do grão é reescalada pela largura de cada peça —
-      sem isso, a mesma arte teria pesos de grão diferentes numa miniatura e num
-      export, e é na miniatura que a direção de arte é julgada.
-    </p>
-    <div id="grade-matriz" class="stack-7"></div>
-  </div>
-</section>
-
-<!-- ============================= 03 A JANELA ============================= -->
-<section id="janela" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">Janela — fotografia</h2><span class="cmc-slide__num">03</span>
-    </div>
-    <div class="formats formats--pair">
-      <div class="stack">
-        <p class="cmc-lead" style="margin:0">
-          Fotografia entra como <strong>prova</strong>, nunca como banco de imagem.
-        </p>
-        <p class="cmc-small cmc-muted" style="margin:0">
-          A regra que já existe no sistema proíbe foto <em>de banco</em>, não
-          fotografia: um KV se refaz de forma, rampa e semente, e material
-          emprestado seria a única peça que ninguém consegue reproduzir — e a
-          única que outra empresa pode estar usando na mesma semana. Foto de
-          coisa real e específica (você, um workshop que aconteceu, uma sala)
-          não tem esse problema: ela é justamente o que não se gera.
-        </p>
-        <p class="cmc-small" style="margin:0">
-          <strong>Cor:</strong> sim, enquanto a foto for foto. No instante em que
-          ela é amostrada pelo motor, ela vira campo — e campo é monocromático,
-          porque a marca tem um canal semântico só e ele é densidade. As três
-          versões ao lado existem para você julgar isso vendo, não acreditando.
-        </p>
-        <div class="cmc-controls">
-          <label class="cmc-btn" for="foto-entrada">Escolher uma foto</label>
-          <input id="foto-entrada" type="file" accept="image/*" hidden>
-          <button class="cmc-btn cmc-btn--ghost" id="foto-limpar" type="button" hidden>Remover</button>
-        </div>
-        <p class="cmc-micro" id="foto-estado">
-          Nada é enviado a lugar nenhum: a foto é lida no seu navegador e some ao fechar a aba.
-        </p>
-      </div>
-      <div class="stack" id="foto-palco"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================== 04 AS VOZES ============================== -->
-<section id="vozes" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">O kit tipográfico</h2><span class="cmc-slide__num">04</span>
-    </div>
-    <p class="block__intro">
-      As três vozes entram na peça como propriedade, não como classe nova:
-      família, peso e tracking. Trocar de voz é trocar três valores — e a regra
-      que impede virar mingau continua valendo, elas nunca competem no mesmo bloco.
-    </p>
-    <div id="grade-vozes" class="formats formats--social"></div>
-  </div>
-</section>
-
-<!-- =============================== 05 REGRAS =============================== -->
-<section id="regras" class="cmc-section">
-  <div class="cmc-shell stack-7">
-    <div class="cmc-section-head">
-      <h2 class="cmc-h1">Regras</h2><span class="cmc-slide__num">05</span>
-    </div>
-    <div class="grid grid--2">
-      <ul class="rules rules--do stack">
-        <li><span class="rules__flag">Faça</span>
-          <p class="cmc-small">Deixe o tipo sentar onde a densidade cai. A clareira é o
-             que torna o campo sangrado legítimo; sem ela é o remendo de z-index que já
-             falhou uma vez aqui.</p></li>
-        <li><span class="rules__flag">Faça</span>
-          <p class="cmc-small">Use figura só quando a peça for <em>sobre</em> alguma coisa —
-             um tema editorial, um cliente. Institucional continua abstrato.</p></li>
-        <li><span class="rules__flag">Faça</span>
-          <p class="cmc-small">Reescale a célula com a largura da peça. Grão é medido em px
-             lógicos, então a mesma arte muda de peso entre a miniatura e o impresso.</p></li>
-        <li><span class="rules__flag">Faça</span>
-          <p class="cmc-small">Publique o buraco. Um registro que não atravessa um formato
-             é um achado, e vale mais que uma célula preenchida à força.</p></li>
-      </ul>
-      <ul class="rules rules--dont stack">
-        <li><span class="rules__flag">Não faça</span>
-          <p class="cmc-small">Cortina de gradiente por cima do grafismo para salvar a
-             manchete. Isso trata o sintoma; a clareira remove a causa.</p></li>
-        <li><span class="rules__flag">Não faça</span>
-          <p class="cmc-small">Figura como enfeite. Silhueta bonita sem assunto é a coisa
-             mais fácil de fazer e a que mais rápido descola a marca do argumento.</p></li>
-        <li><span class="rules__flag">Não faça</span>
-          <p class="cmc-small">Duas vozes disputando o mesmo bloco. Rótulo e número não vão
-             em serifada; texto longo não vai em mono.</p></li>
-        <li><span class="rules__flag">Não faça</span>
-          <p class="cmc-small">Manchete junto de Palavra. Se o tipo já é a imagem, uma
-             segunda linha grande cria duas manchetes e nenhuma.</p></li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<footer class="guide-foot">
-  <div class="cmc-shell">
-    <span class="cmc-lockup">
-      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-        <rect width="64" height="64" rx="14" fill="currentColor"/>
-        <path fill="var(--cmc-bg)" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-      </svg>
-      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
-    </span>
-    <p class="cmc-micro">Clareza é vantagem</p>
-  </div>
-</footer>
+</main>
 
 <script type="module">
 /* ==========================================================================
@@ -2329,733 +2206,178 @@ function brandFromUrl(fallback = BRAND) {
   const param = new URLSearchParams(location.search).get('brand');
   return param ? deriveBrand(param.trim(), fallback) : fallback;
 }
-/* ==========================================================================
-   Camacho — Key Visuals
-   --------------------------------------------------------------------------
-   Os KVs são DADO, não markup: esta lista alimenta a página do guia e o
-   exportador de PNG/vídeo. Um KV escrito à mão nos dois lugares divergiria no
-   primeiro ajuste.
+applyBrand(document, brandFromUrl());
 
-   Cada KV é uma ideia da marca desenhada pelo motor. Nenhuma imagem externa:
-   o sistema inteiro é gerado, e material emprestado seria a única coisa na
-   marca que ninguém consegue reproduzir a partir do código.
-   ========================================================================== */
+/* --- A placa -------------------------------------------------------------
+   Um fixture FOTOGRÁFICO, gerado em canvas. A placa que este repositório já
+   tinha (`_placa.png`) é de formas chapadas: serve para conferir luminância e
+   tingimento, e não serve para julgar tratamento de foto — não tem meio-tom,
+   não tem sombra, não tem grão.
 
-/** Campos disponíveis, com o par fundo/tinta. */
-const CAMPOS = {
-  escuro: { bg: '#000000', ink: '#FFFFFF', classe: '' },
-  papel:  { bg: '#F2F0EE', ink: '#000000', classe: 'kv--papel' },
-  branco: { bg: '#FFFFFF', ink: '#000000', classe: 'kv--branco' },
-};
+   Gerar em vez de embutir custa zero byte no arquivo final e passa pelo guard
+   de auto-contenção sem exceção nenhuma. E fica declarado no rótulo: é
+   sintética, e a escolha de verdade se faz com foto de verdade. */
+function placaSintetica() {
+  const W = 900, H = 640;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const x = c.getContext('2d');
 
-/** Formatos de saída. `w`/`h` são a resolução de exportação. */
-/* `base` é a única medida de tipo de cada formato, em cqi: manchete, apoio,
-   url, lockup, gap e padding derivam dela. Peça larga precisa de tipo menor
-   em relação à largura; peça alta, maior — é a mesma composição, calibrada. */
-const FORMATOS = [
-  /* Valores calibrados por medição, não por estimativa: cada um é o que deixa
-     o grafismo com cerca de metade da altura da peça (mais, nos verticais). */
-  { id: '16x9',  nome: 'Apresentação e site',  ar: '16/9',  w: 2560, h: 1440, base: 5 },
-  { id: '21x9',  nome: 'Hero e banner',        ar: '21/9',  w: 2520, h: 1080, base: 4 },
-  { id: '1x1',   nome: 'Post',                 ar: '1/1',   w: 1440, h: 1440, base: 9 },
-  { id: '4x5',   nome: 'Feed vertical',        ar: '4/5',   w: 1440, h: 1800, base: 11 },
-  { id: '9x16',  nome: 'Story',                ar: '9/16',  w: 1080, h: 1920, base: 14 },
-  /* Capa de LinkedIn: a proporção e os pixels são os que a plataforma usa. */
-  { id: 'capa',  nome: 'Capa de LinkedIn',      ar: '1584/396', w: 1584, h: 396, base: 3.4 },
-  /* Impressos. Aqui o pixel segue o PAPEL, não a plataforma: A4 a 300 dpi e
-     cartão 85x55 mm, o formato brasileiro. Slide de PPT não entra na lista —
-     PPT É 16:9, e uma segunda entrada na mesma proporção só criaria duas
-     calibragens para a mesma peça. */
-  { id: 'a4',     nome: 'Capa de relatório A4',  ar: '210/297',  w: 2480, h: 3508, base: 11 },
-  { id: 'cartao', nome: 'Cartão 85 × 55 mm',     ar: '85/55',    w: 1004, h: 650,  base: 10 },
+  const fundo = x.createLinearGradient(0, 0, 0, H);
+  fundo.addColorStop(0, '#e8c8bd');
+  fundo.addColorStop(1, '#d9ab9e');
+  x.fillStyle = fundo;
+  x.fillRect(0, 0, W, H);
+
+  /* Sombra projetada, elíptica e desfocada — é o que dá chão ao objeto. */
+  x.save();
+  x.filter = 'blur(26px)';
+  x.fillStyle = 'rgba(120,70,55,0.45)';
+  x.beginPath();
+  x.ellipse(W * 0.52, H * 0.78, W * 0.26, H * 0.055, -0.16, 0, Math.PI * 2);
+  x.fill();
+  x.restore();
+
+  /* A forma: um arco espesso com modelagem tonal ao longo da normal. Vinte
+     passes de elipse com deslocamento e clareamento progressivo dão o
+     volume que uma cor chapada não daria. */
+  const cx = W * 0.5, cy = H * 0.58, R = W * 0.30;
+  for (let k = 20; k >= 0; k--) {
+    const t = k / 20;
+    const esp = H * 0.085 * (1 - t * 0.55);
+    const l = 62 + 30 * (1 - t);
+    x.strokeStyle = `hsl(46 82% ${l}%)`;
+    x.lineWidth = esp;
+    x.lineCap = 'round';
+    x.beginPath();
+    x.arc(cx + t * 6, cy - t * 9, R, Math.PI * 1.08, Math.PI * 1.92);
+    x.stroke();
+  }
+  /* Cabo escuro numa ponta: dá referência de forma e um ponto de tom baixo. */
+  x.strokeStyle = '#6d5220'; x.lineWidth = H * 0.028; x.lineCap = 'round';
+  x.beginPath();
+  x.moveTo(cx + R * Math.cos(Math.PI * 1.92), cy + R * Math.sin(Math.PI * 1.92));
+  x.lineTo(cx + R * 1.16, cy - H * 0.10);
+  x.stroke();
+
+  /* Grão fotográfico: sem ele o dither não tem o que resolver nos meios-tons. */
+  const d = x.getImageData(0, 0, W, H), px = d.data;
+  for (let i = 0; i < px.length; i += 4) {
+    const n = (Math.random() - 0.5) * 16;
+    px[i] += n; px[i + 1] += n; px[i + 2] += n;
+  }
+  x.putImageData(d, 0, 0);
+  return c.toDataURL('image/png');
+}
+
+/* --- Os tratamentos ------------------------------------------------------
+   `foto` converte a imagem em luminância e usa como cobertura; `tint` pinta
+   cada célula com a cor da origem; `compor` cruza dois campos. Tudo já existe
+   — o que faltava era ver os cruzamentos lado a lado.
+
+   `crua: true` mostra a foto sem passar pelo motor. É o controle: sem ele não
+   dá para saber o que cada tratamento custou em informação. */
+const ACENTO = '#D9503F';
+const CREME = '#F2F0EE';
+
+const TRATAMENTOS = [
+  { nome: 'Crua, em cor', nota: 'O controle. Foto é prova enquanto é foto.', crua: true },
+
+  { nome: 'Ditherizada', nota: 'Vira matéria do sistema: reproduzível pela origem mais a semente.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 4, opts: { src: 'lab' } } },
+
+  { nome: 'Hachurada', nota: 'A mesma foto em gravura. Densidade vira espessura de traço.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 5, texture: 'hachura', opts: { src: 'lab' } } },
+
+  { nome: 'Meio-tom grande', nota: 'Ponto variável, trama de impressão. Lê a três metros.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 9, texture: 'halftone', opts: { src: 'lab' } } },
+
+  { nome: 'Tingida por célula', nota: 'Existe para ser julgada: com cor, nível deixa de ser legível.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 5, tint: 'lab', opts: { src: 'lab' } } },
+
+  /* Em campo claro a partícula é escura, então a cobertura é 1 − luminância:
+     tinta onde a foto é escura. Sem `inverter` o duotone sai como negativo. */
+  { nome: 'Duotone do sabor', nota: 'Partícula na cor do sabor sobre o creme. Polaridade invertida: em campo claro, tinta onde a foto é escura.',
+    fundo: CREME, cor: ACENTO,
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 4, opts: { src: 'lab', inverter: true } } },
+
+  /* `piso` na foto garante que a letra sempre tenha densidade mínima: com
+     min() puro, todo trecho escuro da foto esvazia o interior da letra e a
+     palavra deixa de ler. O piso mantém a forma; a foto modula dentro dela. */
+  { nome: 'Através da palavra', nota: 'Máscara de texto sobre máscara de imagem. `compor` já fazia — o que faltava era piso na foto, senão a letra esvazia.',
+    cfg: { shape: 'compor', ramp: [1, 1], cell: 3,
+           opts: { modo: 'min', a: { shape: 'text', opts: { text: 'banana', fit: 0.94 } },
+                   b: { shape: 'foto', opts: { src: 'lab', piso: 0.42, ganho: 1.6 } } } } },
+
+  { nome: 'Fora de registro', nota: 'A foto composta com ela mesma, deslocada. Duas leituras.',
+    cfg: { shape: 'compor', ramp: [1, 1], cell: 4,
+           opts: { modo: 'max', a: { shape: 'foto', opts: { src: 'lab' } },
+                   b: { shape: 'foto', opts: { src: 'lab' }, desloca: [0.018, 0.012] } } } },
+
+  { nome: 'Com clareira', nota: 'Sangrada, com terreno limpo onde a manchete senta.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 4, opts: { src: 'lab' },
+           clareira: [{ x: -0.05, y: -0.05, w: 0.52, h: 1.1, soft: 0.075, piso: 0.015 }] } },
+
+  { nome: 'Na rampa', nota: 'A foto resolvendo: ruído numa ponta, imagem na outra.',
+    cfg: { shape: 'foto', ramp: [0.04, 1], cell: 4, opts: { src: 'lab' } } },
 ];
 
-/**
- * Os quatro KVs. Cada um carrega uma das ideias da marca — e só uma, porque
- * um key visual que diz duas coisas não diz nenhuma.
- */
-const KVS = [
-  {
-    id: 'costura',
-    rotulo: 'KV 01 · A costura',
-    ideia: 'A tese: o lado técnico e o humano costurados na estratégia do negócio.',
-    manchete: 'Clareza\né vantagem.',
-    apoio: 'Estratégia, IA e liderança para transformar e escalar empresas.',
-    campo: 'escuro',
-    shape: 'weave',
-    ramp: [0.04, 1],
-    angle: 0,
-    seed: 7,
-    cell: 4,
-  },
-  {
-    id: 'clareza',
-    rotulo: 'KV 02 · Complexidade vira clareza',
-    ideia: 'A cadeia da marca, com a própria assinatura como grafismo.',
-    manchete: null,                    /* o grafismo É a manchete */
-    apoio: 'Do diagnóstico à capacidade instalada.',
-    campo: 'escuro',
-    shape: 'text',
-    opts: { text: 'Clareza\né vantagem', fit: 0.96 },
-    ramp: [0.06, 1],
-    angle: 0,
-    seed: 11,
-    cell: 4,
-  },
-  {
-    id: 'lacuna',
-    rotulo: 'KV 03 · A lacuna que se mede',
-    ideia: 'A marca como instrumento: a abertura do símbolo é a lacuna de capacidade.',
-    manchete: 'A lacuna\ndá para medir.',
-    apoio: 'AI Assessment & Opportunities.',
-    campo: 'papel',
-    shape: 'gauge',
-    ramp: [0.12, 1],
-    angle: 0,
-    seed: 23,
-    cell: 4,
-  },
-  {
-    id: 'capacidade',
-    rotulo: 'KV 04 · O que fica',
-    ideia: 'Transferência de capacidade: um lado esvazia, o outro enche.',
-    manchete: 'O objetivo não é\ndependência.',
-    apoio: 'A empresa precisa sustentar o que foi construído.',
-    campo: 'escuro',
-    shape: 'handoff',
-    ramp: [0.12, 1],
-    angle: 0,
-    seed: 31,
-    cell: 4,
-  },
-];
+const lab = document.getElementById('lab');
+const entrada = document.getElementById('entrada');
+const limpar = document.getElementById('limpar');
+const estado = document.getElementById('estado');
 
-/**
- * Ajustes por formato. O motor é ciente de proporção, então quase nada precisa
- * mudar — o que muda é a célula (peça pequena pede grão mais fino) e, nos
- * verticais, a direção da rampa, para que ela corra no eixo longo da peça.
- */
-function ajustar(kv, formato) {
-  const vertical = formato.id === '9x16' || formato.id === '4x5' || formato.id === 'a4';
-  return {
-    ...kv,
-    cell: formato.id === '9x16' ? 3 : kv.cell,
-    /* Rampa no eixo longo: em peça vertical, adensar de baixo para cima diz a
-       mesma coisa que da esquerda para a direita em peça horizontal. */
-    angle: vertical && kv.shape !== 'text' ? 90 : kv.angle,
-    /* O cartão não carrega linha de apoio, e isso é conta, não gosto: a 85 mm
-       de largura, o `base` que deixa a menor linha em 6 pt (o piso prático de
-       impressão) é 10 — e a 10 a tipografia come a peça, deixando o grafismo
-       numa tira. Ou o cartão perde o apoio, ou sai com texto de 4,3 pt. */
-    apoio: formato.id === 'cartao' ? null : kv.apoio,
-  };
-}
-
-/** Config do motor a partir de um KV já ajustado. */
-function configDoKV(kv, campo = CAMPOS[kv.campo]) {
-  return {
-    shape: kv.shape,
-    opts: kv.opts || null,
-    ramp: kv.ramp,
-    angle: kv.angle,
-    cell: kv.cell,
-    seed: kv.seed,
-    color: campo.ink,
-  };
-}
-/* ==========================================================================
-   Camacho — Direção de arte
-   --------------------------------------------------------------------------
-   Um REGISTRO é uma regra sobre onde o tipo pode sentar em relação à
-   densidade, qual das três vozes fala, e o que a peça pode conter. Não é um
-   humor nem uma paleta: é uma regra verificável.
-
-   Isto é DADO, pela mesma razão que os KVs são (src/kv.js): a matriz atravessa
-   seis formatos, e um registro escrito à mão em cada célula divergiria no
-   primeiro ajuste. Sem `import` aqui — o build embute este arquivo por
-   substituição de texto na página, e um import relativo sobreviveria ao
-   embutimento e daria 404 no dist.
-
-   A regra da casa é que grafismo não cruza com tipografia. Três destes
-   registros põem tipo sobre campo cheio, e eles só são possíveis porque a
-   `clareira` do motor faz a densidade desabar onde o texto vai: não há
-   partícula sob o tipo para cruzar. Cortina de gradiente por cima seria o
-   remendo que já falhou uma vez neste repositório.
-   ========================================================================== */
-
-/** Os formatos que a matriz atravessa, na ordem em que o exercício pede. */
-const GRADE = ['16x9', 'a4', '21x9', 'cartao', '1x1', '4x5'];
-
-/** As três vozes, como propriedades que a peça consome. */
-const VOZES = {
-  sistema:   { fonte: 'var(--cmc-font)',       peso: 300, track: '-0.035em' },
-  editorial: { fonte: 'var(--cmc-font-serif)', peso: 400, track: '-0.005em' },
-  medida:    { fonte: 'var(--cmc-font-mono)',  peso: 400, track: '-0.02em'  },
-};
-
-/**
- * Os registros.
- *
- * `layout` decide a composição:
- *   faixa    três faixas — assinatura, grafismo, manchete. O padrão do sistema.
- *   sangria  o grafismo ocupa a peça inteira e o tipo senta na clareira.
- *   muda     a peça não tem manchete: o grafismo É a manchete.
- *
- * `formatos` é a lista onde o registro funciona. Quando ela não é a grade
- * inteira, `nota` diz por quê — um buraco medido é achado, não omissão.
- */
-const REGISTROS = [
-  /* ---- Camada 1: COMPOSIÇÃO -------------------------------------------
-     Onde o tipo senta em relação à densidade. É gramática, não direção de
-     arte: os cinco são a mesma operação com o texto em lugares diferentes.
-     Ficam porque são a base que as peças usam todo dia — e porque servem de
-     controle para a camada de baixo. */
-  {
-    id: 'corte',
-    camada: 'composicao',
-    nome: 'Corte',
-    regra: 'A textura ocupa um lado; o tipo senta em terreno limpo do outro.',
-    quando: 'O padrão. É o que o hero do site e todo KV já fazem — entra aqui '
-          + 'como controle contra o qual os outros cinco são julgados, não como novidade.',
-    layout: 'faixa',
-    voz: 'sistema',
-    campo: 'escuro',
-    shape: 'weave', ramp: [0.04, 1], angle: 0, cell: 4, seed: 7,
-    manchete: 'Clareza\né vantagem.',
-    apoio: 'Estratégia, IA e liderança para transformar e escalar empresas.',
-    formatos: GRADE,
-  },
-  {
-    id: 'campo',
-    camada: 'composicao',
-    nome: 'Campo',
-    regra: 'O grafismo sangra pela peça inteira; o tipo senta numa clareira de densidade.',
-    quando: 'Quando a peça precisa de presença antes de precisar de argumento: '
-          + 'capa, abertura de deck, banner. A clareira é o que permite isso sem cortina.',
-    layout: 'sangria',
-    voz: 'sistema',
-    campo: 'escuro',
-    shape: 'fill', ramp: [0.05, 0.62], angle: 0, cell: 4, seed: 23,
-    copiaY: 0.46,
-    manchete: 'Complexidade\nvira clareza.',
-    apoio: 'Do diagnóstico à capacidade instalada.',
-    formatos: GRADE,
-  },
-  {
-    id: 'trama',
-    camada: 'composicao',
-    nome: 'Trama',
-    regra: 'O campo É o léxico: as palavras da marca são as partículas.',
-    quando: 'Peça que fala do método ou do repertório. A rampa decide onde a '
-          + 'palavra se lê e onde ela vira grão — a tese aplicada ao próprio vocabulário.',
-    layout: 'sangria',
-    voz: 'sistema',
-    campo: 'escuro',
-    shape: 'trama', ramp: [0.05, 1], angle: 0, cell: 3, seed: 11,
-    opts: { corpo: 0.052 },
-    copiaY: 0.48,
-    manchete: 'Seis etapas.\nUma delas todo\nprojeto pula.',
-    apoio: 'Diagnosticar · Priorizar · Estruturar · Implementar · Incorporar · Medir',
-    formatos: GRADE,
-  },
-  {
-    id: 'figura',
-    camada: 'composicao',
-    nome: 'Figura',
-    regra: 'Uma figura que só existe onde o campo resolve.',
-    quando: 'Peça que é SOBRE alguma coisa — um tema editorial, um cliente. '
-          + 'Peça institucional continua abstrata: figura sem assunto é ornamento.',
-    layout: 'sangria',
-    voz: 'editorial',
-    campo: 'escuro',
-    shape: 'cidade', ramp: [0.06, 1], angle: 0, cell: 4, seed: 31,
-    copiaY: 0.52,
-    manchete: 'A cidade\ncomo sistema\nde decisão.',
-    apoio: 'Cidadania digital e a dinâmica dos centros urbanos.',
-    formatos: GRADE,
-  },
-  {
-    id: 'palavra',
-    camada: 'composicao',
-    nome: 'Palavra',
-    regra: 'O tipo é a imagem, denso o bastante para ler perfeitamente.',
-    quando: 'Quando a frase já é a peça e qualquer grafismo ao lado dela competiria. '
-          + 'Não leva manchete: haveria duas.',
-    layout: 'muda',
-    voz: 'sistema',
-    campo: 'escuro',
-    shape: 'text', ramp: [0.14, 1], angle: 0, cell: 3, seed: 17,
-    opts: { text: 'Clareza\né vantagem', fit: 0.96 },
-    /* Em retrato a mesma frase em duas linhas largas encolhe até virar
-       borrão — medido na matriz, em A4 e 4:5. O tipo dissolvido se ajusta à
-       CAIXA, então peça alta pede quebra alta. Não é preferência: é a mesma
-       frase, quebrada para o formato que a recebe. */
-    optsAlto: { text: 'Clareza\né\nvantagem', fit: 0.9 },
-    manchete: null,
-    apoio: null,   /* o pé já carrega o domínio; repetir daria a mesma linha duas vezes */
-    formatos: GRADE,
-  },
-
-  /* ---- Camada 2: MATERIAL ----------------------------------------------
-     O que a PARTÍCULA está fazendo. Aqui estava o mundo parado: nenhuma peça
-     do sistema tinha usado `texture`, nenhuma tinha saído do campo escuro,
-     a célula nunca saiu de 3 ou 4, e o motor sempre aceitou uma função como
-     forma sem que ninguém compusesse dois campos.
-
-     Estes registros não movem o texto de lugar. Trocam o material. */
-
-  {
-    id: 'impressao',
-    camada: 'material',
-    nome: 'Impressão',
-    regra: 'Ponto ordenado, tinta sobre papel. O sistema como impresso, não como tela.',
-    quando: 'Relatório, cartão, proposta — tudo que sai numa folha. O grão '
-          + 'estocástico é uma textura de tela; o ponto ordenado é de gráfica, '
-          + 'e ele muda a temperatura da marca inteira sem trocar uma forma.',
-    layout: 'faixa',
-    voz: 'sistema',
-    campo: 'papel',
-    shape: 'weave', ramp: [0.14, 1], angle: 0, cell: 6, seed: 7,
-    texture: 'halftone',
-    manchete: 'Clareza\né vantagem.',
-    apoio: 'Estratégia, IA e liderança para transformar e escalar empresas.',
-    formatos: GRADE,
-  },
-  {
-    id: 'interferencia',
-    camada: 'material',
-    nome: 'Interferência',
-    regra: 'Duas grades fora de fase. O ruído não está em nenhuma das duas — está na relação.',
-    quando: 'A tese, desenhada por física em vez de ilustração: dois sistemas '
-          + 'que não conversam produzem ruído, e alinhados o ruído desaparece. '
-          + 'É o diagnóstico da marca (separar técnico de humano é o que faz '
-          + 'a transformação falhar) sem precisar de metáfora.',
-    layout: 'sangria',
-    voz: 'sistema',
-    campo: 'papel',
-    shape: 'interferencia', ramp: [0.7, 1], angle: 0, cell: 3, seed: 7,
-    texture: 'halftone',
-    opts: { passo: 0.07, giro: 10 },
-    copiaY: 0.5,
-    manchete: 'O ruído está\nna relação.',
-    apoio: 'Separar o técnico do humano é o que faz a transformação falhar.',
-    formatos: GRADE,
-  },
-  {
-    id: 'instrumento',
-    camada: 'material',
-    nome: 'Instrumento',
-    regra: 'A marca em N aberturas vira escala. O símbolo é o instrumento do diagnóstico.',
-    quando: 'Avaliação de maturidade, nível, lacuna. A abertura do C representa '
-          + 'a distância entre a complexidade enfrentada e a capacidade instalada '
-          + '— então a mesma letra, repetida em aberturas, JÁ é uma medição. '
-          + 'Para uma prática cuja porta de entrada é diagnóstico, o logo virar '
-          + 'o instrumento é o oposto de ornamento.',
-    layout: 'faixa',
-    voz: 'medida',
-    campo: 'papel',
-    shape: 'gauge', ramp: [0.12, 1], angle: 0, cell: 4, seed: 23,
-    texture: 'halftone',
-    manchete: 'A lacuna\ndá para medir.',
-    apoio: 'Seis dimensões, uma leitura, a sequência que fecha as lacunas na ordem certa.',
-    formatos: GRADE,
-  },
-  {
-    id: 'costura',
-    camada: 'material',
-    nome: 'Costura',
-    regra: 'Dois campos, um operador: a palavra só existe onde o entrelace passa.',
-    quando: 'O diferencial da marca escrito em vez de desenhado. O motor sempre '
-          + 'aceitou uma função como forma; compor texto com o entrelace faz a '
-          + 'mensagem depender do cruzamento dos dois fios — que é literalmente '
-          + 'o argumento.',
-    layout: 'muda',
-    voz: 'sistema',
-    campo: 'escuro',
-    shape: 'compor', ramp: [0.35, 1], angle: 0, cell: 3, seed: 7,
-    opts: {
-      a: { shape: 'text', opts: { text: 'Clareza', fit: 0.95 } },
-      b: { shape: 'weave', opts: { w: 0.75, amp: 0.6, cycles: 1.4 } },
-      modo: 'min',
-    },
-    optsAlto: {
-      a: { shape: 'text', opts: { text: 'Clareza', fit: 0.9 } },
-      b: { shape: 'weave', opts: { w: 0.9, amp: 0.7, cycles: 1.1 } },
-      modo: 'min',
-    },
-    manchete: null,
-    apoio: null,
-    formatos: GRADE,
-  },
-  {
-    id: 'escala',
-    camada: 'material',
-    nome: 'Escala',
-    regra: 'A célula como variável de expressão: a mesma forma, do fotográfico ao brutal.',
-    quando: 'Peça que precisa de peso físico — pôster, abertura, capa grande. '
-          + 'A célula é medida em px lógicos e sempre ficou em 3 ou 4; a 12 ou '
-          + '18 a partícula deixa de ser textura e vira objeto.',
-    layout: 'faixa',
-    voz: 'sistema',
-    campo: 'branco',
-    shape: 'text', ramp: [0.2, 1], angle: 0, cell: 12, seed: 17,
-    texture: 'halftone',
-    opts: { text: 'Clareza', fit: 0.95 },
-    optsAlto: { text: 'Clareza', fit: 0.9 },
-    manchete: null,
-    apoio: 'A partícula deixa de ser textura e vira objeto.',
-    formatos: GRADE,
-  },
-];
-
-/**
- * O repertório de figuras. Cada uma é recrutada por um ASSUNTO, não pela
- * marca — é a regra do registro Figura desenhada em quatro casos. Peça
- * institucional continua abstrata; estas existem porque a peça é sobre
- * alguma coisa.
- */
-const FIGURAS = [
-  { shape: 'cidade', assunto: 'Editorial',
-    manchete: 'A cidade\ncomo sistema\nde decisão.',
-    apoio: 'Cidadania digital e a dinâmica dos centros urbanos.' },
-  { shape: 'pessoa', assunto: 'O fio humano',
-    manchete: 'Ninguém decide\nmelhor sozinho.',
-    apoio: 'Liderança, times e a parte da transformação que não é técnica.' },
-  { shape: 'arvore', assunto: 'Capacidade instalada',
-    manchete: 'O que fica\ndepois que eu saio.',
-    apoio: 'Capacidade que cresce sem depender de quem plantou.' },
-  { shape: 'banana', assunto: 'Cliente · Bananamilk',
-    manchete: 'A operação\ninteira, legível.',
-    apoio: 'Do dado disperso ao painel que a diretoria usa para decidir.' },
-];
-
-/** Ajusta um registro ao formato. Mesma função que `ajustar` faz para os KVs. */
-function ajustarRegistro(reg, formato) {
-  const vertical = formato.id === '9x16' || formato.id === '4x5' || formato.id === 'a4';
-  const alto = vertical || formato.id === '1x1';
-  return {
-    ...reg,
-    /* Rampa no eixo longo em peça vertical — menos no tipo dissolvido, onde
-       girar a rampa leria como degradê sobre as letras. */
-    angle: vertical && reg.shape !== 'text' && reg.shape !== 'trama' ? 90 : reg.angle,
-    /* A clareira mora na parte de baixo, que é onde a cópia senta. Em peça
-       alta ela precisa de menos altura relativa: o mesmo texto ocupa uma
-       fração menor da peça. */
-    /* Duas clareiras. A de cima não é escolha do registro: toda peça tem a
-       assinatura no alto à esquerda, então a faixa que a protege é propriedade
-       do componente. `piso` baixo porque texto pequeno não sobrevive nem a 6%
-       de partícula — medido, com grão cruzando o lockup.
-
-       As duas TRANSBORDAM a peça. Clareira que termina exatamente na borda
-       tem a transição suave mordendo para dentro: a proteção afrouxa
-       justamente no rodapé, e a partícula volta para cima da linha de apoio.
-       Foi o que a primeira rodada mostrou no canto inferior direito. */
-    clareira: reg.copiaY
-      ? [
-          { x: -0.2, y: -0.3, w: 0.85, h: 0.3 + (alto ? 0.13 : 0.2), soft: 0.1, piso: 0.02 },
-          { x: -0.2, y: reg.copiaY + (alto ? 0.1 : 0), w: 1.4,
-            h: 1.3 - reg.copiaY - (alto ? 0.1 : 0), soft: 0.14, piso: 0.02 },
-        ]
-      : null,
-    /* O cartão não carrega linha de apoio — a mesma conta de legibilidade que
-       vale para os KVs (6 pt é o piso a 85 mm de largura). */
-    apoio: formato.id === 'cartao' ? null : reg.apoio,
-    opts: alto && reg.optsAlto ? reg.optsAlto : reg.opts,
-  };
-}
-
-/** Config do motor a partir de um registro já ajustado. */
-function configDoRegistro(reg, campo) {
-  return {
-    shape: reg.shape,
-    opts: reg.opts || null,
-    ramp: reg.ramp,
-    angle: reg.angle,
-    cell: reg.cell,
-    seed: reg.seed,
-    clareira: reg.clareira || null,
-    texture: reg.texture || 'grain',
-    color: campo.ink,
-  };
-}
-
-/**
- * A célula é medida em px lógicos, então a mesma peça numa miniatura de 280 px
- * e num export de 2560 px teria pesos de grão completamente diferentes.
- * Escalar pela largura mantém o grão com o MESMO peso visual — e é na
- * miniatura, não no export, que a direção de arte é julgada.
- */
-function celulaPara(cell, largura, projeto = 1280) {
-  return Math.min(24, Math.max(2, Math.round(cell * (largura / projeto))));
-}
-
-const marca = applyBrand(document, brandFromUrl());
-const fmt = (id) => FORMATOS.find((f) => f.id === id);
-
-const MARCA_SVG = `
-  <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-    <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-  </svg>`;
-
-/**
- * Uma peça. Mesma função para a galeria, para a matriz e para o modo solo —
- * a peça publicada e a peça exportada saem da MESMA composição, e não de dois
- * códigos que divergem no primeiro ajuste.
- */
-function peca(reg, formato, id) {
-  const campo = CAMPOS[reg.campo];
-  const a = ajustarRegistro(reg, formato);
-  const cfg = configDoRegistro(a, campo);
-  const voz = VOZES[reg.voz];
-  const mod = a.layout === 'faixa' ? '' : ` cmc-kv--${a.layout}`;
-  return `
-  <div class="cmc-kv${mod}" id="${id}" data-registro="${reg.id}" data-formato="${formato.id}"
-       style="--kv-ar:${formato.ar};--kv-bg:${campo.bg};--kv-ink:${campo.ink};--kv-base:${formato.base}cqi;--kv-voz:${voz.fonte};--kv-peso:${voz.peso};--kv-track:${voz.track}">
-    <div class="cmc-kv__inner">
-      <span class="cmc-lockup cmc-kv__lockup">${MARCA_SVG}<span class="cmc-lockup__word">${marca.name}</span></span>
-      <div class="cmc-kv__art">
-        <canvas data-cmc-dither="${cfg.shape}" data-ramp="${cfg.ramp.join(',')}"
-                data-angle="${cfg.angle}" data-cell="${cfg.cell}" data-seed="${cfg.seed}"
-                data-base-cell="${cfg.cell}" data-texture="${cfg.texture}"
-                ${cfg.opts ? `data-opts='${JSON.stringify(cfg.opts)}'` : ''}
-                ${cfg.clareira ? `data-clareira='${JSON.stringify(cfg.clareira)}'` : ''}
-                aria-label="${reg.nome}: ${reg.regra}"></canvas>
-      </div>
-      <div class="cmc-kv__copy">
-        ${a.manchete ? `<h3 class="cmc-kv__hed">${a.manchete.replace(/\n/g, '<br>')}</h3>` : ''}
-        <div class="cmc-kv__pe">
-          ${a.apoio ? `<p class="cmc-kv__apoio">${a.apoio}</p>` : '<span></span>'}
-          <span class="cmc-kv__url">${marca.domain}</span>
-        </div>
-      </div>
+lab.innerHTML = TRATAMENTOS.map((t, i) => `
+  <figure class="spec spec--outline" style="margin:0;gap:var(--cmc-sp-3)">
+    <div class="format__frame" style="--ar:16/11;background:${t.fundo || 'var(--cmc-black)'};
+         color:${t.cor || 'var(--cmc-white)'};position:relative;overflow:hidden;padding:0">
+      ${t.crua
+        ? '<img data-crua alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">'
+        : `<canvas data-i="${i}" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true"></canvas>`}
     </div>
-  </div>`;
-}
+    <figcaption class="cmc-micro"><strong>${String(i + 1).padStart(2, '0')} · ${t.nome}</strong><br>${t.nota}</figcaption>
+  </figure>`).join('');
 
-/**
- * A célula é medida em px lógicos, então a mesma peça a 280 px e a 2560 px
- * teria pesos de grão completamente diferentes. Reescalar pela largura real,
- * depois do layout, é o que mantém o grão com o mesmo peso visual — e é na
- * miniatura que a direção de arte é julgada, não no export.
- */
-function reescalarGrao(raiz = document) {
-  for (const c of raiz.querySelectorAll('canvas[data-base-cell]')) {
-    const larg = c.getBoundingClientRect().width;
-    if (larg) c.dataset.cell = celulaPara(Number(c.dataset.baseCell), larg);
+function desenhar() {
+  for (const cv of lab.querySelectorAll('canvas[data-i]')) {
+    render(cv, TRATAMENTOS[Number(cv.dataset.i)].cfg);
   }
 }
 
-const q = new URLSearchParams(location.search);
-const solo = q.get('solo');
-
-if (solo) {
-  /* Modo solo: ?solo=<registro>&fmt=<formato>&cell=<px> desenha uma peça só,
-     ocupando a janela. É o alvo de exportação e o de medição em tamanho real. */
-  const reg = REGISTROS.find((r) => r.id === solo) || REGISTROS[0];
-  const formato = fmt(q.get('fmt')) || fmt('16x9');
-  document.body.innerHTML = peca(reg, formato, 'solo');
-  document.body.style.cssText = 'margin:0;overflow:hidden';
-  const el = document.getElementById('solo');
-  el.style.width = '100vw';
-  el.style.aspectRatio = formato.ar;
-  const forcada = Number(q.get('cell'));
-  if (forcada) el.querySelector('canvas').dataset.cell = forcada;
-  else reescalarGrao(el);
-  init();
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.documentElement.dataset.kvPronto = '1';
-  }));
-} else {
-
-/* --- 01 Os registros, cada um na sua peça grande --- */
-const CAMADAS = [
-  ['composicao', 'Composição — onde o tipo senta',
-   'Gramática, não direção de arte: os cinco são a mesma operação com o texto em '
-   + 'lugares diferentes. Ficam porque são a base das peças do dia a dia, e porque '
-   + 'servem de controle para a camada seguinte.'],
-  ['material', 'Material — o que a partícula faz',
-   'Aqui estava o mundo parado. Nenhuma peça do sistema tinha usado <code>texture</code>, '
-   + 'nenhuma tinha saído do campo escuro, a célula nunca saiu de 3 ou 4, e o motor '
-   + 'sempre aceitou uma função como forma sem que ninguém compusesse dois campos. '
-   + 'Estes registros não movem o texto de lugar — trocam o material.'],
-];
-const bloco = (id) => REGISTROS.filter((r) => r.camada === id);
-
-document.getElementById('galeria-registros').innerHTML = CAMADAS.map(([id, titulo, intro]) => `
-  <div class="stack-5">
-    <h3 class="cmc-h2" style="margin:0">${titulo}</h3>
-    <p class="block__intro" style="margin:0">${intro}</p>
-  </div>
-  ${bloco(id).map((reg) => `
-  <div class="block">
-    <div class="cmc-section-head" style="margin:0;border:0;padding:0">
-      <p class="cmc-h2">${reg.nome}</p>
-      <span class="cmc-micro">${reg.shape} · ${reg.voz} · semente ${reg.seed}</span>
-    </div>
-    <div class="formats formats--pair">
-      <div class="stack">
-        <p class="cmc-lead" style="margin:0">${reg.regra}</p>
-        <p class="cmc-small cmc-muted" style="margin:0">${reg.quando}</p>
-        ${reg.formatos.length < GRADE.length
-          ? `<p class="cmc-small" style="margin:0"><strong>Não atravessa:</strong> ${reg.nota}</p>` : ''}
-      </div>
-      ${peca(reg, fmt('16x9'), `reg-${reg.id}`)}
-    </div>
-    ${reg.id === 'figura' ? `
-    <div class="stack" style="--tira-h:11rem">
-      <p class="cmc-small cmc-muted" style="margin:0">
-        O repertório. Cada figura é recrutada por um assunto — tema editorial,
-        o lado humano do trabalho, a capacidade que fica, um cliente. Nenhuma
-        delas serve para peça institucional: lá a marca fala por forma abstrata.
-      </p>
-      <div class="tira">
-        ${FIGURAS.map((f, i) => `
-          <figure class="format">
-            ${peca({ ...reg, ...f, seed: 31 + i * 13, voz: 'editorial' }, fmt('16x9'), `fig-${f.shape}`)}
-            <figcaption class="cmc-micro">${f.shape} · ${f.assunto}</figcaption>
-          </figure>`).join('')}
-      </div>
-    </div>` : ''}
-  </div>`).join('')}`).join('');
-
-/* --- 02 A matriz: cada registro atravessando os seis formatos --- */
-document.getElementById('grade-matriz').innerHTML = CAMADAS.map(([id, titulo]) => `
-  <h3 class="cmc-h2" style="margin:0">${titulo}</h3>
-  ${bloco(id).map((reg) => `
-  <div class="block">
-    <div class="cmc-section-head" style="margin:0;border:0;padding:0">
-      <p class="cmc-h2">${reg.nome}</p>
-      <span class="cmc-micro">${reg.formatos.length} de ${GRADE.length} formatos</span>
-    </div>
-    <div class="tira">
-      ${GRADE.map((id) => {
-        const f = fmt(id);
-        if (!reg.formatos.includes(id)) return `
-          <figure class="format">
-            <div class="format__frame format__frame--white format__frame--center"
-                 style="--ar:${f.ar};display:grid;place-items:center;padding:6cqi">
-              <p class="cmc-micro" style="text-align:center">não atravessa</p>
-            </div>
-            <figcaption class="cmc-micro">${f.nome} · ${f.ar.replace('/', ':')}</figcaption>
-          </figure>`;
-        return `
-          <figure class="format">
-            ${peca(reg, f, `m-${reg.id}-${id}`)}
-            <figcaption class="cmc-micro">${f.nome} · ${f.ar.replace('/', ':')}</figcaption>
-          </figure>`;
-      }).join('')}
-    </div>
-  </div>`).join('')}`).join('');
-
-/* --- 03 As vozes, com acentuação, que é onde fonte substituta se entrega --- */
-const AMOSTRA = {
-  sistema: ['Voz de sistema', 'Inter Tight', 'Clareza é vantagem', 'Títulos, interface, rótulo, marca.'],
-  editorial: ['Voz editorial', 'Source Serif 4', 'Ação, coração, país', 'Diagnóstico, artigo, material de formação.'],
-  medida: ['Voz de medição', 'IBM Plex Mono', '0123456789 · 3/5', 'Indicador, nível, rótulo de dado.'],
-};
-document.getElementById('grade-vozes').innerHTML = Object.entries(VOZES).map(([id, v]) => {
-  const [rot, familia, amostra, papel] = AMOSTRA[id];
-  return `
-  <figure class="format">
-    <div class="format__frame format__frame--paper" style="--ar:4/3;place-content:center">
-      <p class="cmc-micro">${rot}</p>
-      <p style="margin:0;font-family:${v.fonte};font-weight:${v.peso};letter-spacing:${v.track};font-size:7cqi;line-height:1.05">${amostra}</p>
-      <p class="format__note format__note--muted" style="--note:3.4cqi">${papel}</p>
-    </div>
-    <figcaption class="cmc-micro">${familia} · ${v.peso} · ${v.track}</figcaption>
-  </figure>`;
-}).join('');
-
-/* --- 03 Janela: a foto entra pelo navegador de quem abre a página --------
-   O artifact é publicado e compartilhado, então uma zona de arrastar vazia
-   apareceria como caixa em branco para todo mundo que abrisse o link. Por
-   isso a placa marcada: ela diz o que a peça seria, sem fingir que é. */
-const palco = document.getElementById('foto-palco');
-const entrada = document.getElementById('foto-entrada');
-const limpar = document.getElementById('foto-limpar');
-const estado = document.getElementById('foto-estado');
-
-const TRATAMENTOS = [
-  ['Prova', 'A foto intacta, colorida, no quadro dela. O sistema não encosta.', 'crua'],
-  ['Campo', 'Amostrada pelo motor: virou grafismo, então virou monocromática.', 'mono'],
-  ['Cor por célula', 'A opção que existe e que eu não recomendo — a densidade deixa de comunicar nível.', 'tint'],
-];
-
-function placa() {
-  palco.innerHTML = `
-    <div class="cmc-kv" style="--kv-ar:16/9;--kv-bg:var(--cmc-steel);--kv-ink:#fff;--kv-base:5cqi">
-      <div class="cmc-kv__inner" style="place-content:center">
-        <p class="cmc-measure" style="text-align:center;color:#fff">
-          sem foto carregada<br>o registro precisa de uma imagem real para existir
-        </p>
-      </div>
-    </div>`;
-}
-
-function montar(url) {
-  palco.innerHTML = TRATAMENTOS.map(([nome, nota, modo]) => `
-    <figure class="format" style="width:100%">
-      ${modo === 'crua'
-        ? `<div class="format__frame format__frame--center" style="--ar:16/9">
-             <img alt="Foto carregada por quem abriu a página"
-                  style="width:100%;height:100%;object-fit:cover;display:block">
-           </div>`
-        : `<div class="cmc-kv" style="--kv-ar:16/9;--kv-bg:#000;--kv-ink:#fff;--kv-base:5cqi">
-             <div class="cmc-kv__inner">
-               <span></span>
-               <div class="cmc-kv__art">
-                 <canvas data-cmc-dither="foto" data-ramp="0.08,1" data-cell="4" data-seed="7"
-                         data-base-cell="4" ${modo === 'tint' ? 'data-tint="janela"' : ''}
-                         data-opts='{"src":"janela"}' aria-label="${nome}"></canvas>
-               </div>
-               <span></span>
-             </div>
-           </div>`}
-      <figcaption class="cmc-micro"><strong>${nome}</strong> · ${nota}</figcaption>
-    </figure>`).join('');
-  /* O endereço entra por DOM, não no template. Um atributo de origem literal
-     no fonte é exatamente o que o guard do build procura, e ele está certo em
-     procurar — quem tem que mudar é o template, não o guard. (Este comentário
-     já foi escrito uma vez com o atributo escrito por extenso, e o guard o
-     pegou também. Ele funciona.) */
-  const im = palco.querySelector('img');
-  if (im) im.src = url;
-  reescalarGrao(palco);
-  init(palco);
-}
-
-entrada.addEventListener('change', async () => {
-  const arq = entrada.files && entrada.files[0];
-  if (!arq) return;
-  const url = URL.createObjectURL(arq);
+async function usar(url, rotulo) {
   const img = new Image();
   img.src = url;
   /* Decodificar ANTES de registrar: o contrato do campo é síncrono, e uma
      imagem ainda não decodificada entraria no motor com largura zero. */
   await img.decode();
-  registrarFonte('janela', img);
-  montar(url);
+  registrarFonte('lab', img);
+  /* O endereço entra por DOM, nunca no template: um atributo de origem
+     literal é exatamente o que o guard de auto-contenção procura, e ele está
+     certo em procurar. */
+  for (const im of lab.querySelectorAll('img[data-crua]')) im.src = url;
+  desenhar();
+  estado.textContent = rotulo;
+  document.documentElement.dataset.labPronto = '1';
+}
+
+const PLACA = placaSintetica();
+usar(PLACA, 'Placa sintética — troque por foto real para julgar de verdade.');
+
+entrada.addEventListener('change', async () => {
+  const arq = entrada.files && entrada.files[0];
+  if (!arq) return;
+  await usar(URL.createObjectURL(arq), `${arq.name} · lida no navegador, não enviada a lugar nenhum.`);
   limpar.hidden = false;
-  estado.textContent = `${arq.name} · lida no navegador, não enviada a lugar nenhum.`;
 });
 
 limpar.addEventListener('click', () => {
   entrada.value = '';
   limpar.hidden = true;
-  estado.textContent = 'Nada é enviado a lugar nenhum: a foto é lida no seu navegador e some ao fechar a aba.';
-  placa();
+  usar(PLACA, 'Placa sintética — troque por foto real para julgar de verdade.');
 });
 
-placa();
-
-reescalarGrao();
-init();
-
-let raf;
-addEventListener('resize', () => {
-  cancelAnimationFrame(raf);
-  raf = requestAnimationFrame(() => reescalarGrao());
-});
-
-}
+addEventListener('resize', () => { clearTimeout(window.__t); window.__t = setTimeout(desenhar, 160); });
+init(document);
 </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratório de fotografia</title>
+<meta name="description" content="A mesma foto em dez tratamentos do sistema Camacho: crua, ditherizada, hachurada, tingida, duotone, através da palavra, fora de registro.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/guide.css">
+</head>
+<body>
+
+<header class="hero cmc-inverse">
+  <div class="cmc-shell">
+    <a class="cmc-lockup cmc-lockup--sm" href="index.html">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </a>
+    <div class="stack">
+      <h1 class="cmc-display">Foto,<br>dez tratamentos</h1>
+      <p class="cmc-lead cmc-muted">
+        A mesma imagem passada por tudo que o sistema sabe fazer com fotografia.
+        Escolher tratamento por descrição é adivinhar; aqui se escolhe olhando.
+        <strong>Solte uma foto</strong> e os dez refazem na hora — nada é enviado
+        a lugar nenhum.
+      </p>
+    </div>
+    <div class="cmc-controls" style="gap:var(--cmc-sp-4);flex-wrap:wrap">
+      <label class="cmc-btn cmc-btn--inverse" style="cursor:pointer">
+        Soltar uma foto<input id="entrada" type="file" accept="image/*" hidden>
+      </label>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="limpar" hidden>Voltar à placa</button>
+      <span class="cmc-small" id="estado">Placa sintética — troque por foto real para julgar de verdade.</span>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="cmc-section">
+  <div class="cmc-shell stack-7">
+    <div class="grid grid--2" id="lab"></div>
+  </div>
+</section>
+</main>
+
+<script type="module">
+import { init, render, registrarFonte } from './src/dither.js';
+import { applyBrand, brandFromUrl } from './src/brand.js';
+applyBrand(document, brandFromUrl());
+
+/* --- A placa -------------------------------------------------------------
+   Um fixture FOTOGRÁFICO, gerado em canvas. A placa que este repositório já
+   tinha (`_placa.png`) é de formas chapadas: serve para conferir luminância e
+   tingimento, e não serve para julgar tratamento de foto — não tem meio-tom,
+   não tem sombra, não tem grão.
+
+   Gerar em vez de embutir custa zero byte no arquivo final e passa pelo guard
+   de auto-contenção sem exceção nenhuma. E fica declarado no rótulo: é
+   sintética, e a escolha de verdade se faz com foto de verdade. */
+function placaSintetica() {
+  const W = 900, H = 640;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const x = c.getContext('2d');
+
+  const fundo = x.createLinearGradient(0, 0, 0, H);
+  fundo.addColorStop(0, '#e8c8bd');
+  fundo.addColorStop(1, '#d9ab9e');
+  x.fillStyle = fundo;
+  x.fillRect(0, 0, W, H);
+
+  /* Sombra projetada, elíptica e desfocada — é o que dá chão ao objeto. */
+  x.save();
+  x.filter = 'blur(26px)';
+  x.fillStyle = 'rgba(120,70,55,0.45)';
+  x.beginPath();
+  x.ellipse(W * 0.52, H * 0.78, W * 0.26, H * 0.055, -0.16, 0, Math.PI * 2);
+  x.fill();
+  x.restore();
+
+  /* A forma: um arco espesso com modelagem tonal ao longo da normal. Vinte
+     passes de elipse com deslocamento e clareamento progressivo dão o
+     volume que uma cor chapada não daria. */
+  const cx = W * 0.5, cy = H * 0.58, R = W * 0.30;
+  for (let k = 20; k >= 0; k--) {
+    const t = k / 20;
+    const esp = H * 0.085 * (1 - t * 0.55);
+    const l = 62 + 30 * (1 - t);
+    x.strokeStyle = `hsl(46 82% ${l}%)`;
+    x.lineWidth = esp;
+    x.lineCap = 'round';
+    x.beginPath();
+    x.arc(cx + t * 6, cy - t * 9, R, Math.PI * 1.08, Math.PI * 1.92);
+    x.stroke();
+  }
+  /* Cabo escuro numa ponta: dá referência de forma e um ponto de tom baixo. */
+  x.strokeStyle = '#6d5220'; x.lineWidth = H * 0.028; x.lineCap = 'round';
+  x.beginPath();
+  x.moveTo(cx + R * Math.cos(Math.PI * 1.92), cy + R * Math.sin(Math.PI * 1.92));
+  x.lineTo(cx + R * 1.16, cy - H * 0.10);
+  x.stroke();
+
+  /* Grão fotográfico: sem ele o dither não tem o que resolver nos meios-tons. */
+  const d = x.getImageData(0, 0, W, H), px = d.data;
+  for (let i = 0; i < px.length; i += 4) {
+    const n = (Math.random() - 0.5) * 16;
+    px[i] += n; px[i + 1] += n; px[i + 2] += n;
+  }
+  x.putImageData(d, 0, 0);
+  return c.toDataURL('image/png');
+}
+
+/* --- Os tratamentos ------------------------------------------------------
+   `foto` converte a imagem em luminância e usa como cobertura; `tint` pinta
+   cada célula com a cor da origem; `compor` cruza dois campos. Tudo já existe
+   — o que faltava era ver os cruzamentos lado a lado.
+
+   `crua: true` mostra a foto sem passar pelo motor. É o controle: sem ele não
+   dá para saber o que cada tratamento custou em informação. */
+const ACENTO = '#D9503F';
+const CREME = '#F2F0EE';
+
+const TRATAMENTOS = [
+  { nome: 'Crua, em cor', nota: 'O controle. Foto é prova enquanto é foto.', crua: true },
+
+  { nome: 'Ditherizada', nota: 'Vira matéria do sistema: reproduzível pela origem mais a semente.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 4, opts: { src: 'lab' } } },
+
+  { nome: 'Hachurada', nota: 'A mesma foto em gravura. Densidade vira espessura de traço.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 5, texture: 'hachura', opts: { src: 'lab' } } },
+
+  { nome: 'Meio-tom grande', nota: 'Ponto variável, trama de impressão. Lê a três metros.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 9, texture: 'halftone', opts: { src: 'lab' } } },
+
+  { nome: 'Tingida por célula', nota: 'Existe para ser julgada: com cor, nível deixa de ser legível.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 5, tint: 'lab', opts: { src: 'lab' } } },
+
+  /* Em campo claro a partícula é escura, então a cobertura é 1 − luminância:
+     tinta onde a foto é escura. Sem `inverter` o duotone sai como negativo. */
+  { nome: 'Duotone do sabor', nota: 'Partícula na cor do sabor sobre o creme. Polaridade invertida: em campo claro, tinta onde a foto é escura.',
+    fundo: CREME, cor: ACENTO,
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 4, opts: { src: 'lab', inverter: true } } },
+
+  /* `piso` na foto garante que a letra sempre tenha densidade mínima: com
+     min() puro, todo trecho escuro da foto esvazia o interior da letra e a
+     palavra deixa de ler. O piso mantém a forma; a foto modula dentro dela. */
+  { nome: 'Através da palavra', nota: 'Máscara de texto sobre máscara de imagem. `compor` já fazia — o que faltava era piso na foto, senão a letra esvazia.',
+    cfg: { shape: 'compor', ramp: [1, 1], cell: 3,
+           opts: { modo: 'min', a: { shape: 'text', opts: { text: 'banana', fit: 0.94 } },
+                   b: { shape: 'foto', opts: { src: 'lab', piso: 0.42, ganho: 1.6 } } } } },
+
+  { nome: 'Fora de registro', nota: 'A foto composta com ela mesma, deslocada. Duas leituras.',
+    cfg: { shape: 'compor', ramp: [1, 1], cell: 4,
+           opts: { modo: 'max', a: { shape: 'foto', opts: { src: 'lab' } },
+                   b: { shape: 'foto', opts: { src: 'lab' }, desloca: [0.018, 0.012] } } } },
+
+  { nome: 'Com clareira', nota: 'Sangrada, com terreno limpo onde a manchete senta.',
+    cfg: { shape: 'foto', ramp: [1, 1], cell: 4, opts: { src: 'lab' },
+           clareira: [{ x: -0.05, y: -0.05, w: 0.52, h: 1.1, soft: 0.075, piso: 0.015 }] } },
+
+  { nome: 'Na rampa', nota: 'A foto resolvendo: ruído numa ponta, imagem na outra.',
+    cfg: { shape: 'foto', ramp: [0.04, 1], cell: 4, opts: { src: 'lab' } } },
+];
+
+const lab = document.getElementById('lab');
+const entrada = document.getElementById('entrada');
+const limpar = document.getElementById('limpar');
+const estado = document.getElementById('estado');
+
+lab.innerHTML = TRATAMENTOS.map((t, i) => `
+  <figure class="spec spec--outline" style="margin:0;gap:var(--cmc-sp-3)">
+    <div class="format__frame" style="--ar:16/11;background:${t.fundo || 'var(--cmc-black)'};
+         color:${t.cor || 'var(--cmc-white)'};position:relative;overflow:hidden;padding:0">
+      ${t.crua
+        ? '<img data-crua alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">'
+        : `<canvas data-i="${i}" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true"></canvas>`}
+    </div>
+    <figcaption class="cmc-micro"><strong>${String(i + 1).padStart(2, '0')} · ${t.nome}</strong><br>${t.nota}</figcaption>
+  </figure>`).join('');
+
+function desenhar() {
+  for (const cv of lab.querySelectorAll('canvas[data-i]')) {
+    render(cv, TRATAMENTOS[Number(cv.dataset.i)].cfg);
+  }
+}
+
+async function usar(url, rotulo) {
+  const img = new Image();
+  img.src = url;
+  /* Decodificar ANTES de registrar: o contrato do campo é síncrono, e uma
+     imagem ainda não decodificada entraria no motor com largura zero. */
+  await img.decode();
+  registrarFonte('lab', img);
+  /* O endereço entra por DOM, nunca no template: um atributo de origem
+     literal é exatamente o que o guard de auto-contenção procura, e ele está
+     certo em procurar. */
+  for (const im of lab.querySelectorAll('img[data-crua]')) im.src = url;
+  desenhar();
+  estado.textContent = rotulo;
+  document.documentElement.dataset.labPronto = '1';
+}
+
+const PLACA = placaSintetica();
+usar(PLACA, 'Placa sintética — troque por foto real para julgar de verdade.');
+
+entrada.addEventListener('change', async () => {
+  const arq = entrada.files && entrada.files[0];
+  if (!arq) return;
+  await usar(URL.createObjectURL(arq), `${arq.name} · lida no navegador, não enviada a lugar nenhum.`);
+  limpar.hidden = false;
+});
+
+limpar.addEventListener('click', () => {
+  entrada.value = '';
+  limpar.hidden = true;
+  usar(PLACA, 'Placa sintética — troque por foto real para julgar de verdade.');
+});
+
+addEventListener('resize', () => { clearTimeout(window.__t); window.__t = setTimeout(desenhar, 160); });
+init(document);
+</script>
+</body>
+</html>
