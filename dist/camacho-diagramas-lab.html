@@ -1765,7 +1765,11 @@ function cenasComCorIndevida() {
 
 /* --- utilidades ---------------------------------------------------------- */
 
-const esc = (s) => String(s)
+/* Nome próprio, e não `esc`. Todos os módulos entram no MESMO escopo quando a
+   página é embutida, e três `const esc` viram `Identifier 'esc' has already been
+   declared` — erro de sintaxe, que mata o script inteiro antes da primeira
+   linha rodar. Foi o que aconteceu com a apresentação publicada. */
+const escDg = (s) => String(s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /** `data-b`/`data-ate` como string de atributo. `b` 1 é "desde o começo". */
@@ -1789,14 +1793,14 @@ const rot = (x, y, txt, o = {}) => {
   const op = Math.max(o.op ?? PISO_ROT, PISO_ROT);
   const g = gir ? ` transform="rotate(${gir} ${x} ${y})"` : '';
   return `<text x="${x}" y="${y}" class="dg__rot ${cls}" text-anchor="${anc}" font-size="${tam}"`
-       + ` fill="currentColor" fill-opacity="${op}" ${em(b, ate)}${g}>${esc(txt)}</text>`;
+       + ` fill="currentColor" fill-opacity="${op}" ${em(b, ate)}${g}>${escDg(txt)}</text>`;
 };
 
 /** Texto de conteúdo — nome de degrau, de célula, de caminho. */
 const txt = (x, y, s, o = {}) => {
   const { anc = 'start', tam = 15, op = 1, b = 1, ate = 0, peso = 400, cls = '' } = o;
   return `<text x="${x}" y="${y}" class="dg__txt ${cls}" text-anchor="${anc}" font-size="${tam}"`
-       + ` font-weight="${peso}" fill="currentColor" fill-opacity="${op}" ${em(b, ate)}>${esc(s)}</text>`;
+       + ` font-weight="${peso}" fill="currentColor" fill-opacity="${op}" ${em(b, ate)}>${escDg(s)}</text>`;
 };
 
 /** Quebra em linhas de no máximo `max` caracteres. SVG não quebra texto
@@ -1820,7 +1824,7 @@ const defsSeta = (id) => `<defs>`
   + `</defs>`;
 
 const svg = (id, w, h, rotulo, corpo) =>
-  `<svg class="dg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(rotulo)}"`
+  `<svg class="dg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${escDg(rotulo)}"`
   + ` preserveAspectRatio="xMidYMid meet" data-dg="${id}">${defsSeta(id)}${corpo}</svg>`;
 
 /**

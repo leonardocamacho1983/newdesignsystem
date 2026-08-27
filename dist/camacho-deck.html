@@ -2704,10 +2704,25 @@ function mostrar(i) {
   conta.textContent = `${String(atual + 1).padStart(2, '0')} / ${String(SLIDES.length).padStart(2, '0')}`;
   /* Redesenha o grafismo do slide que entrou: o motor só desenha o que já
      esteve visível, e um slide escondido tem tamanho zero. */
+  /* Passo fixo: este deck é um slide por clique, sem beats. O atributo existe
+     para o arnês poder ler o estado do mesmo jeito nas três peças. */
+  palco.querySelectorAll('.dk__slide').forEach((s) => { s.dataset.passo = '0'; });
   const cv = palco.querySelector(`.dk__slide[data-i="${atual}"] canvas`);
   if (cv) { delete cv.dataset.cmcDone; init(palco); }
 }
 mostrar(0);
+
+/* Clicar no slide avança. Este deck nunca teve isso: o clique não fazia nada e,
+   publicado como artifact, a seta também não chegava — dentro de um iframe a
+   tecla só vale depois que o documento recebe foco, e foco depende de gesto.
+   Mesmo conserto do assessment e do deck da Banana Milk. */
+palco.addEventListener('pointerdown', () => palco.focus());
+palco.addEventListener('click', (e) => {
+  if (e.target.closest('a, button')) return;
+  if (String(getSelection())) return;
+  const r = palco.getBoundingClientRect();
+  mostrar(atual + ((e.clientX - r.left) / r.width < 0.25 ? -1 : 1));
+});
 
 document.getElementById('proximo').addEventListener('click', () => mostrar(atual + 1));
 document.getElementById('anterior').addEventListener('click', () => mostrar(atual - 1));
@@ -2723,6 +2738,10 @@ addEventListener('keydown', (e) => {
 });
 addEventListener('resize', () => mostrar(atual));
 palco.focus();
+
+/* O contrato em que os arneses bloqueiam. Sem ele, medir esta página de fora é
+   impossível — e foi por isso que ela nunca foi medida. */
+document.documentElement.dataset.apPronto = '1';
 </script>
 </body>
 </html>

@@ -1344,7 +1344,8 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
   </div>
 
   <p class="cmc-small" style="padding-block:var(--cmc-sp-4)">
-    Setas ou espaço avançam um passo · <kbd>↑</kbd><kbd>↓</kbd> pulam a cena ·
+    Clique no slide avança · clique na faixa esquerda volta ·
+    setas e espaço também · <kbd>↑</kbd><kbd>↓</kbd> pulam a cena ·
     <kbd>F</kbd> tela cheia · <a id="link-notas" style="color:inherit;text-decoration:underline;cursor:pointer">notas do apresentador</a>
   </p>
 
@@ -3440,7 +3441,11 @@ function corIndevida(cenas) {
 
 /* --- utilidades ---------------------------------------------------------- */
 
-const esc = (s) => String(s)
+/* Nome próprio, e não `esc`. Todos os módulos entram no MESMO escopo quando a
+   página é embutida, e três `const esc` viram `Identifier 'esc' has already been
+   declared` — erro de sintaxe, que mata o script inteiro antes da primeira
+   linha rodar. Foi o que aconteceu com a apresentação publicada. */
+const escDg = (s) => String(s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /** `data-b`/`data-ate` como string de atributo. `b` 1 é "desde o começo". */
@@ -3464,14 +3469,14 @@ const rot = (x, y, txt, o = {}) => {
   const op = Math.max(o.op ?? PISO_ROT, PISO_ROT);
   const g = gir ? ` transform="rotate(${gir} ${x} ${y})"` : '';
   return `<text x="${x}" y="${y}" class="dg__rot ${cls}" text-anchor="${anc}" font-size="${tam}"`
-       + ` fill="currentColor" fill-opacity="${op}" ${em(b, ate)}${g}>${esc(txt)}</text>`;
+       + ` fill="currentColor" fill-opacity="${op}" ${em(b, ate)}${g}>${escDg(txt)}</text>`;
 };
 
 /** Texto de conteúdo — nome de degrau, de célula, de caminho. */
 const txt = (x, y, s, o = {}) => {
   const { anc = 'start', tam = 15, op = 1, b = 1, ate = 0, peso = 400, cls = '' } = o;
   return `<text x="${x}" y="${y}" class="dg__txt ${cls}" text-anchor="${anc}" font-size="${tam}"`
-       + ` font-weight="${peso}" fill="currentColor" fill-opacity="${op}" ${em(b, ate)}>${esc(s)}</text>`;
+       + ` font-weight="${peso}" fill="currentColor" fill-opacity="${op}" ${em(b, ate)}>${escDg(s)}</text>`;
 };
 
 /** Quebra em linhas de no máximo `max` caracteres. SVG não quebra texto
@@ -3495,7 +3500,7 @@ const defsSeta = (id) => `<defs>`
   + `</defs>`;
 
 const svg = (id, w, h, rotulo, corpo) =>
-  `<svg class="dg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(rotulo)}"`
+  `<svg class="dg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${escDg(rotulo)}"`
   + ` preserveAspectRatio="xMidYMid meet" data-dg="${id}">${defsSeta(id)}${corpo}</svg>`;
 
 /**
@@ -3890,7 +3895,12 @@ const CAMPOS = {
      o Ato 1 perdia o campo quente que a regra dos dois registros autoriza. */
   creme:  ['#F3EFE4', '#171717'],
 };
-const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+/* `escTx` e não `esc`, `semMovimento` e não `parado`: quando a página é
+   embutida, todos os módulos e este script caem no MESMO escopo. Dois `const`
+   com o mesmo nome são erro de SINTAXE, e erro de sintaxe mata o script antes
+   da primeira linha — a apresentação publicada não desenhava nada e não tinha
+   como avisar. O build agora compila o pacote embutido e reprova sozinho. */
+const escTx = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 const zz = (n) => String(n).padStart(2, '0');
 const atoDe = (n) => ATOS.find((a) => n >= a.de && n <= a.ate);
 
@@ -3922,11 +3932,11 @@ palco.insertAdjacentHTML('beforeend', CENAS.map((c, i) => {
 
   const ato = atoDe(c.n);
   const topo = c.n === 1
-    ? `<span class="cmc-lockup dk__lockup"><span class="cmc-lockup__word">${esc(marca.name)}</span></span>`
+    ? `<span class="cmc-lockup dk__lockup"><span class="cmc-lockup__word">${escTx(marca.name)}</span></span>`
     /* `listaOlho` tambem serve: e o rotulo da lista da cena, e a linha de cima
        e o lugar de rotulo. Deixa-lo dentro do painel custava altura util onde
        ela e mais escassa. */
-    : `<p class="dk__olho"><strong>Ato ${ato.n}</strong> · ${esc(c.olho || c.listaOlho || ato.nome)}</p>`;
+    : `<p class="dk__olho"><strong>Ato ${ato.n}</strong> · ${escTx(c.olho || c.listaOlho || ato.nome)}</p>`;
 
   const hedClasse = c.n === 1 ? 'dk__hed'
     : (c.hed.replace(/<br>/g, ' ').length > 46 ? 'dk__hed dk__hed--peq' : 'dk__hed dk__hed--med');
@@ -4013,6 +4023,12 @@ function aplicar(animar) {
   const secao = palco.querySelector(`.dk__slide[data-i="${cena}"]`);
 
   palco.querySelectorAll('.dk__slide').forEach((s, k) => s.toggleAttribute('data-ativo', k === cena));
+  /* `data-passo` e não `data-beat`: a folha esconde tudo que carrega
+     `data-beat` até ser revelado, e já perdi um diagrama inteiro para essa
+     colisão. O nome existe para a cena poder dizer em que passo está — sem ele,
+     em cena de diagrama o painel nunca muda e não há como saber, de fora, se a
+     peça andou. */
+  secao.dataset.passo = String(beat);
   marcas.forEach((el, k) => {
     el.toggleAttribute('data-feito', k < cena);
     el.toggleAttribute('data-agora', k === cena);
@@ -4067,10 +4083,10 @@ function aplicar(animar) {
 const passagem = document.getElementById('passagem');
 const passagemCv = document.getElementById('passagem-cv');
 let passagemTimer = 0;
-const parado = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const semMovimento = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function passar(ato, depois) {
-  if (parado()) return depois();
+  if (semMovimento()) return depois();
   clearTimeout(passagemTimer);
   document.getElementById('passagem-n').textContent = `Ato ${ato.n} de ${ATOS.length}`;
   document.getElementById('passagem-nome').textContent = ato.nome;
@@ -4125,7 +4141,42 @@ document.getElementById('anterior').addEventListener('click', () => ir(0, -1));
 document.getElementById('tela').addEventListener('click', () => {
   (document.fullscreenElement ? document.exitFullscreen() : palco.requestFullscreen()).catch(() => {});
 });
-palco.addEventListener('click', () => cortarPassagem());
+/* ==========================================================================
+   Clicar no slide avança
+   --------------------------------------------------------------------------
+   Isto faltava, e a peça publicada era inutilizável por causa disso: o clique
+   herdado da versão anterior só chamava cortarPassagem(), que devolve false na
+   hora quando não há passagem de ato em cena. Passagem dura 2,4 s e acontece em
+   2 das 23 cenas — ou seja, clicar no slide era um no-op em ~99% da peça.
+
+   E a seta também não chegava. O artifact roda dentro de um iframe, e enquanto
+   o documento do iframe não recebe foco a tecla vai para a página de fora.
+   `palco.focus()` no carregamento é cedo demais: foco depende de gesto do
+   usuário. Por isso o foco passa a vir do primeiro `pointerdown`.
+
+   Nada disso apareceu na medição porque `_passe.mjs` dispara
+   `new KeyboardEvent(...)` direto no documento — exatamente o caminho que o
+   iframe bloqueia. Eu provei que a navegação funcionava pelo único caminho que
+   ninguém tem. Quem prova agora é _toque.mjs, com mouse de verdade.
+   ========================================================================== */
+
+/* O foco tem de vir do gesto, e `pointerdown` é o primeiro a chegar — antes do
+   clique, então a tecla já funciona no mesmo gesto que avançou. */
+palco.addEventListener('pointerdown', () => palco.focus());
+
+palco.addEventListener('click', (e) => {
+  /* Cortar a passagem JÁ é a ação daquele clique: cortar e avançar juntos
+     comeria um beat que ninguém pediu. */
+  if (cortarPassagem()) return;
+  /* Um clique num link, num botão ou numa seleção de texto não é navegação. */
+  if (e.target.closest('a, button')) return;
+  if (String(getSelection())) return;
+  /* Primeiro quarto da largura volta; o resto avança. É a convenção de leitor
+     de slides e de quadrinho, e não precisa ser ensinada. */
+  const r = palco.getBoundingClientRect();
+  ir(0, (e.clientX - r.left) / r.width < 0.25 ? -1 : 1);
+});
+
 addEventListener('keydown', (e) => {
   if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); ir(0, 1); }
   else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); ir(0, -1); }
@@ -4161,9 +4212,9 @@ if (params.get('notas')) {
   const el = document.getElementById('notas');
   el.hidden = false;
   el.innerHTML = ATOS.map((a) =>
-    `<h3>Ato ${a.n} · ${esc(a.nome)}</h3><ul class="cmc-small">`
+    `<h3>Ato ${a.n} · ${escTx(a.nome)}</h3><ul class="cmc-small">`
     + CENAS.filter((c) => c.ato === a.n).map((c) =>
-      `<li><strong>${zz(c.n)}</strong> · <em>${esc(c.titulo)}</em><br>${esc(c.fala)}</li>`).join('')
+      `<li><strong>${zz(c.n)}</strong> · <em>${escTx(c.titulo)}</em><br>${escTx(c.fala)}</li>`).join('')
     + '</ul>').join('')
     + `<h3 style="margin-top:2rem">Conferências</h3><ul class="cmc-small">`
     + `<li>${CENAS.length} cenas · ${totalBeats()} beats</li>`

@@ -1341,7 +1341,8 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
   </div>
 
   <p class="cmc-small" style="padding-block:var(--cmc-sp-4)">
-    Setas ou espaço avançam um passo · <kbd>↑</kbd><kbd>↓</kbd> pulam a parada ·
+    Clique no slide avança · clique na faixa esquerda volta ·
+    setas e espaço também · <kbd>↑</kbd><kbd>↓</kbd> pulam a parada ·
     <kbd>F</kbd> tela cheia · <a id="link-notas" style="color:inherit;text-decoration:underline;cursor:pointer">notas do apresentador</a> ·
     <a href="camacho-bananamilk-doc.html" style="color:inherit;text-decoration:underline">documento completo</a>
   </p>
@@ -3321,6 +3322,9 @@ function aplicar(animar) {
   const secao = palco.querySelector(`.dk__slide[data-i="${parada}"]`);
 
   palco.querySelectorAll('.dk__slide').forEach((s, k) => s.toggleAttribute('data-ativo', k === parada));
+  /* `data-passo`: sem ele não há como saber, de fora, se a peça andou — em
+     parada cujo beat só move o gráfico o painel visível não muda. */
+  secao.dataset.passo = String(beat);
   regua.querySelectorAll('i').forEach((el, k) => {
     el.toggleAttribute('data-feito', k < parada);
     el.toggleAttribute('data-agora', k === parada);
@@ -3370,7 +3374,22 @@ document.getElementById('anterior').addEventListener('click', () => ir(0, -1));
 document.getElementById('tela').addEventListener('click', () => {
   (document.fullscreenElement ? document.exitFullscreen() : palco.requestFullscreen()).catch(() => {});
 });
-palco.addEventListener('click', () => { if (abertura.dataset.rodando) cortarAbertura(); });
+/* Clicar no slide avança — o mesmo conserto do assessment, e pelo mesmo motivo.
+   Antes, o clique só cortava a abertura: depois dos 12 segundos iniciais ele
+   virava um no-op, e num artifact (que roda em iframe) a seta também não chega
+   enquanto o documento não recebe foco. Resultado: a peça publicada não tinha
+   como avançar, a não ser acertando os botões da barra.
+
+   O foco vem do `pointerdown` porque foco depende de gesto do usuário — fazer
+   isso no carregamento é cedo demais e não pega. */
+palco.addEventListener('pointerdown', () => palco.focus());
+palco.addEventListener('click', (e) => {
+  if (abertura.dataset.rodando) { cortarAbertura(); return; }
+  if (e.target.closest('a, button')) return;
+  if (String(getSelection())) return;
+  const r = palco.getBoundingClientRect();
+  ir(0, (e.clientX - r.left) / r.width < 0.25 ? -1 : 1);
+});
 addEventListener('keydown', (e) => {
   if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); ir(0, 1); }
   else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); ir(0, -1); }
