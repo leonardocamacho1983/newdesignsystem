@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IA Assessment &amp; Opportunities · Banana Milk</title>
+<meta name="description" content="Vinte e três cenas em três atos: reenquadrar o problema, mostrar a transformação, transformar em decisão.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens/tokens.css">
+<link rel="stylesheet" href="src/camacho.css">
+<link rel="stylesheet" href="src/site.css">
+</head>
+<body class="dk">
+
+<div class="cmc-shell">
+  <div class="dk__barra">
+    <a class="cmc-lockup cmc-lockup--sm" href="site.html" style="color:#fff">
+      <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#fff"/>
+        <path fill="#000" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
+      </svg>
+      <span class="cmc-lockup__word" data-brand="name">Camacho</span>
+    </a>
+    <div class="dk__regua dk__regua--atos" id="regua" aria-hidden="true"></div>
+    <div class="cmc-controls">
+      <span class="dk__conta" id="conta">01 / 23</span>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="anterior" aria-label="Passo anterior">←</button>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="proximo" aria-label="Próximo passo">→</button>
+      <button class="cmc-btn cmc-btn--inverse" type="button" id="tela">Tela cheia</button>
+    </div>
+  </div>
+
+  <div class="dk__palco" id="palco" tabindex="0" aria-label="Apresentação. Use as setas para navegar.">
+    <div class="dk__passagem" id="passagem" aria-hidden="true">
+      <canvas id="passagem-cv"></canvas>
+      <div class="dk__passagem__txt">
+        <p class="dk__passagem__n" id="passagem-n"></p>
+        <p class="dk__passagem__nome" id="passagem-nome"></p>
+      </div>
+    </div>
+  </div>
+
+  <p class="cmc-small" style="padding-block:var(--cmc-sp-4)">
+    Setas ou espaço avançam um passo · <kbd>↑</kbd><kbd>↓</kbd> pulam a cena ·
+    <kbd>F</kbd> tela cheia · <a id="link-notas" style="color:inherit;text-decoration:underline;cursor:pointer">notas do apresentador</a>
+  </p>
+
+  <div class="dk__notas" id="notas" hidden></div>
+</div>
+
+<script type="module">
+import { render, anima, parar } from './src/dither.js';
+import { applyBrand, brandFromUrl } from './src/brand.js';
+import { ATOS, CENAS, PERSONAGEM_EM, totalBeats } from './src/deck23.js';
+import { paineisDe, arteNoBeat, modoDe, montagemDe, acentoDe } from './src/cenas.js';
+import { noBeat } from './src/diagramas.js';
+
+const marca = applyBrand(document, brandFromUrl());
+const params = new URLSearchParams(location.search);
+/* href por DOM: um `?notas=1` literal no atributo é referência local e o guard
+   de autocontenção do build derruba a página por causa dele. */
+document.getElementById('link-notas').href = '?notas=1';
+
+const CAMPOS = {
+  escuro: ['#000000', '#FFFFFF'],
+  papel:  ['#F2F0EE', '#000000'],
+  /* creme é do cliente. Sem esta entrada as cenas 2, 3, 4 e 6 caíam no papel e
+     o Ato 1 perdia o campo quente que a regra dos dois registros autoriza. */
+  creme:  ['#F3EFE4', '#171717'],
+};
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const zz = (n) => String(n).padStart(2, '0');
+const atoDe = (n) => ATOS.find((a) => n >= a.de && n <= a.ate);
+
+/* ==========================================================================
+   As 23 cenas viram DOM, uma vez
+   ========================================================================== */
+const palco = document.getElementById('palco');
+
+palco.insertAdjacentHTML('beforeend', CENAS.map((c, i) => {
+  const [bg, ink] = CAMPOS[c.campo] || CAMPOS.papel;
+  const modo = modoDe(c);
+  const acento = acentoDe(c);
+
+  /* --cl vem da clareira DECLARADA pela cena, tomando a mais protetora ao
+     longo de todos os beats: o tipo não passa da borda do clarão em beat
+     nenhum, em vez de flutuar sobre a arte em um deles. */
+  let larg = '';
+  if (modo === 'sangria') {
+    let melhor = 0;
+    for (let k = 0; k < c.beats; k++) {
+      const cfg = arteNoBeat(c, k), cl = cfg && cfg.clareira && cfg.clareira[0];
+      if (cl) melhor = Math.max(melhor, (cl.x + cl.w) - cl.soft * 0.5);
+    }
+    if (melhor) larg = `;--cl:${Math.max(0.3, melhor)}`;
+  }
+
+  const estilo = `--slide-bg:${bg};--slide-ink:${ink}`
+    + (acento ? `;--slide-acento:${acento}` : '') + larg;
+
+  const ato = atoDe(c.n);
+  const topo = c.n === 1
+    ? `<span class="cmc-lockup dk__lockup"><span class="cmc-lockup__word">${esc(marca.name)}</span></span>`
+    /* `listaOlho` tambem serve: e o rotulo da lista da cena, e a linha de cima
+       e o lugar de rotulo. Deixa-lo dentro do painel custava altura util onde
+       ela e mais escassa. */
+    : `<p class="dk__olho"><strong>Ato ${ato.n}</strong> · ${esc(c.olho || c.listaOlho || ato.nome)}</p>`;
+
+  const hedClasse = c.n === 1 ? 'dk__hed'
+    : (c.hed.replace(/<br>/g, ' ').length > 46 ? 'dk__hed dk__hed--peq' : 'dk__hed dk__hed--med');
+
+  const paineis = paineisDe(c, CENAS);
+  const temArte = !!arteNoBeat(c, 0);
+
+  /* No modo matriz a manchete sobe para a linha de cima, junto do olho.
+     Nao e arranjo: o painel de um diagrama e largo e baixo, entao o desenho se
+     limita pela ALTURA e sobra largura vazia dos dois lados. Cada pixel de
+     altura devolvido ao painel vira 1,7 pixel de largura de desenho, e tirar a
+     manchete da linha do meio devolve uns 105. */
+  const matriz = modo === 'matriz';
+  const hedHtml = `<h2 class="${hedClasse}">${c.hed}</h2>`;
+
+  return `<section class="dk__slide" data-i="${i}" data-n="${c.n}" data-ato="${ato.n}"
+      data-campo="${c.campo}" data-arte="${modo}" data-registro="${c.registro}"
+      data-montagem="${montagemDe(c)}" style="${estilo}">
+    ${temArte ? '<div class="dk__art"><canvas aria-hidden="true"></canvas></div>' : ''}
+    <div>${topo}${matriz ? hedHtml : ''}</div>
+    <div class="dk__meio">
+      ${matriz ? '' : hedHtml}
+      <div class="dk__paineis">${paineis.map((h, k) =>
+        `<div class="dk__painel" data-painel="${k}">${h}</div>`).join('')}</div>
+    </div>
+    <div>
+      <div class="dk__pe" style="margin-top:2cqi">
+        <span>IA Assessment &amp; Opportunities · Banana Milk</span>
+        <span>${zz(c.n)} / ${zz(CENAS.length)}</span>
+      </div>
+    </div>
+  </section>`;
+}).join(''));
+
+/* ==========================================================================
+   --cp: o painel mede a si mesmo e desce até caber
+   --------------------------------------------------------------------------
+   Piso declarado. Assim "não coube" é um número no relatório e não uma barra
+   de rolagem que ninguém vê durante a apresentação.
+   ========================================================================== */
+const PISO = 0.68;
+const estouros = [];
+
+function ajustarCena(secao) {
+  secao.querySelectorAll('.dk__painel').forEach((el) => {
+    const tinha = el.hasAttribute('data-visivel');
+    el.setAttribute('data-visivel', '');
+    el.style.setProperty('--cp', '1');
+    let cp = 1;
+    while (el.scrollHeight > el.clientHeight + 1 && cp > PISO) {
+      cp = Math.round((cp - 0.04) * 100) / 100;
+      el.style.setProperty('--cp', String(cp));
+    }
+    if (el.scrollHeight > el.clientHeight + 1)
+      estouros.push({ cena: secao.dataset.n, sobra: el.scrollHeight - el.clientHeight });
+    if (!tinha) el.removeAttribute('data-visivel');
+  });
+}
+
+palco.querySelectorAll('.dk__slide').forEach((s) => {
+  s.setAttribute('data-ativo', ''); ajustarCena(s); s.removeAttribute('data-ativo');
+});
+window.apEstouro = estouros;
+
+
+/* ==========================================================================
+   Régua de três atos
+   ========================================================================== */
+const regua = document.getElementById('regua');
+regua.innerHTML = ATOS.map((a) =>
+  `<span class="dk__regua__ato" title="Ato ${a.n} · ${a.nome}">`
+  + CENAS.filter((c) => c.ato === a.n).map(() => '<i></i>').join('') + '</span>').join('');
+const marcas = [...regua.querySelectorAll('i')];
+const conta = document.getElementById('conta');
+
+/* ==========================================================================
+   Estado
+   ========================================================================== */
+let cena = 0, beat = 0, anterior = -1;
+const passosDa = (i) => CENAS[i].beats;
+
+function aplicar(animar) {
+  const c = CENAS[cena];
+  const secao = palco.querySelector(`.dk__slide[data-i="${cena}"]`);
+
+  palco.querySelectorAll('.dk__slide').forEach((s, k) => s.toggleAttribute('data-ativo', k === cena));
+  marcas.forEach((el, k) => {
+    el.toggleAttribute('data-feito', k < cena);
+    el.toggleAttribute('data-agora', k === cena);
+  });
+  conta.textContent = `${zz(c.n)} / ${zz(CENAS.length)}`;
+
+  const paineis = secao.querySelectorAll('.dk__painel');
+  if (montagemDe(c) === 'constroi') {
+    /* Um painel só, sempre visível. Quem revela são os elementos dentro dele. */
+    paineis.forEach((el, k) => el.toggleAttribute('data-visivel', k === 0));
+  } else {
+    /* Os painéis TROCAM. O índice é `beat - 1` CLAMPADO e não igual: um beat
+       pode mover só o gráfico, e com igualdade estrita o painel sumia. */
+    const vis = Math.min(beat - 1, paineis.length - 1);
+    paineis.forEach((el, k) => el.toggleAttribute('data-visivel', k === vis && beat > 0));
+  }
+
+  /* Revelação acumulada dentro do painel, e revelação exclusiva (um de cada
+     vez, para a legenda que acompanha um degrau da escada). */
+  secao.querySelectorAll('[data-beat]').forEach((el) =>
+    el.toggleAttribute('data-visivel', beat >= +el.dataset.beat));
+  secao.querySelectorAll('[data-beat-so]').forEach((el) =>
+    el.toggleAttribute('data-visivel', beat === +el.dataset.beatSo));
+
+  /* O diagrama.
+
+     Em `constroi`, `beat + 1` e não `beat`: o primeiro estado de um desenho é
+     ele EXISTIR, e ele chega junto com a manchete. O primeiro estado de uma
+     lista é ela estar vazia — as duas escalas diferem de propósito.
+
+     Em `troca`, o beat move PAINEL e não desenho, então o desenho tem de estar
+     inteiro. Sem isto a cena 22 mostrava a comparação sem a terceira linha —
+     e a terceira linha é justamente a opção recomendada. */
+  const svg = secao.querySelector('.dg');
+  if (svg) noBeat(svg, montagemDe(c) === 'constroi' ? beat + 1 : 99);
+
+  const cv = secao.querySelector('canvas');
+  if (cv) {
+    const alvo = arteNoBeat(c, beat);
+    if (animar && cena === anterior) anima(cv, arteNoBeat(c, beat - 1), alvo, 1100);
+    else { parar(cv); render(cv, alvo); }
+  }
+  anterior = cena;
+}
+
+/* ==========================================================================
+   As passagens de ato
+   --------------------------------------------------------------------------
+   Não entram como cena: as cenas são 23, e o contador diria 26 se elas
+   virassem slide. São os únicos momentos em que a tela não argumenta nada.
+   ========================================================================== */
+const passagem = document.getElementById('passagem');
+const passagemCv = document.getElementById('passagem-cv');
+let passagemTimer = 0;
+const parado = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function passar(ato, depois) {
+  if (parado()) return depois();
+  clearTimeout(passagemTimer);
+  document.getElementById('passagem-n').textContent = `Ato ${ato.n} de ${ATOS.length}`;
+  document.getElementById('passagem-nome').textContent = ato.nome;
+  passagem.setAttribute('data-visivel', '');
+  /* A clareira é obrigatória aqui: sem ela a costura atravessa o nome do ato,
+     que é o defeito que a clareira existe para impedir — e que eu já tinha
+     cometido uma vez na capa. Arte sangrada só convive com tipo quando a cena
+     DECLARA onde o tipo senta. */
+  const claro = [{ x: 0.06, y: 0.12, w: 0.88, h: 0.34, soft: 0.14, piso: 0 }];
+  /* E o topo da rampa fica em 0.62, nao em 0.9: a passagem e um respiro entre
+     atos, nao uma tela que argumenta. Densidade alta aqui compete com o nome do
+     ato pela atencao e nao ganha nada com isso. */
+  const de = { shape: 'weave', ramp: [0.02, 0.24], cell: 5, seed: 7 + ato.n, clareira: claro };
+  render(passagemCv, de);
+  anima(passagemCv, de, { ...de, ramp: [0.02, 0.62] }, 2000);
+  depois();
+  passagemTimer = setTimeout(() => {
+    passagem.removeAttribute('data-visivel');
+    parar(passagemCv);
+  }, 2400);
+}
+
+function cortarPassagem() {
+  if (!passagem.hasAttribute('data-visivel')) return false;
+  clearTimeout(passagemTimer);
+  passagem.removeAttribute('data-visivel');
+  parar(passagemCv);
+  return true;
+}
+
+/* ==========================================================================
+   Navegação
+   ========================================================================== */
+function ir(dc, db) {
+  if (cortarPassagem()) return;
+  if (db) {
+    const n = beat + db;
+    if (n >= 0 && n < passosDa(cena)) { beat = n; return aplicar(db > 0); }
+    dc = db > 0 ? 1 : -1;
+  }
+  const nc = cena + dc;
+  if (nc < 0 || nc >= CENAS.length) return;
+  const atoAntes = CENAS[cena].ato, atoDepois = CENAS[nc].ato;
+  cena = nc;
+  beat = db < 0 ? passosDa(cena) - 1 : 0;
+  if (atoDepois !== atoAntes && db >= 0 && dc > 0) passar(atoDe(CENAS[nc].n), () => aplicar(false));
+  else aplicar(false);
+}
+
+document.getElementById('proximo').addEventListener('click', () => ir(0, 1));
+document.getElementById('anterior').addEventListener('click', () => ir(0, -1));
+document.getElementById('tela').addEventListener('click', () => {
+  (document.fullscreenElement ? document.exitFullscreen() : palco.requestFullscreen()).catch(() => {});
+});
+palco.addEventListener('click', () => cortarPassagem());
+addEventListener('keydown', (e) => {
+  if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); ir(0, 1); }
+  else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); ir(0, -1); }
+  else if (e.key === 'ArrowDown') { e.preventDefault(); ir(1, 0); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); ir(-1, 0); }
+  else if (e.key === 'Home') { cena = 0; beat = 0; aplicar(false); }
+  else if (e.key === 'End') { cena = CENAS.length - 1; beat = passosDa(cena) - 1; aplicar(false); }
+  else if (e.key.toLowerCase() === 'f') document.getElementById('tela').click();
+});
+addEventListener('resize', () => aplicar(false));
+
+/* Impressão: uma página por cena, com tudo revelado. */
+function achatar() {
+  palco.querySelectorAll('.dk__slide').forEach((s, k) => {
+    s.querySelectorAll('.dk__painel, [data-beat], [data-beat-so]')
+      .forEach((el) => el.setAttribute('data-visivel', ''));
+    const svg = s.querySelector('.dg');
+    if (svg) noBeat(svg, CENAS[k].beats + 1);
+    const cv = s.querySelector('canvas');
+    if (cv) { parar(cv); render(cv, arteNoBeat(CENAS[k], CENAS[k].beats - 1)); }
+  });
+}
+addEventListener('beforeprint', achatar);
+if (matchMedia('print').matches) achatar();
+
+/* ==========================================================================
+   Visão de apresentador
+   --------------------------------------------------------------------------
+   A fala de cada cena é o material mais valioso do documento e não pode ir
+   para a tela — quem lê o slide não ouve quem apresenta.
+   ========================================================================== */
+if (params.get('notas')) {
+  const el = document.getElementById('notas');
+  el.hidden = false;
+  el.innerHTML = ATOS.map((a) =>
+    `<h3>Ato ${a.n} · ${esc(a.nome)}</h3><ul class="cmc-small">`
+    + CENAS.filter((c) => c.ato === a.n).map((c) =>
+      `<li><strong>${zz(c.n)}</strong> · <em>${esc(c.titulo)}</em><br>${esc(c.fala)}</li>`).join('')
+    + '</ul>').join('')
+    + `<h3 style="margin-top:2rem">Conferências</h3><ul class="cmc-small">`
+    + `<li>${CENAS.length} cenas · ${totalBeats()} beats</li>`
+    + `<li>O personagem aparece nas cenas ${PERSONAGEM_EM.join(', ')} — e em nenhuma outra.</li>`
+    + `<li>${estouros.length ? `ATENÇÃO: ${estouros.length} painéis transbordando` : 'Nenhum painel transbordando.'}</li>`
+    + '</ul>';
+}
+
+/* Ponto de entrada por URL. `?cena=N` é 1-based; `?beat=K` é 0-based. */
+/* `parada` é sinônimo de `cena`: os arneses deste repositório foram escritos
+   contra o deck anterior e falam `parada`. Aceitar os dois nomes custa uma
+   linha; não aceitar custa um arnês que mede a cena errada e não reclama. */
+const nCena = params.get('cena') || params.get('parada');
+if (nCena) {
+  cena = Math.max(0, Math.min(CENAS.length - 1, Number(nCena) - 1));
+  beat = Math.max(0, Math.min(passosDa(cena) - 1, Number(params.get('beat') || 0)));
+}
+aplicar(false);
+palco.focus();
+
+/* Última instrução, e depois de ajustarCena ter rodado em todas as cenas: é o
+   contrato em que _cabe.mjs e _cena.mjs bloqueiam. Sem ele os arneses travam. */
+document.documentElement.dataset.apPronto = '1';
+</script>
+
+</body>
+</html>

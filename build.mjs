@@ -2,7 +2,7 @@
    sem nenhuma referência local, pronto para mandar por e-mail ou publicar. */
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { buildTokens } from './tokens/build-tokens.mjs';
-import { read, escapeRe, modulos, embutirCss, embutirModulos, pendencias } from './src/inline.mjs';
+import { read, escapeRe, modulos, embutirCss, embutirModulos, pendencias, chegaram } from './src/inline.mjs';
 
 /* Tabela única do projeto. `out` é ENDEREÇO, `src` e conteúdo são ASSUNTO:
    o nome do arquivo em dist/ é o caminho de publicação a que o artifact está
@@ -33,6 +33,7 @@ const PAGES = [
      pé. Entra em PAGES mesmo assim, porque é aqui que os dois guards de
      autocontenção examinam src/diagramas.js e src/deck23.js pela primeira vez. */
   { src: 'diagramas-lab.html', out: 'camacho-diagramas-lab', url: 'https://claude.ai/code/artifact/6a594b93-d030-4cc8-93a8-5b568038cdd6' },
+  { src: 'assessment.html', out: 'camacho-assessment', url: '' },
 ];
 
 /* Primeiro os tokens: o JSON é derivado do CSS, e a checagem de fechamento
@@ -75,6 +76,16 @@ for (const page of PAGES) {
   /* As duas travas de autocontenção vivem em src/inline.mjs, para o exportador
      de cards do design system usar exatamente as mesmas. Links entre as
      próprias páginas do dist são destinos legítimos. */
+  /* Terceira trava: o modulo importado pela fonte chegou mesmo na pagina? As
+     outras duas olham o que SOBROU (import relativo, referencia local). Esta
+     olha o que FALTOU, que e o modo de falha silencioso — pagina construida,
+     build 0, e o modulo simplesmente ausente. */
+  const faltas = chegaram(read(page.src), html);
+  if (faltas.length) {
+    console.error(`${page.src}: modulo importado nao chegou na pagina construida:\n  ${faltas.join('\n  ')}`);
+    process.exit(1);
+  }
+
   const { soltas, imports } = pendencias(html, new Set(PAGES.map((p) => `${p.out}.html`)));
   if (imports.length) {
     console.error(`${page.src}: import relativo sobreviveu ao embutimento:\n  ${imports.join('\n  ')}`);

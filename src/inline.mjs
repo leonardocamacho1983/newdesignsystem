@@ -14,6 +14,9 @@ import { readFileSync } from 'node:fs';
 export const read = (p) => readFileSync(p, 'utf8');
 export const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+/** Remove importacoes de outros modulos do repositorio de um corpo embutido. */
+const semImports = (t) => t.replace(/^import \{[\s\S]*?\} from '\.\/[^']+\.js';\n?/gm, '');
+
 /* As folhas que as páginas linkam, na ordem em que são procuradas. */
 export const CSS = ['tokens/tokens.css', 'src/camacho.css', 'src/guide.css', 'src/site.css'];
 
@@ -37,6 +40,15 @@ export function modulos() {
     apresentacao: read('src/apresentacao.js').replace(/^export /gm, ''),
     deck23: read('src/deck23.js').replace(/^export /gm, ''),
     diagramas: read('src/diagramas.js').replace(/^export /gm, ''),
+    /* cenas.js importa deck23, diagramas e personagem. Tirar `export` nao tira
+       `import`: a linha sobrevive ao corte, e um `import` no meio de um script
+       inline quebra a pagina inteira em runtime — sem o guard de importacao
+       relativa ver nada, porque ele olha o HTML e nao o corpo do modulo.
+
+       Entao: as importacoes internas caem, e personagem.js — que a pagina nao
+       importa diretamente — viaja junto com quem depende dele. */
+    cenas: semImports(read('src/personagem.js') + '\n' + read('src/cenas.js'))
+      .replace(/^export /gm, ''),
   };
 
   /* Trava: um módulo embutido pela metade não emite erro nenhum — a página sai,
@@ -52,6 +64,9 @@ export function modulos() {
     ['src/deck23.js', m.deck23, ['const ATOS', 'const CENAS', 'const PERSONAGEM_EM']],
     ['src/diagramas.js', m.diagramas, ['function noBeat', 'function exclusao', 'function escada',
                                        'function nucleo', 'function quadrante', 'function comparacao']],
+    ['src/cenas.js (+personagem)', m.cenas, ['function personagem', 'function figura',
+                                             'const DISPOSITIVOS', 'function paineisDe',
+                                             'function arteNoBeat', 'function modoDe']],
   ];
   for (const [nome, texto, marcas] of INTEIRO) {
     const faltando = marcas.filter((x) => !texto.includes(x));
@@ -60,6 +75,38 @@ export function modulos() {
     }
   }
   return m;
+}
+
+/* O que cada modulo tem de deixar no HTML CONSTRUIDO. A trava de INTEIRO acima
+   confere o corpo do modulo depois do corte; esta confere o resultado. Sao
+   coisas diferentes, e a diferenca entre elas foi um bug real: o corpo de
+   deck23 estava perfeito e mesmo assim nao chegava na pagina, porque a regex de
+   um import vizinho varria de qualquer `import {` do documento ate o alvo e
+   apagava o que houvesse no caminho. Nenhum guard via nada — nao sobrava import
+   relativo, nao sobrava referencia local, e o build saia 0. */
+const NA_PAGINA = {
+  'src/dither.js':     ['function render', 'const fields'],
+  'src/brand.js':      ['function applyBrand'],
+  'src/kv.js':         ['const KVS'],
+  'src/direcao.js':    ['function ajustarRegistro'],
+  'src/apresentacao.js': ['const PARADAS'],
+  'src/deck23.js':     ['const CENAS', 'const ATOS'],
+  'src/diagramas.js':  ['function noBeat'],
+  'src/cenas.js':      ['const DISPOSITIVOS', 'function personagem'],
+};
+
+/**
+ * Confere que todo modulo importado pela FONTE deixou marca no HTML construido.
+ * Devolve a lista de faltas; quem chama decide se derruba.
+ */
+export function chegaram(fonte, construido) {
+  const faltas = [];
+  for (const [caminho, marcas] of Object.entries(NA_PAGINA)) {
+    if (!fonte.includes(`'./${caminho}'`)) continue;
+    const ausentes = marcas.filter((x) => !construido.includes(x));
+    if (ausentes.length) faltas.push(`${caminho}: falta ${ausentes.join(', ')}`);
+  }
+  return faltas;
 }
 
 /** Troca cada `<link rel="stylesheet">` conhecido pelo `<style>` correspondente. */
@@ -78,11 +125,17 @@ export function embutirModulos(html, m = modulos()) {
     .replace(/import \{[^}]+\} from '\.\/src\/kv\.js';\n?/, m.kv)
     .replace(/import \{[^}]+\} from '\.\/src\/direcao\.js';\n?/, m.direcao)
     .replace(/import \{[^}]+\} from '\.\/src\/apresentacao\.js';\n?/, m.apresentacao)
-    /* deck23 antes de diagramas: o import de diagramas pode ocupar duas linhas
-       e a regex de cada um só casa o seu próprio caminho, então a ordem aqui é
-       só legibilidade — o que NÃO pode faltar é a entrada, nos três pontos. */
-    .replace(/import \{[^}]+\} from '\.\/src\/deck23\.js';\n?/, m.deck23)
-    .replace(/import \{[\s\S]*?\}\s*\n?\s*from '\.\/src\/diagramas\.js';\n?/, m.diagramas);
+    /* `[^}]+` e nao `[\s\S]*?`, mesmo para importacao que ocupa duas linhas:
+       `[^}]` ja casa quebra de linha, e a lista de nomes nunca tem `}` dentro.
+
+       A versao com `[\s\S]*?` era destrutiva em silencio. Ela comecava no
+       PRIMEIRO `import {` do documento — que a essa altura pode estar dentro de
+       um modulo ja embutido — e varria ate o alvo, apagando tudo no caminho.
+       Foi assim que o corpo de deck23 sumiu da pagina construida: sem erro de
+       build, sem import sobrevivente, sem nada para o guard ver. */
+    .replace(/import \{[^}]+\}\s*from '\.\/src\/deck23\.js';\n?/, m.deck23)
+    .replace(/import \{[^}]+\}\s*from '\.\/src\/cenas\.js';\n?/, m.cenas)
+    .replace(/import \{[^}]+\}\s*from '\.\/src\/diagramas\.js';\n?/, m.diagramas);
 }
 
 /**

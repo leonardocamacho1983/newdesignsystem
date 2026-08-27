@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Deck Comercial Camacho</title>
-<meta name="description" content="Apresentação de proposta: o problema, a costura, o método em seis etapas, escopo e próximo passo.">
+<title>IA Assessment &amp; Opportunities · Banana Milk</title>
+<meta name="description" content="Vinte e três cenas em três atos: reenquadrar o problema, mostrar a transformação, transformar em decisão.">
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwMDAiLz48cGF0aCBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zMiAxMmEyMCAyMCAwIDEgMCAwIDQwIDIwIDIwIDAgMCAwIDE5LjYtMTZINDEuMkExMC41IDEwLjUgMCAxIDEgNDEuMiAyOGgxMC40QTIwIDIwIDAgMCAwIDMyIDEyWiIvPjwvc3ZnPg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1324,19 +1324,31 @@ a.cmc-tag:hover > * { color: var(--cmc-bg); }
       </svg>
       <span class="cmc-lockup__word" data-brand="name">Camacho</span>
     </a>
+    <div class="dk__regua dk__regua--atos" id="regua" aria-hidden="true"></div>
     <div class="cmc-controls">
-      <span class="dk__conta" id="conta">01 / 09</span>
-      <button class="cmc-btn cmc-btn--ghost" type="button" id="anterior" aria-label="Slide anterior">←</button>
-      <button class="cmc-btn cmc-btn--ghost" type="button" id="proximo" aria-label="Próximo slide">→</button>
+      <span class="dk__conta" id="conta">01 / 23</span>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="anterior" aria-label="Passo anterior">←</button>
+      <button class="cmc-btn cmc-btn--ghost" type="button" id="proximo" aria-label="Próximo passo">→</button>
       <button class="cmc-btn cmc-btn--inverse" type="button" id="tela">Tela cheia</button>
     </div>
   </div>
 
-  <div class="dk__palco" id="palco" tabindex="0" aria-label="Apresentação. Use as setas para navegar."></div>
+  <div class="dk__palco" id="palco" tabindex="0" aria-label="Apresentação. Use as setas para navegar.">
+    <div class="dk__passagem" id="passagem" aria-hidden="true">
+      <canvas id="passagem-cv"></canvas>
+      <div class="dk__passagem__txt">
+        <p class="dk__passagem__n" id="passagem-n"></p>
+        <p class="dk__passagem__nome" id="passagem-nome"></p>
+      </div>
+    </div>
+  </div>
 
   <p class="cmc-small" style="padding-block:var(--cmc-sp-4)">
-    Setas ou espaço para navegar · <kbd>F</kbd> para tela cheia · imprima para PDF pelo navegador.
+    Setas ou espaço avançam um passo · <kbd>↑</kbd><kbd>↓</kbd> pulam a cena ·
+    <kbd>F</kbd> tela cheia · <a id="link-notas" style="color:inherit;text-decoration:underline;cursor:pointer">notas do apresentador</a>
   </p>
+
+  <div class="dk__notas" id="notas" hidden></div>
 </div>
 
 <script type="module">
@@ -2607,122 +2619,1575 @@ function brandFromUrl(fallback = BRAND) {
   const param = new URLSearchParams(location.search).get('brand');
   return param ? deriveBrand(param.trim(), fallback) : fallback;
 }
-const marca = applyBrand(document, brandFromUrl());
+/* ==========================================================================
+   IA Assessment & Opportunities · Banana Milk — as 23 cenas como dado
 
-const LOCK = (inv) => `
-  <span class="cmc-lockup dk__lockup">
-    <svg class="cmc-lockup__mark" viewBox="0 0 64 64" aria-hidden="true">
-      <path fill="currentColor" fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 19.6-16H41.2A10.5 10.5 0 1 1 41.2 28h10.4A20 20 0 0 0 32 12Z"/>
-    </svg><span class="cmc-lockup__word">${marca.name}</span>
-  </span>`;
+   Conteúdo editorial do assessment: o que aparece na tela e o que se fala em
+   cada slide. Este arquivo decide COMO cada argumento aparece, nunca QUAL.
 
-const arte = (shape, ramp, seed, extra = '') =>
-  `<div class="dk__art"><canvas data-cmc-dither="${shape}" data-ramp="${ramp}"
-     data-cell="4" data-seed="${seed}" ${extra} aria-hidden="true"></canvas></div>`;
+   Alimenta dois artefatos, e é fonte única dos dois:
+   - `assessment.html`       — a apresentação, 16:9, navegada por beats
+   - `assessment-documento.html` — o texto integral, para ler e imprimir
 
-/* Nove slides: abertura, problema, tese, costura, método, incorporar,
-   medida, escopo e próximo passo. Um argumento por slide. */
-const SLIDES = [
-  { campo: 'escuro', topo: LOCK(), meio: arte('weave', '0.04,1', 7),
-    pe: `<h2 class="dk__hed dk__hed--grande">Clareza<br>é vantagem.</h2>`,
-    rodape: 'Proposta de transformação com IA' },
+   Duas listas soltas para a mesma peça é a divergência que este repositório já
+   cometeu e documentou no cabeçalho de src/kv.js.
 
-  { campo: 'papel', topo: `<p class="cmc-micro">O problema</p>`,
-    meio: `<h2 class="dk__hed">Empresas não perdem capacidade por falta de tecnologia.</h2>`,
-    pe: `<p class="dk__corpo dk__corpo--serif">Perdem quando a complexidade cresce mais rápido do que sua forma de decidir, operar e liderar.</p>` },
+   --- A regra que organiza tudo: dois registros ---------------------------
 
-  { campo: 'escuro', topo: `<p class="cmc-micro">A cadeia</p>`,
-    meio: arte('noiseToSignal', '0.03,1', 11),
-    pe: `<div class="dk__grade" style="--cols:4">
-        <div class="dk__item"><h4>Complexidade</h4><p>o estado de chegada</p></div>
-        <div class="dk__item"><h4>Clareza</h4><p>o que o diagnóstico produz</p></div>
-        <div class="dk__item"><h4>Decisões</h4><p>o que a clareza destrava</p></div>
-        <div class="dk__item"><h4>Capacidade</h4><p>o que fica quando eu saio</p></div>
-      </div>` },
+   `registro: 'cliente'`  → o assunto é a Banana Milk: o negócio, os dados, a
+                            decisão deles. Cor permitida — os quatro acentos.
+   `registro: 'camacho'`  → tagline, proposta de valor, método, consultoria,
+                            preço. SEMPRE minimalista: preto e papel, mono,
+                            muito acabamento e nenhum enfeite.
 
-  { campo: 'escuro', topo: `<p class="cmc-micro">Como eu trabalho</p>`,
-    meio: arte('weave', '0.05,1', 19),
-    pe: `<h2 class="dk__hed">Não vendo duas coisas.</h2>
-         <p class="dk__corpo">O lado técnico e o lado humano, costurados na estratégia do negócio. Separá-los é o que faz a transformação falhar.</p>` },
+   Aplicada aos 23 slides ela produz um arco que não é o óbvio: o Ato 1 é quase
+   todo cliente e o 2 e o 3 são quase todos Camacho. Ou seja, a apresentação
+   começa em cor e termina em preto e branco. Está certo — ela termina numa
+   decisão, e decisão não precisa de atmosfera.
+   ========================================================================== */
 
-  { campo: 'papel', topo: `<p class="cmc-micro">O método</p>`,
-    meio: `<div class="dk__grade" style="--cols:3">
-        <div class="dk__item"><h4>01 Diagnosticar</h4><p>Entender antes de propor</p></div>
-        <div class="dk__item"><h4>02 Priorizar</h4><p>Urgência não é importância</p></div>
-        <div class="dk__item"><h4>03 Estruturar</h4><p>Arquitetura antes de automação</p></div>
-        <div class="dk__item"><h4>04 Implementar</h4><p>Até funcionar na operação</p></div>
-        <div class="dk__item"><h4>05 Incorporar</h4><p>Líderes e times junto</p></div>
-        <div class="dk__item"><h4>06 Medir</h4><p>No painel do cliente</p></div>
-      </div>`,
-    pe: `<p class="dk__corpo">Seis etapas. A quinta é a que quase todo projeto pula.</p>` },
-
-  { campo: 'escuro', topo: `<p class="cmc-micro">05 · Incorporar</p>`,
-    meio: arte('cohort', '0.14,1', 31),
-    pe: `<h2 class="dk__hed">Mudar processo sem mudar como as pessoas decidem não instala capacidade.</h2>` },
-
-  { campo: 'papel', topo: `<p class="cmc-micro">06 · Medir</p>`,
-    meio: arte('gauge', '0.16,1', 23),
-    pe: `<h2 class="dk__hed">A lacuna dá para medir.</h2>
-         <p class="dk__corpo">Cada frente entra com a métrica declarada antes da primeira linha de código.</p>` },
-
-  { campo: 'escuro', topo: `<p class="cmc-micro">Escopo sugerido</p>`,
-    meio: `<div class="dk__grade" style="--cols:2">
-        <div class="dk__item"><h4>Diagnóstico · 3 semanas</h4><p>AI Assessment, achados priorizados e roadmap</p></div>
-        <div class="dk__item"><h4>Estruturação · 6 semanas</h4><p>Dados, processos e indicadores</p></div>
-        <div class="dk__item"><h4>Implementação · contínuo</h4><p>Analytics, automação e agentes</p></div>
-        <div class="dk__item"><h4>Incorporação · paralelo</h4><p>Líderes e times, do início</p></div>
-      </div>`,
-    pe: `<p class="dk__corpo">Contratável por etapa. O diagnóstico é a porta de entrada e já entrega decisão.</p>` },
-
-  { campo: 'escuro', topo: LOCK(), meio: arte('handoff', '0.12,1', 41),
-    pe: `<h2 class="dk__hed">O objetivo não é dependência.</h2>
-         <p class="dk__corpo">Você precisa entender, usar e sustentar o que foi construído.</p>`,
-    rodape: 'contato' },
+const ATOS = [
+  { n: 1, nome: 'Reenquadrar o problema', de: 1, ate: 7 },
+  { n: 2, nome: 'Mostrar a transformação', de: 8, ate: 17 },
+  { n: 3, nome: 'Transformar em decisão', de: 18, ate: 23 },
 ];
 
-const CAMPOS = { escuro: ['#000000', '#FFFFFF'], papel: ['#F2F0EE', '#000000'] };
-const palco = document.getElementById('palco');
-palco.innerHTML = SLIDES.map((s, i) => {
-  const [bg, ink] = CAMPOS[s.campo];
-  const rodape = s.rodape === 'contato'
-    ? `<span>${marca.email}</span><span>${marca.domain}</span>`
-    : `<span>${s.rodape || marca.domain}</span><span>${String(i + 1).padStart(2, '0')} / ${String(SLIDES.length).padStart(2, '0')}</span>`;
-  return `<section class="dk__slide" data-i="${i}" style="--slide-bg:${bg};--slide-ink:${ink}">
-    <div>${s.topo || ''}</div>
-    ${s.meio.startsWith('<div class="dk__art"') ? s.meio : `<div style="display:flex;align-items:center">${s.meio}</div>`}
-    <div>${s.pe || ''}<div class="dk__pe" style="margin-top:2cqi">${rodape}</div></div>
-  </section>`;
-}).join('');
+/* Os quatro acentos da embalagem. Vivem AQUI, na peça — a fundação do Camacho
+   segue monocromática em tokens/. Lidos de uma captura, não de arquivo da
+   marca: trocar pelos oficiais antes de apresentar. */
+const ACENTOS = {
+  coral: '#D9503F', amarelo: '#EFBE2E', cacau: '#7A4A2E', azul: '#1B7FC4',
+  creme: '#F3EFE4', vermelho: '#E23D35',
+};
 
-let atual = 0;
-const conta = document.getElementById('conta');
-function mostrar(i) {
-  atual = Math.max(0, Math.min(SLIDES.length - 1, i));
-  palco.querySelectorAll('.dk__slide').forEach((s, k) => {
-    s.toggleAttribute('data-ativo', k === atual);
-  });
-  conta.textContent = `${String(atual + 1).padStart(2, '0')} / ${String(SLIDES.length).padStart(2, '0')}`;
-  /* Redesenha o grafismo do slide que entrou: o motor só desenha o que já
-     esteve visível, e um slide escondido tem tamanho zero. */
-  const cv = palco.querySelector(`.dk__slide[data-i="${atual}"] canvas`);
-  if (cv) { delete cv.dataset.cmcDone; init(palco); }
+/* O personagem aparece por ASSUNTO, não por ato: só onde a capacidade do
+   cliente é o que está em jogo. Três momentos no deck inteiro. Fora daí ele
+   não existe, e a ausência significa que ainda não há quem dirija. */
+const PERSONAGEM_EM = [10, 17, 23];
+
+const CENAS = [
+
+/* ===== ATO 1 · Reenquadrar o problema ==================================== */
+
+{ n: 1, ato: 1, registro: 'camacho', campo: 'escuro', dispositivo: 'weave',
+  titulo: 'Capa',
+  hed: 'Clareza para decidir.<br>Inteligência para crescer.',
+  olho: 'IA Assessment &amp; Opportunities',
+  pe: 'Banana Milk · Agosto de 2026',
+  fala: 'Este trabalho começou com uma pergunta prática: como colocar os dados da Banana Milk ao alcance da liderança, inclusive pelo WhatsApp? Ao investigar essa pergunta, encontramos algo maior. A oportunidade não é apenas criar uma nova interface. É construir uma capacidade gerencial que permita à Banana Milk enxergar melhor, agir antes e crescer com menos dependência do esforço dos sócios.',
+  beats: 2 },
+
+{ n: 2, ato: 1, registro: 'cliente', campo: 'creme', dispositivo: 'recuo',
+  titulo: 'O WhatsApp é a porta. O controle é o destino.',
+  hed: 'O WhatsApp é a porta.<br>O controle é o destino.',
+  citacao: 'Quero perguntar pelo WhatsApp e receber a informação gerencial de que preciso.',
+  citacaoDe: 'O pedido',
+  listaOlho: 'A necessidade real',
+  lista: ['recuperar domínio sobre os números',
+          'reduzir a dependência de relatórios e terceiros',
+          'antecipar riscos',
+          'transformar informação em ação'],
+  fala: 'O pedido do Marcos é muito claro: conseguir conversar com os dados pelo WhatsApp. Mas o valor não está no WhatsApp. O valor está em recuperar o controle sobre o negócio. Se a informação continua ambígua, atrasada ou dependente de interpretação, colocar um agente na frente dela apenas acelera o acesso à dúvida. Portanto, o WhatsApp é a primeira experiência. O produto real é uma gestão mais confiável.',
+  beats: 3 },
+
+{ n: 3, ato: 1, registro: 'cliente', campo: 'creme', dispositivo: 'soltos',
+  titulo: 'Os dados existem. O sistema gerencial ainda não.',
+  hed: 'Os dados existem.<br>O sistema gerencial ainda não.',
+  numeros: [['6', 'ambientes relevantes de informação'],
+            ['4', 'modelos de canal com economias diferentes'],
+            ['6', 'ambiguidades que alteram os números']],
+  ambientes: ['Omie', 'BPO', 'Excel', 'Drive', 'Notion', 'WhatsApp'],
+  fecho: 'Diversas rotinas dependentes de memória e consultas manuais.',
+  fala: 'A Banana Milk não sofre por falta absoluta de dados ou por excesso de ferramentas. Os dados estão no Omie, no BPO, em planilhas, no Drive, no Notion e em conversas. O problema é que eles ainda não formam um sistema gerencial único. Cada nova pergunta exige localizar informações, combinar fontes e reconstruir a interpretação. Isso funciona enquanto o conhecimento está na cabeça de poucas pessoas. Não funciona bem quando o número de produtos, canais, redes, lotes e decisões aumenta.',
+  beats: 3 },
+
+{ n: 4, ato: 1, registro: 'cliente', campo: 'creme', dispositivo: 'desregistro',
+  titulo: 'Se o conceito muda, o número também muda.',
+  hed: 'Se o conceito muda,<br>o número também muda.',
+  /* A palavra que entra fora de registro e converge. Uma só, grande — seis
+     desregistros seriam seis piadas iguais. */
+  palavra: 'receita',
+  tabela: { cols: ['Conceito', 'Ambiguidade encontrada'], linhas: [
+    ['Volume', 'Unidade, pack ou caixa?'],
+    ['Receita', 'Venda ou bonificação?'],
+    ['Resultado', 'Caixa ou competência?'],
+    ['Cliente', 'Rede, distribuidor ou loja?'],
+    ['Produto', 'Família, SKU ou lote?'],
+    ['Estoque', 'Interno ou disponível no mercado?'] ] },
+  fecho: 'Sem definição comum, não existe indicador confiável.',
+  fala: 'Antes de integrar sistemas, precisamos integrar significados. Quando alguém pergunta quanto foi vendido, precisamos saber se está falando de unidades, packs ou caixas. Quando pergunta pelo desempenho de uma rede, precisamos separar venda, bonificação, distribuidor, rede e loja. Essas não são discussões acadêmicas. Cada definição altera faturamento, volume, margem, estoque e desempenho comercial. O primeiro trabalho, portanto, não é tecnológico. É fazer a Banana Milk falar uma língua gerencial comum.',
+  beats: 3 },
+
+{ n: 5, ato: 1, registro: 'cliente', campo: 'papel', dispositivo: 'exclusao',
+  titulo: 'Um relatório pode estar certo e ainda ser insuficiente.',
+  hed: 'Um relatório pode estar certo<br>e ainda ser insuficiente.',
+  olho: 'Exemplo observado na análise financeira',
+  /* ATENÇÃO, e é o único risco de CORREÇÃO do deck: o texto diz que estes dois
+     valores NÃO podem ser somados nem subtraídos. Qualquer cascata, barra ou
+     eixo compartilhado vai sugerir que somam, e aí o desenho contradiz a fala.
+     O dispositivo é `exclusao`: um colchete que fecha em volta do que entrou no
+     subtotal, e um valor visivelmente FORA dele. Sem eixo, sem escala, sem
+     operação — a pergunta que a imagem faz é "dentro ou fora?". */
+  valores: [
+    { rot: 'Resultado apresentado', v: '−R$ 636,8 mil', dentro: true },
+    { rot: 'CMC visível fora do cálculo', v: 'R$ 222,9 mil', dentro: false },
+  ],
+  razao: 'Razão indicada: ausência de classificação no plano de contas.',
+  fecho: 'A DRE atual não oferece segurança para análise e decisão estratégica.',
+  fala: 'Este exemplo resume o problema. O relatório apresenta um resultado negativo de 636,8 mil reais. Ao mesmo tempo, existem aproximadamente 222,9 mil reais de CMC visíveis que não entram nos subtotais, aparentemente por falta de classificação. Isso não significa que podemos simplesmente somar ou subtrair esses valores. Significa que o número não pode ser utilizado estrategicamente sem reconciliação. Uma visão pode cumprir sua finalidade contábil e continuar insuficiente para responder às perguntas dos gestores.',
+  beats: 4 },
+
+{ n: 6, ato: 1, registro: 'cliente', campo: 'creme', dispositivo: 'chave',
+  titulo: 'Margem não é preço menos custo.',
+  hed: 'Margem não é<br>preço menos custo.',
+  olho: 'A unidade econômica real',
+  /* As quatro dimensões travam num bloco: o objeto da análise não é o SKU, é o
+     SKU dentro de uma condição. Cada uma leva um acento. */
+  chave: ['SKU', 'canal', 'cliente', 'condições do pedido'],
+  cadeia: ['Preço de venda', 'impostos', 'bonificação', 'contrato', 'frete',
+           'comissão', 'promoção', 'custo completo do produto'],
+  resultado: 'margem real da decisão',
+  fala: 'A negociação com o Oba mostrou por que uma margem genérica por produto não é suficiente. O mesmo SKU pode ser um bom negócio em um canal e um mau negócio em outro. A resposta depende do preço, impostos, bonificação, frete, comissão, promoção, prazo e volume. O verdadeiro objeto da análise não é apenas o SKU. É o SKU dentro de uma condição comercial específica. Essa mesma regra precisa alimentar a precificação, a DRE, as simulações, o WhatsApp e futuras recomendações de IA.',
+  beats: 3 },
+
+{ n: 7, ato: 1, registro: 'cliente', campo: 'escuro', dispositivo: 'vao',
+  titulo: 'O prejuízo mais perigoso é o que aparece tarde.',
+  hed: 'O prejuízo mais perigoso<br>é o que aparece tarde.',
+  listaOlho: 'O custo invisível do modelo atual',
+  lista: ['produto perde a janela comercial',
+          'cliente deixa de recomprar',
+          'promoção começa tarde',
+          'preço é definido com informação incompleta',
+          'decisões aguardam extrações e consultas',
+          'conhecimento permanece concentrado em pessoas'],
+  fecho: 'O problema não é apenas produzir o relatório. É descobrir tarde o que deveria ter sido feito.',
+  fala: 'Nem todo custo aparece na DRE como uma linha chamada "falta de visibilidade". Ele aparece como produto que perdeu sua janela comercial, cliente que não recomprou, promoção iniciada tarde, decisão adiada ou tempo dos sócios gasto procurando informações. Shelf life é o melhor exemplo. A data de validade física não é o único prazo. Existe também a janela comercial para entregar, vender e promover o produto. Quando o relatório mostra o problema, parte do valor já pode ter sido perdida.',
+  beats: 3 },
+
+/* ===== ATO 2 · Mostrar a transformação ================================== */
+
+{ n: 8, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'estados',
+  titulo: 'A Banana Milk está pronta para usar IA. Ainda não para delegar a ela.',
+  hed: 'Pronta para usar IA.<br>Ainda não para delegar a ela.',
+  olho: 'Agent Readiness',
+  /* Estados QUALITATIVOS. Um medidor aqui prometeria uma medição que o
+     assessment não fez — e a regra de não parecer instrumento sem número
+     continua valendo em todo o Ato 2. */
+  tabela: { cols: ['Dimensão', 'Situação atual'], linhas: [
+    ['Conhecimento', 'Conceitos dispersos'],
+    ['Dados', 'Disponíveis, com lacunas'],
+    ['Conectividade', 'Sistemas pouco integrados'],
+    ['Ação', 'Rotinas majoritariamente manuais'],
+    ['Governança', 'Limites ainda não formalizados'] ] },
+  fecho: 'Bons casos de uso, fundação em construção.',
+  fala: 'Existe uma diferença entre AI Readiness e Agent Readiness. AI Readiness significa que a empresa consegue usar inteligência artificial. A Banana Milk já começou a fazer isso. Agent Readiness significa que a empresa está preparada para permitir que agentes consultem dados, interpretem conceitos e executem ações com segurança. A Banana Milk tem liderança interessada, problemas concretos e dados relevantes. O que ainda precisa ser construído é a fundação que torna os agentes confiáveis.',
+  beats: 3 },
+
+{ n: 9, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'termos',
+  titulo: 'Antes de ensinar a IA, a empresa precisa ensinar a si mesma.',
+  hed: 'Antes de ensinar a IA,<br>a empresa ensina a si mesma.',
+  termos: [['Ontologia', 'Como os elementos do negócio se relacionam.'],
+           ['Vocabulário oficial', 'O que cada conceito significa.'],
+           ['Inventário de dados', 'Onde a informação nasce e quem responde por ela.'],
+           ['OKF', 'Conhecimento portátil, legível por pessoas e agentes.']],
+  fala: 'Ontologia pode parecer uma palavra sofisticada, mas a ideia é prática. Precisamos definir como produto, SKU, pack, lote, cliente, rede, loja, pedido, venda, bonificação, receita, custo e margem se relacionam. Depois, registramos onde cada dado nasce, qual é sua regra e quem responde por ele. Isso reduz dependência das pessoas, evita que cada fornecedor invente sua própria interpretação e cria uma memória organizacional que pode ser utilizada por humanos, sistemas e agentes.',
+  beats: 5 },
+
+{ n: 10, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'escada',
+  titulo: 'A transformação acontece em cinco movimentos.',
+  hed: 'A transformação acontece<br>em cinco movimentos.',
+  degraus: [['Legível', 'O negócio possui conceitos e regras claros.'],
+            ['Conectável', 'Dados e capacidades são acessíveis.'],
+            ['Consultável', 'Pessoas conseguem obter respostas confiáveis.'],
+            ['Coordenável', 'Alertas geram ações e responsáveis.'],
+            ['Progressivamente autônomo', 'Agentes atuam dentro de limites.']],
+  faixa: 'Dependência → visibilidade → antecipação → coordenação → autonomia',
+  fala: 'Esta não é uma sequência rígida de projetos. É uma sequência de capacidades. Primeiro, tornamos o negócio legível. Depois, conectável. Então ele pode ser consultado com confiança. O próximo estágio é transformar respostas em alertas, tarefas e acompanhamento. Somente depois faz sentido permitir que agentes recomendem ou executem determinadas ações. Não precisamos terminar uma fase inteira antes de começar a seguinte. Podemos atravessar as cinco camadas com um caso de uso pequeno e ampliar progressivamente.',
+  beats: 6 },
+
+{ n: 11, ato: 2, registro: 'camacho', campo: 'escuro', dispositivo: 'nucleo',
+  titulo: 'Uma base. Muitas aplicações.',
+  hed: 'Uma base.<br>Muitas aplicações.',
+  tabela: { cols: ['Capacidade compartilhada', 'Onde será utilizada'], linhas: [
+    ['Regra de margem', 'DRE, preço, WhatsApp e simulação'],
+    ['Dados de lotes', 'Estoque, shelf life e promoções'],
+    ['Histórico de clientes', 'Recompra, alertas e cadências'],
+    ['Ontologia', 'Relatórios, agentes e treinamento'],
+    ['Permissões', 'WhatsApp, automações e agentes'] ] },
+  fecho: 'Construir uma vez. Reutilizar em cada nova aplicação.',
+  fala: 'A proposta é trabalhar com uma arquitetura API-first e um Backend for Agents. Na prática, isso significa que a regra de margem não fica presa a uma planilha ou a um chatbot. Ela se torna uma capacidade reutilizável. A mesma lógica pode alimentar a DRE, uma simulação comercial, um dashboard, o WhatsApp e futuros agentes. Esse reaproveitamento é a principal vantagem econômica de um programa integrado. Em projetos separados, cada fornecedor tende a reconstruir parte da fundação.',
+  beats: 3 },
+
+{ n: 12, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'passos',
+  titulo: 'Primeira entrega: conversar com o negócio.',
+  hed: 'Primeira entrega:<br>conversar com o negócio.',
+  olho: 'WhatsApp executivo · primeiro ciclo',
+  passos: ['selecionar 10 a 15 perguntas', 'definir os conceitos',
+           'reconciliar as fontes', 'construir respostas controladas',
+           'informar fonte, período e cálculo', 'validar', 'expandir'],
+  fecho: 'Valor rápido com confiança controlada.',
+  fala: 'Minha recomendação é começar pelo WhatsApp executivo porque existe uma urgência explícita do CEO e um valor percebido muito alto. Mas não começaremos tentando responder qualquer pergunta sobre qualquer dado. Começaremos com 10 a 15 perguntas prioritárias. Para cada uma, definiremos o conceito, a fonte, o cálculo e a forma de validação. Assim, entregamos uma experiência visível rapidamente e usamos cada pergunta para construir uma parte reutilizável da fundação.',
+  beats: 3 },
+
+{ n: 13, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'perguntas',
+  titulo: 'As primeiras perguntas definem a primeira fundação.',
+  hed: 'As primeiras perguntas<br>definem a primeira fundação.',
+  /* O slide é vitrine: só apresentar as perguntas. A última sobe de peso,
+     porque é a que separa um chatbot de uma capacidade gerencial. */
+  perguntas: ['Qual foi o faturamento líquido do mês?',
+              'Como estamos em relação ao mês anterior?',
+              'Quanto temos de cada SKU?',
+              'Quais lotes exigem atenção?',
+              'Quais clientes deixaram de recomprar?',
+              'Qual é a margem estimada deste pedido?',
+              'O que exige uma decisão nesta semana?'],
+  fecho: 'Cada resposta deve mostrar: fonte, período e regra.',
+  fala: 'O objetivo não é apenas responder quanto vendemos. É permitir que o gestor compreenda e confie na resposta. Quando o agente responder, ele deve indicar o período, a fonte e a regra utilizada. Também precisamos evoluir de perguntas descritivas, como "quanto temos em estoque?", para perguntas gerenciais, como "o que exige uma decisão nesta semana?". Essa mudança separa um chatbot de uma verdadeira capacidade gerencial.',
+  beats: 3 },
+
+{ n: 14, ato: 2, registro: 'camacho', campo: 'escuro', dispositivo: 'quadrante',
+  titulo: 'Quatro formas de gerar valor.',
+  hed: 'Quatro formas<br>de gerar valor.',
+  eixos: { x: ['Observar', 'Agir'], y: ['Antecipar', 'Reagir'] },
+  celulas: [['Inteligência', 'antecipar o que pode acontecer'],
+            ['Autonomia', 'permitir ação dentro de limites'],
+            ['Visibilidade', 'entender o que aconteceu'],
+            ['Orquestração', 'garantir que algo seja feito']],
+  fala: 'Organizamos as oportunidades em duas dimensões. A primeira é a evolução de observar para agir. A segunda é a evolução de reagir para antecipar. Isso produz quatro espaços de valor. Visibilidade, inteligência, orquestração e autonomia. O quadrante evita que toda ideia de IA pareça igualmente importante. Também mostra que não precisamos começar pela autonomia. Há muito valor a capturar em visibilidade e orquestração.',
+  beats: 4 },
+
+{ n: 15, ato: 2, registro: 'camacho', campo: 'escuro', dispositivo: 'quadrante-cheio',
+  titulo: 'O portfólio de oportunidades.',
+  hed: 'O portfólio<br>de oportunidades.',
+  /* O mesmo quadrante da cena 14, povoado. O portfólio não é uma lista de
+     dezesseis itens — é o quadrante preenchido, e é isso que mata o
+     slide-lista mais perigoso do deck. */
+  portfolio: {
+    Visibilidade: ['WhatsApp executivo', 'DRE contínua', 'margem', 'estoque e lotes'],
+    Inteligência: ['previsão de demanda', 'risco de validade', 'risco de não recompra', 'simulação comercial'],
+    Orquestração: ['alertas de shelf life', 'cadências comerciais', 'programa de promotores', 'tarefas e responsáveis'],
+    Autonomia: ['recomendação de ações', 'contato autorizado', 'execução de rotinas', 'decisões dentro de limites'],
+  },
+  fala: 'O assessment não encontrou um único projeto. Encontrou um portfólio. Algumas oportunidades melhoram decisões. Outras reduzem esforço operacional. Outras aumentam a capacidade de escala. O ponto importante é que elas compartilham dados, conceitos, regras e integrações. Por isso, não deveriam ser tratadas como quatro sistemas ou dez contratações independentes.',
+  beats: 5 },
+
+{ n: 16, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'criterios',
+  titulo: 'Nem tudo que gera valor deve começar agora.',
+  hed: 'Nem tudo que gera valor<br>deve começar agora.',
+  olho: 'Cinco critérios de priorização',
+  criterios: ['Valor econômico', 'Urgência', 'Prontidão dos dados',
+              'Reutilização da fundação', 'Esforço e risco'],
+  recomendacao: 'Recomendação inicial: WhatsApp executivo.',
+  fecho: 'Próximas prioridades: definidas com a liderança.',
+  fala: 'Eu não quero impor um roadmap anual fechado antes de discutirmos as prioridades. O assessment define os critérios e as dependências. A liderança escolhe, conosco, a sequência do portfólio. Minha recomendação inicial é o WhatsApp executivo. Depois dessa primeira entrega, podemos escolher entre aprofundar DRE e margem, atacar shelf life, organizar recompra ou avançar em outra oportunidade. O backlog pode mudar. A arquitetura e a lógica de priorização permanecem.',
+  beats: 3 },
+
+{ n: 17, ato: 2, registro: 'camacho', campo: 'papel', dispositivo: 'travessia',
+  titulo: 'A tecnologia muda. A forma de operar muda mais.',
+  hed: 'A tecnologia muda.<br>A forma de operar muda mais.',
+  tabela: { cols: ['Hoje', 'Capacidade futura'], linhas: [
+    ['Procurar respostas', 'Consultar imediatamente'],
+    ['Interpretar relatórios', 'Usar conceitos oficiais'],
+    ['Descobrir problemas tarde', 'Receber alertas antecipados'],
+    ['Cobrar ações manualmente', 'Orquestrar responsáveis'],
+    ['Depender da memória', 'Registrar conhecimento'],
+    ['Analisar do zero', 'Reutilizar regras'] ] },
+  fecho: 'Melhor decisão. Menor esforço operacional. Maior capacidade de escala.',
+  fala: 'O resultado não deve ser medido pela quantidade de ferramentas implantadas. A mudança real acontece quando a empresa deixa de procurar respostas e passa a consultá-las. Quando deixa de descobrir problemas tarde e passa a receber alertas. Quando deixa de depender da memória e passa a operar com conhecimento registrado. Essa é a transformação que conecta gestão, dados, automação e IA.',
+  beats: 4 },
+
+/* ===== ATO 3 · Transformar em decisão =================================== */
+
+{ n: 18, ato: 3, registro: 'camacho', campo: 'papel', dispositivo: 'entregas',
+  titulo: 'O assessment termina. O ativo permanece.',
+  hed: 'O assessment termina.<br>O ativo permanece.',
+  olho: 'A Banana Milk recebe',
+  entregas: ['diagnóstico de Agent Readiness', 'tese de transformação',
+             'arquitetura conceitual', 'portfólio de oportunidades',
+             'critérios de priorização', 'desenho dos projetos',
+             'dependências e riscos', 'lógica orçamentária',
+             'condições para contratar o mercado'],
+  fecho: 'A Banana Milk pode seguir internamente, conosco ou com outros parceiros.',
+  fala: 'Este assessment não é um argumento para tornar a Banana Milk dependente de mim. A empresa recebe um diagnóstico, uma arquitetura, um portfólio, critérios de priorização e condições para solicitar propostas ao mercado. Vocês podem executar internamente, contratar projetos separados ou trabalhar comigo em um programa contínuo. Minha responsabilidade nesta entrega é dar condições para que vocês façam uma escolha informada.',
+  beats: 3 },
+
+{ n: 19, ato: 3, registro: 'camacho', campo: 'escuro', dispositivo: 'nucleo-invertido',
+  titulo: 'No mercado, as partes são vendidas separadamente.',
+  hed: 'No mercado, as partes<br>são vendidas separadamente.',
+  olho: 'Normalmente contratadas como frentes diferentes',
+  frentes: ['estratégia e governança', 'dados e integrações', 'BI e indicadores',
+            'automações', 'agentes de IA', 'adoção e desenvolvimento do time'],
+  valor: 'R$ 175 mil a R$ 350 mil',
+  valorRot: 'Portfólio contratado por projetos',
+  nota: 'Faixa de planejamento. Não representa cotação formal.',
+  fala: 'Esse tipo de transformação normalmente é comprado em partes. Uma empresa define a estratégia. Outra integra os dados. Outra constrói o BI. Outra desenvolve automações. Outra implementa o agente. Depois, alguém precisa coordenar tudo. Nossa estimativa preliminar para contratar separadamente um portfólio equivalente fica entre 175 mil e 350 mil reais. O principal problema não é apenas o preço. É a fragmentação. Cada nova contratação consome diagnóstico, alinhamento, coordenação e reconstrução de contexto.',
+  beats: 4 },
+
+{ n: 20, ato: 3, registro: 'camacho', campo: 'papel', dispositivo: 'comparacao',
+  titulo: 'Três maneiras de construir a mesma capacidade.',
+  hed: 'Três maneiras de construir<br>a mesma capacidade.',
+  caminhos: [
+    { nome: 'Projetos separados', inv: 'R$ 175 mil a R$ 350 mil', lim: 'Fragmentação' },
+    { nome: 'Equipe interna', inv: 'Acima de R$ 35 mil/mês', lim: 'Múltiplos perfis e contratação' },
+    { nome: 'Programa integrado', inv: 'R$ 12 mil a R$ 32 mil/mês', lim: 'Capacidade conforme dedicação' },
+  ],
+  fecho: 'O programa anual não economiza apenas dinheiro. Economiza recomeços.',
+  fala: 'A comparação correta não é entre o meu trabalho e um dashboard. A comparação é entre três formas de construir uma capacidade que envolve estratégia, dados, gestão, automação, IA e adoção. Uma equipe interna completa exigiria múltiplos perfis. Projetos separados geram fragmentação. O programa integrado preserva o contexto e reutiliza a mesma fundação, ajustando a dedicação e a velocidade conforme a opção escolhida.',
+  beats: 3 },
+
+{ n: 21, ato: 3, registro: 'camacho', campo: 'papel', dispositivo: 'niveis',
+  titulo: 'Três níveis de parceria.',
+  hed: 'Três níveis<br>de parceria.',
+  /* NÃO pré-destacar a coluna do meio. Se a recomendação já estiver marcada
+     aqui, a cena 22 não tem o que fazer — e o ato perde o único gesto de
+     ênfase que se permite. */
+  niveis: [
+    { nome: 'Transformação', mes: 'R$ 12 mil', ano: 'R$ 144 mil', ded: 'Ciclos', papel: 'Construir' },
+    { nome: 'AI Advisor', mes: 'R$ 20 mil', ano: 'R$ 240 mil', ded: 'Até 8h/semana', papel: 'Construir e orientar' },
+    { nome: 'Fractional CAIO', mes: 'R$ 32 mil', ano: 'R$ 384 mil', ded: 'Até 20h/semana', papel: 'Liderar a função' },
+  ],
+  fala: 'Existem três níveis possíveis de parceria. O primeiro é um programa de transformação com ciclos de implementação. O segundo adiciona acompanhamento semanal da liderança, gestão mais próxima do portfólio, desenvolvimento da ontologia, inventário de dados e participação pontual em decisões executivas. O terceiro é uma função executiva fracionada. Nesse modelo, eu assumo a liderança contínua da agenda de IA, participando da gestão, do desenvolvimento dos times, de conselhos e, quando necessário, de reuniões com investidores.',
+  beats: 4 },
+
+{ n: 22, ato: 3, registro: 'camacho', campo: 'papel', dispositivo: 'assentamento',
+  titulo: 'A opção recomendada: construir e orientar.',
+  hed: 'Programa de Transformação<br>+ AI Advisor',
+  valor: 'R$ 20 mil por mês',
+  inclui: ['acompanhamento semanal', 'até 8 horas de dedicação por semana',
+           'gestão do portfólio', 'implementação incremental', 'ontologia e OKF',
+           'inventário e governança dos dados', 'desenvolvimento do time',
+           'acompanhamento de fornecedores', 'participação executiva pontual'],
+  fala: 'Minha recomendação para a Banana Milk é o modelo intermediário. Ele oferece proximidade suficiente para construir a fundação, acompanhar semanalmente as prioridades e desenvolver a capacidade interna, sem criar o custo de uma função executiva parcial de 20 horas por semana. Não é apenas aconselhamento. Também não é desenvolvimento ilimitado. É uma capacidade contínua de transformação, com prioridades acordadas e uma frente principal de implementação por vez.',
+  beats: 3 },
+
+{ n: 23, ato: 3, registro: 'camacho', campo: 'escuro', dispositivo: 'fecho',
+  titulo: 'A decisão de hoje define o primeiro movimento.',
+  hed: 'A decisão de hoje define<br>o primeiro movimento.',
+  olho: 'Próximos passos',
+  passos: ['escolher o modelo de parceria',
+           'selecionar as 10 a 15 perguntas executivas',
+           'nomear os responsáveis pelos dados',
+           'iniciar o primeiro ciclo',
+           'validar a primeira entrega',
+           'priorizar o próximo caso de uso'],
+  fecho: 'A escolha não é se a Banana Milk usará IA. A escolha é se a IA será apenas mais uma ferramenta ou uma capacidade real do negócio.',
+  fala: 'O primeiro passo não exige decidir hoje a ordem de todos os projetos do ano. Precisamos decidir o modelo de parceria e escolher as primeiras perguntas que queremos responder com confiança. A partir delas, construiremos a primeira fundação, entregaremos valor e escolheremos o próximo movimento com base no que aprendermos. A escolha central não é simplesmente usar ou não usar inteligência artificial. É decidir se ela será apenas mais uma ferramenta ou se ajudará a construir uma capacidade real da Banana Milk.',
+  beats: 4 },
+];
+
+/* --- Conferências -------------------------------------------------------- */
+
+/** Total de passos da apresentação. Acima de ~60 a peça pede mais cliques do
+    que 30–40 minutos comportam — é medida, não estimativa. */
+function totalBeats() {
+  return CENAS.reduce((s, c) => s + c.beats, 0);
 }
-mostrar(0);
 
-document.getElementById('proximo').addEventListener('click', () => mostrar(atual + 1));
-document.getElementById('anterior').addEventListener('click', () => mostrar(atual - 1));
+/** Cenas de um ato. */
+function cenasDoAto(n) {
+  return CENAS.filter((c) => c.ato === n);
+}
+
+/** Cor nunca deve aparecer em cena de registro `camacho`. Esta função existe
+    para a conferência final poder ser automática em vez de visual. */
+function cenasComCorIndevida() {
+  return CENAS.filter((c) => c.registro === 'camacho' && c.acento).map((c) => c.n);
+}
+/* ==========================================================================
+   O personagem — um só, em quatro posturas
+
+   Extraído de direcao-bananamilk.html, onde ele nasceu como um dos doze
+   registros da faixa de direção de arte. Vira módulo porque três cenas do
+   assessment precisam dele e uma cópia em cada seria a divergência que este
+   repositório passa o tempo todo evitando.
+
+   O que muda entre as posturas é SÓ o ângulo das pernas e a inclinação do
+   corpo. Se mudasse o desenho, seriam quatro personagens e não um — e a
+   promessa da faixa era exatamente essa: um personagem que muda de postura
+   conforme a capacidade.
+
+   --- Onde ele aparece, e o que a ausência significa ----------------------
+
+   Por ASSUNTO, não por ato: só onde a capacidade do cliente é o que está em
+   jogo. São três momentos no deck inteiro — cena 10 (o último degrau da
+   escada), cena 17 (o fecho da travessia) e cena 23 (a decisão). A lista viva
+   em PERSONAGEM_EM, em src/deck23.js.
+
+   Fora daí ele não existe, e a ausência quer dizer que ainda não há quem
+   dirija. É a regra mais fácil de quebrar "só nesse caso", e por isso a
+   conferência é automática.
+   ========================================================================== */
+
+/** As quatro posturas, na ordem em que a capacidade cresce. */
+const POSTURAS = {
+  parado:     { giro: 0,   perna: [3, -3] },
+  olhando:    { giro: -4,  perna: [10, -6] },
+  andando:    { giro: -10, perna: [22, -14] },
+  conduzindo: { giro: -14, perna: [30, -20], prancha: true },
+};
+
+/* As cores da embalagem. Vivem aqui e não em tokens/: a fundação do Camacho é
+   monocromática, e o personagem é do cliente.
+
+   --- E por isso ele tem duas versões ------------------------------------
+
+   As três cenas em que ele aparece — 10, 17 e 23 — são todas de registro
+   `camacho`: método, capacidade, decisão. Um boneco amarelo com sapato branco
+   numa tela dessas é exatamente o vazamento que a regra dos dois registros
+   existe para impedir, e foi o que apareceu na primeira leitura.
+
+   Em `camacho` ele vira traço: sem preenchimento, tudo em currentColor, e por
+   isso funciona igual no papel e no escuro. A cor volta inteira se ele algum
+   dia entrar numa cena do cliente. */
+const AMARELO = '#EFBE2E', PRETO = '#171717', BRANCO = '#FFFFFF';
+
+/**
+ * O corpo do personagem, como fragmento SVG — sem `<svg>` em volta, para poder
+ * entrar tanto numa peça inteira quanto dentro do `<g>` de um diagrama.
+ * A caixa útil é `viewBox="20 10 180 245"`.
+ */
+function personagem({ giro = 0, perna = [8, -8], prancha = false, mono = true } = {}) {
+  const corpo = mono ? 'none' : AMARELO;
+  const tinta = mono ? 'currentColor' : PRETO;
+  const sola  = mono ? 'none' : BRANCO;
+  const roda  = mono ? 'none' : AMARELO;
+  const traco = mono ? ' stroke="currentColor" stroke-width="5"' : '';
+  return `
+  <g transform="translate(100 46) rotate(${giro})">
+    <path d="M 4 0 C -16 26 -20 74 -6 108 L 40 108 C 46 70 36 26 22 0 Z" fill="${corpo}"${traco}/>
+    <path d="M 4 0 L 12 -14" stroke="${tinta}" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="6"  cy="40" r="3.4" fill="${tinta}"/>
+    <circle cx="24" cy="38" r="3.4" fill="${tinta}"/>
+    <path d="M 6 52 Q 15 60 26 50" fill="none" stroke="${tinta}"
+          stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g stroke="${tinta}" stroke-width="${mono ? 8 : 17}" stroke-linecap="round" fill="none">
+    <path d="M 104 150 L ${104 + perna[0]} 208"/>
+    <path d="M 118 150 L ${118 + perna[1]} 208"/>
+  </g>
+  <g fill="${sola}" stroke="${tinta}" stroke-width="3">
+    <ellipse cx="${104 + perna[0] + 4}" cy="212" rx="15" ry="7"/>
+    <ellipse cx="${118 + perna[1] + 4}" cy="212" rx="15" ry="7"/>
+  </g>
+  ${prancha ? `
+    <path d="M 62 226 L 168 226" stroke="${tinta}" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="82"  cy="234" r="6" fill="${roda}" stroke="${tinta}" stroke-width="3"/>
+    <circle cx="148" cy="234" r="6" fill="${roda}" stroke="${tinta}" stroke-width="3"/>` : ''}`;
+}
+
+/**
+ * O personagem numa peça sozinha, pronto para entrar no HTML de uma cena.
+ * `postura` é uma chave de POSTURAS; `alt` é a altura em cqi.
+ *
+ * Entra sempre por beat: quem chama passa `b`, e o CSS de `.dg`/`[data-beat]`
+ * cuida do estado. Ele nunca aparece junto com a manchete — chega no fecho.
+ */
+function figura(postura = 'parado', { alt = 22, b = null, rot = '', mono = true } = {}) {
+  const p = { ...(POSTURAS[postura] || POSTURAS.parado), mono };
+  return `<div class="dk__figura" style="--fig:${alt}cqi"`
+    + (b != null ? ` data-beat="${b}"` : '') + `>`
+    + `<svg viewBox="20 10 180 245" role="img" aria-label="${rot || 'Quem conduz a operação'}">`
+    + personagem(p) + `</svg></div>`;
+}
+
+/* ==========================================================================
+   IA Assessment · Banana Milk — de cena a tela
+
+   `src/deck23.js` diz O QUE cada cena argumenta. Este arquivo diz COMO ela
+   aparece: quais painéis, qual arte, qual modo de palco, qual acento. A
+   separação é a mesma de kv.js e existe pela mesma razão — HTML escrito à mão
+   para 23 cenas divergiria do conteúdo no primeiro ajuste, e em silêncio.
+
+   --- Duas montagens, e a escolha é por argumento -------------------------
+
+   `troca`   — os painéis TROCAM: cada beat mostra um painel e esconde o
+               anterior. É para quando cada beat é uma coisa diferente.
+   `constroi`— um painel só, sempre visível, e o que revela por beat são os
+               elementos dentro dele (`data-beat`, `data-beat-so`). É para
+               quando a lista É o argumento se acumulando, e para os diagramas,
+               em que o beat é o desenho se construindo.
+
+   `troca` não é gosto: com painéis empilhados, 22 das 23 cenas da versão
+   anterior transbordavam o 16:9, algumas por 700px num espaço de 419.
+
+   --- A regra dos dois registros, aplicada por construção -----------------
+
+   O acento é lido AQUI e só existe quando `registro === 'cliente'`. Não é uma
+   convenção que alguém precisa lembrar: uma cena `camacho` não tem por onde
+   receber cor, porque a função que devolve o acento devolve null para ela.
+   ========================================================================== */
+
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const li = (x, a = '') => `<li ${a}>${esc(x)}</li>`;
+
+/* O acento de cada cena do cliente. Um por cena, dos quatro da embalagem —
+   índice, não decoração: a mesma cor não reaparece em duas cenas seguidas. */
+const ACENTO_DA_CENA = {
+  2: ACENTOS.coral, 3: ACENTOS.azul, 4: ACENTOS.coral,
+  5: ACENTOS.cacau, 6: ACENTOS.amarelo, 7: ACENTOS.azul,
+};
+
+/** Cor da cena, ou null. Cena `camacho` não tem por onde receber cor. */
+function acentoDe(c) {
+  return c.registro === 'cliente' ? (ACENTO_DA_CENA[c.n] || null) : null;
+}
+
+/* ==========================================================================
+   Arte — só três cenas têm canvas
+   --------------------------------------------------------------------------
+   E é decisão, não economia. O motor é o registro do diagnóstico; ligá-lo em
+   todas as cenas transformaria a peça no que você já criticou uma vez — o
+   mesmo grafismo cinza repetido. Ele entra onde a arte É o argumento: a
+   costura que resolve (1), o erro de registro (4) e o vão temporal (7).
+   ========================================================================== */
+const ARTE = {
+  /* A costura resolvendo. A clareira é declarada e é dela que sai --cl: o tipo
+     não passa da borda do clarão, em vez de flutuar sobre a arte. */
+  1: {
+    base: { shape: 'weave', ramp: [0.03, 0.5], cell: 4, seed: 7,
+            /* w 0.70 e nao 0.60: --cl sai daqui, e com 0.60 a manchete da capa
+               quebrava em quatro linhas, ocupava 369px dos 412 do meio e
+               deixava 11px para o painel. A clareira dimensiona o tipo.
+               A altura tambem importa: com h 0.74 o clarao cobria quase o
+               quadro inteiro e a costura virava um borrao no canto. Ela ocupa a
+               metade de baixo, que e onde ha o que ver. */
+            clareira: [{ x: 0.04, y: 0.04, w: 0.70, h: 0.44, soft: 0.10, piso: 0.03 }] },
+    beats: { 1: { ramp: [0.03, 1] } },
+  },
+  /* Erro de registro de impressão: a mesma palavra composta com ela mesma,
+     fora de registro, convergindo para zero. `deslocar` entrou no motor para
+     isto — "integrar significados", desenhado em vez de dito. */
+  4: {
+    base: { shape: 'compor', ramp: [1, 1], cell: 3, seed: 11, texture: 'screen',
+            opts: { modo: 'max',
+                    a: { shape: 'text', opts: { text: 'receita', fit: 0.78 }, desloca: [-0.018, -0.012] },
+                    b: { shape: 'text', opts: { text: 'receita', fit: 0.78 }, desloca: [0.018, 0.012] } } },
+    beats: {
+      1: { opts: { a: { shape: 'text', opts: { text: 'receita', fit: 0.78 }, desloca: [-0.008, -0.005] },
+                   b: { shape: 'text', opts: { text: 'receita', fit: 0.78 }, desloca: [0.008, 0.005] } } },
+      2: { opts: { a: { shape: 'text', opts: { text: 'receita', fit: 0.78 }, desloca: [0, 0] },
+                   b: { shape: 'text', opts: { text: 'receita', fit: 0.78 }, desloca: [0, 0] } } },
+    },
+  },
+  /* O vão entre o fato e a ação. ramp [1,1] e não [0,1]: a rampa global
+     multiplicaria o gradiente do próprio campo e o argumento sumiria — bonito
+     e mudo, que é a pior forma de errar. */
+  7: {
+    base: { shape: 'intervalo', ramp: [1, 1], cell: 4, seed: 7,
+            opts: { vaos: [[0.10, 0.92]], marcas: [[0.10]], alt: 0.5 } },
+    beats: {
+      1: { opts: { vaos: [[0.10, 0.92]], marcas: [[0.10, 0.34, 0.58, 0.92]], alt: 0.5 } },
+      2: { opts: { vaos: [[0.10, 0.92]], marcas: [[0.10, 0.34, 0.58, 0.76, 0.92]], alt: 0.5 } },
+    },
+  },
+};
+
+/**
+ * A arte da cena num beat, como estado ABSOLUTO e não delta.
+ * É o que faz voltar um passo, `End`, redimensionar e imprimir desenharem
+ * certo sem replay de animação nenhuma.
+ */
+function arteNoBeat(c, k) {
+  const a = ARTE[c.n];
+  if (!a) return null;
+  let cfg = { ...a.base };
+  for (let i = 1; i <= k; i++) {
+    const b = a.beats[i];
+    if (b) cfg = { ...cfg, ...b, opts: { ...cfg.opts, ...(b.opts || {}) } };
+  }
+  return cfg;
+}
+
+/** O modo de palco de cada cena. Sai do que ela guarda, não do gosto. */
+function modoDe(c) {
+  if (DIAGRAMA.has(c.dispositivo)) return 'matriz';
+  if (c.n === 1) return 'sangria';
+  if (c.n === 7) return 'pe';
+  if (c.n === 4) return 'faixa';
+  return 'borda';
+}
+
+const DIAGRAMA = new Set(['exclusao', 'escada', 'nucleo', 'nucleo-invertido',
+                          'quadrante', 'quadrante-cheio', 'comparacao', 'assentamento']);
+
+/** `constroi` para diagrama e para lista que se acumula; `troca` no resto. */
+/* 22 saiu daqui: o assentamento, o valor e as nove inclusoes nao cabem num
+   painel so — a lista crescia e espremia o desenho ate virar um fio. Sao tres
+   coisas diferentes e a cena tem tres beats. Que sejam dois paineis. */
+const CONSTROI = new Set([5, 10, 11, 13, 14, 15, 17, 19, 20, 21]);
+const montagemDe = (c) => (CONSTROI.has(c.n) ? 'constroi' : 'troca');
+
+/* --- blocos ---------------------------------------------------------------- */
+/* A margem do olho e 0.8cqi e nao 1.4: no modo `pe` o painel tem 117px de
+   altura util, e 22px de margem eram a diferenca entre caber e transbordar. */
+const lista = (xs, cols = 2, olho = '') =>
+  (olho ? `<p class="dk__olho" style="margin-bottom:0.8cqi">${esc(olho)}</p>` : '')
+  + `<ul class="dk__lista" style="--cols:${cols}">${xs.map((x) => li(x)).join('')}</ul>`;
+
+const passos = (xs, olho = '') =>
+  (olho ? `<p class="dk__olho" style="margin-bottom:0.8cqi">${esc(olho)}</p>` : '')
+  + `<ol class="dk__passos" style="--cols:${xs.length > 5 ? 2 : 1}">${xs.map((x) => li(x)).join('')}</ol>`;
+
+const fecho = (t) => `<p class="dk__fecho">${esc(t)}</p>`;
+
+const tabela = (t, porBeat = false) =>
+  `<table class="dk__tab"><thead><tr>${t.cols.map((x) => `<th>${esc(x)}</th>`).join('')}</tr></thead>`
+  + `<tbody>${t.linhas.map((l, i) => `<tr>${l.map((x) =>
+      `<td${porBeat ? ` data-beat="${i + 1}"` : ''}>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+
+const blocos = (pares, cols = 2) =>
+  `<div class="dk__blocos" style="--cols:${cols}">` + pares.map(([h, t], i) =>
+    `<div class="dk__bloco"><h4>${String(i + 1).padStart(2, '0')} · ${esc(h)}</h4><p>${esc(t)}</p></div>`).join('')
+  + '</div>';
+
+const valor = (v, rot) => `<div class="dk__valor"><span>${esc(rot)}</span><b>${esc(v)}</b></div>`;
+
+/* ==========================================================================
+   Os dezenove dispositivos
+   ========================================================================== */
+const DISPOSITIVOS = {
+
+  /* 01 — Capa. A costura resolve e os dois nomes assentam. */
+  /* O nome do cliente sai do slot, nao do texto: `pe` traz "Banana Milk ·
+     Agosto de 2026" e o slot ja diz Banana Milk — juntos, a capa dizia o nome
+     duas vezes seguidas. Quando o logotipo vetorial chegar em cliente/, ele
+     entra no slot e a data continua onde esta. */
+  weave: (c) => [`<div class="dk__capa-pe">
+      <span class="dk__lockup-slot" data-slot="lockup">Banana&nbsp;Milk</span>
+      <span>${esc(c.pe.split('·').pop().trim())}</span></div>`],
+
+  /* 02 — A citação recua: o valor não está no pedido, está no que ele quer dizer. */
+  recuo: (c) => [
+    `<blockquote class="dk__cita"><p>“${esc(c.citacao)}”</p><cite>${esc(c.citacaoDe)}</cite></blockquote>`,
+    `<blockquote class="dk__cita dk__cita--peq" style="margin-bottom:2.4cqi">
+       <p>“${esc(c.citacao)}”</p></blockquote>` + lista(c.lista, 2, c.listaOlho),
+  ],
+
+  /* 03 — Os seis ambientes entram e NADA os liga. A ausência é o argumento. */
+  soltos: (c) => [
+    `<div class="dk__nums" style="--cols:3">` + c.numeros.map(([n, r]) =>
+      `<div class="dk__num"><b>${esc(n)}</b><span>${esc(r)}</span></div>`).join('') + '</div>',
+    lista(c.ambientes, 3, 'Onde a informação vive hoje') + fecho(c.fecho),
+  ],
+
+  /* 04 — Se o conceito muda, o número muda. */
+  /* Lista e não tabela. Em `faixa` o tipo tem 62% da largura, e uma tabela de
+     duas colunas ali quebra cada célula em duas linhas: media 14px de
+     transbordo com --cp já no piso. São seis ambiguidades, não uma matriz —
+     "Volume — unidade, pack ou caixa?" cabe numa linha e diz o mesmo. */
+  desregistro: (c) => [
+    lista(c.tabela.linhas.map(([a, b]) => `${a} — ${b.toLowerCase()}`), 1, c.tabela.cols.join(' · ')),
+    fecho(c.fecho)],
+
+  /* 06 — Quatro dimensões travam num bloco: o objeto é o SKU dentro de uma condição. */
+  chave: (c) => [
+    `<ul class="dk__chave">` + c.chave.map((x, i) =>
+      (i ? '<span class="dk__chave__mais">+</span>' : '')
+      + `<li data-acento style="--ac:var(--slide-acento)">${esc(x)}</li>`).join('') + '</ul>',
+    `<ul class="dk__cadeia">` + c.cadeia.map((x) => li(x)).join('') + '</ul>'
+      + `<p class="dk__fecho" style="margin-top:2cqi">= ${esc(c.resultado)}</p>`,
+  ],
+
+  /* 07 — O vão entre o fato e a ação. */
+  /* Três colunas: o modo `pe` reserva 15cqi para o eixo de tempo embaixo, e
+     seis itens em duas colunas transbordavam 25px com --cp no piso. */
+  /* Sem olho dentro do painel: o modo `pe` reserva 15cqi para o eixo de tempo
+     e sobram 117px de altura util. O olho custava 41px deles, e ele tem lugar
+     proprio — a linha de cima da cena, que existe exatamente para isso. */
+  vao: (c) => [lista(c.lista, 3), fecho(c.fecho)],
+
+  /* 08 — Agent Readiness. Estados qualitativos, e por isso SEM medidor: um
+     gauge aqui prometeria uma medição que o assessment não fez. */
+  estados: (c) => [tabela(c.tabela, true), fecho(c.fecho)],
+
+  /* 09 — Cada definição ocupa a tela sozinha. */
+  termos: (c) => c.termos.map(([t, d]) =>
+    `<div class="dk__cita"><cite>${esc(t)}</cite><p style="font-size:calc(3.4cqi * var(--cp,1))">${esc(d)}</p></div>`),
+
+  /* 12 — Primeira entrega. */
+  passos: (c) => [passos(c.passos, c.olho), fecho(c.fecho)],
+
+  /* 13 — Só as perguntas. A última sobe de peso: é ela que separa um chatbot
+     de uma capacidade gerencial. */
+  perguntas: (c) => [
+    `<ul class="dk__lista" style="--cols:2">` + c.perguntas.map((x, i) =>
+      li(x, `data-beat="${Math.min(3, Math.ceil((i + 1) / 3))}"`
+        + (i === c.perguntas.length - 1 ? ' style="font-size:calc(2.7cqi * var(--cp,1))"' : ''))).join('')
+    + '</ul>' + `<p class="dk__fecho" data-beat="3" style="margin-top:2cqi">${esc(c.fecho)}</p>`],
+
+  /* 16 — Nem tudo que gera valor deve começar agora. */
+  criterios: (c) => [
+    lista(c.criterios, 2, c.olho),
+    `<p class="dk__fecho">${esc(c.recomendacao)}</p>`
+      + `<p class="dk__fecho" style="margin-top:1.6cqi;opacity:.62">${esc(c.fecho)}</p>`,
+  ],
+
+  /* 17 — A travessia. Não é tabela de duas colunas: a seta é o conteúdo, e uma
+     tabela diria "os dois estados coexistem", que é o contrário da fala. */
+  travessia: (c) => [
+    `<ul class="dk__travessia">` + c.tabela.linhas.map(([a, b], i) =>
+      `<li data-beat="${Math.min(2, Math.ceil((i + 1) / 3))}">`
+      + `<span>${esc(a)}</span><i>→</i><span>${esc(b)}</span></li>`).join('') + '</ul>'
+    + `<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:3cqi;margin-top:1.2cqi">`
+    + `<p class="dk__fecho" data-beat="3">${esc(c.fecho)}</p>`
+    + figura('andando', { alt: 9, b: 3, rot: 'Quem passa a conduzir a operação' })
+    + `</div>`],
+
+  /* 18 — O ativo permanece. A frase final fica SOZINHA: é a que diz que a
+     Banana Milk não sai daqui dependente de mim. */
+  entregas: (c) => [lista(c.entregas, 3, c.olho), fecho(c.fecho)],
+
+  /* 21 — Três níveis, sem pré-destaque. Se a recomendação já estiver marcada
+     aqui, a cena 22 não tem o que fazer. */
+  niveis: (c) => [
+    `<div class="dk__niveis">` + c.niveis.map((n, i) =>
+      `<div data-beat="${i + 1}"><h4>${esc(n.nome)}</h4><b>${esc(n.mes)}</b>`
+      + `<span>${esc(n.ano)} por ano</span><span>${esc(n.ded)}</span><span>${esc(n.papel)}</span></div>`).join('')
+    + '</div>'],
+
+  /* 23 — Tudo limpa. A frase final fica sozinha; no último beat, as duas marcas. */
+  fecho: (c) => [
+    passos(c.passos, c.olho),
+    `<p class="dk__fecho" style="font-size:calc(3.2cqi * var(--cp,1))">${esc(c.fecho)}</p>`,
+    `<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:4cqi">
+       <div class="dk__valor"><span>Camacho · Banana Milk</span><b style="font-size:3.4cqi">Clareza é vantagem.</b></div>`
+      + figura('conduzindo', { alt: 16, rot: 'Quem conduz a operação daqui em diante' }) + `</div>`,
+  ],
+
+  /* --- os oito diagramas: um painel só, e o beat é o desenho se construindo */
+  exclusao: (c) => [exclusao(c, 'exc')],
+  escada: (c) => [escada(c.degraus, 'esc')
+    + `<div class="dk__legenda">` + c.degraus.map(([, d], i) =>
+        `<p data-beat-so="${i + 1}">${esc(d)}</p>`).join('')
+    + `<p data-beat-so="6">${esc(c.faixa)}</p></div>`],
+  nucleo: (c) => [nucleo(c.tabela.linhas, 'nuc')],
+  'nucleo-invertido': (c) => [nucleoInvertido(c.frentes, c.valor, c.valorRot, c.nota, 'nvi')],
+  quadrante: (c) => [quadrante(c, 'qd')],
+  'quadrante-cheio': (c, todas) => [quadrante(todas.find((x) => x.n === 14), 'qdc', c.portfolio)],
+  comparacao: (c) => [comparacao(c.caminhos, c.fecho, 'cmp')],
+  /* 22 — O assentamento. Índice 2 e não 1: a recomendada é "Programa
+     integrado", a terceira linha. "A do meio" é a coluna do meio da tabela de
+     níveis da cena 21, que é outro objeto. */
+  /* O desenho assentado e o argumento; o valor e a legenda dele. Na primeira
+     montagem o valor tinha 6.4cqi e a comparacao ficava do tamanho de uma nota
+     de rodape — o slide dizia "R$ 20 mil" e escondia por que. */
+  assentamento: (c, todas) => [
+    /* O gesto sozinho: a coluna do meio ganha peso e as outras recuam. E o
+       unico momento de enfase do Ato 3, e ele nao divide a tela com nada. */
+    comparacao(todas.find((x) => x.n === 20).caminhos, '', 'ass', 2),
+    /* Depois, o que isso e e o que inclui. */
+    `<div class="dk__assenta-pe">`
+    + `<div class="dk__valor"><span>A opção recomendada</span><b>${esc(c.valor)}</b></div>`
+    + lista(c.inclui, 3, 'O que inclui') + `</div>`],
+};
+
+/** Os painéis de uma cena, na ordem dos beats. */
+function paineisDe(c, todas) {
+  const f = DISPOSITIVOS[c.dispositivo];
+  if (!f) throw new Error(`cena ${c.n}: dispositivo "${c.dispositivo}" não tem renderizador`);
+  return f(c, todas);
+}
+
+/* --- Conferências, para a rodada poder reprovar sozinha -------------------- */
+
+/** Todo dispositivo de deck23 tem renderizador aqui? */
+function dispositivosSemRenderizador(cenas) {
+  return cenas.filter((c) => !DISPOSITIVOS[c.dispositivo]).map((c) => c.n);
+}
+
+/** O personagem só pode existir nas cenas de PERSONAGEM_EM. É a regra mais
+    fácil de quebrar "só nesse caso", então ela é medida e não lembrada. */
+function personagemForaDeLugar(cenas) {
+  return cenas.filter((c) => paineisDe(c, cenas).join('').includes('dk__figura')
+                          && !PERSONAGEM_EM.includes(c.n)).map((c) => c.n);
+}
+
+/** Cor em cena `camacho` reprova a rodada.
+
+    Cobre o acento E qualquer hexadecimal no HTML da cena. A primeira versao
+    olhava so o acento e deixou passar o personagem, que chegava amarelo numa
+    tela de registro `camacho` — cor entrando por um caminho que a conferencia
+    nao vigiava. */
+function corIndevida(cenas) {
+  return cenas.filter((c) => c.registro !== 'cliente'
+    && (acentoDe(c) || /#[0-9A-Fa-f]{6}/.test(paineisDe(c, cenas).join('')))).map((c) => c.n);
+}
+/* ==========================================================================
+   IA Assessment · Banana Milk — os cinco diagramas
+
+   Cinco argumentos que o motor de partículas NÃO deve desenhar. Partícula é
+   campo contínuo; estes cinco são discretos — pertencer, ordenar, ramificar,
+   classificar, escolher. Passá-los pelo dither produziria de novo "o mesmo
+   tipo de gráfico", que é exatamente a crítica que originou este arquivo.
+
+   SVG escrito à mão: `viewBox`, `currentColor`, seta em `<defs><marker>`,
+   texto entre 11 e 13px na escala desenhada. Sem `<script>`, sem `<style>` e
+   sem `<foreignObject>` dentro do fragmento — os dois guards de autocontenção
+   do build reprovam, e o fragmento precisa sobreviver a `innerHTML`.
+
+   --- O beat é ATRIBUTO, não animação --------------------------------------
+
+   Cada função emite o desenho INTEIRO, com `data-b` (o beat em que o elemento
+   entra) e, quando some, `data-ate`. Quem muda o estado é `noBeat(raiz, b)`,
+   que só troca classe. Assim o estado final é alcançável direto — voltar um
+   passo, `End`, redimensionar, imprimir e `prefers-reduced-motion` passam
+   todos pelo mesmo caminho.
+
+   Isto é a correção do bug do `morf`, que só resolvia dentro de `anima()`: um
+   desenho que só sabe se desenhar animando desenha errado em quatro situações
+   que ninguém testa.
+   ========================================================================== */
+
+/* --- utilidades ---------------------------------------------------------- */
+
+const esc = (s) => String(s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/** `data-b`/`data-ate` como string de atributo. `b` 1 é "desde o começo". */
+const em = (b, ate) => `data-b="${b}"${ate ? ` data-ate="${ate}"` : ''}`;
+
+/* O piso de opacidade dos rótulos de serviço, e ele é MEDIDO, não escolhido.
+
+   Medindo o pixel composto: a mesma opacidade rende 6,27:1 no campo escuro e
+   4,61:1 no campo papel. Tinta preta sobre claro perde contraste bem mais
+   rápido do que tinta branca sobre preto, então o valor que parece discreto no
+   escuro já sumiu no papel. Abaixo de 0,55 o rótulo de 11px cai para 2,8:1 —
+   e ele carrega os números ordinais e os cabeçalhos de coluna.
+
+   Fica como trava e não como convenção porque a próxima opacidade baixa vai
+   ser escrita por hábito, num rótulo que ninguém vai medir de novo. */
+const PISO_ROT = 0.55;
+
+/** Rótulo mono, o tipo de serviço do desenho: eixo, legenda, nota. */
+const rot = (x, y, txt, o = {}) => {
+  const { anc = 'start', tam = 11, b = 1, ate = 0, gir = 0, cls = '' } = o;
+  const op = Math.max(o.op ?? PISO_ROT, PISO_ROT);
+  const g = gir ? ` transform="rotate(${gir} ${x} ${y})"` : '';
+  return `<text x="${x}" y="${y}" class="dg__rot ${cls}" text-anchor="${anc}" font-size="${tam}"`
+       + ` fill="currentColor" fill-opacity="${op}" ${em(b, ate)}${g}>${esc(txt)}</text>`;
+};
+
+/** Texto de conteúdo — nome de degrau, de célula, de caminho. */
+const txt = (x, y, s, o = {}) => {
+  const { anc = 'start', tam = 15, op = 1, b = 1, ate = 0, peso = 400, cls = '' } = o;
+  return `<text x="${x}" y="${y}" class="dg__txt ${cls}" text-anchor="${anc}" font-size="${tam}"`
+       + ` font-weight="${peso}" fill="currentColor" fill-opacity="${op}" ${em(b, ate)}>${esc(s)}</text>`;
+};
+
+/** Quebra em linhas de no máximo `max` caracteres. SVG não quebra texto
+    sozinho, e um rótulo de três palavras dentro de uma caixa de 168px sai
+    pela borda sem avisar — foi o que aconteceu com "adoção e desenvolvimento
+    do time" na primeira rodada. */
+const quebra = (s, max) => {
+  const out = []; let linha = '';
+  for (const w of String(s).split(' ')) {
+    if (linha && (linha + ' ' + w).length > max) { out.push(linha); linha = w; }
+    else linha = linha ? linha + ' ' + w : w;
+  }
+  if (linha) out.push(linha);
+  return out;
+};
+
+/** A seta. Um marker por instância, porque o id é global no documento. */
+const defsSeta = (id) => `<defs>`
+  + `<marker id="${id}-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6"`
+  + ` orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker>`
+  + `</defs>`;
+
+const svg = (id, w, h, rotulo, corpo) =>
+  `<svg class="dg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(rotulo)}"`
+  + ` preserveAspectRatio="xMidYMid meet" data-dg="${id}">${defsSeta(id)}${corpo}</svg>`;
+
+/**
+ * Aplica o beat. Só troca classe: quem anima é o CSS da página.
+ * Um elemento sem `data-b` é permanente — moldura, eixo, o que existe sempre.
+ */
+function noBeat(raiz, beat) {
+  if (!raiz) return;
+  /* `dgbeat` e nao `beat`: o deck esconde tudo que carrega `data-beat` ate ser
+     revelado (`.dk__slide [data-beat]`), e carimbar esse nome na raiz do SVG
+     fazia o diagrama inteiro nascer com visibility:hidden.
+
+     O laboratorio nao pegou porque a regra e escopada em `.dk__slide`, que la
+     nao existe: o mesmo SVG desenhava certo isolado e sumia dentro da cena.
+     Duas convencoes independentes disputando um nome de atributo. */
+  raiz.dataset.dgbeat = String(beat);
+  for (const el of raiz.querySelectorAll('[data-b]')) {
+    const b = +el.dataset.b;
+    const ate = +el.dataset.ate || Infinity;
+    const on = beat >= b && beat <= ate;
+    el.classList.toggle('dg--on', on);
+    el.classList.toggle('dg--off', !on);
+  }
+}
+
+/** Quantos beats cada diagrama tem. Confere contra `beats` em deck23.js. */
+const BEATS = {
+  exclusao: 4, escada: 6, nucleo: 3, nucleoInvertido: 4,
+  quadrante: 4, quadranteCheio: 5, comparacao: 3,
+};
+
+/* ==========================================================================
+   1 · EXCLUSÃO — cena 5
+   --------------------------------------------------------------------------
+   O único risco de CORREÇÃO do deck. O texto diz que −R$ 636,8 mil e
+   R$ 222,9 mil não podem ser somados nem subtraídos. Cascata, barra empilhada
+   ou qualquer par de retângulos em escala comum sugerem soma.
+
+   Por isso: colchetes (notação de conjunto), nenhum eixo, nenhuma escala,
+   nenhum sinal de operação em lugar nenhum. A pergunta que a imagem faz é
+   "dentro ou fora?".
+
+   As quatro barras anônimas dentro do colchete são as linhas que FORAM
+   classificadas. Não têm número e não têm rótulo individual, de propósito: o
+   assessment não me deu esses valores e desenhar cinco linhas com cifras seria
+   inventar dado. Elas existem só para o colchete ler como subtotal.
+   ========================================================================== */
+
+function exclusao(d, id = 'exc') {
+  const W = 720, H = 430;
+  const L = 60, R = 470;             // as duas hastes do colchete
+  const dentro = d.valores.find((v) => v.dentro);
+  const fora = d.valores.find((v) => !v.dentro);
+  const bracket = (y0, y1, b, ate) =>
+    `<path d="M ${L + 16} ${y0} H ${L} V ${y1} H ${L + 16}" class="dg__col" fill="none"`
+    + ` stroke="currentColor" stroke-width="2" ${em(b, ate)}/>`
+    + `<path d="M ${R - 16} ${y0} H ${R} V ${y1} H ${R - 16}" class="dg__col" fill="none"`
+    + ` stroke="currentColor" stroke-width="2" ${em(b, ate)}/>`;
+
+  /* As linhas que FORAM classificadas. Sem número e sem rótulo individual, de
+     propósito: o assessment não deu esses valores, e desenhar cifras seria
+     inventar dado. Régua de livro-caixa, não barra — na primeira rodada eram
+     retângulos arredondados e liam como esqueleto de carregamento. */
+  const anon = [300, 246, 322].map((w, i) =>
+    `<line x1="${L + 34}" y1="${100 + i * 24}" x2="${L + 34 + w}" y2="${100 + i * 24}"`
+    + ` stroke="currentColor" stroke-opacity="0.22" stroke-width="2" ${em(1)}/>`).join('');
+
+  return svg(id, W, H,
+    `${dentro.rot}: ${dentro.v}, dentro do subtotal. ${fora.rot}: ${fora.v}, fora do subtotal. `
+    + 'Os dois valores não se somam nem se subtraem.',
+    /* beat 2 — o colchete alto, ainda com as duas linhas dentro */
+    bracket(72, 322, 2, 2)
+    /* beat 3 — o colchete recua e deixa de fora a linha que não entrou */
+    + bracket(72, 258, 3)
+    + anon
+    + rot(L + 34, 86, 'linhas classificadas', { b: 1 })
+
+    /* a linha que entrou */
+    + rot(L + 34, 218, dentro.rot, { b: 1 })
+    + txt(L + 34, 248, dentro.v, { tam: 30, b: 1 })
+
+    /* A linha que não entrou. O rótulo viaja DENTRO do grupo: solto, ele ficava
+       parado enquanto o valor dava o passo, e os dois se atropelavam. */
+    + `<g class="dg__fora" ${em(1)}>`
+    + rot(L + 34, 286, fora.rot, { b: 1 })
+    + txt(L + 34, 316, fora.v, { tam: 30, b: 1 })
+    + rot(L + 34, 338, 'não entra em subtotal nenhum', { b: 3, op: 0.75 })
+    + `</g>`
+
+    /* a razão e o fecho */
+    + rot(L, 396, d.razao, { b: 4, tam: 12 })
+    + rot(L, 418, d.fecho, { b: 4, tam: 12, op: 0.85 }));
+}
+
+/* ==========================================================================
+   2 · ESCADA — cena 10
+   --------------------------------------------------------------------------
+   Cinco capacidades, não cinco projetos: a fala diz explicitamente que não é
+   sequência rígida. Por isso o desenho carrega ORDEM e não carrega cronograma
+   — nenhuma data, nenhum trimestre, nenhum eixo de tempo.
+
+   As definições de cada degrau não entram aqui. São frases, e frase em desenho
+   vira ruído: elas vivem na coluna de HTML da cena, reveladas pelo mesmo beat.
+   ========================================================================== */
+
+function escada(degraus, id = 'esc') {
+  const W = 720, H = 400;
+  const x0 = 52, base = 300, larg = 122, alt = 44;
+  let corpo = '';
+  degraus.forEach(([nome], i) => {
+    const x = x0 + i * larg, topo = base - (i + 1) * alt;
+    corpo += `<path d="M ${x} ${base} V ${topo} H ${x + larg}" class="dg__deg" fill="none"`
+           + ` stroke="currentColor" stroke-width="2" ${em(i + 1)}/>`;
+    corpo += `<rect x="${x}" y="${topo}" width="${larg}" height="${base - topo}"`
+           + ` fill="currentColor" fill-opacity="0.04" ${em(i + 1)}/>`;
+    /* o último degrau fecha o perfil descendo até a base: sem isso a escada
+       fica aberta à direita e o desenho parece cortado, não terminado */
+    if (i === degraus.length - 1) {
+      corpo += `<line x1="${x + larg}" y1="${topo}" x2="${x + larg}" y2="${base}"`
+             + ` stroke="currentColor" stroke-width="2" ${em(i + 1)}/>`;
+    }
+    /* O nome deita sobre a pisada do degrau. O último alinha à DIREITA: com
+       alinhamento à esquerda, "Progressivamente autônomo" saía pela borda do
+       quadro — e um rótulo cortado não é acabamento ruim, é informação perdida. */
+    const fim = i === degraus.length - 1;
+    corpo += txt(fim ? x + larg : x + 10, topo - 12, nome,
+      { tam: 13, b: i + 1, anc: fim ? 'end' : 'start' });
+    corpo += rot(fim ? x + larg : x + 10, topo - 28, String(i + 1).padStart(2, '0'),
+      { tam: 11, b: i + 1, anc: fim ? 'end' : 'start' });
+  });
+  /* Sem linha de base. Uma régua embaixo de cinco formas que sobem transforma
+     escada em gráfico de colunas, e coluna promete uma quantidade medida —
+     que é justamente o que a fala nega: são capacidades, não números. */
+
+  /* a faixa: dependência → autonomia. Um segmento por beat, seta só no fim. */
+  const fy = 348;
+  const passos = ['dependência', 'visibilidade', 'antecipação', 'coordenação', 'autonomia'];
+  passos.forEach((p, i) => {
+    const a = x0 + i * larg, b = a + larg;
+    corpo += `<line x1="${a}" y1="${fy}" x2="${b}" y2="${fy}" stroke="currentColor"`
+           + ` stroke-width="2" stroke-opacity="0.5" class="dg__faixa" ${em(i + 1)}`
+           + (i === 4 ? ` marker-end="url(#${id}-s)"` : '') + `/>`;
+    corpo += rot(a + larg / 2, fy + 20, p, { anc: 'middle', b: i + 1 });
+  });
+
+  /* âncora do personagem no último degrau. Ele entra como módulo, num passo
+     posterior; aqui fica só o lugar, e a cena 10 é uma das três de PERSONAGEM_EM. */
+  corpo += `<g class="dg__personagem" data-slot="personagem"`
+         + ` transform="translate(${x0 + 5 * larg - 58} ${base - 5 * alt - 96})" ${em(6)}></g>`;
+
+  return svg(id, W, H,
+    'Escada de cinco capacidades, de legível a progressivamente autônomo, '
+    + 'sobre uma faixa que vai de dependência a autonomia.', corpo);
+}
+
+/* ==========================================================================
+   3 · NÚCLEO e NÚCLEO INVERTIDO — cenas 11 e 19
+   --------------------------------------------------------------------------
+   Um desenho, duas leituras, e essa economia É o argumento comercial: na 11,
+   uma fundação e cinco braços; na 19, seis compras separadas, cada uma
+   refazendo A SUA fundação. O desperdício não é dito, é desenhado — seis
+   fundações onde havia uma.
+
+   O bloco de fundação é literalmente o mesmo retângulo nos dois, mesmo
+   tamanho e mesmo traço. Se ele mudar, a inversão deixa de ler como inversão.
+   ========================================================================== */
+
+/** A medida da fundação. Uma constante, e não dois números iguais em dois
+    lugares: dois números iguais divergem no primeiro ajuste. */
+const FUND_W = 168, FUND_H = 56;
+
+/** O bloco de fundação. Idêntico nas duas cenas — é a peça que se repete. */
+const fundacao = (x, y, w, h, atrs = '') =>
+  `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="currentColor"`
+  + ` fill-opacity="0.10" stroke="currentColor" stroke-width="2" ${atrs}/>`;
+
+function nucleo(dados, id = 'nuc') {
+  const W = 720, H = 420;
+  /* 168 x 56 é a medida da fundação, e ela é COMPARTILHADA com a cena 19.
+     Se as duas divergirem, a inversão do slide 19 deixa de ler como inversão
+     e o argumento comercial inteiro cai. */
+  const cx = 74, cy = 182, cw = FUND_W, ch = FUND_H;
+  const bx = 430, bw = 240, bh = 50, gap = 18;
+  const n = dados.length;
+  const y0 = (H - (n * bh + (n - 1) * gap)) / 2;
+
+  let corpo = fundacao(cx, cy, cw, ch, em(1));
+  corpo += txt(cx + 16, cy + 30, 'Fundação', { tam: 15, b: 1 });
+  corpo += rot(cx + 16, cy + 50, 'construída uma vez', { b: 1 });
+
+  dados.forEach(([cap], i) => {
+    const y = y0 + i * (bh + gap);
+    corpo += `<rect x="${bx}" y="${y}" width="${bw}" height="${bh}" rx="4" fill="none"`
+           + ` stroke="currentColor" stroke-width="1.5" stroke-opacity="0.55" ${em(2)}/>`;
+    corpo += txt(bx + 14, y + bh / 2 + 5, cap, { tam: 13, b: 2 });
+    corpo += `<path d="M ${cx + cw + 10} ${cy + ch / 2} C ${bx - 90} ${cy + ch / 2},`
+           + ` ${bx - 90} ${y + bh / 2}, ${bx - 10} ${y + bh / 2}" fill="none"`
+           + ` stroke="currentColor" stroke-width="1.5" stroke-opacity="0.45"`
+           + ` marker-end="url(#${id}-s)" ${em(2)}/>`;
+  });
+  /* Rotula UMA vez — a mesma codificação repetida cinco vezes é legenda, não
+     dado. Fica ACIMA do pescoço do leque: no meio dele, atravessava as cinco
+     curvas e virava ruído em cima do próprio rótulo. */
+  corpo += rot(cx + cw + 6, cy - 10, 'reutiliza', { b: 2, op: 0.7 });
+  corpo += rot(cx, H - 22, 'Construir uma vez. Reutilizar em cada nova aplicação.',
+    { tam: 12, b: 3, op: 0.85 });
+
+  return svg(id, W, H,
+    'Uma fundação única, à esquerda, reutilizada por cinco aplicações à direita.', corpo);
+}
+
+function nucleoInvertido(frentes, valor, valorRot, nota, id = 'nvi') {
+  const W = 900, H = 510;
+  const cols = 3, gap = 30, x0 = 52;
+  const passoX = FUND_W + gap;
+  const linhaY = [76, 252];          // duas fileiras de três; ver abaixo
+
+  /* Por que 3 x 2 e não seis colunas: a fundação tem de ser LITERALMENTE o
+     mesmo retângulo da cena 11. Em seis colunas ela caberia com 104px, e uma
+     fundação menor aqui do que lá diria exatamente o contrário do argumento —
+     que reconstruir sai barato. Com 168px ela é a mesma, e são seis. */
+  let corpo = rot(x0, 52, 'Normalmente contratadas como frentes diferentes', { b: 1 });
+
+  frentes.forEach((f, i) => {
+    const x = x0 + (i % cols) * passoX;
+    const topo = linhaY[Math.floor(i / cols)];
+    corpo += `<rect x="${x}" y="${topo}" width="${FUND_W}" height="46" rx="4" fill="none"`
+           + ` stroke="currentColor" stroke-width="1.5" stroke-opacity="0.55" ${em(1)}/>`;
+    const linhas = quebra(f, 24);
+    linhas.forEach((parte, k) => {
+      corpo += txt(x + FUND_W / 2, topo + 28 - (linhas.length - 1) * 7 + k * 14, parte,
+        { anc: 'middle', tam: 12, b: 1 });
+    });
+    corpo += `<line x1="${x + FUND_W / 2}" y1="${topo + 54}" x2="${x + FUND_W / 2}" y2="${topo + 84}"`
+           + ` stroke="currentColor" stroke-width="1.5" stroke-opacity="0.45"`
+           + ` marker-end="url(#${id}-s)" ${em(2)}/>`;
+    /* A MESMA fundação da cena 11, repetida uma vez por compra. É o desperdício. */
+    corpo += fundacao(x, topo + 92, FUND_W, FUND_H, em(2));
+    corpo += rot(x + FUND_W / 2, topo + 92 + FUND_H / 2 + 4, 'fundação',
+      { anc: 'middle', tam: 11.5, b: 2, op: 0.7 });
+  });
+
+  /* A legenda fica na coluna livre à direita, fora do caminho das setas. */
+  const lx = x0 + cols * passoX + 16;
+  corpo += rot(lx, 120, 'cada contratação', { b: 2 });
+  corpo += rot(lx, 138, 'reconstrói a fundação', { b: 2 });
+  corpo += txt(lx, 230, `${frentes.length} contratações`, { tam: 15, b: 2 });
+  corpo += txt(lx, 254, `${frentes.length} fundações`, { tam: 15, b: 2 });
+
+  corpo += rot(x0, 436, valorRot, { b: 3 });
+  corpo += txt(x0, 472, valor, { tam: 32, b: 3 });
+  corpo += rot(x0, 496, nota, { b: 4, tam: 11 });
+
+  return svg(id, W, H,
+    `${frentes.length} frentes contratadas separadamente, cada uma reconstruindo a mesma `
+    + `fundação. ${valorRot}: ${valor}.`, corpo);
+}
+
+/* ==========================================================================
+   4 · QUADRANTE — cenas 14 e 15
+   --------------------------------------------------------------------------
+   São UM objeto em dois estados, não dois slides. Os eixos desenham na 14, os
+   quatro nomes pousam, e na 15 o mesmo quadrante recebe as dezesseis
+   oportunidades. Se a 15 virar lista, a 14 não vale o tempo que custa.
+
+   A ordem de `celulas` em deck23.js é a de leitura da matriz, começando pelo
+   alto à esquerda: Inteligência, Autonomia, Visibilidade, Orquestração.
+   ========================================================================== */
+
+function quadrante(cena, id = 'qd', portfolio = null) {
+  const W = 760, H = 540;
+  /* O deslocamento de beats entre as duas cenas. Na 14 o quadrante SE CONSTRÓI
+     em quatro beats. Na 15 ele já está pronto no primeiro — o que entra são as
+     dezesseis oportunidades, um grupo por beat.
+
+     Na primeira rodada eu deixei os grupos começarem no beat 4 nas duas, e a
+     cena 15 terminava com dois quadrantes vazios: só quatro das dezesseis
+     oportunidades chegavam a aparecer. Não dava erro nenhum; só desenhava
+     metade do portfólio e ficava calado. */
+  const b = portfolio ? { eixoX: 1, eixoY: 1, nomes: 1, grupo0: 2 }
+                      : { eixoX: 1, eixoY: 2, nomes: 3, grupo0: 4 };
+  const x0 = 92, y0 = 44, x1 = 700, y1 = 452;
+  const mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+  const { eixos, celulas } = cena;
+
+  let corpo = '';
+  /* moldura recessiva: existe desde sempre, não é beat */
+  corpo += `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="none"`
+         + ` stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/>`;
+
+  /* beat 1 — o eixo horizontal: observar → agir */
+  corpo += `<line x1="${x0}" y1="${my}" x2="${x1}" y2="${my}" stroke="currentColor"`
+         + ` stroke-width="1.5" stroke-opacity="0.4" marker-end="url(#${id}-s)" ${em(b.eixoX)}/>`;
+  corpo += rot(x0, y1 + 26, eixos.x[0], { b: b.eixoX });
+  corpo += rot(x1, y1 + 26, eixos.x[1], { anc: 'end', b: b.eixoX });
+
+  /* beat 2 — o eixo vertical: reagir → antecipar, e ele aponta para CIMA */
+  corpo += `<line x1="${mx}" y1="${y1}" x2="${mx}" y2="${y0}" stroke="currentColor"`
+         + ` stroke-width="1.5" stroke-opacity="0.4" marker-end="url(#${id}-s)" ${em(b.eixoY)}/>`;
+  corpo += rot(x0 - 18, y0 + 8, eixos.y[0], { anc: 'middle', gir: -90, b: b.eixoY });
+  corpo += rot(x0 - 18, y1 - 8, eixos.y[1], { anc: 'middle', gir: -90, b: b.eixoY });
+
+  /* beat 3 — os quatro nomes pousam */
+  const cel = [[x0, y0], [mx, y0], [x0, my], [mx, my]];
+  celulas.forEach(([nome, gloss], i) => {
+    const [cx, cy] = cel[i];
+    const bx = cx + 20, by = cy + 34;
+    corpo += txt(bx, by, nome, { tam: 18, b: b.nomes });
+    corpo += rot(bx, by + 20, gloss, { tam: 11.5, b: b.nomes });
+    if (portfolio && portfolio[nome]) {
+      portfolio[nome].forEach((item, k) => {
+        corpo += `<circle cx="${bx + 4}" cy="${by + 52 + k * 26}" r="2.5" fill="currentColor"`
+               + ` fill-opacity="0.5" ${em(b.grupo0 + i)}/>`;
+        corpo += txt(bx + 16, by + 56 + k * 26, item, { tam: 13, b: b.grupo0 + i });
+      });
+    }
+  });
+
+  if (!portfolio) {
+    corpo += rot(x0, y1 + 60, 'Não é preciso começar pela autonomia.',
+      { b: b.grupo0, tam: 12, op: 0.85 });
+  }
+
+  return svg(id, W, H,
+    `Quadrante de ${eixos.x[0]} a ${eixos.x[1]} e de ${eixos.y[1]} a ${eixos.y[0]}, `
+    + `com quatro espaços de valor: ${celulas.map((c) => c[0]).join(', ')}.`
+    + (portfolio ? ' Cada espaço povoado por quatro oportunidades.' : ''), corpo);
+}
+
+/* ==========================================================================
+   5 · COMPARAÇÃO — cena 20, com o assentamento da 22
+   --------------------------------------------------------------------------
+   Três caminhos, três linhas iguais. NÃO leva barra, escala nem eixo comum: os
+   valores estão em unidades diferentes — um total de projeto contra dois
+   valores mensais. Eixo compartilhado entre unidades diferentes é o erro mais
+   comum de gráfico que existe, e aqui ele inventaria uma comparação que os
+   números não sustentam.
+
+   `assenta` é o índice da linha que ganha peso; as outras recuam. É o único
+   gesto de ênfase do Ato 3, e é opacidade e peso — não brilho, não cor.
+   A cena 20 chama com `assenta = -1`. Quem assenta é a 22.
+   ========================================================================== */
+
+function comparacao(caminhos, fecho, id = 'cmp', assenta = -1) {
+  /* 860 e não 720: em 720 "Capacidade conforme dedicação" e "Múltiplos perfis
+     e contratação" saíam pela borda direita, cortadas no meio da palavra. Não
+     é acabamento — é a coluna que diz o que cada caminho custa em capacidade,
+     e ela chegava truncada. */
+  const W = 860, H = 372;
+  const x0 = 52, xInv = 300, xLim = 566;
+  const y0 = 78, lh = 76;
+
+  let corpo = rot(x0, 52, 'caminho', { tam: 11 })
+            + rot(xInv, 52, 'investimento', { tam: 11 })
+            + rot(xLim, 52, 'o que limita', { tam: 11 })
+            + `<line x1="${x0}" y1="62" x2="${W - 52}" y2="62" stroke="currentColor"`
+            + ` stroke-opacity="0.25" stroke-width="1"/>`;
+
+  caminhos.forEach((c, i) => {
+    const y = y0 + i * lh;
+    const dest = assenta === i;
+    const recua = assenta >= 0 && !dest;
+    const cls = dest ? 'dg__linha dg__linha--assenta' : recua ? 'dg__linha dg__linha--recua' : 'dg__linha';
+    corpo += `<g class="${cls}" ${em(i + 1)}>`;
+    corpo += txt(x0, y + 22, c.nome, { tam: 17, peso: dest ? 500 : 400 });
+    corpo += txt(xInv, y + 22, c.inv, { tam: 15 });
+    quebra(c.lim, 26).forEach((linha, k) => {
+      corpo += rot(xLim, y + 22 + k * 16, linha, { tam: 12, op: 0.6 });
+    });
+    corpo += `<line x1="${x0}" y1="${y + 44}" x2="${W - 52}" y2="${y + 44}"`
+           + ` stroke="currentColor" stroke-opacity="0.14" stroke-width="1"/>`;
+    corpo += `</g>`;
+  });
+
+  corpo += rot(x0, H - 22, fecho, { b: 3, tam: 12, op: 0.85 });
+
+  return svg(id, W, H,
+    'Três caminhos para a mesma capacidade, com investimento e limite de cada um. '
+    + 'Sem escala comum: os valores estão em unidades diferentes.', corpo);
+}
+
+const marca = applyBrand(document, brandFromUrl());
+const params = new URLSearchParams(location.search);
+/* href por DOM: um `?notas=1` literal no atributo é referência local e o guard
+   de autocontenção do build derruba a página por causa dele. */
+document.getElementById('link-notas').href = '?notas=1';
+
+const CAMPOS = {
+  escuro: ['#000000', '#FFFFFF'],
+  papel:  ['#F2F0EE', '#000000'],
+  /* creme é do cliente. Sem esta entrada as cenas 2, 3, 4 e 6 caíam no papel e
+     o Ato 1 perdia o campo quente que a regra dos dois registros autoriza. */
+  creme:  ['#F3EFE4', '#171717'],
+};
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const zz = (n) => String(n).padStart(2, '0');
+const atoDe = (n) => ATOS.find((a) => n >= a.de && n <= a.ate);
+
+/* ==========================================================================
+   As 23 cenas viram DOM, uma vez
+   ========================================================================== */
+const palco = document.getElementById('palco');
+
+palco.insertAdjacentHTML('beforeend', CENAS.map((c, i) => {
+  const [bg, ink] = CAMPOS[c.campo] || CAMPOS.papel;
+  const modo = modoDe(c);
+  const acento = acentoDe(c);
+
+  /* --cl vem da clareira DECLARADA pela cena, tomando a mais protetora ao
+     longo de todos os beats: o tipo não passa da borda do clarão em beat
+     nenhum, em vez de flutuar sobre a arte em um deles. */
+  let larg = '';
+  if (modo === 'sangria') {
+    let melhor = 0;
+    for (let k = 0; k < c.beats; k++) {
+      const cfg = arteNoBeat(c, k), cl = cfg && cfg.clareira && cfg.clareira[0];
+      if (cl) melhor = Math.max(melhor, (cl.x + cl.w) - cl.soft * 0.5);
+    }
+    if (melhor) larg = `;--cl:${Math.max(0.3, melhor)}`;
+  }
+
+  const estilo = `--slide-bg:${bg};--slide-ink:${ink}`
+    + (acento ? `;--slide-acento:${acento}` : '') + larg;
+
+  const ato = atoDe(c.n);
+  const topo = c.n === 1
+    ? `<span class="cmc-lockup dk__lockup"><span class="cmc-lockup__word">${esc(marca.name)}</span></span>`
+    /* `listaOlho` tambem serve: e o rotulo da lista da cena, e a linha de cima
+       e o lugar de rotulo. Deixa-lo dentro do painel custava altura util onde
+       ela e mais escassa. */
+    : `<p class="dk__olho"><strong>Ato ${ato.n}</strong> · ${esc(c.olho || c.listaOlho || ato.nome)}</p>`;
+
+  const hedClasse = c.n === 1 ? 'dk__hed'
+    : (c.hed.replace(/<br>/g, ' ').length > 46 ? 'dk__hed dk__hed--peq' : 'dk__hed dk__hed--med');
+
+  const paineis = paineisDe(c, CENAS);
+  const temArte = !!arteNoBeat(c, 0);
+
+  /* No modo matriz a manchete sobe para a linha de cima, junto do olho.
+     Nao e arranjo: o painel de um diagrama e largo e baixo, entao o desenho se
+     limita pela ALTURA e sobra largura vazia dos dois lados. Cada pixel de
+     altura devolvido ao painel vira 1,7 pixel de largura de desenho, e tirar a
+     manchete da linha do meio devolve uns 105. */
+  const matriz = modo === 'matriz';
+  const hedHtml = `<h2 class="${hedClasse}">${c.hed}</h2>`;
+
+  return `<section class="dk__slide" data-i="${i}" data-n="${c.n}" data-ato="${ato.n}"
+      data-campo="${c.campo}" data-arte="${modo}" data-registro="${c.registro}"
+      data-montagem="${montagemDe(c)}" style="${estilo}">
+    ${temArte ? '<div class="dk__art"><canvas aria-hidden="true"></canvas></div>' : ''}
+    <div>${topo}${matriz ? hedHtml : ''}</div>
+    <div class="dk__meio">
+      ${matriz ? '' : hedHtml}
+      <div class="dk__paineis">${paineis.map((h, k) =>
+        `<div class="dk__painel" data-painel="${k}">${h}</div>`).join('')}</div>
+    </div>
+    <div>
+      <div class="dk__pe" style="margin-top:2cqi">
+        <span>IA Assessment &amp; Opportunities · Banana Milk</span>
+        <span>${zz(c.n)} / ${zz(CENAS.length)}</span>
+      </div>
+    </div>
+  </section>`;
+}).join(''));
+
+/* ==========================================================================
+   --cp: o painel mede a si mesmo e desce até caber
+   --------------------------------------------------------------------------
+   Piso declarado. Assim "não coube" é um número no relatório e não uma barra
+   de rolagem que ninguém vê durante a apresentação.
+   ========================================================================== */
+const PISO = 0.68;
+const estouros = [];
+
+function ajustarCena(secao) {
+  secao.querySelectorAll('.dk__painel').forEach((el) => {
+    const tinha = el.hasAttribute('data-visivel');
+    el.setAttribute('data-visivel', '');
+    el.style.setProperty('--cp', '1');
+    let cp = 1;
+    while (el.scrollHeight > el.clientHeight + 1 && cp > PISO) {
+      cp = Math.round((cp - 0.04) * 100) / 100;
+      el.style.setProperty('--cp', String(cp));
+    }
+    if (el.scrollHeight > el.clientHeight + 1)
+      estouros.push({ cena: secao.dataset.n, sobra: el.scrollHeight - el.clientHeight });
+    if (!tinha) el.removeAttribute('data-visivel');
+  });
+}
+
+palco.querySelectorAll('.dk__slide').forEach((s) => {
+  s.setAttribute('data-ativo', ''); ajustarCena(s); s.removeAttribute('data-ativo');
+});
+window.apEstouro = estouros;
+
+
+/* ==========================================================================
+   Régua de três atos
+   ========================================================================== */
+const regua = document.getElementById('regua');
+regua.innerHTML = ATOS.map((a) =>
+  `<span class="dk__regua__ato" title="Ato ${a.n} · ${a.nome}">`
+  + CENAS.filter((c) => c.ato === a.n).map(() => '<i></i>').join('') + '</span>').join('');
+const marcas = [...regua.querySelectorAll('i')];
+const conta = document.getElementById('conta');
+
+/* ==========================================================================
+   Estado
+   ========================================================================== */
+let cena = 0, beat = 0, anterior = -1;
+const passosDa = (i) => CENAS[i].beats;
+
+function aplicar(animar) {
+  const c = CENAS[cena];
+  const secao = palco.querySelector(`.dk__slide[data-i="${cena}"]`);
+
+  palco.querySelectorAll('.dk__slide').forEach((s, k) => s.toggleAttribute('data-ativo', k === cena));
+  marcas.forEach((el, k) => {
+    el.toggleAttribute('data-feito', k < cena);
+    el.toggleAttribute('data-agora', k === cena);
+  });
+  conta.textContent = `${zz(c.n)} / ${zz(CENAS.length)}`;
+
+  const paineis = secao.querySelectorAll('.dk__painel');
+  if (montagemDe(c) === 'constroi') {
+    /* Um painel só, sempre visível. Quem revela são os elementos dentro dele. */
+    paineis.forEach((el, k) => el.toggleAttribute('data-visivel', k === 0));
+  } else {
+    /* Os painéis TROCAM. O índice é `beat - 1` CLAMPADO e não igual: um beat
+       pode mover só o gráfico, e com igualdade estrita o painel sumia. */
+    const vis = Math.min(beat - 1, paineis.length - 1);
+    paineis.forEach((el, k) => el.toggleAttribute('data-visivel', k === vis && beat > 0));
+  }
+
+  /* Revelação acumulada dentro do painel, e revelação exclusiva (um de cada
+     vez, para a legenda que acompanha um degrau da escada). */
+  secao.querySelectorAll('[data-beat]').forEach((el) =>
+    el.toggleAttribute('data-visivel', beat >= +el.dataset.beat));
+  secao.querySelectorAll('[data-beat-so]').forEach((el) =>
+    el.toggleAttribute('data-visivel', beat === +el.dataset.beatSo));
+
+  /* O diagrama.
+
+     Em `constroi`, `beat + 1` e não `beat`: o primeiro estado de um desenho é
+     ele EXISTIR, e ele chega junto com a manchete. O primeiro estado de uma
+     lista é ela estar vazia — as duas escalas diferem de propósito.
+
+     Em `troca`, o beat move PAINEL e não desenho, então o desenho tem de estar
+     inteiro. Sem isto a cena 22 mostrava a comparação sem a terceira linha —
+     e a terceira linha é justamente a opção recomendada. */
+  const svg = secao.querySelector('.dg');
+  if (svg) noBeat(svg, montagemDe(c) === 'constroi' ? beat + 1 : 99);
+
+  const cv = secao.querySelector('canvas');
+  if (cv) {
+    const alvo = arteNoBeat(c, beat);
+    if (animar && cena === anterior) anima(cv, arteNoBeat(c, beat - 1), alvo, 1100);
+    else { parar(cv); render(cv, alvo); }
+  }
+  anterior = cena;
+}
+
+/* ==========================================================================
+   As passagens de ato
+   --------------------------------------------------------------------------
+   Não entram como cena: as cenas são 23, e o contador diria 26 se elas
+   virassem slide. São os únicos momentos em que a tela não argumenta nada.
+   ========================================================================== */
+const passagem = document.getElementById('passagem');
+const passagemCv = document.getElementById('passagem-cv');
+let passagemTimer = 0;
+const parado = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function passar(ato, depois) {
+  if (parado()) return depois();
+  clearTimeout(passagemTimer);
+  document.getElementById('passagem-n').textContent = `Ato ${ato.n} de ${ATOS.length}`;
+  document.getElementById('passagem-nome').textContent = ato.nome;
+  passagem.setAttribute('data-visivel', '');
+  /* A clareira é obrigatória aqui: sem ela a costura atravessa o nome do ato,
+     que é o defeito que a clareira existe para impedir — e que eu já tinha
+     cometido uma vez na capa. Arte sangrada só convive com tipo quando a cena
+     DECLARA onde o tipo senta. */
+  const claro = [{ x: 0.06, y: 0.12, w: 0.88, h: 0.34, soft: 0.14, piso: 0 }];
+  /* E o topo da rampa fica em 0.62, nao em 0.9: a passagem e um respiro entre
+     atos, nao uma tela que argumenta. Densidade alta aqui compete com o nome do
+     ato pela atencao e nao ganha nada com isso. */
+  const de = { shape: 'weave', ramp: [0.02, 0.24], cell: 5, seed: 7 + ato.n, clareira: claro };
+  render(passagemCv, de);
+  anima(passagemCv, de, { ...de, ramp: [0.02, 0.62] }, 2000);
+  depois();
+  passagemTimer = setTimeout(() => {
+    passagem.removeAttribute('data-visivel');
+    parar(passagemCv);
+  }, 2400);
+}
+
+function cortarPassagem() {
+  if (!passagem.hasAttribute('data-visivel')) return false;
+  clearTimeout(passagemTimer);
+  passagem.removeAttribute('data-visivel');
+  parar(passagemCv);
+  return true;
+}
+
+/* ==========================================================================
+   Navegação
+   ========================================================================== */
+function ir(dc, db) {
+  if (cortarPassagem()) return;
+  if (db) {
+    const n = beat + db;
+    if (n >= 0 && n < passosDa(cena)) { beat = n; return aplicar(db > 0); }
+    dc = db > 0 ? 1 : -1;
+  }
+  const nc = cena + dc;
+  if (nc < 0 || nc >= CENAS.length) return;
+  const atoAntes = CENAS[cena].ato, atoDepois = CENAS[nc].ato;
+  cena = nc;
+  beat = db < 0 ? passosDa(cena) - 1 : 0;
+  if (atoDepois !== atoAntes && db >= 0 && dc > 0) passar(atoDe(CENAS[nc].n), () => aplicar(false));
+  else aplicar(false);
+}
+
+document.getElementById('proximo').addEventListener('click', () => ir(0, 1));
+document.getElementById('anterior').addEventListener('click', () => ir(0, -1));
 document.getElementById('tela').addEventListener('click', () => {
   (document.fullscreenElement ? document.exitFullscreen() : palco.requestFullscreen()).catch(() => {});
 });
+palco.addEventListener('click', () => cortarPassagem());
 addEventListener('keydown', (e) => {
-  if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); mostrar(atual + 1); }
-  if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); mostrar(atual - 1); }
-  if (e.key === 'Home') mostrar(0);
-  if (e.key === 'End') mostrar(SLIDES.length - 1);
-  if (e.key.toLowerCase() === 'f') document.getElementById('tela').click();
+  if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); ir(0, 1); }
+  else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); ir(0, -1); }
+  else if (e.key === 'ArrowDown') { e.preventDefault(); ir(1, 0); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); ir(-1, 0); }
+  else if (e.key === 'Home') { cena = 0; beat = 0; aplicar(false); }
+  else if (e.key === 'End') { cena = CENAS.length - 1; beat = passosDa(cena) - 1; aplicar(false); }
+  else if (e.key.toLowerCase() === 'f') document.getElementById('tela').click();
 });
-addEventListener('resize', () => mostrar(atual));
+addEventListener('resize', () => aplicar(false));
+
+/* Impressão: uma página por cena, com tudo revelado. */
+function achatar() {
+  palco.querySelectorAll('.dk__slide').forEach((s, k) => {
+    s.querySelectorAll('.dk__painel, [data-beat], [data-beat-so]')
+      .forEach((el) => el.setAttribute('data-visivel', ''));
+    const svg = s.querySelector('.dg');
+    if (svg) noBeat(svg, CENAS[k].beats + 1);
+    const cv = s.querySelector('canvas');
+    if (cv) { parar(cv); render(cv, arteNoBeat(CENAS[k], CENAS[k].beats - 1)); }
+  });
+}
+addEventListener('beforeprint', achatar);
+if (matchMedia('print').matches) achatar();
+
+/* ==========================================================================
+   Visão de apresentador
+   --------------------------------------------------------------------------
+   A fala de cada cena é o material mais valioso do documento e não pode ir
+   para a tela — quem lê o slide não ouve quem apresenta.
+   ========================================================================== */
+if (params.get('notas')) {
+  const el = document.getElementById('notas');
+  el.hidden = false;
+  el.innerHTML = ATOS.map((a) =>
+    `<h3>Ato ${a.n} · ${esc(a.nome)}</h3><ul class="cmc-small">`
+    + CENAS.filter((c) => c.ato === a.n).map((c) =>
+      `<li><strong>${zz(c.n)}</strong> · <em>${esc(c.titulo)}</em><br>${esc(c.fala)}</li>`).join('')
+    + '</ul>').join('')
+    + `<h3 style="margin-top:2rem">Conferências</h3><ul class="cmc-small">`
+    + `<li>${CENAS.length} cenas · ${totalBeats()} beats</li>`
+    + `<li>O personagem aparece nas cenas ${PERSONAGEM_EM.join(', ')} — e em nenhuma outra.</li>`
+    + `<li>${estouros.length ? `ATENÇÃO: ${estouros.length} painéis transbordando` : 'Nenhum painel transbordando.'}</li>`
+    + '</ul>';
+}
+
+/* Ponto de entrada por URL. `?cena=N` é 1-based; `?beat=K` é 0-based. */
+/* `parada` é sinônimo de `cena`: os arneses deste repositório foram escritos
+   contra o deck anterior e falam `parada`. Aceitar os dois nomes custa uma
+   linha; não aceitar custa um arnês que mede a cena errada e não reclama. */
+const nCena = params.get('cena') || params.get('parada');
+if (nCena) {
+  cena = Math.max(0, Math.min(CENAS.length - 1, Number(nCena) - 1));
+  beat = Math.max(0, Math.min(passosDa(cena) - 1, Number(params.get('beat') || 0)));
+}
+aplicar(false);
 palco.focus();
+
+/* Última instrução, e depois de ajustarCena ter rodado em todas as cenas: é o
+   contrato em que _cabe.mjs e _cena.mjs bloqueiam. Sem ele os arneses travam. */
+document.documentElement.dataset.apPronto = '1';
 </script>
+
 </body>
 </html>

@@ -90,7 +90,14 @@ const svg = (id, w, h, rotulo, corpo) =>
  */
 export function noBeat(raiz, beat) {
   if (!raiz) return;
-  raiz.dataset.beat = String(beat);
+  /* `dgbeat` e nao `beat`: o deck esconde tudo que carrega `data-beat` ate ser
+     revelado (`.dk__slide [data-beat]`), e carimbar esse nome na raiz do SVG
+     fazia o diagrama inteiro nascer com visibility:hidden.
+
+     O laboratorio nao pegou porque a regra e escopada em `.dk__slide`, que la
+     nao existe: o mesmo SVG desenhava certo isolado e sumia dentro da cena.
+     Duas convencoes independentes disputando um nome de atributo. */
+  raiz.dataset.dgbeat = String(beat);
   for (const el of raiz.querySelectorAll('[data-b]')) {
     const b = +el.dataset.b;
     const ate = +el.dataset.ate || Infinity;
