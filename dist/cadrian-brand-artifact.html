@@ -1495,6 +1495,15 @@ function mascara(chave, construir) {
    consertá-la. */
 if (typeof document !== 'undefined') document.fonts?.ready.then(() => MASCARAS.clear());
 
+/**
+ * Desloca a amostragem de um campo. Devolve o próprio campo quando não há o
+ * que deslocar, para não pagar uma chamada extra por célula à toa.
+ */
+function deslocar(campo, dx = 0, dy = 0) {
+  if (!dx && !dy) return campo;
+  return (u, v, ar) => campo(u - dx, v - dy, ar);
+}
+
 const fields = {
   /* `k` = meia-altura do campo: deixa toda forma se ajustar à proporção do
      canvas sem que ninguém precise recalcular raios na mão. */
@@ -1893,9 +1902,16 @@ const fields = {
      `min` é interseção: a palavra só existe ONDE o entrelace passa. Os dois
      fios precisam se cruzar para a mensagem existir, que é literalmente o
      argumento da marca. `sub` é recorte; `max` é união. */
+  /* `desloca: [dx, dy]` em cada lado permite compor um campo COM ELE MESMO,
+     fora de registro. É o que desenha um conceito com dois sentidos: a mesma
+     palavra, duas leituras que não coincidem. Animar os dois deslocamentos
+     para zero é "integrar significados" — desenhado, não ilustrado.
+
+     O deslocamento é do amostrador, não do desenho: `f(u - dx, v - dy)`. Por
+     isso não custa nada e continua independente de resolução. */
   compor: ({ a = { shape: 'text' }, b = { shape: 'weave' }, modo = 'min' } = {}) => {
-    const fa = (fields[a.shape] || fields.disc)(a.opts || {});
-    const fb = (fields[b.shape] || fields.disc)(b.opts || {});
+    const fa = deslocar((fields[a.shape] || fields.disc)(a.opts || {}), ...(a.desloca || []));
+    const fb = deslocar((fields[b.shape] || fields.disc)(b.opts || {}), ...(b.desloca || []));
     const op = modo === 'max' ? Math.max
              : modo === 'sub' ? (x, y) => Math.min(x, 1 - y)
              : Math.min;
@@ -2178,7 +2194,8 @@ const DEFAULTS = {
   radial: false,     /* rampa radial: denso no miolo, disperso nas bordas */
   clareira: null,    /* região onde a densidade desaba, para o tipo sentar */
   tint: null,        /* nome de fonte: pinta cada célula com a cor da imagem */
-  texture: 'grain',  /* grain (estocástica) | screen (Bayer) | halftone (ponto variável) */
+  texture: 'grain',  /* grain | screen | halftone | hachura */
+  hachuraAngulo: -38,/* graus. Um ângulo por peça: dois na mesma tela batem em moiré */
   progress: 1,       /* 0..1 para animar a resolução */
   opts: null,        /* parâmetros do campo */
 };
@@ -2237,21 +2254,73 @@ function render(canvas, config = {}) {
       : null,
   };
 
+  /* A densidade de um ponto, num lugar só. As duas geometrias de laço — a
+     grade reta e a grade girada da hachura — precisam da MESMA conta, e
+     duplicá-la seria a divergência que este repositório já documentou: as duas
+     cópias andam juntas até alguém mexer numa. */
+  const densidadeEm = (u, v) => {
+    const cov = field(u, v, ar);
+    if (cov <= 0) return 0;
+    let d = cov * rampAt(u, v, ar, rampCfg);
+    /* Revelação: uma frente de onda atravessa o eixo da rampa, resolvendo
+       primeiro a ponta densa (sinal) e depois a dispersa (ruído). */
+    if (p < 1) {
+      const BAND = 0.55;
+      const behind = 1 - rampPos(u, v, ar, rampCfg);
+      d *= clamp01((p - behind * BAND) / (1 - BAND));
+    }
+    return d;
+  };
+
+  /* Hachura: a quarta textura, e a primeira com direção.
+
+     Hachura e dithering são a mesma ideia — marcas binárias cuja densidade
+     produz o tom. Xilogravura, Bayer e grade de partícula são três respostas
+     para o mesmo problema, e é por isso que ela entra como textura do motor em
+     vez de estilo de ilustração importado: todo campo que já existe passa a
+     poder vestir hachura sem uma linha nova.
+
+     O traço é contínuo ao longo do ângulo (células vizinhas se emendam) e o
+     que varia é a ESPESSURA. Traço picotado leria como grade girada, não como
+     hachura.
+
+     O contexto gira UMA VEZ, fora do laço. Girar por célula seria uma troca de
+     estado a cada uma das ~100 mil, que é exatamente o custo que o cache de
+     máscara deste arquivo já pagou uma vez. */
+  if (cfg.texture === 'hachura') {
+    const rad = (cfg.hachuraAngulo * Math.PI) / 180;
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    const cx = w / 2, cy = h / 2;
+    const meia = Math.hypot(w, h) / 2;
+    const n = Math.ceil((meia * 2) / cell);
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rad);
+    for (let j = 0; j < n; j++) {
+      const py = -meia + (j + 0.5) * cell;
+      for (let i = 0; i < n; i++) {
+        const px = -meia + (i + 0.5) * cell;
+        /* Volta ao espaço da peça para amostrar o campo, que não girou. */
+        const x = cx + px * cos - py * sin;
+        const y = cy + px * sin + py * cos;
+        if (x < 0 || x >= w || y < 0 || y >= h) continue;
+        const d = densidadeEm(x / w, y / w);
+        if (d <= 0.02) continue;
+        const esp = cell * clamp01(d) * 0.88;
+        if (esp < 0.35) continue;
+        ctx.fillRect(px - cell / 2, py - esp / 2, cell + 0.5, esp);
+      }
+    }
+    ctx.restore();
+    return;
+  }
+
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
       const u = ((i + 0.5) * cell) / w;
       const v = ((j + 0.5) * cell) / w;   /* mesma escala de u: preserva proporção */
-      const cov = field(u, v, ar);
-      if (cov <= 0) continue;
-
-      let d = cov * rampAt(u, v, ar, rampCfg);
-      /* Revelação: uma frente de onda atravessa o eixo da rampa, resolvendo
-         primeiro a ponta densa (sinal) e depois a dispersa (ruído). */
-      if (p < 1) {
-        const BAND = 0.55;
-        const behind = 1 - rampPos(u, v, ar, rampCfg);
-        d *= clamp01((p - behind * BAND) / (1 - BAND));
-      }
+      const d = densidadeEm(u, v);
       if (d <= 0) continue;
 
       /* Meio-tom: a célula sempre existe, o que varia é o tamanho do ponto.
@@ -2432,6 +2501,7 @@ function configFromEl(el) {
     mirror: d.mirror === 'true',
     radial: d.radial === 'true',
     texture: d.texture || DEFAULTS.texture,
+    hachuraAngulo: num(d.hachuraAngulo, DEFAULTS.hachuraAngulo),
     clareira: d.clareira ? JSON.parse(d.clareira) : DEFAULTS.clareira,
     tint: d.tint || DEFAULTS.tint,
     opts: d.opts ? JSON.parse(d.opts) : null,
