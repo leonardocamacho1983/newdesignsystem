@@ -33,7 +33,7 @@ const PAGES = [
      pé. Entra em PAGES mesmo assim, porque é aqui que os dois guards de
      autocontenção examinam src/diagramas.js e src/deck23.js pela primeira vez. */
   { src: 'diagramas-lab.html', out: 'camacho-diagramas-lab', url: 'https://claude.ai/code/artifact/6a594b93-d030-4cc8-93a8-5b568038cdd6' },
-  { src: 'assessment.html', out: 'camacho-assessment', url: '' },
+  { src: 'assessment.html', out: 'camacho-assessment', url: 'https://claude.ai/code/artifact/1fc3a780-4202-4ef0-b316-24aa3a105414' },
 ];
 
 /* Primeiro os tokens: o JSON é derivado do CSS, e a checagem de fechamento
